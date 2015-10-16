@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+// [START index.php]
 require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
@@ -33,4 +34,6 @@ if (PHP_SAPI != 'cli') {
     $app->run();
 }
 // @codeCoverageIgnoreEnd
+
 return $app;
+// [END index.php]
