@@ -25,14 +25,15 @@ use Silex\Provider\TwigServiceProvider;
 $app = new Application();
 
 $app->register(new TwigServiceProvider(), array(
-    'twig.path' => __DIR__.'/../templates',
+    'twig.path' => __DIR__ . '/../templates',
     'twig.options' => array(
         'strict_variables' => false,
     ),
 ));
 $app['debug'] = !in_array(
     getenv('BOOKSHELF_DEBUG'),
-    [false, 'false', '', '0', 'off', 'no']);
+    [false, 'false', '', '0', 'off', 'no']
+);
 $app['bookshelf.page_size'] = 10;
 
 return $app;

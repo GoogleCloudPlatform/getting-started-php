@@ -121,7 +121,8 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     return new Response('', Response::HTTP_NOT_FOUND);
 });
 
-$app->post('/books/{id}/delete',
+$app->post(
+    '/books/{id}/delete',
     function ($id) use ($app) {
         /** @var DataModelInterface $model */
         $model = $app['bookshelf.model'];
@@ -133,4 +134,5 @@ $app->post('/books/{id}/delete',
         }
 
         return new Response('', Response::HTTP_NOT_FOUND);
-    });
+    }
+);

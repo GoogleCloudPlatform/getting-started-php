@@ -17,7 +17,7 @@
  */
 
 // [START index_php]
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
@@ -37,3 +37,4 @@ if (PHP_SAPI != 'cli') {
 
 return $app;
 // [END index_php]
+

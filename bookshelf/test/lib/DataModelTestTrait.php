@@ -28,7 +28,7 @@ trait DataModelTestTrait
      * It iterates through all the books in the data model, so for performance
      * reasons, the data model should not be prefilled with hundreds of books.
      */
-    function testDataModel()
+    public function testDataModel()
     {
         $model = $this->model;
         // Iterate over the existing books and count the rows.
