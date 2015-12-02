@@ -25,4 +25,4 @@ class CloudsqlModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->model = new CloudsqlModel();
     }
- }
+}

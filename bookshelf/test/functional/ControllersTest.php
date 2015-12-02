@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class ControllersTest.
  */
-class controllersTest extends WebTestCase
+class ControllersTest extends WebTestCase
 {
     use SkipTestsIfMissingCredentialsTrait;
     /**
@@ -33,8 +33,8 @@ class controllersTest extends WebTestCase
      */
     public function createApplication()
     {
-        $app = require __DIR__.'/../../src/app.php';
-        require __DIR__.'/../../src/controllers.php';
+        $app = require __DIR__ . '/../../src/app.php';
+        require __DIR__ . '/../../src/controllers.php';
         $app['bookshelf.model'] = new CloudsqlModel();
         // Set a tiny page size so it's easy to test paging.
         $app['bookshelf.page_size'] = 1;
@@ -68,10 +68,10 @@ class controllersTest extends WebTestCase
         $form = $submitButton->form();
 
         $photo = new UploadedFile(
-            __DIR__.'/../lib/CatHat.jpg',
+            __DIR__ . '/../lib/CatHat.jpg',
             'CatHat.jpg',
             'image/jpg',
-            filesize(__DIR__.'/../lib/CatHat.jpg')
+            filesize(__DIR__ . '/../lib/CatHat.jpg')
         );
         $crawler = $client->submit($form, array(
             'title' => 'The Cat in the Hat',
@@ -138,10 +138,10 @@ class controllersTest extends WebTestCase
         $form = $submitButton->form();
 
         $photo = new UploadedFile(
-            __DIR__.'/../lib/CatHat.jpg',
+            __DIR__ . '/../lib/CatHat.jpg',
             'CatHat.jpg',
             'image/jpg',
-            filesize(__DIR__.'/../lib/CatHat.jpg')
+            filesize(__DIR__ . '/../lib/CatHat.jpg')
         );
         $crawler = $client->submit($form, array(
             'title' => 'Where the Red Fern Grows',

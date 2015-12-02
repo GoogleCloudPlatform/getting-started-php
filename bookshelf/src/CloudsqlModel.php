@@ -35,16 +35,16 @@ class CloudsqlModel implements DataModelInterface
     private function newConnection()
     {
         if (false == ($dsn = getenv('MYSQL_DSN'))) {
-            throw new \Exception('Set the environment variable MYSQL_DSN '.
-                'to your data source name.  See '.
+            throw new \Exception('Set the environment variable MYSQL_DSN ' .
+                'to your data source name.  See ' .
                 'http://php.net/manual/en/ref.pdo-mysql.connection.php');
         }
         if (false == ($user = getenv('MYSQL_USER'))) {
-            throw new \Exception('Set the environment variable MYSQL_USER to '.
+            throw new \Exception('Set the environment variable MYSQL_USER to ' .
                 'your database user name.');
         }
         if (false == ($password = getenv('MYSQL_PASSWORD'))) {
-            throw new \Exception('Set the environment variable MYSQL_PASSWORD '.
+            throw new \Exception('Set the environment variable MYSQL_PASSWORD ' .
                 'to your database password.');
         }
         $pdo = new PDO($dsn, $user, $password);
@@ -87,8 +87,10 @@ class CloudsqlModel implements DataModelInterface
     private function verifyBook($book)
     {
         if ($invalid = array_diff_key($book, array_flip($this->columnNames))) {
-            throw new \Exception(sprintf('unsupported book properties: "%s"',
-                implode(', ', $invalid)));
+            throw new \Exception(sprintf(
+                'unsupported book properties: "%s"',
+                implode(', ', $invalid)
+            ));
         }
     }
 
@@ -96,7 +98,7 @@ class CloudsqlModel implements DataModelInterface
     {
         $pdo = $this->newConnection();
         if ($cursor) {
-            $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id'.
+            $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id' .
                 ' LIMIT :limit';
             $statement = $pdo->prepare($query);
             $statement->bindValue(':cursor', $cursor, PDO::PARAM_INT);
@@ -132,8 +134,12 @@ class CloudsqlModel implements DataModelInterface
         }
         $pdo = $this->newConnection();
         $names = array_keys($book);
-        $placeHolders = array_map(function ($key) { return ":$key";}, $names);
-        $sql = sprintf('INSERT INTO books (%s) VALUES (%s)',
+        $placeHolders = array_map(function ($key) {
+            return ":$key";
+
+        }, $names);
+        $sql = sprintf(
+            'INSERT INTO books (%s) VALUES (%s)',
             implode(', ', $names),
             implode(', ', $placeHolders)
         );
@@ -158,7 +164,9 @@ class CloudsqlModel implements DataModelInterface
         $this->verifyBook($book);
         $pdo = $this->newConnection();
         $assignments = array_map(
-            function ($column) {return "$column=:$column";},
+            function ($column) {
+                return "$column=:$column";
+            },
             $this->columnNames
         );
         $assignmentString = implode(',', $assignments);

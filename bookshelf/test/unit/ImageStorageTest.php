@@ -20,11 +20,11 @@ class ImageStorageTest extends \PHPUnit_Framework_TestCase
 {
     use SkipTestsIfMissingCredentialsTrait;
 
-    function testOne()
+    public function testOne()
     {
         $bucket = getenv('GOOGLE_STORAGE_BUCKET');
         $storage = new ImageStorage();
-        $url = $storage->storeFile(__DIR__.'/../lib/CatHat.jpg', 'image/jpg');
+        $url = $storage->storeFile(__DIR__ . '/../lib/CatHat.jpg', 'image/jpg');
         try {
             $this->assertStringStartsWith(
                 "https://www.googleapis.com/download/storage/v1/b/$bucket/o/",

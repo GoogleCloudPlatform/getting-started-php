@@ -14,24 +14,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         syntaxCheck="false"
->
+<phpunit bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="Hello World App Test Suite">
-            <directory>../tests</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
     <filter>
-      <whitelist processUncoveredFilesFromWhitelist="true">
-        <file>../web/index.php</file>
+      <whitelist>
+        <directory suffix=".php">./</directory>
+        <exclude>
+          <directory suffix=".php">./vendor/</directory>
+          <directory suffix=".phtml">./vendor/</directory>
+          <file>./tests/bootstrap.php</file>
+          <!-- add more directories with relative or absolute path -->
+        </exclude>
       </whitelist>
     </filter>
 </phpunit>

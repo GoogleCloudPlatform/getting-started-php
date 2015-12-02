@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+namespace Google\Cloud\Samples\Helloworld;
+
 use Silex\WebTestCase;
 
 /**
@@ -25,7 +27,7 @@ class MySilexAppTest extends WebTestCase
 {
     public function createApplication()
     {
-        $app = require __DIR__.'/../web/index.php';
+        $app = require __DIR__ . '/../web/index.php';
         $app['debug'] = true;
         unset($app['exception_handler']);
 
