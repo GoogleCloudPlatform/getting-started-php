@@ -21,17 +21,17 @@ class DatastoreModelTest extends \PHPUnit_Framework_TestCase
     use SkipTestsIfMissingCredentialsTrait;
 
     /** @var \DatastoreModel $model */
-    protected static $model;
+    protected $model;
 
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        if (self::hasCredentials()) {
-            self::$model = new DatastoreModel();
+        if ($this->hasCredentials()) {
+            $this->model = new DatastoreModel();
         }
     }
 
     public function testListBooks()
     {
-        self::$model->listBooks();
+        $this->model->listBooks();
     }
 }
