@@ -45,6 +45,9 @@ done
 
 cd "${TEST_BUILD_DIR}"
 
+# Composer for php-coveralls
+composer install
+
 # Install php-cs-fixer
 wget http://get.sensiolabs.org/php-cs-fixer.phar -O ${HOME}/bin/php-cs-fixer
 chmod +x ${HOME}/bin/php-cs-fixer

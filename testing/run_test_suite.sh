@@ -26,9 +26,12 @@ php-cs-fixer fix --dry-run --diff --level=psr2 --fixers=concat_with_spaces .
 # Run tests for each directories.
 for DIR in "${DIRS[@]}"; do
     cd ${DIR}
-    vendor/bin/phpunit
+    mkdir -p ${DIR}/build/logs
+    vendor/bin/phpunit --coverage-clover ${DIR}/build/logs/clover.xml
 done
 
 cd ${TEST_BUILD_DIR}
 
-# TODO: code coverage
+mkdir -p ${TEST_BUILD_DIR}/build/logs
+
+vendor/bin/coveralls
