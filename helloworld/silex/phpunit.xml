@@ -20,9 +20,12 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
     <filter>
       <whitelist>
-        <directory suffix=".php">./</directory>
+        <directory suffix=".php">./web</directory>
         <exclude>
           <directory suffix=".php">./vendor/</directory>
           <directory suffix=".phtml">./vendor/</directory>
