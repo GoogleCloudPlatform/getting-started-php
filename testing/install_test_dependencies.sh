@@ -45,8 +45,14 @@ done
 
 cd "${TEST_BUILD_DIR}"
 
-# Composer for php-coveralls
-composer install
+# Install php-coveralls
+
+# php-coveralls depends some legacy libs which may conflicts with the
+# dependencies of modern applications. To avoid such conflicts, it is
+# best to use the phar file (which includes all the deps).
+
+wget https://github.com/satooshi/php-coveralls/releases/download/v0.7.0/coveralls.phar -O ${HOME}/bin/coveralls
+chmod +x ${HOME}/bin/coveralls
 
 # Install php-cs-fixer
 wget http://get.sensiolabs.org/php-cs-fixer.phar -O ${HOME}/bin/php-cs-fixer

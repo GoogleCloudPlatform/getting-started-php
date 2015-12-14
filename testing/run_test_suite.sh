@@ -34,4 +34,4 @@ cd ${TEST_BUILD_DIR}
 
 mkdir -p ${TEST_BUILD_DIR}/build/logs
 
-vendor/bin/coveralls -v --exclude-no-stmt
+${HOME}/bin/coveralls --exclude-no-stmt -v
