@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "15b7a358b979f6407b19f2930d023da3",
-    "content-hash": "27f78fc017f5ab126103be8b756f57bc",
+    "hash": "a1d80087140a9088fc4ae56202055a80",
+    "content-hash": "d8bd57e86f4a61ba4b874c7a93a5c7e7",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -105,16 +105,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v0.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-auth-library-php.git",
-                "reference": "b2d0e7bdcbe8ccdd0f83a7527ef23bcc202e331a"
+                "reference": "0eaf83e1b8c5b5423a09bdd55aa9e6d49d7395b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/b2d0e7bdcbe8ccdd0f83a7527ef23bcc202e331a",
-                "reference": "b2d0e7bdcbe8ccdd0f83a7527ef23bcc202e331a",
+                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/0eaf83e1b8c5b5423a09bdd55aa9e6d49d7395b1",
+                "reference": "0eaf83e1b8c5b5423a09bdd55aa9e6d49d7395b1",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +146,7 @@
                 "google",
                 "oauth2"
             ],
-            "time": "2015-11-03 23:16:35"
+            "time": "2015-12-16 17:49:29"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2239,10 +2239,18 @@
             "time": "2015-11-30 12:36:17"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "0.4.x-dev",
+            "alias_normalized": "0.4.9999999.9999999-dev",
+            "version": "9999999-dev",
+            "package": "google/auth"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "google/apiclient": 5
+        "google/apiclient": 5,
+        "google/auth": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

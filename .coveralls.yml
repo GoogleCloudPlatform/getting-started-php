@@ -2,11 +2,6 @@
 
 service_name: travis-ci
 
-src_dir: bookshelf/src
-# It doesn't contain helloworld/silex, but there is no issues with the
-# report.
-# TODO: Confirm what is src_dir is for.
-
 coverage_clover:
   - bookshelf/build/logs/clover.xml
   - helloworld/silex/build/logs/clover.xml
