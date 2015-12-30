@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\FileSystem;
 
 /**
- * Class FakeImageStorage
+ * Class FakeFileStorage
  * @package Google\Cloud\Samples\Bookshelf
  *
  * A simple mock that is easy to verify in tests.
  */
-class FakeImageStorage
+class FakeFileStorage
 {
     public function __construct()
     {

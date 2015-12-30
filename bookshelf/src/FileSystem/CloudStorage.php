@@ -15,31 +15,27 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\FileSystem;
 
 /**
- * class ImageStorage stores images in Google Cloud Storage.
+ * class CloudStorage stores images in Google Cloud Storage.
  */
-class ImageStorage
+class CloudStorage
 {
     /**
-     * ImageStorage constructor.
+     * CloudStorage constructor.
      *
+     * @param string         $bucketName The cloud storage bucket name
      * @param \Google_Client $client     When null, a new Google_client is created
      *                                   that uses default application credentials.
-     * @param string         $bucketName When null, uses environment variable
-     *                                   GOOGLE_STORAGE_BUCKET.
      */
-    public function __construct(\Google_Client $client = null, $bucketName = null)
+    public function __construct($bucketName, \Google_Client $client = null)
     {
         if (!$client) {
             $client = new \Google_Client();
             $client->useApplicationDefaultCredentials();
             $client->setApplicationName('php bookshelf');
             $client->setScopes(\Google_Service_Storage::DEVSTORAGE_READ_WRITE);
-        }
-        if (!$bucketName) {
-            $bucketName = getenv('GOOGLE_STORAGE_BUCKET');
         }
         $this->service = new \Google_Service_Storage($client);
         $this->bucketName = $bucketName;

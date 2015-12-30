@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
 use Google_Service_Datastore;
 
@@ -24,13 +24,10 @@ use Google_Service_Datastore;
  *
  * Incomplete and untested.
  */
-class DatastoreModel implements DataModelInterface
+class Datastore implements DataModelInterface
 {
-    public function __construct($datastoreDatasetId = null)
+    public function __construct($datastoreDatasetId)
     {
-        if (!$datastoreDatasetId) {
-            $datastoreDatasetId = getenv('GOOGLE_PROJECT_ID');
-        }
         $this->datasetId = $datastoreDatasetId;
         $client = new \Google_Client();
         $client->setScopes([

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
 /**
  * Common code to test all data models.

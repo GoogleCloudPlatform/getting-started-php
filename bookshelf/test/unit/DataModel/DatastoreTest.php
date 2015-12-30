@@ -14,24 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
-class ImageStorageTest extends \PHPUnit_Framework_TestCase
+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
+
+class DatastoreTest extends \PHPUnit_Framework_TestCase
 {
     use SkipTestsIfMissingCredentialsTrait;
 
-    public function testOne()
+    /** @var \DatastoreModel $model */
+    protected $model;
+
+    public function setUp()
     {
-        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
-        $storage = new ImageStorage();
-        $url = $storage->storeFile(__DIR__ . '/../lib/CatHat.jpg', 'image/jpg');
-        try {
-            $this->assertStringStartsWith(
-                "https://www.googleapis.com/download/storage/v1/b/$bucket/o/",
-                $url
-            );
-        } finally {  // clean up
-            $storage->deleteFile($url);
+        parent::setUp();
+
+        if ($this->hasCredentials()) {
+            if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+                $this->markTestSkipped('Set the GOOGLE_PROJECT_ID environment variable to run this test');
+            }
+            $this->model = new Datastore($projectId);
         }
+    }
+
+    public function testListBooks()
+    {
+        $this->model->listBooks();
     }
 }
