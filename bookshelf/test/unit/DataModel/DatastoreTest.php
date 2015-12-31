@@ -20,25 +20,17 @@ use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
 
 class DatastoreTest extends \PHPUnit_Framework_TestCase
 {
+    use DataModelTestTrait;
     use SkipTestsIfMissingCredentialsTrait;
-
-    /** @var \DatastoreModel $model */
-    protected $model;
 
     public function setUp()
     {
         parent::setUp();
 
-        if ($this->hasCredentials()) {
-            if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-                $this->markTestSkipped('Set the GOOGLE_PROJECT_ID environment variable to run this test');
-            }
-            $this->model = new Datastore($projectId);
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Set the GOOGLE_PROJECT_ID environment variable to run this test');
         }
-    }
 
-    public function testListBooks()
-    {
-        $this->model->listBooks();
+        $this->model = new Datastore($projectId);
     }
 }
