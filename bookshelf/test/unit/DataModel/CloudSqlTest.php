@@ -14,24 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
-class DatastoreModelTest extends \PHPUnit_Framework_TestCase
+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
+
+class CloudSqlTest extends \PHPUnit_Framework_TestCase
 {
+    use DataModelTestTrait;
     use SkipTestsIfMissingCredentialsTrait;
-
-    /** @var \DatastoreModel $model */
-    protected $model;
 
     public function setUp()
     {
-        if ($this->hasCredentials()) {
-            $this->model = new DatastoreModel();
-        }
-    }
+        parent::setUp();
 
-    public function testListBooks()
-    {
-        $this->model->listBooks();
+        $this->model = new CloudSql();
     }
 }

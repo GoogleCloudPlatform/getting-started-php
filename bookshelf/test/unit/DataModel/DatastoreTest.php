@@ -14,30 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
-/**
- * Class FakeImageStorage
- * @package Google\Cloud\Samples\Bookshelf
- *
- * A simple mock that is easy to verify in tests.
- */
-class FakeImageStorage
+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
+
+class DatastoreTest extends \PHPUnit_Framework_TestCase
 {
-    public function __construct()
-    {
-        $this->count = 0;
-        $this->deletedFiles = array();
-    }
+    use DataModelTestTrait;
+    use SkipTestsIfMissingCredentialsTrait;
 
-    public function storeFile($localFilePath, $contentType)
+    public function setUp()
     {
-        $this->count += 1;
-        return 'img' . $this->count;
-    }
+        parent::setUp();
 
-    public function deleteFile($url)
-    {
-        array_push($this->deletedFiles, $url);
+        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
+            $this->markTestSkipped('Set the GOOGLE_PROJECT_ID environment variable to run this test');
+        }
+
+        $this->model = new Datastore($projectId);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2015 Google Inc. All Rights Reserved.
  *
@@ -22,6 +23,8 @@ namespace Google\Cloud\Samples\Bookshelf;
  */
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
+use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
 
 $app->get('/', function (Request $request) use ($app) {
     return $app->redirect('/books/');
@@ -54,7 +57,7 @@ $app->get('/books/add', function () use ($app) {
 $app->post('/books/add', function (Request $request) use ($app) {
     /** @var DataModelInterface $model */
     $model = $app['bookshelf.model'];
-    /** @var ImageStorage $storage */
+    /** @var CloudStorage $storage */
     $storage = $app['bookshelf.storage'];
     $files = $request->files;
     $book = $request->request->all();
@@ -102,7 +105,7 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
 $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     $book = $request->request->all();
     $book['id'] = $id;
-    /** @var ImageStorage $storage */
+    /** @var CloudStorage $storage */
     $storage = $app['bookshelf.storage'];
     /** @var DataModelInterface $model */
     $model = $app['bookshelf.model'];

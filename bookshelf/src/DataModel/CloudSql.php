@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
 use PDO;
 
 /**
- * Class CloudsqlModel implements the DataModel with a mysql database.
+ * Class CloudSql implements the DataModelInterface with a mysql database.
  *
  * Set the three environment variables MYSQL_DSN, MYSQL_USER,
  * and MYSQL_PASSWORD.
  */
-class CloudsqlModel implements DataModelInterface
+class CloudSql implements DataModelInterface
 {
     /**
      * Creates a new PDO instance and sets error mode to exception.
@@ -43,7 +43,7 @@ class CloudsqlModel implements DataModelInterface
             throw new \Exception('Set the environment variable MYSQL_USER to ' .
                 'your database user name.');
         }
-        if (false == ($password = getenv('MYSQL_PASSWORD'))) {
+        if (false === ($password = getenv('MYSQL_PASSWORD'))) {
             throw new \Exception('Set the environment variable MYSQL_PASSWORD ' .
                 'to your database password.');
         }

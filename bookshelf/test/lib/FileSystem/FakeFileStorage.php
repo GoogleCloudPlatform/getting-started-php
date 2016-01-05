@@ -14,24 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\FileSystem;
 
-class ImageStorageTest extends \PHPUnit_Framework_TestCase
+/**
+ * Class FakeFileStorage
+ * @package Google\Cloud\Samples\Bookshelf
+ *
+ * A simple mock that is easy to verify in tests.
+ */
+class FakeFileStorage
 {
-    use SkipTestsIfMissingCredentialsTrait;
-
-    public function testOne()
+    public function __construct()
     {
-        $bucket = getenv('GOOGLE_STORAGE_BUCKET');
-        $storage = new ImageStorage();
-        $url = $storage->storeFile(__DIR__ . '/../lib/CatHat.jpg', 'image/jpg');
-        try {
-            $this->assertStringStartsWith(
-                "https://www.googleapis.com/download/storage/v1/b/$bucket/o/",
-                $url
-            );
-        } finally {  // clean up
-            $storage->deleteFile($url);
-        }
+        $this->count = 0;
+        $this->deletedFiles = array();
+    }
+
+    public function storeFile($localFilePath, $contentType)
+    {
+        $this->count += 1;
+        return 'img' . $this->count;
+    }
+
+    public function deleteFile($url)
+    {
+        array_push($this->deletedFiles, $url);
     }
 }

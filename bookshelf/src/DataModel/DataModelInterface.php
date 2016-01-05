@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2015 Google Inc. All Rights Reserved.
  *
@@ -15,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
 /**
  * The common model implemented by Google Datastore, mysql, etc.
