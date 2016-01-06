@@ -22,19 +22,47 @@
  */
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
+use Silex\Provider\UrlGeneratorServiceProvider;
+use Google\Cloud\Samples\Bookshelf\User\SimpleUser;
 
 $app = new Application();
 
+// register twig
 $app->register(new TwigServiceProvider(), array(
     'twig.path' => __DIR__ . '/../templates',
     'twig.options' => array(
         'strict_variables' => false,
     ),
 ));
+
+// register the url generator
+$app->register(new UrlGeneratorServiceProvider);
+
+// turn debug on by default
 $app['debug'] = !in_array(
     getenv('BOOKSHELF_DEBUG'),
-    [false, 'false', '', '0', 'off', 'no']
+    ['false', '', '0', 'off', 'no']
 );
+
+// create the user object
+$app['user'] = function($app) {
+  return SimpleUser::createFromRequest($app['request']);
+};
+
+// create the google authorization client
+$app['google_client'] = function($app) {
+  /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
+  $urlGen = $app['url_generator'];
+  $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
+
+  return new Google_Client([
+    'client_id'     => getenv('GOOGLE_CLIENT_ID'),
+    'client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
+    'redirect_uri'  => $redirectUri,
+  ]);
+};
+
+// add service parameters
 $app['bookshelf.page_size'] = 10;
 
 return $app;
