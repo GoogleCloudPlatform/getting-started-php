@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Bookshelf;
 use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
 use Silex\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -40,7 +41,7 @@ class ControllersTest extends WebTestCase
         $app['bookshelf.model'] = new CloudSql();
         // Set a tiny page size so it's easy to test paging.
         $app['bookshelf.page_size'] = 1;
-        $this->storage = $app['bookshelf.storage'] = new FakeFileStorage();
+        $app['bookshelf.storage'] = new FakeFileStorage();
 
         return $app;
     }
@@ -197,5 +198,88 @@ class ControllersTest extends WebTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
         $client->submit($submitButton->form());
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testLogin()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/books/');
+        $loginLink = $crawler->filter('a:contains("Login")')->link();
+
+        $crawler = $client->click($loginLink);
+        $response = $client->getResponse();
+        $this->assertEquals(302, $response->getStatusCode());
+        $url = $response->headers->get('Location');
+        $this->assertNotNull($url);
+
+        $parts = parse_url($url);
+        parse_str($parts['query'], $query);
+
+        $this->assertArrayHasKey('response_type', $query);
+        $this->assertArrayHasKey('client_id', $query);
+        $this->assertArrayHasKey('redirect_uri', $query);
+        $this->assertArrayHasKey('state', $query);
+        $this->assertArrayHasKey('scope', $query);
+
+        $this->assertEquals('code', $query['response_type']);
+        $this->assertEquals('http://localhost/login/callback', $query['redirect_uri']);
+    }
+
+    public function testLoginCallback()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/login/callback');
+
+        $response = $client->getResponse();
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('Code required', (string) $response->getContent());
+
+        $crawler = $client->request('GET', '/login/callback?code=123');
+
+        $response = $client->getResponse();
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals('Missing parameter: client_id', (string) $response->getContent());
+
+        $idToken = ['sub' => 'fake-id'];
+        $googleClient = $this->getMock('Google_Client');
+        $googleClient->expects($this->once())
+            ->method('fetchAccessTokenWithAuthCode')
+            ->will($this->returnValue(true));
+        $googleClient->expects($this->once())
+            ->method('getAccessToken')
+            ->will($this->returnValue(['access_token' => 'xyz']));
+        $googleClient->expects($this->once())
+            ->method('verifyIdToken')
+            ->will($this->returnValue($idToken));
+
+        $this->app['google_client'] = $googleClient;
+        $crawler = $client->request('GET', '/login/callback?code=123');
+        $response = $client->getResponse();
+        $cookies = $response->headers->getCookies();
+
+        $this->assertEquals(1, count($cookies));
+        $this->assertEquals('google_user_info', $cookies[0]->getName());
+        $this->assertEquals(json_encode($idToken), $cookies[0]->getValue());
+    }
+
+    public function testLogout()
+    {
+        $client = $this->createClient();
+
+        // set the logged-in user info on the request
+        $userInfo = [
+            'sub' => 'fake-id',
+        ];
+        $cookie = new Cookie('google_user_info', json_encode($userInfo));
+        $client->getCookieJar()->set($cookie);
+
+        // make the request
+        $crawler = $client->request('GET', '/logout');
+        $response = $client->getResponse();
+        $cookies = $response->headers->getCookies();
+
+        $this->assertEquals(1, count($cookies));
+        $this->assertEquals('google_user_info', $cookies[0]->getName());
+        $this->assertNull($cookies[0]->getValue());
     }
 }
