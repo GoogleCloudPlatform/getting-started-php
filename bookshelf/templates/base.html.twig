@@ -30,6 +30,19 @@
         <ul class="nav navbar-nav">
           <li><a href="/books">Books</a></li>
         </ul>
+        <p class="navbar-text navbar-right">
+          {% if app.user.loggedIn %}
+            {% if app.user.imageUrl %}
+              <img src="{{ app.user.imageUrl }}" class="img-circle" width="24" alt="Photo" />
+            {% endif %}
+            <span>
+              {{ app.user.name }} &nbsp;
+              <a href="/logout">(logout)</a>
+            </span>
+          {% else %}
+            <a href="/login">Login</a>
+          {% endif %}
+        </p>
       </div>
     </div>
     <div class="container">

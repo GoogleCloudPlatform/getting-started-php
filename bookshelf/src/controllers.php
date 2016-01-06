@@ -21,10 +21,12 @@ namespace Google\Cloud\Samples\Bookshelf;
 /*
  * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
  */
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
 use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
+use Google_Service_OAuth2;
 
 $app->get('/', function (Request $request) use ($app) {
     return $app->redirect('/books/');
@@ -139,3 +141,48 @@ $app->post(
         return new Response('', Response::HTTP_NOT_FOUND);
     }
 );
+
+$app->get('/login', function () use ($app) {
+    /** @var Google_Client $client */
+    $client = $app['google_client'];
+
+    $scopes = [ Google_Service_OAuth2::USERINFO_PROFILE ];
+    $authUrl = $client->createAuthUrl($scopes);
+
+    return $app->redirect($authUrl);
+})->bind('login');
+
+$app->get('/login/callback', function () use ($app) {
+    /** @var Request $request */
+    $request = $app['request'];
+
+    if (!$code = $request->query->get('code')) {
+        return new Response('Code required', Response::HTTP_BAD_REQUEST);
+    }
+
+    /** @var Google_Client $client */
+    $client = $app['google_client'];
+    $authResponse = $client->fetchAccessTokenWithAuthCode($code);
+
+    if ($client->getAccessToken()) {
+        $userInfo = $client->verifyIdToken();
+
+        // set the user info in a cookie and redirect to the homepage
+        $cookie = new Cookie('google_user_info', json_encode($userInfo));
+        $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
+        $response->headers->setCookie($cookie);
+
+        return $response;
+    }
+
+    // an error occured while trying to authorize - display it
+    return new Response($authResponse['error_description'], 400);
+
+})->bind('login_callback');
+
+$app->get('/logout', function () use ($app) {
+    $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
+    $response->headers->clearCookie('google_user_info');
+
+    return $response;
+})->bind('logout');
