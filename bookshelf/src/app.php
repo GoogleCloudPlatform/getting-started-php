@@ -65,4 +65,8 @@ $app['google_client'] = function ($app) {
 // add service parameters
 $app['bookshelf.page_size'] = 10;
 
+// add logging to stderr
+$app->register(new Silex\Provider\MonologServiceProvider());
+$app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
+
 return $app;

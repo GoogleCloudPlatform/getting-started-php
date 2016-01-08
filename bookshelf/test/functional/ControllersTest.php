@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
+use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -42,6 +43,7 @@ class ControllersTest extends WebTestCase
         // Set a tiny page size so it's easy to test paging.
         $app['bookshelf.page_size'] = 1;
         $app['bookshelf.storage'] = new FakeFileStorage();
+        $app['monolog.handler'] = new TestHandler();
 
         return $app;
     }
