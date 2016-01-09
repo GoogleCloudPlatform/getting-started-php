@@ -21,9 +21,7 @@ namespace Google\Cloud\Samples\Bookshelf\DataModel;
 use Google_Service_Datastore;
 
 /**
- * Class DatastoreModel implements the DataModel with a Google Data Store.
- *
- * Incomplete and untested.
+ * Class Datastore implements the DataModel with a Google Data Store.
  */
 class Datastore implements DataModelInterface
 {
