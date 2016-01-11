@@ -17,22 +17,29 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
-use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
-use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
+use Silex\WebTestCase;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+/**
+ * Class ControllersTest.
+ */
+class LoggerTest extends WebTestCase
+{
+    /**
+     * Creates the application.
+     *
+     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+     */
+    public function createApplication()
+    {
+        $app = require __DIR__ . '/../../src/app.php';
+        require __DIR__ . '/../../src/controllers.php';
 
-$app = require __DIR__ . '/../src/app.php';
-require __DIR__ . '/../src/controllers.php';
+        return $app;
+    }
 
-// Cloud Storage
-$bucket = getenv('GOOGLE_STORAGE_BUCKET');
-$app['bookshelf.storage'] = new CloudStorage($bucket);
-// Cloud SQL
-$app['bookshelf.model'] = new CloudSql();
-// Cloud Datastore
-// $datasetId = getenv('GOOGLE_DATASET_ID');
-// $app['bookshelf.model'] = new Datastore($datasetId);
-
-$app->run();
+    public function testLogger()
+    {
+        $this->assertInstanceOf('Monolog\Logger', $this->app['monolog']);
+        $this->assertInstanceOf('Monolog\Handler\ErrorLogHandler', $this->app['monolog.handler']);
+    }
+}
