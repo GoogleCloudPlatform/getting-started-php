@@ -19,6 +19,7 @@ namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -29,10 +30,22 @@ require __DIR__ . '/../src/controllers.php';
 // Cloud Storage
 $bucket = getenv('GOOGLE_STORAGE_BUCKET');
 $app['bookshelf.storage'] = new CloudStorage($bucket);
-// Cloud SQL
-$app['bookshelf.model'] = new CloudSql();
-// Cloud Datastore
-// $datasetId = getenv('GOOGLE_DATASET_ID');
-// $app['bookshelf.model'] = new Datastore($datasetId);
+
+// Data Model
+$db = getenv('BOOKSHELF_DATA_BACKEND');
+if ($db === false) {
+    $db = 'cloudsql'; // default
+}
+if ($db == 'mongodb') {
+    $app['bookshelf.model'] = new MongoDb();
+} elseif ($db == 'datastore') {
+    $datasetId = getenv('GOOGLE_DATASET_ID');
+    $app['bookshelf.model'] = new Datastore($datasetId);
+} elseif ($db == 'cloudsql') {
+    $app['bookshelf.model'] = new CloudSql();
+} else {
+    throw Exception("Invalid BOOKSHELF_DATA_BACKEND given: $db. "
+                    . "Possible values are cloudsql, mongodb, or datastore.");
+}
 
 $app->run();

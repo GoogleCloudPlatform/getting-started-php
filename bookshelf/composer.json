@@ -11,6 +11,7 @@
     "symfony/browser-kit": "^3.0",
     "symfony/css-selector": "^2.7",
     "monolog/monolog": "^1.17",
+    "mongodb/mongodb": "^1.0.0@beta",
     "php": "^5.5"
   },
   "require-dev": {
