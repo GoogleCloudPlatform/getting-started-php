@@ -34,7 +34,7 @@
 
   <div class="form-group">
     <label for="publishedDate">Date Published</label>
-    <input type="text" name="publishedDate" id="publishedDate" value="{{book.publishedDate}}" class="form-control"/>
+    <input type="text" name="publishedDate" id="publishedDate" value="{{book.publishedDate|date("F jS, Y")}}" class="form-control"/>
   </div>
 
   <div class="form-group">

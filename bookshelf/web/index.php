@@ -24,8 +24,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = require __DIR__ . '/../src/app.php';
 require __DIR__ . '/../src/controllers.php';
-$app['bookshelf.model'] = new CloudSql();
+
+// Cloud Storage
 $bucket = getenv('GOOGLE_STORAGE_BUCKET');
 $app['bookshelf.storage'] = new CloudStorage($bucket);
+// Cloud SQL
+$app['bookshelf.model'] = new CloudSql();
+// Cloud Datastore
+// $projectId = getenv('GOOGLE_PROJECT_ID');
+// $app['bookshelf.model'] = new Datastore($projectId);
 
 $app->run();

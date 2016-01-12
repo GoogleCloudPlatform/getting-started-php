@@ -69,6 +69,9 @@ $app->post('/books/add', function (Request $request) use ($app) {
             $image->getMimeType()
         );
     }
+    if (!empty($book['publishedDate'])) {
+        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
+    }
     $id = $model->create($book);
 
     return $app->redirect("/books/$id");
@@ -117,6 +120,9 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
             $image->getRealPath(),
             $image->getMimeType()
         );
+    }
+    if (!empty($book['publishedDate'])) {
+        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
     }
     if ($model->update($book)) {
         return $app->redirect("/books/$id");
