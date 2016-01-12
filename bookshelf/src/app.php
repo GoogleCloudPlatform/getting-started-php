@@ -41,7 +41,8 @@ $app->register(new UrlGeneratorServiceProvider);
 // turn debug on by default
 $app['debug'] = !in_array(
     getenv('BOOKSHELF_DEBUG'),
-    ['false', '', '0', 'off', 'no']
+    ['false', '', '0', 'off', 'no'],
+    true
 );
 
 // create the user object
