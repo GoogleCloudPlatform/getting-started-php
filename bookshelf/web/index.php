@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf;
-
 use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
@@ -39,8 +37,8 @@ if ($db === false) {
 if ($db == 'mongodb') {
     $app['bookshelf.model'] = new MongoDb();
 } elseif ($db == 'datastore') {
-    $datasetId = getenv('GOOGLE_DATASET_ID');
-    $app['bookshelf.model'] = new Datastore($datasetId);
+    $projectId = getenv('GOOGLE_PROJECT_ID');
+    $app['bookshelf.model'] = new Datastore($projectId);
 } elseif ($db == 'cloudsql') {
     $app['bookshelf.model'] = new CloudSql();
 } else {
