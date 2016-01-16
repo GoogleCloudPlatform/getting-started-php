@@ -17,6 +17,7 @@
   "require-dev": {
     "phpunit/phpunit": "~4",
     "symfony/browser-kit": "^3.0",
-    "symfony/http-kernel": "^3.0"
+    "symfony/http-kernel": "^3.0",
+    "behat/mink": "^1.7"
   }
 }
