@@ -37,6 +37,7 @@ env:
 install:
 - testing/install_test_dependencies.sh
 - pecl install mongodb && /bin/true
+- cp bookshelf/config/settings.yml.dist bookshelf/config/settings.yml
 
 script:
 - testing/run_test_suite.sh

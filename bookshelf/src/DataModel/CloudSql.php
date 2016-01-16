@@ -22,42 +22,22 @@ use PDO;
 /**
  * Class CloudSql implements the DataModelInterface with a mysql database.
  *
- * Set the three environment variables MYSQL_DSN, MYSQL_USER,
- * and MYSQL_PASSWORD.
  */
 class CloudSql implements DataModelInterface
 {
-    /**
-     * Creates a new PDO instance and sets error mode to exception.
-     *
-     * @return PDO
-     */
-    private function newConnection()
-    {
-        if (false == ($dsn = getenv('MYSQL_DSN'))) {
-            throw new \Exception('Set the environment variable MYSQL_DSN ' .
-                'to your data source name.  See ' .
-                'http://php.net/manual/en/ref.pdo-mysql.connection.php');
-        }
-        if (false == ($user = getenv('MYSQL_USER'))) {
-            throw new \Exception('Set the environment variable MYSQL_USER to ' .
-                'your database user name.');
-        }
-        if (false === ($password = getenv('MYSQL_PASSWORD'))) {
-            throw new \Exception('Set the environment variable MYSQL_PASSWORD ' .
-                'to your database password.');
-        }
-        $pdo = new PDO($dsn, $user, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        return $pdo;
-    }
+    private $dsn;
+    private $user;
+    private $password;
 
     /**
      * Creates the SQL books table if it doesn't already exist.
      */
-    public function __construct()
+    public function __construct($dsn, $user, $password)
     {
+        $this->dsn = $dsn;
+        $this->user = $user;
+        $this->password = $password;
+
         $columns = array(
             'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ',
             'title VARCHAR(255)',
@@ -75,6 +55,19 @@ class CloudSql implements DataModelInterface
         $columnText = implode(', ', $columns);
         $pdo = $this->newConnection();
         $pdo->query("CREATE TABLE IF NOT EXISTS books ($columnText)");
+    }
+
+    /**
+     * Creates a new PDO instance and sets error mode to exception.
+     *
+     * @return PDO
+     */
+    private function newConnection()
+    {
+        $pdo = new PDO($this->dsn, $this->user, $this->password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        return $pdo;
     }
 
     /**

@@ -53,18 +53,8 @@ class MongoDb implements DataModelInterface
     /**
      * Connects to the MongoDB server.
      */
-    public function __construct()
+    public function __construct($dbUrl, $namespace)
     {
-        if (false == ($dbUrl = getenv('MONGO_URL'))) {
-            throw new \Exception(
-                'Set the environment variable MONGO_URL to the URL of your '
-                . 'MongoDB instance.');
-        }
-        if (false == ($namespace = getenv('MONGO_NAMESPACE'))) {
-            throw new \Exception(
-                'Set the environment variable MONGO_NAMESPACE to your '
-                . 'MongoDB namespace (in the "db.collection" format).');
-        }
         $manager = new \MongoDB\Driver\Manager($dbUrl);
         $this->db = new \MongoDB\Collection($manager, $namespace);
     }

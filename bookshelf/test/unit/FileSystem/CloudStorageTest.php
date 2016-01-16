@@ -17,17 +17,17 @@
 namespace Google\Cloud\Samples\Bookshelf\FileSystem;
 
 use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
+use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
 
 class CloudStorageTest extends \PHPUnit_Framework_TestCase
 {
     use SkipTestsIfMissingCredentialsTrait;
+    use GetConfigTrait;
 
     public function testOne()
     {
-        if (!$bucket = getenv('GOOGLE_STORAGE_BUCKET')) {
-            $this->markTestSkipped('Set the GOOGLE_STORAGE_BUCKET environment variable to run this test');
-        }
-
+        $config = $this->getConfig();
+        $bucket = $config['google_storage_bucket'];
         $storage = new CloudStorage($bucket);
         $url = $storage->storeFile(__DIR__ . '/../../lib/CatHat.jpg', 'image/jpg');
         try {

@@ -16,16 +16,24 @@
  */
 namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
+use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
 use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
 
 class MongoDbTest extends \PHPUnit_Framework_TestCase
 {
     use DataModelTestTrait;
+    use GetConfigTrait;
+    use SkipTestsIfMissingCredentialsTrait;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->model = new MongoDb();
+        $config = $this->getConfig();
+
+        $this->model = new MongoDb(
+            $config['mongo_url'],
+            $config['mongo_namespace']
+        );
     }
 }

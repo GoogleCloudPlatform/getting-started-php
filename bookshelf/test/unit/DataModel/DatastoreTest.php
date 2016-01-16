@@ -16,21 +16,21 @@
  */
 namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
+use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
 use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
 
 class DatastoreTest extends \PHPUnit_Framework_TestCase
 {
     use DataModelTestTrait;
+    use GetConfigTrait;
     use SkipTestsIfMissingCredentialsTrait;
 
     public function setUp()
     {
         parent::setUp();
 
-        if (!$projectId = getenv('GOOGLE_PROJECT_ID')) {
-            $this->markTestSkipped('Set the GOOGLE_PROJECT_ID environment variable to run this test');
-        }
+        $config = $this->getConfig();
 
-        $this->model = new Datastore($projectId);
+        $this->model = new Datastore($config['google_project_id']);
     }
 }
