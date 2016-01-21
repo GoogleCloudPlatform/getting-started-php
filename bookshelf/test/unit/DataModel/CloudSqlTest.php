@@ -16,17 +16,25 @@
  */
 namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
+use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
 use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
 
 class CloudSqlTest extends \PHPUnit_Framework_TestCase
 {
     use DataModelTestTrait;
+    use GetConfigTrait;
     use SkipTestsIfMissingCredentialsTrait;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->model = new CloudSql();
+        $config = $this->getConfig();
+
+        $this->model = new CloudSql(
+            $config['mysql_dsn'],
+            $config['mysql_user'],
+            $config['mysql_password']
+        );
     }
 }

@@ -22,28 +22,39 @@ use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+/** @var Silex\Application $app */
 $app = require __DIR__ . '/../src/app.php';
 require __DIR__ . '/../src/controllers.php';
 
+/** @var array $config */
+$config = $app['config'];
+
 // Cloud Storage
-$bucket = getenv('GOOGLE_STORAGE_BUCKET');
-$app['bookshelf.storage'] = new CloudStorage($bucket);
+$app['bookshelf.storage'] = new CloudStorage($config['google_storage_bucket']);
 
 // Data Model
-$db = getenv('BOOKSHELF_DATA_BACKEND');
-if ($db === false) {
-    $db = 'cloudsql'; // default
-}
-if ($db == 'mongodb') {
-    $app['bookshelf.model'] = new MongoDb();
-} elseif ($db == 'datastore') {
-    $projectId = getenv('GOOGLE_PROJECT_ID');
-    $app['bookshelf.model'] = new Datastore($projectId);
-} elseif ($db == 'cloudsql') {
-    $app['bookshelf.model'] = new CloudSql();
-} else {
-    throw Exception("Invalid BOOKSHELF_DATA_BACKEND given: $db. "
-                    . "Possible values are cloudsql, mongodb, or datastore.");
+switch ($config['bookshelf_backend']) {
+    case 'mongodb':
+        $app['bookshelf.model'] = new MongoDb(
+            $config['mongo_url'],
+            $config['mongo_namespace']
+        );
+        break;
+    case 'datastore':
+        $app['bookshelf.model'] = new Datastore(
+            $config['google_project_id']
+        );
+        break;
+    case 'cloudsql':
+        $app['bookshelf.model'] = new CloudSql(
+            $config['mysql_dsn'],
+            $config['mysql_user'],
+            $config['mysql_password']
+        );
+        break;
+    default:
+        throw Exception("Invalid BOOKSHELF_DATA_BACKEND given: $db. "
+            . "Possible values are cloudsql, mongodb, or datastore.");
 }
 
 $app->run();

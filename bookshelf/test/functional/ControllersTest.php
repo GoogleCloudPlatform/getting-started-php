@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ControllersTest extends WebTestCase
 {
     use SkipTestsIfMissingCredentialsTrait;
+    use GetConfigTrait;
+
     /**
      * Creates the application.
      *
@@ -39,7 +41,14 @@ class ControllersTest extends WebTestCase
     {
         $app = require __DIR__ . '/../../src/app.php';
         require __DIR__ . '/../../src/controllers.php';
-        $app['bookshelf.model'] = new CloudSql();
+
+        $config = $this->getConfig();
+
+        $app['bookshelf.model'] = new CloudSql(
+            $config['mysql_dsn'],
+            $config['mysql_user'],
+            $config['mysql_password']
+        );
         // Set a tiny page size so it's easy to test paging.
         $app['bookshelf.page_size'] = 1;
         $app['bookshelf.storage'] = new FakeFileStorage();
@@ -240,7 +249,6 @@ class ControllersTest extends WebTestCase
 
         $response = $client->getResponse();
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('Missing parameter: client_id', (string) $response->getContent());
 
         $idToken = ['sub' => 'fake-id'];
         $googleClient = $this->getMock('Google_Client');

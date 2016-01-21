@@ -5,4 +5,5 @@
 *~
 *.iml
 composer.phar
-app.yaml
+bookshelf/config/settings.yml
+

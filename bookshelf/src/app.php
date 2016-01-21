@@ -23,6 +23,7 @@
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
+use Symfony\Component\Yaml\Yaml;
 use Google\Cloud\Samples\Bookshelf\User\SimpleUser;
 
 $app = new Application();
@@ -37,6 +38,9 @@ $app->register(new TwigServiceProvider(), array(
 
 // register the url generator
 $app->register(new UrlGeneratorServiceProvider);
+
+// parse configuration
+$app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
 
 // turn debug on by default
 $app['debug'] = !in_array(
@@ -56,8 +60,8 @@ $app['google_client'] = function ($app) {
   $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
 
   return new Google_Client([
-    'client_id'     => getenv('GOOGLE_CLIENT_ID'),
-    'client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
+    'client_id'     => $app['config']['google_client_id'],
+    'client_secret' => $app['config']['google_client_secret'],
     'redirect_uri'  => $redirectUri,
   ]);
 };
