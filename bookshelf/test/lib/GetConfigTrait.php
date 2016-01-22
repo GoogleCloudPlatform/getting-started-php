@@ -27,7 +27,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 trait GetConfigTrait
 {
-    protected function getConfig()
+    protected static function getConfig()
     {
         $config = array(
             'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
@@ -39,7 +39,8 @@ trait GetConfigTrait
             'mysql_user' => getenv('MYSQL_USER'),
             'mysql_password' => getenv('MYSQL_PASSWORD'),
             'mongo_url' => getenv('MONGO_URL'),
-            'mongo_namespace' => getenv('MONGO_NAMESPACE'),
+            'mongo_database' => getenv('MONGO_DATABASE'),
+            'mongo_collection' => getenv('MONGO_COLLECTION'),
         );
 
         return $config;

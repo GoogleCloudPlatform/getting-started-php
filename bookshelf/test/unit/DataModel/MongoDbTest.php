@@ -29,11 +29,12 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $config = $this->getConfig();
+        $config = self::getConfig();
 
         $this->model = new MongoDb(
             $config['mongo_url'],
-            $config['mongo_namespace']
+            $config['mongo_database'],
+            $config['mongo_collection']
         );
     }
 }

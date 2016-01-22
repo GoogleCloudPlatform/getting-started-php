@@ -17,28 +17,85 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
+use Symfony\Component\Yaml\Dumper;
+
 /**
  * Class E2EDeploymentTrait
  * @package Google\Cloud\Samples\Bookshelf
  *
- * Use this trait to deploy the project to GCP for an end-to-end test
+ * Use this trait to deploy the project to GCP for an end-to-end test.
  */
 trait E2EDeploymentTrait
 {
+    use GetConfigTrait;
     use SkipTestsIfMissingCredentialsTrait;
 
-    protected $url;
+    /** @staticvar array $versions */
+    public static $versions;
 
-    protected function checkIsDeployed()
+    /** @staticvar Gcloud $gcloud */
+    public static $gcloud;
+
+    private static function dumpConfig()
     {
+        $config = self::getConfig();
+        $dumper = new Dumper();
+        $yaml = $dumper->dump($config);
+        // TODO: Use different filename
+        file_put_contents(__DIR__ . '/../../config/settings-e2e.yml', $yaml);
+    }
+
+    /**
+     * Tries to deploy the app for a given step and store the url for later use.
+     *
+     * @return bool
+     */
+    protected static function deployApp($step)
+    {
+        // TODO: allow changing the data backend.
         if (!self::hasCredentials()) {
-            $this->markTestSkipped('No application credentials were found.');
+            // Just return here for avoiding errors.
+            return false;
         }
-
-        if (!AppDeploy::check()) {
-            $this->markTestSkipped('Failed to deploy to Google Cloud Platform');
+        self::dumpConfig();
+        $version = self::$gcloud->deployApp($step);
+        if ($version === false) {
+            return false;
         }
+        self::$versions[$step] = $version;
+        return true;
+    }
 
-        $this->url = AppDeploy::$url;
+    /**
+     * Tries to delete the app for the given step.
+     *
+     * @return bool
+     */
+    protected static function deleteApp($step)
+    {
+        if (!array_key_exists($step, self::$versions)) {
+            return false;
+        }
+        return self::$gcloud->deleteApp($step, self::$versions[$step]);
+    }
+
+    /**
+     * Returns the top URL for the given step.
+     *
+     * @return mixed
+     */
+    protected static function getUrl($step)
+    {
+        $projectId = getenv("GOOGLE_PROJECT_ID");
+        if (!array_key_exists($step, self::$versions)) {
+            return false;
+        }
+        return sprintf(
+            'https://%s-dot-%s.appspot.com',
+            self::$versions[$step],
+            $projectId
+        );
     }
 }
+E2EDeploymentTrait::$versions = array();
+E2EDeploymentTrait::$gcloud = new Gcloud();

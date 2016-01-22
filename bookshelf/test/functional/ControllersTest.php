@@ -42,7 +42,7 @@ class ControllersTest extends WebTestCase
         $app = require __DIR__ . '/../../src/app.php';
         require __DIR__ . '/../../src/controllers.php';
 
-        $config = $this->getConfig();
+        $config = self::getConfig();
 
         $app['bookshelf.model'] = new CloudSql(
             $config['mysql_dsn'],

@@ -20,9 +20,6 @@ set -ev
 MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${MYDIR}/variables.sh
 
-# Coding style check.
-php-cs-fixer fix --dry-run --diff --level=psr2 --fixers=concat_with_spaces .
-
 # Run tests for each directories.
 for DIR in "${DIRS[@]}"; do
     cd ${DIR}
@@ -35,3 +32,6 @@ cd ${TEST_BUILD_DIR}
 mkdir -p ${TEST_BUILD_DIR}/build/logs
 
 ${HOME}/bin/coveralls --exclude-no-stmt -v
+
+# Coding style check.
+php-cs-fixer fix --dry-run --diff --level=psr2 --fixers=concat_with_spaces .

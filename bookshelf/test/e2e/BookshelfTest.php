@@ -17,17 +17,42 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
+use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Session;
+
 /**
- * Class ControllersTest.
+ * Class BookshelfTest
  */
-class ControllersTest extends \PHPUnit_Framework_TestCase
+class BookshelfTest extends \PHPUnit_Framework_TestCase
 {
     use E2EDeploymentTrait;
 
-    public function testLogout()
-    {
-        $this->checkIsDeployed();
+    const STEP = 'bookshelf';
 
-        $this->assertNotNull($this->url);
+    public static function setUpBeforeClass()
+    {
+        self::deployApp(self::STEP);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        self::deleteApp(self::STEP);
+    }
+
+    public function setUp()
+    {
+        $this->url = self::getUrl(self::STEP);
+        $driver = new GoutteDriver();
+        $this->session = new Session($driver);
+    }
+
+    public function testIndex()
+    {
+        $this->assertNotNull(self::$versions[self::STEP]);
+        $this->session->visit($this->url . '/books');
+        $this->assertEquals('200', $this->session->getStatusCode(),
+                            'Book index status code');
+        // TODO: content check
+        $page = $this->session->getPage();
     }
 }

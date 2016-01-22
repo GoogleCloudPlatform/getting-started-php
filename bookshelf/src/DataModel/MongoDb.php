@@ -53,10 +53,10 @@ class MongoDb implements DataModelInterface
     /**
      * Connects to the MongoDB server.
      */
-    public function __construct($dbUrl, $namespace)
+    public function __construct($dbUrl, $database, $collection)
     {
         $manager = new \MongoDB\Driver\Manager($dbUrl);
-        $this->db = new \MongoDB\Collection($manager, $namespace);
+        $this->db = new \MongoDB\Collection($manager, $database, $collection);
     }
 
     /**
