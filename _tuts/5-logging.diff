@@ -1,0 +1,44 @@
+diff --git a/composer.json b/composer.json
+index 49e52b1..6483105 100644
+--- a/composer.json
++++ b/composer.json
+@@ -9,7 +9,8 @@
+     "silex/silex": "^1.3",
+     "twig/twig": "^1.22",
+     "mongodb/mongodb": "^1.0.0@beta",
+-    "google/apiclient": "~2.0@RC"
++    "google/apiclient": "~2.0@RC",
++    "monolog/monolog": "^1.17"
+   },
+   "require-dev": {
+     "phpunit/phpunit": "~4",
+diff --git a/composer.lock b/composer.lock
+index 6df3088..455ca23 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,8 +4,8 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+         "This file is @generated automatically"
+     ],
+-    "hash": "9ab83f808a6a17db791783ec9614c05f",
+-    "content-hash": "6d1c10b93c1371ce5ece62984ac99b59",
++    "hash": "f28df3701fd982ed8adc8711d87699de",
++    "content-hash": "9eb662c3f2bfcbb4853af5087212587d",
+     "packages": [
+         {
+             "name": "firebase/php-jwt",
+diff --git a/src/app.php b/src/app.php
+index 1de13f3..0a9d1e9 100644
+--- a/src/app.php
++++ b/src/app.php
+@@ -47,6 +47,10 @@ $app['user'] = function ($app) {
+   return SimpleUser::createFromRequest($app['request']);
+ };
+ 
++// add logging to stderr
++$app->register(new Silex\Provider\MonologServiceProvider());
++$app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
++
+ // create the google authorization client
+ $app['google_client'] = function ($app) {
+   /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */

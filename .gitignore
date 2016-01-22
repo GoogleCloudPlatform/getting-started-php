@@ -5,5 +5,5 @@
 *~
 *.iml
 composer.phar
-bookshelf/config/settings.yml
+config/settings.yml
 

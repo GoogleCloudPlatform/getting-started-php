@@ -1,0 +1,254 @@
+diff --git a/src/User/SimpleUser.php b/src/User/SimpleUser.php
+new file mode 100644
+index 0000000..20d0cf3
+--- /dev/null
++++ b/src/User/SimpleUser.php
+@@ -0,0 +1,54 @@
++<?php
++
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf\User;
++
++use Symfony\Component\HttpFoundation\Request;
++
++/**
++ * class SimepleUser controlls the user in the session
++ */
++class SimpleUser
++{
++    public $id;
++    public $name;
++    public $imageUrl;
++
++    public function __construct($id = null, $name = null, $imageUrl = null)
++    {
++        $this->id = $id;
++        $this->name = $name;
++        $this->imageUrl = $imageUrl;
++    }
++
++    public function getLoggedIn()
++    {
++        return !empty($this->id);
++    }
++
++    public static function createFromRequest(Request $request)
++    {
++        if ($userInfo = $request->cookies->get('google_user_info')) {
++            $userInfo = json_decode($userInfo, true);
++
++            return new SimpleUser($userInfo['sub'], $userInfo['name'], $userInfo['picture']);
++        }
++
++        return new SimpleUser;
++    }
++}
+diff --git a/src/app.php b/src/app.php
+index cf1c569..1de13f3 100644
+--- a/src/app.php
++++ b/src/app.php
+@@ -24,6 +24,7 @@ use Silex\Application;
+ use Silex\Provider\TwigServiceProvider;
+ use Silex\Provider\UrlGeneratorServiceProvider;
+ use Symfony\Component\Yaml\Yaml;
++use Google\Cloud\Samples\Bookshelf\User\SimpleUser;
+ 
+ $app = new Application();
+ 
+@@ -35,9 +36,17 @@ $app->register(new TwigServiceProvider(), array(
+     ),
+ ));
+ 
++// register the url generator
++$app->register(new UrlGeneratorServiceProvider);
++
+ // parse configuration
+ $app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
+ 
++// create the user object
++$app['user'] = function ($app) {
++  return SimpleUser::createFromRequest($app['request']);
++};
++
+ // create the google authorization client
+ $app['google_client'] = function ($app) {
+   /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
+diff --git a/src/controllers.php b/src/controllers.php
+index 85b7a45..1e8a11a 100644
+--- a/src/controllers.php
++++ b/src/controllers.php
+@@ -72,6 +72,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
+     if (!empty($book['publishedDate'])) {
+         $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
+     }
++    if ($app['user']->getLoggedIn()) {
++        $book['createdBy'] = $app['user']->name;
++        $book['createdById'] = $app['user']->id;
++    }
+     $id = $model->create($book);
+ 
+     return $app->redirect("/books/$id");
+@@ -145,3 +149,48 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+     }
+ );
+ 
++$app->get('/login', function () use ($app) {
++    /** @var Google_Client $client */
++    $client = $app['google_client'];
++
++    $scopes = [ \Google_Service_Oauth2::USERINFO_PROFILE ];
++    $authUrl = $client->createAuthUrl($scopes);
++
++    return $app->redirect($authUrl);
++})->bind('login');
++
++$app->get('/login/callback', function () use ($app) {
++    /** @var Request $request */
++    $request = $app['request'];
++
++    if (!$code = $request->query->get('code')) {
++        return new Response('Code required', Response::HTTP_BAD_REQUEST);
++    }
++
++    /** @var Google_Client $client */
++    $client = $app['google_client'];
++    $authResponse = $client->fetchAccessTokenWithAuthCode($code);
++
++    if ($client->getAccessToken()) {
++        $userInfo = $client->verifyIdToken();
++
++        // set the user info in a cookie and redirect to the homepage
++        $cookie = new Cookie('google_user_info', json_encode($userInfo));
++        $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
++        $response->headers->setCookie($cookie);
++
++        return $response;
++    }
++
++    // an error occured while trying to authorize - display it
++    return new Response($authResponse['error_description'], 400);
++
++})->bind('login_callback');
++
++$app->get('/logout', function () use ($app) {
++    $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
++    $response->headers->clearCookie('google_user_info');
++
++    return $response;
++})->bind('logout');
++
+diff --git a/templates/base.html.twig b/templates/base.html.twig
+index db1be8f..b6a8cb4 100644
+--- a/templates/base.html.twig
++++ b/templates/base.html.twig
+@@ -30,6 +30,19 @@
+         <ul class="nav navbar-nav">
+           <li><a href="/books">Books</a></li>
+         </ul>
++        <p class="navbar-text navbar-right">
++          {% if app.user.loggedIn %}
++            {% if app.user.imageUrl %}
++              <img src="{{ app.user.imageUrl }}" class="img-circle" width="24" alt="Photo" />
++            {% endif %}
++            <span>
++              {{ app.user.name }} &nbsp;
++              <a href="/logout">(logout)</a>
++            </span>
++          {% else %}
++            <a href="/login">Login</a>
++          {% endif %}
++        </p>
+       </div>
+     </div>
+     <div class="container">
+diff --git a/test/unit/User/SimpleUserTest.php b/test/unit/User/SimpleUserTest.php
+new file mode 100644
+index 0000000..d9ef01e
+--- /dev/null
++++ b/test/unit/User/SimpleUserTest.php
+@@ -0,0 +1,70 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\User;
++
++use Symfony\Component\HttpFoundation\Request;
++
++class SimpleUserTest extends \PHPUnit_Framework_TestCase
++{
++    public function testLoggedIn()
++    {
++        $id = 'fake-id';
++        $user = new SimpleUser($id);
++
++        $this->assertTrue($user->getLoggedIn());
++        $this->assertNull($user->name);
++        $this->assertNull($user->imageUrl);
++    }
++
++    public function testNotLoggedIn()
++    {
++        $user = new SimpleUser();
++
++        $this->assertFalse($user->getLoggedIn());
++        $this->assertNull($user->name);
++        $this->assertNull($user->imageUrl);
++    }
++
++    public function testCreateFromRequest()
++    {
++        $userInfo = [
++            'sub'       => 'fake-id',
++            'name'      => 'Test Guy',
++            'picture'   => 'http://fa.ke/image.jpg',
++        ];
++
++        $request = new Request();
++        $request->cookies->set('google_user_info', json_encode($userInfo));
++
++        $user = SimpleUser::createFromRequest($request);
++
++        $this->assertTrue($user->getLoggedIn());
++        $this->assertEquals($userInfo['sub'], $user->id);
++        $this->assertEquals($userInfo['name'], $user->name);
++        $this->assertEquals($userInfo['picture'], $user->imageUrl);
++    }
++
++    public function testCreateFromRequestWithoutCookie()
++    {
++        $request = new Request();
++        $user = SimpleUser::createFromRequest($request);
++
++        $this->assertFalse($user->getLoggedIn());
++        $this->assertNull($user->name);
++        $this->assertNull($user->imageUrl);
++    }
++}

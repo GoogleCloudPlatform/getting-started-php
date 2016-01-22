@@ -1,0 +1,3580 @@
+diff --git a/composer.json b/composer.json
+index 9f8b3b6..971a288 100644
+--- a/composer.json
++++ b/composer.json
+@@ -1,11 +1,19 @@
+ {
++  "autoload": {
++    "psr-4": {
++      "Google\\Cloud\\Samples\\Bookshelf\\": ["src", "test/lib"]
++    }
++  },
+   "require": {
+     "php": "^5.5",
+-    "silex/silex": "^1.3"
++    "silex/silex": "^1.3",
++    "twig/twig": "^1.22",
++    "mongodb/mongodb": "^1.0.0@beta"
+   },
+   "require-dev": {
+     "phpunit/phpunit": "~4",
+     "symfony/browser-kit": "^3.0",
++    "symfony/css-selector": "^2.7",
+     "symfony/http-kernel": "^3.0"
+   }
+ }
+diff --git a/composer.lock b/composer.lock
+index 1e26669..a1b0105 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,10 +4,70 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+         "This file is @generated automatically"
+     ],
+-    "hash": "99564f3400cca5903769d636142313a9",
+-    "content-hash": "5370fe3ed21bd2015c8ed9ea3c1494fa",
++    "hash": "b29938c246301dcf7805b4cd739d2d7a",
++    "content-hash": "2069950a30309dfff534083499affd5e",
+     "packages": [
+         {
++            "name": "mongodb/mongodb",
++            "version": "1.0.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/mongodb/mongo-php-library.git",
++                "reference": "851a560864281cbf91fe182aefed85bfc3395031"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/851a560864281cbf91fe182aefed85bfc3395031",
++                "reference": "851a560864281cbf91fe182aefed85bfc3395031",
++                "shasum": ""
++            },
++            "require": {
++                "ext-mongodb": "^1.1.0",
++                "php": ">=5.4"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.0.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "MongoDB\\": "src/"
++                },
++                "files": [
++                    "src/functions.php"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "Apache-2.0"
++            ],
++            "authors": [
++                {
++                    "name": "Jeremy Mikola",
++                    "email": "jmikola@gmail.com"
++                },
++                {
++                    "name": "Hannes Magnusson",
++                    "email": "bjori@mongodb.com"
++                },
++                {
++                    "name": "Derick Rethans",
++                    "email": "github@derickrethans.nl"
++                }
++            ],
++            "description": "MongoDB driver library",
++            "homepage": "https://jira.mongodb.org/browse/PHPLIB",
++            "keywords": [
++                "database",
++                "driver",
++                "mongodb",
++                "persistence"
++            ],
++            "time": "2016-01-21 19:43:25"
++        },
++        {
+             "name": "pimple/pimple",
+             "version": "v1.1.1",
+             "source": {
+@@ -492,6 +552,67 @@
+                 "url"
+             ],
+             "time": "2015-12-23 08:00:11"
++        },
++        {
++            "name": "twig/twig",
++            "version": "v1.23.3",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/twigphp/Twig.git",
++                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae53fc2c312fdee63773b75cb570304f85388b08",
++                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.2.7"
++            },
++            "require-dev": {
++                "symfony/debug": "~2.7",
++                "symfony/phpunit-bridge": "~2.7"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.23-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Twig_": "lib/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "BSD-3-Clause"
++            ],
++            "authors": [
++                {
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com",
++                    "homepage": "http://fabien.potencier.org",
++                    "role": "Lead Developer"
++                },
++                {
++                    "name": "Armin Ronacher",
++                    "email": "armin.ronacher@active-4.com",
++                    "role": "Project Founder"
++                },
++                {
++                    "name": "Twig Team",
++                    "homepage": "http://twig.sensiolabs.org/contributors",
++                    "role": "Contributors"
++                }
++            ],
++            "description": "Twig, the flexible, fast, and secure template language for PHP",
++            "homepage": "http://twig.sensiolabs.org",
++            "keywords": [
++                "templating"
++            ],
++            "time": "2016-01-11 14:02:19"
+         }
+     ],
+     "packages-dev": [
+@@ -1455,6 +1576,59 @@
+             "time": "2015-12-26 13:39:53"
+         },
+         {
++            "name": "symfony/css-selector",
++            "version": "v2.8.2",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/symfony/css-selector.git",
++                "reference": "ac06d8173bd80790536c0a4a634a7d705b91f54f"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/symfony/css-selector/zipball/ac06d8173bd80790536c0a4a634a7d705b91f54f",
++                "reference": "ac06d8173bd80790536c0a4a634a7d705b91f54f",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.9"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "2.8-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Symfony\\Component\\CssSelector\\": ""
++                },
++                "exclude-from-classmap": [
++                    "/Tests/"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Jean-François Simon",
++                    "email": "jeanfrancois.simon@sensiolabs.com"
++                },
++                {
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com"
++                },
++                {
++                    "name": "Symfony Community",
++                    "homepage": "https://symfony.com/contributors"
++                }
++            ],
++            "description": "Symfony CssSelector Component",
++            "homepage": "https://symfony.com",
++            "time": "2016-01-03 15:33:41"
++        },
++        {
+             "name": "symfony/dom-crawler",
+             "version": "v3.0.1",
+             "source": {
+@@ -1621,7 +1795,9 @@
+     ],
+     "aliases": [],
+     "minimum-stability": "stable",
+-    "stability-flags": [],
++    "stability-flags": {
++        "mongodb/mongodb": 10
++    },
+     "prefer-stable": false,
+     "prefer-lowest": false,
+     "platform": {
+diff --git a/config/settings.yml.dist b/config/settings.yml.dist
+new file mode 100644
+index 0000000..09171d9
+--- /dev/null
++++ b/config/settings.yml.dist
+@@ -0,0 +1,17 @@
++# Google credentials and configuration
++google_client_id:      YOUR_CLIENT_ID
++google_client_secret:  YOUR_CLIENT_SECRET
++google_project_id:     YOUR_PROJECT_ID
++google_storage_bucket: YOUR_STORAGE_BUCKET_NAME
++
++# options are "cloudsql", "mongo", or "datastore"
++bookshelf_backend: cloudsql
++
++# configure CloudSQL backend
++mysql_dsn: "mysql:host=IP_ADDRESS;port=3306;dbname=YOUR_DB_NAME"
++mysql_user: YOUR_MYSQL_USER
++mysql_password: YOUR_MYSQL_PASSWORD
++
++# configure Mongo backend
++mongo_url: YOUR_MONGODB_URL
++mongo_namespace: YOUR_MONGO_NAMESPACE
+diff --git a/php.ini b/php.ini
+new file mode 100644
+index 0000000..45969d0
+--- /dev/null
++++ b/php.ini
+@@ -0,0 +1 @@
++extension=mongodb.so
+diff --git a/src/DataModel/CloudSql.php b/src/DataModel/CloudSql.php
+new file mode 100644
+index 0000000..3de407e
+--- /dev/null
++++ b/src/DataModel/CloudSql.php
+@@ -0,0 +1,186 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use PDO;
++
++/**
++ * Class CloudSql implements the DataModelInterface with a mysql database.
++ *
++ */
++class CloudSql implements DataModelInterface
++{
++    private $dsn;
++    private $user;
++    private $password;
++
++    /**
++     * Creates the SQL books table if it doesn't already exist.
++     */
++    public function __construct($dsn, $user, $password)
++    {
++        $this->dsn = $dsn;
++        $this->user = $user;
++        $this->password = $password;
++
++        $columns = array(
++            'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ',
++            'title VARCHAR(255)',
++            'author VARCHAR(255)',
++            'publishedDate DATE',
++            'imageUrl VARCHAR(255)',
++            'description VARCHAR(255)',
++            'createdBy VARCHAR(255)',
++            'createdById VARCHAR(255)',
++        );
++
++        $this->columnNames = array_map(function ($columnDefinition) {
++            return explode(' ', $columnDefinition)[0];
++        }, $columns);
++        $columnText = implode(', ', $columns);
++        $pdo = $this->newConnection();
++        $pdo->query("CREATE TABLE IF NOT EXISTS books ($columnText)");
++    }
++
++    /**
++     * Creates a new PDO instance and sets error mode to exception.
++     *
++     * @return PDO
++     */
++    private function newConnection()
++    {
++        $pdo = new PDO($this->dsn, $this->user, $this->password);
++        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
++
++        return $pdo;
++    }
++
++    /**
++     * Throws an exception if $book contains an invalid key.
++     *
++     * @param $book array
++     *
++     * @throws \Exception
++     */
++    private function verifyBook($book)
++    {
++        if ($invalid = array_diff_key($book, array_flip($this->columnNames))) {
++            throw new \Exception(sprintf(
++                'unsupported book properties: "%s"',
++                implode(', ', $invalid)
++            ));
++        }
++    }
++
++    public function listBooks($limit = 10, $cursor = null)
++    {
++        $pdo = $this->newConnection();
++        if ($cursor) {
++            $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id' .
++                ' LIMIT :limit';
++            $statement = $pdo->prepare($query);
++            $statement->bindValue(':cursor', $cursor, PDO::PARAM_INT);
++        } else {
++            $query = 'SELECT * FROM books ORDER BY id LIMIT :limit';
++            $statement = $pdo->prepare($query);
++        }
++        $statement->bindValue(':limit', $limit + 1, PDO::PARAM_INT);
++        $statement->execute();
++        $rows = array();
++        $last_row = null;
++        $new_cursor = null;
++        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
++            if (count($rows) == $limit) {
++                $new_cursor = $last_row['id'];
++                break;
++            }
++            array_push($rows, $row);
++            $last_row = $row;
++        }
++
++        return array(
++            'books' => $rows,
++            'cursor' => $new_cursor,
++        );
++    }
++
++    public function create($book, $id = null)
++    {
++        $this->verifyBook($book);
++        if ($id) {
++            $book['id'] = $id;
++        }
++        $pdo = $this->newConnection();
++        $names = array_keys($book);
++        $placeHolders = array_map(function ($key) {
++            return ":$key";
++
++        }, $names);
++        $sql = sprintf(
++            'INSERT INTO books (%s) VALUES (%s)',
++            implode(', ', $names),
++            implode(', ', $placeHolders)
++        );
++        $statement = $pdo->prepare($sql);
++        $statement->execute($book);
++
++        return $pdo->lastInsertId();
++    }
++
++    public function read($id)
++    {
++        $pdo = $this->newConnection();
++        $statement = $pdo->prepare('SELECT * FROM books WHERE id = :id');
++        $statement->bindValue('id', $id, PDO::PARAM_INT);
++        $statement->execute();
++
++        return $statement->fetch(PDO::FETCH_ASSOC);
++    }
++
++    public function update($book)
++    {
++        $this->verifyBook($book);
++        $pdo = $this->newConnection();
++        $assignments = array_map(
++            function ($column) {
++                return "$column=:$column";
++            },
++            $this->columnNames
++        );
++        $assignmentString = implode(',', $assignments);
++        $sql = "UPDATE books SET $assignmentString WHERE id = :id";
++        $statement = $pdo->prepare($sql);
++        $values = array_merge(
++            array_fill_keys($this->columnNames, null),
++            $book
++        );
++        $statement->execute($values);
++
++        return $statement->rowCount();
++    }
++
++    public function delete($id)
++    {
++        $pdo = $this->newConnection();
++        $statement = $pdo->prepare('DELETE FROM books WHERE id = :id');
++        $statement->bindValue('id', $id, PDO::PARAM_INT);
++        $statement->execute();
++
++        return $statement->rowCount();
++    }
++}
+diff --git a/src/DataModel/DataModelInterface.php b/src/DataModel/DataModelInterface.php
+new file mode 100644
+index 0000000..2942024
+--- /dev/null
++++ b/src/DataModel/DataModelInterface.php
+@@ -0,0 +1,78 @@
++<?php
++
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++/**
++ * The common model implemented by Google Datastore, mysql, etc.
++ */
++interface DataModelInterface
++{
++    /**
++     * Lists all the books in the data model.
++     * Cannot simply be called 'list' due to PHP keyword collision.
++     *
++     * @param int  $limit  How many books will we fetch at most?
++     * @param null $cursor Returned by an earlier call to listBooks().
++     *
++     * @return array ['books' => array of associative arrays mapping column
++     *               name to column value,
++     *               'cursor' => pass to next call to listBooks() to fetch
++     *               more books]
++     */
++    public function listBooks($limit = 10, $cursor = null);
++
++    /**
++     * Creates a new book in the data model.
++     *
++     * @param $book array  An associative array.
++     * @param null $id integer  The id, if known.
++     *
++     * @return mixed The id of the new book.
++     */
++    public function create($book, $id = null);
++
++    /**
++     * Reads a book from the data model.
++     *
++     * @param $id  The id of the book to read.
++     *
++     * @return mixed An associative array representing the book if found.
++     *               Otherwise, a false value.
++     */
++    public function read($id);
++
++    /**
++     * Updates a book in the data model.
++     *
++     * @param $book array  An associative array representing the book.
++     * @param null $id The old id of the book.
++     *
++     * @return int The number of books updated.
++     */
++    public function update($book);
++
++    /**
++     * Deletes a book from the data model.
++     *
++     * @param $id  The book id.
++     *
++     * @return int The number of books deleted.
++     */
++    public function delete($id);
++}
+diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
+new file mode 100644
+index 0000000..46ae3ff
+--- /dev/null
++++ b/src/DataModel/Datastore.php
+@@ -0,0 +1,240 @@
++<?php
++
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use Google_Service_Datastore;
++
++/**
++ * Class Datastore implements the DataModel with a Google Data Store.
++ */
++class Datastore implements DataModelInterface
++{
++    protected $columns = [
++        'id'            => 'integer',
++        'title'         => 'string',
++        'author'        => 'string',
++        'publishedDate' => 'dateTime',
++        'imageUrl'      => 'string',
++        'description'   => 'string',
++        'createdBy'     => 'string',
++        'createdById'   => 'string',
++    ];
++
++    public function __construct($datastoreDatasetId)
++    {
++        $this->datasetId = $datastoreDatasetId;
++        $client = new \Google_Client();
++        $client->setScopes([
++            Google_Service_Datastore::CLOUD_PLATFORM,
++            Google_Service_Datastore::DATASTORE,
++            // @TODO: remove this scope when we move to Datastore v3
++            Google_Service_Datastore::USERINFO_EMAIL,
++        ]);
++        $client->useApplicationDefaultCredentials();
++        $this->datastore = new \Google_Service_Datastore($client);
++    }
++
++    public function listBooks($limit = 10, $cursor = null)
++    {
++        $query = new \Google_Service_Datastore_Query([
++            'kinds' => [
++                [
++                    'name' => 'Book',
++                ],
++            ],
++            'order' => 'title',
++            'limit' => $limit,
++            'startCursor' => $cursor,
++        ]);
++
++        $request = new \Google_Service_Datastore_RunQueryRequest();
++        $request->setQuery($query);
++        $response = $this->datastore->datasets->
++            runQuery($this->datasetId, $request);
++
++        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
++        $batch = $response->getBatch();
++        $endCursor = $batch->getEndCursor();
++
++        $books = [];
++        foreach ($batch->getEntityResults() as $entityResult) {
++            $entity = $entityResult->getEntity();
++            $books[] = $this->propertiesToBook($entity->getProperties());
++        }
++
++        return array(
++            'books' => $books,
++            'cursor' => $endCursor === $cursor ? null : $endCursor,
++        );
++    }
++
++    public function create($book, $key = null)
++    {
++        $this->verifyBook($book);
++
++        if (is_null($key)) {
++            $key = $this->createKey();
++        }
++
++        $properties = $this->bookToProperties($book);
++
++        $entity = new \Google_Service_Datastore_Entity([
++            'key' => $key,
++            'properties' => $properties
++        ]);
++
++        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
++        $request = new \Google_Service_Datastore_CommitRequest([
++            'mode' => 'NON_TRANSACTIONAL',
++            'mutation' => [
++                'insertAutoId' => [$entity]
++            ]
++        ]);
++
++        $response = $this->datastore->datasets->commit($this->datasetId, $request);
++
++        $keys = $response->getMutationResult()->getInsertAutoIdKeys();
++
++        // return the ID of the created datastore item
++        return $keys[0]->getPath()[0]->getId();
++    }
++
++    public function read($id)
++    {
++        $key = $this->createKey($id);
++        $request = new \Google_Service_Datastore_LookupRequest([
++            'keys' => [$key]
++        ]);
++
++        $response = $this->datastore->datasets->
++            lookup($this->datasetId, $request);
++
++        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
++        if ($found = $response->getFound()) {
++            $book = $this->propertiesToBook($found[0]['entity']['properties']);
++            $book['id'] = $id;
++
++            return $book;
++        }
++
++        return false;
++    }
++
++    public function update($book)
++    {
++        $this->verifyBook($book);
++
++        if (!isset($book['id'])) {
++            throw new InvalidArgumentException('Book must have an "id" attribute');
++        }
++
++        $key = $this->createKey($book['id']);
++        $properties = $this->bookToProperties($book);
++
++        $entity = new \Google_Service_Datastore_Entity([
++            'key' => $key,
++            'properties' => $properties
++        ]);
++
++        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
++        $request = new \Google_Service_Datastore_CommitRequest([
++            'mode' => 'NON_TRANSACTIONAL',
++            'mutation' => [
++                'update' => [$entity]
++            ]
++        ]);
++
++        $response = $this->datastore->datasets->commit($this->datasetId, $request);
++
++        // return the number of updated rows
++        return 1;
++    }
++
++    public function delete($id)
++    {
++        $key = $this->createKey($id);
++
++        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
++        $request = new \Google_Service_Datastore_CommitRequest([
++            'mode' => 'NON_TRANSACTIONAL',
++            'mutation' => [
++                'delete' => [$key]
++            ]
++        ]);
++
++        $response = $this->datastore->datasets->commit($this->datasetId, $request);
++
++        return true;
++    }
++
++    protected function createKey($id = null)
++    {
++        $key = new \Google_Service_Datastore_Key([
++            'path' => [
++                [
++                    'kind' => 'Book'
++                ],
++            ]
++        ]);
++
++        // If we have an ID, set it in the path
++        if ($id) {
++            $key->getPath()[0]->setId($id);
++        }
++
++        return $key;
++    }
++
++    private function verifyBook($book)
++    {
++        if ($invalid = array_diff_key($book, $this->columns)) {
++            throw new \InvalidArgumentException(sprintf(
++                'unsupported book properties: "%s"',
++                implode(', ', $invalid)
++            ));
++        }
++    }
++
++    private function bookToProperties(array $book)
++    {
++        $properties = [];
++        foreach ($book as $colName => $colValue) {
++            $propName = $this->columns[$colName] . 'Value';
++            $properties[$colName] = [
++                 $propName => $colValue
++            ];
++        }
++
++        return $properties;
++    }
++
++    private function propertiesToBook(array $properties)
++    {
++        $book = [];
++        foreach ($this->columns as $colName => $colType) {
++            $book[$colName] = null;
++            if (isset($properties[$colName])) {
++                $propName = $colType . 'Value';
++                $book[$colName] = $properties[$colName][$propName];
++            }
++        }
++
++        return $book;
++    }
++}
+diff --git a/src/DataModel/MongoDb.php b/src/DataModel/MongoDb.php
+new file mode 100644
+index 0000000..b3dfda3
+--- /dev/null
++++ b/src/DataModel/MongoDb.php
+@@ -0,0 +1,203 @@
++<?php
++
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use \MongoDB\BSON\ObjectId;
++
++/**
++ * Class MongoDb implements the DataModel with MongoDB.
++ *
++ * To use this class, set two environment variables; MONGO_URL and
++ * MONGO_NAMESPACE.
++ */
++class MongoDb implements DataModelInterface
++{
++    /**
++     * Properties of the books.
++     *
++     * @var array
++     */
++    protected $columns = array(
++        'id',
++        'title',
++        'author',
++        'publishedDate',
++        'imageUrl',
++        'description',
++        'createdBy',
++        'createdById',
++    );
++
++    /**
++     * MongoDB collection.
++     *
++     * @var \MongoDB\Collection
++     */
++    private $db;
++
++    /**
++     * Connects to the MongoDB server.
++     */
++    public function __construct($dbUrl, $namespace)
++    {
++        $manager = new \MongoDB\Driver\Manager($dbUrl);
++        $this->db = new \MongoDB\Collection($manager, $namespace);
++    }
++
++    /**
++     * @see DataModelInterface::listBooks
++     */
++    public function listBooks($limit = 10, $cursor = null)
++    {
++        if ($cursor) {
++            $q = $this->db->find(
++                array('_id' => array('$gt' => new ObjectId($cursor))),
++                array('sort' => array('_id' => 1))
++            );
++        } else {
++            $q = $this->db->find(
++                array(),
++                array('sort' => array('_id' => 1))
++            );
++        }
++        $rows = array();
++        $last_row = null;
++        $new_cursor = null;
++        foreach ($q as $row) {
++            if (count($rows) == $limit) {
++                $new_cursor = (string) ($last_row->_id);
++                break;
++            }
++            array_push($rows, $this->bookToArray($row));
++            $last_row = $row;
++        }
++        return array(
++            'books' => $rows,
++            'cursor' => $new_cursor,
++        );
++    }
++
++    /**
++     * @see DataModelInterface::create
++     */
++    public function create($book, $id = null)
++    {
++        $this->verifyBook($book);
++        if ($id) {
++            $book['_id'] = $id;
++        }
++        $result = $this->db->insertOne($book);
++        return $result->getInsertedId();
++    }
++
++    /**
++     * @see DataModelInterface::read
++     */
++    public function read($id)
++    {
++        $result = $this->db->findOne(
++            array('_id' => new ObjectId($id)));
++        if ($result) {
++            return $this->bookToArray($result);
++        }
++        return false;
++    }
++
++    /**
++     * @see DataModelInterface::update
++     */
++    public function update($book)
++    {
++        $this->verifyBook($book);
++        $result = $this->db->replaceOne(
++            array('_id' => new ObjectId($book['id'])),
++            $this->arrayToBook($book));
++        return $result->getModifiedCount();
++    }
++
++    /**
++     * @see DataModelInterface::delete
++     */
++    public function delete($id)
++    {
++        $result = $this->db->deleteOne(
++            array('_id' => new ObjectId($id)));
++        return $result->getDeletedCount();
++    }
++
++    /**
++     * Throws an exception if $book contains an invalid key.
++     *
++     * @param $book array
++     *
++     * @throws \InvalidArgumentException
++     */
++    private function verifyBook($book)
++    {
++        if ($invalid = array_diff_key($book, array_flip($this->columns))) {
++            throw new \InvalidArgumentException(sprintf(
++                'unsupported book properties: "%s"',
++                implode(', ', $invalid)
++            ));
++        }
++    }
++
++    /**
++     * Converts an array to a \stdClass object representing a book.
++     *
++     * @param $array array
++     *
++     * @return \stdClass
++     */
++    private function arrayToBook($array)
++    {
++        $book = new \stdClass();
++        foreach ($this->columns as $column) {
++            if ($column == 'id') {
++                $book->_id = new ObjectId($array['id']);
++            } elseif (isset($array[$column])) {
++                $book->{$column} = $array[$column];
++            } else {
++                $book->{$column} = null;
++            }
++        }
++        return $book;
++    }
++
++    /**
++     * Converts a \stdClass object to an array representing a book.
++     *
++     * @param $book \stdClass
++     *
++     * @return array
++     */
++    private function bookToArray($book)
++    {
++        $ret = array();
++        foreach ($this->columns as $column) {
++            if ($column == 'id') {
++                $ret['id'] = (string) $book->_id;
++            } elseif (isset($book->{$column})) {
++                $ret[$column] = $book->{$column};
++            } else {
++                $ret[$column] = null;
++            }
++        }
++        return $ret;
++    }
++}
+diff --git a/src/app.php b/src/app.php
+new file mode 100644
+index 0000000..eb8e434
+--- /dev/null
++++ b/src/app.php
+@@ -0,0 +1,50 @@
++<?php
++
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++/**
++ * Create a new Silex Application with Twig.  Configure it for debugging.
++ * Follows Silex Skeleton pattern.
++ */
++use Silex\Application;
++use Silex\Provider\TwigServiceProvider;
++use Silex\Provider\UrlGeneratorServiceProvider;
++use Symfony\Component\Yaml\Yaml;
++
++$app = new Application();
++
++// register twig
++$app->register(new TwigServiceProvider(), array(
++    'twig.path' => __DIR__ . '/../templates',
++    'twig.options' => array(
++        'strict_variables' => false,
++    ),
++));
++
++// parse configuration
++$app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
++
++// turn debug on by default
++$app['debug'] = !in_array(
++    getenv('BOOKSHELF_DEBUG'),
++    ['false', '', '0', 'off', 'no']
++);
++
++// add service parameters
++$app['bookshelf.page_size'] = 10;
++
++return $app;
+diff --git a/src/controllers.php b/src/controllers.php
+new file mode 100644
+index 0000000..918f708
+--- /dev/null
++++ b/src/controllers.php
+@@ -0,0 +1,128 @@
++<?php
++
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++/*
++ * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
++ */
++use Symfony\Component\HttpFoundation\Cookie;
++use Symfony\Component\HttpFoundation\Request;
++use Symfony\Component\HttpFoundation\Response;
++use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
++
++$app->get('/', function (Request $request) use ($app) {
++    return $app->redirect('/books/');
++});
++
++$app->get('/books/', function (Request $request) use ($app) {
++    /** @var DataModelInterface $model */
++    $model = $app['bookshelf.model'];
++    /** @var Twig_Environment $twig */
++    $twig = $app['twig'];
++    $token = $request->query->get('page_token');
++    $bookList = $model->listBooks($app['bookshelf.page_size'], $token);
++
++    return $twig->render('list.html.twig', array(
++        'books' => $bookList['books'],
++        'next_page_token' => $bookList['cursor'],
++    ));
++});
++
++$app->get('/books/add', function () use ($app) {
++    /** @var Twig_Environment $twig */
++    $twig = $app['twig'];
++
++    return $twig->render('form.html.twig', array(
++        'action' => 'Add',
++        'book' => array(),
++    ));
++});
++
++$app->post('/books/add', function (Request $request) use ($app) {
++    /** @var DataModelInterface $model */
++    $model = $app['bookshelf.model'];
++    $files = $request->files;
++    $book = $request->request->all();
++    if (!empty($book['publishedDate'])) {
++        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
++    }
++    $id = $model->create($book);
++
++    return $app->redirect("/books/$id");
++});
++
++$app->get('/books/{id}', function ($id) use ($app) {
++    /** @var DataModelInterface $model */
++    $model = $app['bookshelf.model'];
++    $book = $model->read($id);
++    if (!$book) {
++        return new Response('', Response::HTTP_NOT_FOUND);
++    }
++    /** @var Twig_Environment $twig */
++    $twig = $app['twig'];
++
++    return $twig->render('view.html.twig', array('book' => $book));
++});
++
++$app->get('/books/{id}/edit', function ($id) use ($app) {
++    /** @var DataModelInterface $model */
++    $model = $app['bookshelf.model'];
++    $book = $model->read($id);
++    if (!$book) {
++        return new Response('', Response::HTTP_NOT_FOUND);
++    }
++    /** @var Twig_Environment $twig */
++    $twig = $app['twig'];
++
++    return $twig->render('form.html.twig', array(
++        'action' => 'Edit',
++        'book' => $book,
++    ));
++});
++
++$app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
++    $book = $request->request->all();
++    $book['id'] = $id;
++    /** @var DataModelInterface $model */
++    $model = $app['bookshelf.model'];
++    $files = $request->files;
++    if (!empty($book['publishedDate'])) {
++        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
++    }
++    if ($model->update($book)) {
++        return $app->redirect("/books/$id");
++    }
++
++    return new Response('', Response::HTTP_NOT_FOUND);
++});
++
++$app->post('/books/{id}/delete', function ($id) use ($app) {
++        /** @var DataModelInterface $model */
++        $model = $app['bookshelf.model'];
++        $book = $model->read($id);
++        if ($book) {
++            $model->delete($id);
++
++            return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
++        }
++
++        return new Response('', Response::HTTP_NOT_FOUND);
++    }
++);
++
+diff --git a/templates/base.html.twig b/templates/base.html.twig
+new file mode 100644
+index 0000000..db1be8f
+--- /dev/null
++++ b/templates/base.html.twig
+@@ -0,0 +1,40 @@
++{#
++# Copyright 2015 Google Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#}
++<!DOCTYPE html>
++<html lang="en">
++  <head>
++    <title>Bookshelf - PHP on Google Cloud Platform</title>
++    <meta charset="utf-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1">
++    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
++  </head>
++  <body>
++    <div class="navbar navbar-default">
++      <div class="container">
++        <div class="navbar-header">
++          <div class="navbar-brand">Bookshelf</div>
++        </div>
++        <ul class="nav navbar-nav">
++          <li><a href="/books">Books</a></li>
++        </ul>
++      </div>
++    </div>
++    <div class="container">
++      {% block content %}{% endblock %}
++    </div>
++    {{user}}
++  </body>
++</html>
+diff --git a/templates/form.html.twig b/templates/form.html.twig
+new file mode 100644
+index 0000000..f1986f6
+--- /dev/null
++++ b/templates/form.html.twig
+@@ -0,0 +1,49 @@
++{#
++# Copyright 2015 Google Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#}
++
++{# [START form] #}
++{% extends "base.html.twig" %}
++
++{% block content %}
++<h3>{{action}} book</h3>
++
++<form method="POST" enctype="multipart/form-data">
++
++  <div class="form-group">
++    <label for="title">Title</label>
++    <input type="text" name="title" id="title" value="{{book.title}}" class="form-control"/>
++  </div>
++
++  <div class="form-group">
++    <label for="author">Author</label>
++    <input type="text" name="author" id="author" value="{{book.author}}" class="form-control"/>
++  </div>
++
++  <div class="form-group">
++    <label for="publishedDate">Date Published</label>
++    <input type="text" name="publishedDate" id="publishedDate" value="{{book.publishedDate|date("F jS, Y")}}" class="form-control"/>
++  </div>
++
++  <div class="form-group">
++    <label for="description">Description</label>
++    <textarea name="description" id="description" class="form-control">{{book.description}}</textarea>
++  </div>
++
++  <button id="submit" type="submit" class="btn btn-success">Save</button>
++</form>
++
++{% endblock %}
++{# [END form] #}
+diff --git a/templates/list.html.twig b/templates/list.html.twig
+new file mode 100644
+index 0000000..2f1ac99
+--- /dev/null
++++ b/templates/list.html.twig
+@@ -0,0 +1,55 @@
++{#
++# Copyright 2015 Google Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#}
++
++{% extends "base.html.twig" %}
++
++{% block content %}
++
++<h3>Books</h3>
++<a href="/books/add" class="btn btn-success btn-sm">
++  <i class="glyphicon glyphicon-plus"></i>
++  Add book
++</a>
++
++{% for book in books %}
++<div class="media">
++  <a href="/books/{{book.id}}">
++    <div class="media-left">
++      {% if book.imageUrl %}
++        <img src="{{book.imageUrl}}">
++      {% else %}
++        <img src="http://placekitten.com/g/128/192">
++      {% endif %}
++    </div>
++    <div class="media-body">
++      <h4>{{book.title}}</h4>
++      <p>{{book.author}}</p>
++    </div>
++  </a>
++</div>
++{% else %}
++<p>No books found</p>
++{% endfor %}
++
++{% if next_page_token %}
++<nav>
++  <ul class="pager">
++    <li><a href="?page_token={{next_page_token}}">More</a></li>
++  </ul>
++</nav>
++{% endif %}
++
++{% endblock %}
+diff --git a/templates/view.html.twig b/templates/view.html.twig
+new file mode 100644
+index 0000000..676e8c5
+--- /dev/null
++++ b/templates/view.html.twig
+@@ -0,0 +1,52 @@
++{#
++# Copyright 2015 Google Inc.
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++#}
++
++{% extends "base.html.twig" %}
++
++{% block content %}
++
++<h3>Book</h3>
++<form method="post" action="/books/{{book.id}}/delete" id="deleteForm">
++  <div class="btn-group">
++    <a href="/books/{{book.id}}/edit" class="btn btn-primary btn-sm">
++      <i class="glyphicon glyphicon-edit"></i>
++      Edit book
++    </a>
++    <button id="submit" type="submit" class="btn btn-danger btn-sm">
++      <i class="glyphicon glyphicon-trash"></i>
++      Delete book
++    </button>
++  </div>
++</form>
++
++<div class="media">
++  {# [START book_image] #}
++  <div class="media-left">
++    <img class="book-image"
++         src="{{ book.imageUrl ?: 'http://placekitten.com/g/128/192' }}">
++  </div>
++  {# [END book_image] #}
++  <div class="media-body">
++    <h4 class="book-title">
++      {{book.title}}
++      <small>{{book.publishedDate|date("F jS, Y")}}</small>
++    </h4>
++    <h5 class="book-author">By {{book.author|default('Unknown', True)}}</h5>
++    <p class="book-description">{{book.description}}</p>
++  </div>
++</div>
++
++{% endblock %}
+diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
+new file mode 100644
+index 0000000..0fb184b
+--- /dev/null
++++ b/test/functional/ControllersTest.php
+@@ -0,0 +1,295 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
++use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
++use Monolog\Handler\TestHandler;
++use Silex\WebTestCase;
++use Symfony\Component\BrowserKit\Cookie;
++use Symfony\Component\HttpFoundation\File\UploadedFile;
++
++/**
++ * Class ControllersTest.
++ */
++class ControllersTest extends WebTestCase
++{
++    use SkipTestsIfMissingCredentialsTrait;
++    use GetConfigTrait;
++
++    /**
++     * Creates the application.
++     *
++     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
++     */
++    public function createApplication()
++    {
++        $app = require __DIR__ . '/../../src/app.php';
++        require __DIR__ . '/../../src/controllers.php';
++
++        $config = $this->getConfig();
++
++        $app['bookshelf.model'] = new CloudSql(
++            $config['mysql_dsn'],
++            $config['mysql_user'],
++            $config['mysql_password']
++        );
++        // Set a tiny page size so it's easy to test paging.
++        $app['bookshelf.page_size'] = 1;
++        $app['bookshelf.storage'] = new FakeFileStorage();
++        $app['monolog.handler'] = new TestHandler();
++
++        return $app;
++    }
++
++    public function testRoot()
++    {
++        $client = $this->createClient();
++        $client->request('GET', '/');
++
++        $this->assertTrue($client->getResponse()->isRedirect());
++    }
++
++    public function testPaging()
++    {
++        $client = $this->createClient();
++        $client->followRedirects();
++        $crawler = $client->request('GET', '/books/');
++
++        $editLink = $crawler
++            ->filter('a:contains("Add")') // find all links with the text "Add"
++            ->link();
++
++        $crawler = $client->click($editLink);
++
++        // Fill the form and submit it, twice.
++        $submitButton = $crawler->selectButton('submit');
++        $form = $submitButton->form();
++
++        $photo = new UploadedFile(
++            __DIR__ . '/../lib/CatHat.jpg',
++            'CatHat.jpg',
++            'image/jpg',
++            filesize(__DIR__ . '/../lib/CatHat.jpg')
++        );
++        $crawler = $client->submit($form, array(
++            'title' => 'The Cat in the Hat',
++            'author' => 'Dr. Suess',
++            'publishedDate' => '1957-01-01',
++            'image' => $photo,
++        ));
++        $this->assertEquals(
++            'img1',
++            $crawler->filter('.book-image')->attr('src')
++        );
++
++        // Capture the delete button.
++        $deleteCatHat = $crawler->selectButton('submit');
++
++        $crawler = $client->submit($form, array(
++            'title' => 'Treasure Island',
++            'author' => 'Robert Louis Stevenson',
++            'publishedDate' => '1883-01-01',
++        ));
++        $deleteTreasureIsland = $crawler->selectButton('submit');
++
++        try {
++            // Now go through the pages one by one and confirm we saw the books
++            // we just added.
++            $foundTreasureIsland = false;
++            $foundCatHat = false;
++            $crawler = $client->request('GET', '/');
++            while (true) {
++                $foundCatHat = $foundCatHat ||
++                    $crawler->filter('h4:contains("The Cat in the Hat")');
++                $foundTreasureIsland = $foundTreasureIsland ||
++                    $crawler->filter('h4:contains("Treasure Island")');
++                $more = $crawler->filter('a:contains("More")');
++                if (count($more)) {
++                    $crawler = $client->click($more->link());
++                } else {
++                    break;
++                }
++            }
++            $this->assertTrue($foundTreasureIsland);
++            $this->assertTrue($foundCatHat);
++        } finally {
++            $client->submit($deleteCatHat->form());
++            $client->submit($deleteTreasureIsland->form());
++        }
++    }
++
++    public function testCrud()
++    {
++        $client = $this->createClient();
++        $client->followRedirects();
++        $crawler = $client->request('GET', '/books/');
++
++        $editLink = $crawler
++            ->filter('a:contains("Add")') // find all links with the text "Add"
++            ->link();
++
++        // and click it
++        $crawler = $client->click($editLink);
++
++        // Fill the form and submit it.
++        $submitButton = $crawler->selectButton('submit');
++        $form = $submitButton->form();
++
++        $photo = new UploadedFile(
++            __DIR__ . '/../lib/CatHat.jpg',
++            'CatHat.jpg',
++            'image/jpg',
++            filesize(__DIR__ . '/../lib/CatHat.jpg')
++        );
++        $crawler = $client->submit($form, array(
++            'title' => 'Where the Red Fern Grows',
++            'author' => 'Will Rawls',
++            'publishedDate' => '1961',
++            'image' => $photo,
++        ));
++
++        // Make sure the page contents match what we just submitted.
++        $title = $crawler->filter('.book-title')->text();
++        $this->assertContains('Where the Red Fern Grows', $title);
++        $author = $crawler->filter('.book-author')->text();
++        $this->assertContains('Will Rawls', $author);
++        $viewBookUrl = $client->getRequest()->getUri();
++
++        // Click the edit button.
++        $editLink = $crawler->filter('a:contains("Edit")')->link();
++        $crawler = $client->click($editLink);
++
++        // Fill the form and submit it.
++        $submitButton = $crawler->selectButton('submit');
++        $form = $submitButton->form();
++        $crawler = $client->submit($form, array(
++            'title' => 'Where the Red Fern Grows',
++            'author' => 'Wilson Rawls',
++            'publishedDate' => '1961',
++            'image' => $photo,
++        ));
++
++        // Make sure the page contents match what we just submitted.
++        $title = $crawler->filter('.book-title')->text();
++        $this->assertContains('Where the Red Fern Grows', $title);
++        $author = $crawler->filter('.book-author')->text();
++        $this->assertContains('Wilson Rawls', $author);
++
++        // Click the delete button.
++        $deleteButton = $crawler->selectButton('submit');
++        $client->submit($deleteButton->form());
++        $this->assertTrue($client->getResponse()->isOk());
++
++        // Confirm that we don't find the book anymore.
++        $client->request('GET', $viewBookUrl);
++        $this->assertEquals(404, $client->getResponse()->getStatusCode());
++
++        // Confirm that we can't delete again it either.
++        $client->submit($deleteButton->form());
++        $this->assertEquals(404, $client->getResponse()->getStatusCode());
++
++        // And confirm that we can't edit again.
++        $client->click($editLink);
++        $this->assertEquals(404, $client->getResponse()->getStatusCode());
++        $client->submit($submitButton->form());
++        $this->assertEquals(404, $client->getResponse()->getStatusCode());
++    }
++
++    public function testLogin()
++    {
++        $client = $this->createClient();
++        $crawler = $client->request('GET', '/books/');
++        $loginLink = $crawler->filter('a:contains("Login")')->link();
++
++        $crawler = $client->click($loginLink);
++        $response = $client->getResponse();
++        $this->assertEquals(302, $response->getStatusCode());
++        $url = $response->headers->get('Location');
++        $this->assertNotNull($url);
++
++        $parts = parse_url($url);
++        parse_str($parts['query'], $query);
++
++        $this->assertArrayHasKey('response_type', $query);
++        $this->assertArrayHasKey('client_id', $query);
++        $this->assertArrayHasKey('redirect_uri', $query);
++        $this->assertArrayHasKey('state', $query);
++        $this->assertArrayHasKey('scope', $query);
++
++        $this->assertEquals('code', $query['response_type']);
++        $this->assertEquals('http://localhost/login/callback', $query['redirect_uri']);
++    }
++
++    public function testLoginCallback()
++    {
++        $client = $this->createClient();
++        $crawler = $client->request('GET', '/login/callback');
++
++        $response = $client->getResponse();
++        $this->assertEquals(400, $response->getStatusCode());
++        $this->assertEquals('Code required', (string) $response->getContent());
++
++        $crawler = $client->request('GET', '/login/callback?code=123');
++
++        $response = $client->getResponse();
++        $this->assertEquals(400, $response->getStatusCode());
++
++        $idToken = ['sub' => 'fake-id'];
++        $googleClient = $this->getMock('Google_Client');
++        $googleClient->expects($this->once())
++            ->method('fetchAccessTokenWithAuthCode')
++            ->will($this->returnValue(true));
++        $googleClient->expects($this->once())
++            ->method('getAccessToken')
++            ->will($this->returnValue(['access_token' => 'xyz']));
++        $googleClient->expects($this->once())
++            ->method('verifyIdToken')
++            ->will($this->returnValue($idToken));
++
++        $this->app['google_client'] = $googleClient;
++        $crawler = $client->request('GET', '/login/callback?code=123');
++        $response = $client->getResponse();
++        $cookies = $response->headers->getCookies();
++
++        $this->assertEquals(1, count($cookies));
++        $this->assertEquals('google_user_info', $cookies[0]->getName());
++        $this->assertEquals(json_encode($idToken), $cookies[0]->getValue());
++    }
++
++    public function testLogout()
++    {
++        $client = $this->createClient();
++
++        // set the logged-in user info on the request
++        $userInfo = [
++            'sub' => 'fake-id',
++        ];
++        $cookie = new Cookie('google_user_info', json_encode($userInfo));
++        $client->getCookieJar()->set($cookie);
++
++        // make the request
++        $crawler = $client->request('GET', '/logout');
++        $response = $client->getResponse();
++        $cookies = $response->headers->getCookies();
++
++        $this->assertEquals(1, count($cookies));
++        $this->assertEquals('google_user_info', $cookies[0]->getName());
++        $this->assertNull($cookies[0]->getValue());
++    }
++}
+diff --git a/test/functional/LoggerTest.php b/test/functional/LoggerTest.php
+new file mode 100644
+index 0000000..8e96919
+--- /dev/null
++++ b/test/functional/LoggerTest.php
+@@ -0,0 +1,45 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Silex\WebTestCase;
++
++/**
++ * Class ControllersTest.
++ */
++class LoggerTest extends WebTestCase
++{
++    /**
++     * Creates the application.
++     *
++     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
++     */
++    public function createApplication()
++    {
++        $app = require __DIR__ . '/../../src/app.php';
++        require __DIR__ . '/../../src/controllers.php';
++
++        return $app;
++    }
++
++    public function testLogger()
++    {
++        $this->assertInstanceOf('Monolog\Logger', $this->app['monolog']);
++        $this->assertInstanceOf('Monolog\Handler\ErrorLogHandler', $this->app['monolog.handler']);
++    }
++}
+diff --git a/test/lib/CatHat.jpg b/test/lib/CatHat.jpg
+new file mode 100644
+index 0000000000000000000000000000000000000000..14bf2dbc902288a48f76220f16362371721c3c1e
+GIT binary patch
+literal 68493
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
+new file mode 100644
+index 0000000..1bb3f10
+--- /dev/null
++++ b/test/lib/DataModel/DataModelTestTrait.php
+@@ -0,0 +1,114 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++/**
++ * Common code to test all data models.
++ *
++ * @property DataModelInterface $model Must be set by parent class.
++ */
++trait DataModelTestTrait
++{
++    /**
++     * Tests all the crud operations in a data model.
++     * It iterates through all the books in the data model, so for performance
++     * reasons, the data model should not be prefilled with hundreds of books.
++     */
++    public function testDataModel()
++    {
++        $model = $this->model;
++        // Iterate over the existing books and count the rows.
++        $fetch = array('cursor' => null);
++        $rowCount = 0;
++        do {
++            $fetch = $model->listBooks(10, $fetch['cursor']);
++            $rowCount += count($fetch['books']);
++        } while ($fetch['cursor']);
++
++        // Insert two books.
++        $breakfastId = $model->create(array(
++            'title' => 'Breakfast of Champions',
++            'author' => 'Kurt Vonnegut'
++        ));
++
++        $bellId = $model->create(array(
++            'title' => 'For Whom the Bell Tolls',
++            'author' => 'Ernest Hemingway'
++        ));
++
++        // Try to create a book with a bad property name.
++        try {
++            $model->create(array(
++                'bogus' => 'Teach your owl to drive!'
++            ));
++            $this->assertFalse(true);
++        } catch (\Exception $e) {
++            // Good.  An exception is expected.
++        }
++
++        // Iterate over the books again and verify there are now 2 more.
++        $newCount = 0;
++        do {
++            // Only fetch one book at a time to test that code path.
++            $fetch = $model->listBooks(1, $fetch['cursor']);
++            $newCount += count($fetch['books']);
++        } while ($fetch['cursor']);
++        $this->assertEquals($rowCount + 2, $newCount);
++
++        // Make sure the book we read looks like the book we wrote.
++        $breakfastBook = $model->read($breakfastId);
++        $this->assertEquals('Breakfast of Champions', $breakfastBook['title']);
++        $this->assertEquals('Kurt Vonnegut', $breakfastBook['author']);
++        $this->assertEquals($breakfastId, $breakfastBook['id']);
++        $this->assertNull($breakfastBook['description']);
++
++        // Try updating a book.
++        $breakfastBook['description'] = 'A really fun read.';
++        $model->update($breakfastBook);
++        $breakfastBookCopy = $model->read($breakfastId);
++        // And confirm it was correctly updated.
++        $this->assertEquals(
++            'A really fun read.',
++            $breakfastBookCopy['description']
++        );
++
++        // Update it again and delete the description.
++        unset($breakfastBook['description']);
++        $breakfastBook['author'] = null;
++        $model->update($breakfastBook);
++        $breakfastBookCopy = $model->read($breakfastId);
++        // And confirm it was correctly updated.
++        $this->assertNull($breakfastBookCopy['description']);
++        $this->assertNull($breakfastBookCopy['author']);
++
++        // Try updating the book with a bad property name.
++        try {
++            $book['bogus'] = 'The power of scratching.';
++            $model->update($book);
++            $this->assertFalse(true);
++        } catch (\Exception $e) {
++            // Good.  An exception is expected.
++        }
++
++        // Clean up.
++        $model->delete($breakfastId);
++        $this->assertFalse($model->read($breakfastId));
++        $this->assertTrue((bool)$model->read($bellId));
++        $model->delete($bellId);
++        $this->assertFalse($model->read($bellId));
++    }
++}
+diff --git a/test/lib/FileSystem/FakeFileStorage.php b/test/lib/FileSystem/FakeFileStorage.php
+new file mode 100644
+index 0000000..7882a18
+--- /dev/null
++++ b/test/lib/FileSystem/FakeFileStorage.php
+@@ -0,0 +1,43 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\FileSystem;
++
++/**
++ * Class FakeFileStorage
++ * @package Google\Cloud\Samples\Bookshelf
++ *
++ * A simple mock that is easy to verify in tests.
++ */
++class FakeFileStorage
++{
++    public function __construct()
++    {
++        $this->count = 0;
++        $this->deletedFiles = array();
++    }
++
++    public function storeFile($localFilePath, $contentType)
++    {
++        $this->count += 1;
++        return 'img' . $this->count;
++    }
++
++    public function deleteFile($url)
++    {
++        array_push($this->deletedFiles, $url);
++    }
++}
+diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
+new file mode 100644
+index 0000000..979f725
+--- /dev/null
++++ b/test/lib/GetConfigTrait.php
+@@ -0,0 +1,47 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Symfony\Component\Yaml\Yaml;
++
++/**
++ * Class GetConfigTrait
++ * @package Google\Cloud\Samples\Bookshelf
++ *
++ * Use this trait to load the project configuration
++ */
++trait GetConfigTrait
++{
++    protected function getConfig()
++    {
++        $config = array(
++            'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
++            'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
++            'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
++            'google_storage_bucket' => getenv('GOOGLE_STORAGE_BUCKET'),
++            'bookshelf_backend' => 'cloudsql',
++            'mysql_dsn' => getenv('MYSQL_DSN'),
++            'mysql_user' => getenv('MYSQL_USER'),
++            'mysql_password' => getenv('MYSQL_PASSWORD'),
++            'mongo_url' => getenv('MONGO_URL'),
++            'mongo_namespace' => getenv('MONGO_NAMESPACE'),
++        );
++
++        return $config;
++    }
++}
+diff --git a/test/lib/SkipTestsIfMissingCredentialsTrait.php b/test/lib/SkipTestsIfMissingCredentialsTrait.php
+new file mode 100644
+index 0000000..969a27c
+--- /dev/null
++++ b/test/lib/SkipTestsIfMissingCredentialsTrait.php
+@@ -0,0 +1,50 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++/**
++ * Class SkipTestsIfMissingCredentials
++ * @package Google\Cloud\Samples\Bookshelf
++ *
++ * Use this trait to skip all tests when credentials have not been set in
++ * the environment.
++ */
++trait SkipTestsIfMissingCredentialsTrait
++{
++    /**
++     * @return bool True if we found application credentials in the environment.
++     */
++    public static function hasCredentials()
++    {
++        static $hasCredentials = null;
++        if ($hasCredentials == null) {
++            $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
++            $hasCredentials = $path && file_exists($path) &&
++                filesize($path) > 0;
++        }
++        return $hasCredentials;
++    }
++
++    public function setUp()
++    {
++        if (!self::hasCredentials()) {
++            $this->markTestSkipped('No application credentials were found.');
++        }
++        return parent::setUp();
++    }
++}
+diff --git a/test/unit/DataModel/CloudSqlTest.php b/test/unit/DataModel/CloudSqlTest.php
+new file mode 100644
+index 0000000..984f065
+--- /dev/null
++++ b/test/unit/DataModel/CloudSqlTest.php
+@@ -0,0 +1,40 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
++use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++
++class CloudSqlTest extends \PHPUnit_Framework_TestCase
++{
++    use DataModelTestTrait;
++    use GetConfigTrait;
++    use SkipTestsIfMissingCredentialsTrait;
++
++    public function setUp()
++    {
++        parent::setUp();
++
++        $config = $this->getConfig();
++
++        $this->model = new CloudSql(
++            $config['mysql_dsn'],
++            $config['mysql_user'],
++            $config['mysql_password']
++        );
++    }
++}
+diff --git a/test/unit/DataModel/DatastoreTest.php b/test/unit/DataModel/DatastoreTest.php
+new file mode 100644
+index 0000000..9ff003d
+--- /dev/null
++++ b/test/unit/DataModel/DatastoreTest.php
+@@ -0,0 +1,36 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
++use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++
++class DatastoreTest extends \PHPUnit_Framework_TestCase
++{
++    use DataModelTestTrait;
++    use GetConfigTrait;
++    use SkipTestsIfMissingCredentialsTrait;
++
++    public function setUp()
++    {
++        parent::setUp();
++
++        $config = $this->getConfig();
++
++        $this->model = new Datastore($config['google_project_id']);
++    }
++}
+diff --git a/test/unit/DataModel/MongoDbTest.php b/test/unit/DataModel/MongoDbTest.php
+new file mode 100644
+index 0000000..97761aa
+--- /dev/null
++++ b/test/unit/DataModel/MongoDbTest.php
+@@ -0,0 +1,39 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
++use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++
++class MongoDbTest extends \PHPUnit_Framework_TestCase
++{
++    use DataModelTestTrait;
++    use GetConfigTrait;
++    use SkipTestsIfMissingCredentialsTrait;
++
++    public function setUp()
++    {
++        parent::setUp();
++
++        $config = $this->getConfig();
++
++        $this->model = new MongoDb(
++            $config['mongo_url'],
++            $config['mongo_namespace']
++        );
++    }
++}
+diff --git a/web/index.php b/web/index.php
+index d507ca2..28375cf 100644
+--- a/web/index.php
++++ b/web/index.php
+@@ -1,13 +1,12 @@
+ <?php
+-
+ /*
+- * Copyright 2015 Google Inc.
++ * Copyright 2015 Google Inc. All Rights Reserved.
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+- *     http://www.apache.org/licenses/LICENSE-2.0
++ *   http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+@@ -16,25 +15,44 @@
+  * limitations under the License.
+  */
+ 
+-// [START index_php]
+-require_once __DIR__ . '/../vendor/autoload.php';
+-
+-$app = new Silex\Application();
++use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
++use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
++use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
++use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
+ 
+-$app->get('/', function () {
+-    return 'Hello World';
+-});
+-
+-$app->get('/goodbye', function () {
+-    return 'Goodbye World';
+-});
++require_once __DIR__ . '/../vendor/autoload.php';
+ 
+-// @codeCoverageIgnoreStart
+-if (PHP_SAPI != 'cli') {
+-    $app->run();
++/** @var Silex\Application $app */
++$app = require __DIR__ . '/../src/app.php';
++require __DIR__ . '/../src/controllers.php';
++
++/** @var array $config */
++$config = $app['config'];
++
++// Data Model
++switch ($config['bookshelf_backend']) {
++    case 'mongodb':
++        $app['bookshelf.model'] = new MongoDb(
++            $config['mongo_url'],
++            $config['mongo_namespace']
++        );
++        break;
++    case 'datastore':
++        $app['bookshelf.model'] = new Datastore(
++            $config['google_project_id']
++        );
++        break;
++    case 'cloudsql':
++        $app['bookshelf.model'] = new CloudSql(
++            $config['mysql_dsn'],
++            $config['mysql_user'],
++            $config['mysql_password']
++        );
++        break;
++    default:
++        throw new Exception("Invalid BOOKSHELF_DATA_BACKEND given: $config[bookshelf_backend]. "
++            . "Possible values are cloudsql, mongodb, or datastore.");
+ }
+-// @codeCoverageIgnoreEnd
+ 
+-return $app;
+-// [END index_php]
++$app->run();
+ 
