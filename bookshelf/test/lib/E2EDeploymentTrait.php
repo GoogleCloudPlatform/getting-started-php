@@ -31,7 +31,7 @@ trait E2EDeploymentTrait
     use SkipTestsIfMissingCredentialsTrait;
 
     /** @staticvar array $versions */
-    public static $versions;
+    public static $versions = array();
 
     /** @staticvar Gcloud $gcloud */
     public static $gcloud;
@@ -97,5 +97,4 @@ trait E2EDeploymentTrait
         );
     }
 }
-E2EDeploymentTrait::$versions = array();
 E2EDeploymentTrait::$gcloud = new Gcloud();
