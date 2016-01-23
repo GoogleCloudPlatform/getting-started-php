@@ -1,3 +1,32 @@
+diff --git a/.dockerignore b/.dockerignore
+deleted file mode 100644
+index 305612c..0000000
+--- a/.dockerignore
++++ /dev/null
+@@ -1,2 +0,0 @@
+-test/*
+-coverage/*
+diff --git a/Dockerfile b/Dockerfile
+deleted file mode 100644
+index 3b50bda..0000000
+--- a/Dockerfile
++++ /dev/null
+@@ -1,6 +0,0 @@
+-# This file will go away once gcloud implements fingerprinting.
+-FROM gcr.io/php-mvm-a/php-nginx:latest
+-
+-# The docker image will configure the document root according to this
+-# environment variable.
+-ENV DOCUMENT_ROOT /app/web
+diff --git a/app.yaml b/app.yaml
+deleted file mode 100644
+index 67656f0..0000000
+--- a/app.yaml
++++ /dev/null
+@@ -1,2 +0,0 @@
+-runtime: custom
+-vm: true
+\ No newline at end of file
 diff --git a/gce/deploy.sh b/gce/deploy.sh
 new file mode 100644
 index 0000000..61b2846
@@ -400,3 +429,20 @@ index 0000000..7452db1
 +gcloud compute instance-templates delete $TEMPLATE 
 +
 +gcloud compute firewall-rules delete default-allow-http-8080
+diff --git a/nginx-app.conf b/nginx-app.conf
+deleted file mode 100644
+index c13edbf..0000000
+--- a/nginx-app.conf
++++ /dev/null
+@@ -1,4 +0,0 @@
+-location / {
+-  # try to serve file directly, fallback to front controller
+-  try_files $uri /index.php$is_args$args;
+-}
+diff --git a/php.ini b/php.ini
+deleted file mode 100644
+index 45969d0..0000000
+--- a/php.ini
++++ /dev/null
+@@ -1 +0,0 @@
+-extension=mongodb.so
