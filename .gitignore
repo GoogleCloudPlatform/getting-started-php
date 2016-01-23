@@ -1,9 +1,0 @@
-**/vendor/
-**/coverage/
-**/build/
-.idea
-*~
-*.iml
-composer.phar
-config/settings.yml
-
