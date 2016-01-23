@@ -1,5 +1,0 @@
-runtime: custom
-vm: true
-
-env_variables:
-  DOCUMENT_ROOT: /app/web
