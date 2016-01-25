@@ -18,6 +18,21 @@ index 0000000..3b50bda
 +# The docker image will configure the document root according to this
 +# environment variable.
 +ENV DOCUMENT_ROOT /app/web
+diff --git a/app-e2e.yaml b/app-e2e.yaml
+new file mode 100644
+index 0000000..7aaf1f1
+--- /dev/null
++++ b/app-e2e.yaml
+@@ -0,0 +1,9 @@
++runtime: custom
++vm: true
++
++env_variables:
++  DOCUMENT_ROOT: /app/web
++  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
++
++manual_scaling:
++  instances: 1
 diff --git a/app.yaml b/app.yaml
 new file mode 100644
 index 0000000..67656f0
@@ -29,11 +44,16 @@ index 0000000..67656f0
 \ No newline at end of file
 diff --git a/composer.json b/composer.json
 new file mode 100644
-index 0000000..9f8b3b6
+index 0000000..5d13630
 --- /dev/null
 +++ b/composer.json
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,18 @@
 +{
++  "autoload": {
++    "psr-4": {
++      "Google\\Cloud\\Samples\\Bookshelf\\": ["src", "test/lib"]
++    }
++  },
 +  "require": {
 +    "php": "^5.5",
 +    "silex/silex": "^1.3"
@@ -41,23 +61,25 @@ index 0000000..9f8b3b6
 +  "require-dev": {
 +    "phpunit/phpunit": "~4",
 +    "symfony/browser-kit": "^3.0",
-+    "symfony/http-kernel": "^3.0"
++    "symfony/http-kernel": "^3.0",
++    "behat/mink": "^1.7",
++    "behat/mink-goutte-driver": "^1.2"
 +  }
 +}
 diff --git a/composer.lock b/composer.lock
 new file mode 100644
-index 0000000..1e26669
+index 0000000..39f7499
 --- /dev/null
 +++ b/composer.lock
-@@ -0,0 +1,1631 @@
+@@ -0,0 +1,2122 @@
 +{
 +    "_readme": [
 +        "This file locks the dependencies of your project to a known state",
 +        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
 +        "This file is @generated automatically"
 +    ],
-+    "hash": "99564f3400cca5903769d636142313a9",
-+    "content-hash": "5370fe3ed21bd2015c8ed9ea3c1494fa",
++    "hash": "dcbf68eee17473825134eedb44ae4018",
++    "content-hash": "2bc964af18907f06737142d1fb06cf46",
 +    "packages": [
 +        {
 +            "name": "pimple/pimple",
@@ -548,6 +570,175 @@ index 0000000..1e26669
 +    ],
 +    "packages-dev": [
 +        {
++            "name": "behat/mink",
++            "version": "v1.7.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/minkphp/Mink.git",
++                "reference": "6c129030ec2cc029905cf969a56ca8f087b2dfdf"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/minkphp/Mink/zipball/6c129030ec2cc029905cf969a56ca8f087b2dfdf",
++                "reference": "6c129030ec2cc029905cf969a56ca8f087b2dfdf",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.1",
++                "symfony/css-selector": "~2.1"
++            },
++            "require-dev": {
++                "symfony/phpunit-bridge": "~2.7"
++            },
++            "suggest": {
++                "behat/mink-browserkit-driver": "extremely fast headless driver for Symfony\\Kernel-based apps (Sf2, Silex)",
++                "behat/mink-goutte-driver": "fast headless driver for any app without JS emulation",
++                "behat/mink-selenium2-driver": "slow, but JS-enabled driver for any app (requires Selenium2)",
++                "behat/mink-zombie-driver": "fast and JS-enabled headless driver for any app (requires node.js)"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.7.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Behat\\Mink\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Konstantin Kudryashov",
++                    "email": "ever.zet@gmail.com",
++                    "homepage": "http://everzet.com"
++                }
++            ],
++            "description": "Browser controller/emulator abstraction for PHP",
++            "homepage": "http://mink.behat.org/",
++            "keywords": [
++                "browser",
++                "testing",
++                "web"
++            ],
++            "time": "2015-09-20 20:24:03"
++        },
++        {
++            "name": "behat/mink-browserkit-driver",
++            "version": "v1.3.1",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/minkphp/MinkBrowserKitDriver.git",
++                "reference": "2650f5420e713e3807c7f09a07370a4f48367bf9"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/minkphp/MinkBrowserKitDriver/zipball/2650f5420e713e3807c7f09a07370a4f48367bf9",
++                "reference": "2650f5420e713e3807c7f09a07370a4f48367bf9",
++                "shasum": ""
++            },
++            "require": {
++                "behat/mink": "~1.7@dev",
++                "php": ">=5.3.6",
++                "symfony/browser-kit": "~2.3|~3.0",
++                "symfony/dom-crawler": "~2.3|~3.0"
++            },
++            "require-dev": {
++                "silex/silex": "~1.2",
++                "symfony/phpunit-bridge": "~2.7|~3.0"
++            },
++            "type": "mink-driver",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.3.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Behat\\Mink\\Driver\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Konstantin Kudryashov",
++                    "email": "ever.zet@gmail.com",
++                    "homepage": "http://everzet.com"
++                }
++            ],
++            "description": "Symfony2 BrowserKit driver for Mink framework",
++            "homepage": "http://mink.behat.org/",
++            "keywords": [
++                "Mink",
++                "Symfony2",
++                "browser",
++                "testing"
++            ],
++            "time": "2016-01-19 16:59:07"
++        },
++        {
++            "name": "behat/mink-goutte-driver",
++            "version": "v1.2.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/minkphp/MinkGoutteDriver.git",
++                "reference": "c8e254f127d6f2242b994afd4339fb62d471df3f"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/minkphp/MinkGoutteDriver/zipball/c8e254f127d6f2242b994afd4339fb62d471df3f",
++                "reference": "c8e254f127d6f2242b994afd4339fb62d471df3f",
++                "shasum": ""
++            },
++            "require": {
++                "behat/mink": "~1.6@dev",
++                "behat/mink-browserkit-driver": "~1.2@dev",
++                "fabpot/goutte": "~1.0.4|~2.0|~3.1",
++                "php": ">=5.3.1"
++            },
++            "require-dev": {
++                "symfony/phpunit-bridge": "~2.7"
++            },
++            "type": "mink-driver",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.2.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Behat\\Mink\\Driver\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Konstantin Kudryashov",
++                    "email": "ever.zet@gmail.com",
++                    "homepage": "http://everzet.com"
++                }
++            ],
++            "description": "Goutte driver for Mink framework",
++            "homepage": "http://mink.behat.org/",
++            "keywords": [
++                "browser",
++                "goutte",
++                "headless",
++                "testing"
++            ],
++            "time": "2015-09-21 21:31:11"
++        },
++        {
 +            "name": "doctrine/instantiator",
 +            "version": "1.0.5",
 +            "source": {
@@ -600,6 +791,226 @@ index 0000000..1e26669
 +                "instantiate"
 +            ],
 +            "time": "2015-06-14 21:17:01"
++        },
++        {
++            "name": "fabpot/goutte",
++            "version": "v3.1.2",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/FriendsOfPHP/Goutte.git",
++                "reference": "3cbc6ed222422a28400e470050f14928a153207e"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/3cbc6ed222422a28400e470050f14928a153207e",
++                "reference": "3cbc6ed222422a28400e470050f14928a153207e",
++                "shasum": ""
++            },
++            "require": {
++                "guzzlehttp/guzzle": "^6.0",
++                "php": ">=5.5.0",
++                "symfony/browser-kit": "~2.1|~3.0",
++                "symfony/css-selector": "~2.1|~3.0",
++                "symfony/dom-crawler": "~2.1|~3.0"
++            },
++            "type": "application",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "3.1-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Goutte\\": "Goutte"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com"
++                }
++            ],
++            "description": "A simple PHP Web Scraper",
++            "homepage": "https://github.com/FriendsOfPHP/Goutte",
++            "keywords": [
++                "scraper"
++            ],
++            "time": "2015-11-05 12:58:44"
++        },
++        {
++            "name": "guzzlehttp/guzzle",
++            "version": "6.1.1",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/guzzle/guzzle.git",
++                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c6851d6e48f63b69357cbfa55bca116448140e0c",
++                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c",
++                "shasum": ""
++            },
++            "require": {
++                "guzzlehttp/promises": "~1.0",
++                "guzzlehttp/psr7": "~1.1",
++                "php": ">=5.5.0"
++            },
++            "require-dev": {
++                "ext-curl": "*",
++                "phpunit/phpunit": "~4.0",
++                "psr/log": "~1.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "6.1-dev"
++                }
++            },
++            "autoload": {
++                "files": [
++                    "src/functions_include.php"
++                ],
++                "psr-4": {
++                    "GuzzleHttp\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "Guzzle is a PHP HTTP client library",
++            "homepage": "http://guzzlephp.org/",
++            "keywords": [
++                "client",
++                "curl",
++                "framework",
++                "http",
++                "http client",
++                "rest",
++                "web service"
++            ],
++            "time": "2015-11-23 00:47:50"
++        },
++        {
++            "name": "guzzlehttp/promises",
++            "version": "1.0.3",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/guzzle/promises.git",
++                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/guzzle/promises/zipball/b1e1c0d55f8083c71eda2c28c12a228d708294ea",
++                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.5.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.0-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "GuzzleHttp\\Promise\\": "src/"
++                },
++                "files": [
++                    "src/functions_include.php"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "Guzzle promises library",
++            "keywords": [
++                "promise"
++            ],
++            "time": "2015-10-15 22:28:00"
++        },
++        {
++            "name": "guzzlehttp/psr7",
++            "version": "1.2.2",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/guzzle/psr7.git",
++                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5d04bdd2881ac89abde1fb78cc234bce24327bb",
++                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.4.0",
++                "psr/http-message": "~1.0"
++            },
++            "provide": {
++                "psr/http-message-implementation": "1.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.0-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "GuzzleHttp\\Psr7\\": "src/"
++                },
++                "files": [
++                    "src/functions_include.php"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "PSR-7 message implementation",
++            "keywords": [
++                "http",
++                "message",
++                "stream",
++                "uri"
++            ],
++            "time": "2016-01-23 01:23:02"
 +        },
 +        {
 +            "name": "phpdocumentor/reflection-docblock",
@@ -1079,6 +1490,55 @@ index 0000000..1e26669
 +            "time": "2015-10-02 06:51:40"
 +        },
 +        {
++            "name": "psr/http-message",
++            "version": "1.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/php-fig/http-message.git",
++                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
++                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.0.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Psr\\Http\\Message\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "PHP-FIG",
++                    "homepage": "http://www.php-fig.org/"
++                }
++            ],
++            "description": "Common interface for HTTP messages",
++            "keywords": [
++                "http",
++                "http-message",
++                "psr",
++                "psr-7",
++                "request",
++                "response"
++            ],
++            "time": "2015-05-04 20:22:00"
++        },
++        {
 +            "name": "sebastian/comparator",
 +            "version": "1.2.0",
 +            "source": {
@@ -1507,6 +1967,59 @@ index 0000000..1e26669
 +            "time": "2015-12-26 13:39:53"
 +        },
 +        {
++            "name": "symfony/css-selector",
++            "version": "v2.8.2",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/symfony/css-selector.git",
++                "reference": "ac06d8173bd80790536c0a4a634a7d705b91f54f"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/symfony/css-selector/zipball/ac06d8173bd80790536c0a4a634a7d705b91f54f",
++                "reference": "ac06d8173bd80790536c0a4a634a7d705b91f54f",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.9"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "2.8-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Symfony\\Component\\CssSelector\\": ""
++                },
++                "exclude-from-classmap": [
++                    "/Tests/"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Jean-François Simon",
++                    "email": "jeanfrancois.simon@sensiolabs.com"
++                },
++                {
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com"
++                },
++                {
++                    "name": "Symfony Community",
++                    "homepage": "https://symfony.com/contributors"
++                }
++            ],
++            "description": "Symfony CssSelector Component",
++            "homepage": "https://symfony.com",
++            "time": "2016-01-03 15:33:41"
++        },
++        {
 +            "name": "symfony/dom-crawler",
 +            "version": "v3.0.1",
 +            "source": {
@@ -1564,16 +2077,16 @@ index 0000000..1e26669
 +        },
 +        {
 +            "name": "symfony/polyfill-mbstring",
-+            "version": "v1.0.1",
++            "version": "v1.1.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/symfony/polyfill-mbstring.git",
-+                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
++                "reference": "1289d16209491b584839022f29257ad859b8532d"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
-+                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
++                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
++                "reference": "1289d16209491b584839022f29257ad859b8532d",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -1585,7 +2098,7 @@ index 0000000..1e26669
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.0-dev"
++                    "dev-master": "1.1-dev"
 +                }
 +            },
 +            "autoload": {
@@ -1619,7 +2132,7 @@ index 0000000..1e26669
 +                "portable",
 +                "shim"
 +            ],
-+            "time": "2015-11-20 09:19:13"
++            "time": "2016-01-20 09:13:37"
 +        },
 +        {
 +            "name": "symfony/yaml",
@@ -1734,66 +2247,6 @@ index 0000000..3e43624
 +      </whitelist>
 +    </filter>
 +</phpunit>
-diff --git a/test/MySilexAppTest.php b/test/MySilexAppTest.php
-new file mode 100644
-index 0000000..a7ea1fe
---- /dev/null
-+++ b/test/MySilexAppTest.php
-@@ -0,0 +1,54 @@
-+<?php
-+
-+/*
-+ * Copyright 2015 Google Inc.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+namespace Google\Cloud\Samples\Helloworld;
-+
-+use Silex\WebTestCase;
-+
-+/**
-+ * WebTestCase for the sample Hello World application.
-+ */
-+class MySilexAppTest extends WebTestCase
-+{
-+    public function createApplication()
-+    {
-+        $app = require __DIR__ . '/../web/index.php';
-+        $app['debug'] = true;
-+        unset($app['exception_handler']);
-+
-+        return $app;
-+    }
-+
-+    public function testTopPage()
-+    {
-+        $client = $this->createClient();
-+        $crawlerexport = $client->request('GET', '/');
-+        $resp = $client->getResponse();
-+        $this->assertTrue($resp->isOk());
-+        $this->assertContains('Hello World', $resp->getContent());
-+    }
-+
-+    public function testBlog()
-+    {
-+        $client = $this->createClient();
-+        $crawlerexport = $client->request('GET', '/goodbye');
-+        $resp = $client->getResponse();
-+        $this->assertTrue($resp->isOk());
-+        $this->assertContains('Goodbye World', $resp->getContent());
-+    }
-+}
 diff --git a/test/bootstrap.php b/test/bootstrap.php
 new file mode 100644
 index 0000000..54fe66c
@@ -1819,6 +2272,456 @@ index 0000000..54fe66c
 + */
 +
 +require_once __DIR__ . '/../vendor/autoload.php';
+diff --git a/test/e2e/BookshelfTest.php b/test/e2e/BookshelfTest.php
+new file mode 100644
+index 0000000..6a2dcae
+--- /dev/null
++++ b/test/e2e/BookshelfTest.php
+@@ -0,0 +1,65 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Behat\Mink\Driver\GoutteDriver;
++use Behat\Mink\Session;
++
++/**
++ * Class BookshelfTest
++ */
++class BookshelfTest extends \PHPUnit_Framework_TestCase
++{
++    protected static $step;
++    use E2EDeploymentTrait;
++
++    public static function setUpBeforeClass()
++    {
++        if (self::$step = getenv('STEP_NAME')) {
++            self::deployApp(self::$step);
++        }
++    }
++
++    public static function tearDownAfterClass()
++    {
++        if (self::$step) {
++            self::deleteApp(self::$step);
++        }
++    }
++
++    public function setUp()
++    {
++        if (!self::$step) {
++            $this->markTestSkipped('must set STEP_NAME for e2e testing');
++        }
++        $this->url = self::getUrl(self::$step);
++        $driver = new GoutteDriver();
++        $this->session = new Session($driver);
++    }
++
++    public function testIndex()
++    {
++        $this->assertNotNull(self::$versions[self::$step]);
++        $this->session->visit($this->url . '/');
++        $this->assertEquals('200', $this->session->getStatusCode(),
++                            'Book index status code');
++        // TODO: content check
++        $page = $this->session->getPage();
++    }
++}
++
+diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
+new file mode 100644
+index 0000000..3aecfc4
+--- /dev/null
++++ b/test/functional/ControllersTest.php
+@@ -0,0 +1,54 @@
++<?php
++
++/*
++ * Copyright 2015 Google Inc.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Silex\WebTestCase;
++
++/**
++ * WebTestCase for the sample Hello World application.
++ */
++class ControllersTest extends WebTestCase
++{
++    public function createApplication()
++    {
++        $app = require __DIR__ . '/../../web/index.php';
++        $app['debug'] = true;
++        unset($app['exception_handler']);
++
++        return $app;
++    }
++
++    public function testTopPage()
++    {
++        $client = $this->createClient();
++        $crawlerexport = $client->request('GET', '/');
++        $resp = $client->getResponse();
++        $this->assertTrue($resp->isOk());
++        $this->assertContains('Hello World', $resp->getContent());
++    }
++
++    public function testBlog()
++    {
++        $client = $this->createClient();
++        $crawlerexport = $client->request('GET', '/goodbye');
++        $resp = $client->getResponse();
++        $this->assertTrue($resp->isOk());
++        $this->assertContains('Goodbye World', $resp->getContent());
++    }
++}
+diff --git a/test/lib/E2EDeploymentTrait.php b/test/lib/E2EDeploymentTrait.php
+new file mode 100644
+index 0000000..7eefc9e
+--- /dev/null
++++ b/test/lib/E2EDeploymentTrait.php
+@@ -0,0 +1,103 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Symfony\Component\Yaml\Dumper;
++
++/**
++ * Class E2EDeploymentTrait
++ * @package Google\Cloud\Samples\Bookshelf
++ *
++ * Use this trait to deploy the project to GCP for an end-to-end test.
++ */
++trait E2EDeploymentTrait
++{
++    use GetConfigTrait;
++    use SkipTestsIfMissingCredentialsTrait;
++
++    /** @staticvar array $versions */
++    public static $versions = array();
++
++    /** @staticvar Gcloud $gcloud */
++    public static $gcloud;
++
++    private static function dumpConfig()
++    {
++        $config = self::getConfig();
++        $dumper = new Dumper();
++        $yaml = $dumper->dump($config);
++        // TODO: Use different filename
++        file_put_contents(__DIR__ . '/../../config/settings-e2e.yml', $yaml);
++    }
++
++    /**
++     * Tries to deploy the app for a given step and store the url for later use.
++     *
++     * @return bool
++     */
++    protected static function deployApp($step)
++    {
++        // TODO: allow changing the data backend.
++        if (!self::hasCredentials()) {
++            // Just return here for avoiding errors.
++            return false;
++        }
++        self::dumpConfig();
++        $version = self::$gcloud->deployApp($step);
++        if ($version === false) {
++            return false;
++        }
++        self::$versions[$step] = $version;
++        return true;
++    }
++
++    /**
++     * Tries to delete the app for the given step.
++     *
++     * @return bool
++     */
++    protected static function deleteApp($step)
++    {
++        if (!array_key_exists($step, self::$versions)) {
++            return false;
++        }
++        return self::$gcloud->deleteApp($step, self::$versions[$step]);
++    }
++
++    /**
++     * Returns the top URL for the given step.
++     *
++     * @return mixed
++     */
++    protected static function getUrl($step)
++    {
++        $projectId = getenv('GOOGLE_PROJECT_ID');
++        if (empty($projectId)) {
++            return false;
++        }
++        if (!array_key_exists($step, self::$versions)) {
++            return false;
++        }
++        return sprintf(
++            'https://%s-dot-%s.appspot.com',
++            self::$versions[$step],
++            $projectId
++        );
++    }
++}
++E2EDeploymentTrait::$gcloud = new Gcloud();
+diff --git a/test/lib/Gcloud.php b/test/lib/Gcloud.php
+new file mode 100644
+index 0000000..954602f
+--- /dev/null
++++ b/test/lib/Gcloud.php
+@@ -0,0 +1,92 @@
++<?php
++
++/**
++ * Copyright 2015, Google, Inc.
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *    http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++class Gcloud
++{
++    /**
++     * Deploy the app and return the version id or false if failed.
++     *
++     * @return mixed
++     */
++    public function deployApp($stepName, $deploySingleInstance = true,
++                              $useComputeEngine = false)
++    {
++        $buildId = getenv('TRAVIS_BUILD_ID');
++        if ($buildId === false) {
++            $buildId = rand(1000, 9999);
++        }
++
++        $version = "{$stepName}-{$buildId}";
++
++        // deploy this $stepName to gcloud
++        // try 3 times in case of intermittent deploy error
++        $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
++        for ($i = 0; $i < 3; $i++) {
++            $result = $this->exec("gcloud preview app deploy {$appYamlPath} --version={$version} -q --no-promote");
++            if ($result == 0) {
++                break;
++            }
++        }
++
++        // if status is not 0, we tried 3 times and failed
++        if ($result != 0) {
++            $this->output("Failed to deploy to gcloud");
++
++            return false;
++        }
++
++        // sleeping 1 to ensure URL is callable
++        sleep(1);
++
++        return $version;
++    }
++
++    public function deleteApp($stepName, $version)
++    {
++        // run gcloud command
++        $result = $this->exec("gcloud preview app modules delete default --version={$version} -q");
++
++        // return the result of the gcloud delete command
++        if ($result != 0) {
++            $this->output("Failed to delete e2e version");
++
++            return false;
++        }
++
++        // return 0, no errors
++        return true;
++    }
++
++
++    private function exec($cmd)
++    {
++        $this->output("> {$cmd}");
++        exec($cmd, $output, $return_var);
++        foreach ($output as $line) {
++            $this->output($line);
++        }
++
++        return $return_var;
++    }
++
++    private function output($line)
++    {
++        fwrite(STDOUT, $line . "\n");
++    }
++}
+diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
+new file mode 100644
+index 0000000..25d77fc
+--- /dev/null
++++ b/test/lib/GetConfigTrait.php
+@@ -0,0 +1,48 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Symfony\Component\Yaml\Yaml;
++
++/**
++ * Class GetConfigTrait
++ * @package Google\Cloud\Samples\Bookshelf
++ *
++ * Use this trait to load the project configuration
++ */
++trait GetConfigTrait
++{
++    protected static function getConfig()
++    {
++        $config = array(
++            'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
++            'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
++            'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
++            'google_storage_bucket' => getenv('GOOGLE_STORAGE_BUCKET'),
++            'bookshelf_backend' => 'cloudsql',
++            'mysql_dsn' => getenv('MYSQL_DSN'),
++            'mysql_user' => getenv('MYSQL_USER'),
++            'mysql_password' => getenv('MYSQL_PASSWORD'),
++            'mongo_url' => getenv('MONGO_URL'),
++            'mongo_database' => getenv('MONGO_DATABASE'),
++            'mongo_collection' => getenv('MONGO_COLLECTION'),
++        );
++
++        return $config;
++    }
++}
+diff --git a/test/lib/SkipTestsIfMissingCredentialsTrait.php b/test/lib/SkipTestsIfMissingCredentialsTrait.php
+new file mode 100644
+index 0000000..929cc3a
+--- /dev/null
++++ b/test/lib/SkipTestsIfMissingCredentialsTrait.php
+@@ -0,0 +1,52 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++/**
++ * Class SkipTestsIfMissingCredentials
++ * @package Google\Cloud\Samples\Bookshelf
++ *
++ * Use this trait to skip all tests when credentials have not been set in
++ * the environment.
++ */
++trait SkipTestsIfMissingCredentialsTrait
++{
++    /**
++     * @return bool True if we found application credentials in the environment.
++     */
++    public static function hasCredentials()
++    {
++        static $hasCredentials = null;
++        if ($hasCredentials == null) {
++            $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
++            $hasCredentials = $path && file_exists($path) &&
++                filesize($path) > 0;
++        }
++        return $hasCredentials;
++    }
++
++    /**
++     * @before
++     */
++    public function checkCredentials()
++    {
++        if (!self::hasCredentials()) {
++            $this->markTestSkipped('No application credentials were found.');
++        }
++    }
++}
 diff --git a/web/index.php b/web/index.php
 new file mode 100644
 index 0000000..d507ca2
