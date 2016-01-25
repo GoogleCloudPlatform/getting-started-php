@@ -5,5 +5,5 @@
 *~
 *.iml
 composer.phar
-bookshelf/config/settings.yml
-bookshelf/config/settings-e2e.yml
+**/config/settings.yml
+**/config/settings-e2e.yml
