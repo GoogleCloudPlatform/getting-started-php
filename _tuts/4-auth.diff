@@ -176,6 +176,97 @@ index db1be8f..b6a8cb4 100644
        </div>
      </div>
      <div class="container">
+diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
+index a959177..0fb184b 100644
+--- a/test/functional/ControllersTest.php
++++ b/test/functional/ControllersTest.php
+@@ -210,4 +210,86 @@ class ControllersTest extends WebTestCase
+         $client->submit($submitButton->form());
+         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+     }
++
++    public function testLogin()
++    {
++        $client = $this->createClient();
++        $crawler = $client->request('GET', '/books/');
++        $loginLink = $crawler->filter('a:contains("Login")')->link();
++
++        $crawler = $client->click($loginLink);
++        $response = $client->getResponse();
++        $this->assertEquals(302, $response->getStatusCode());
++        $url = $response->headers->get('Location');
++        $this->assertNotNull($url);
++
++        $parts = parse_url($url);
++        parse_str($parts['query'], $query);
++
++        $this->assertArrayHasKey('response_type', $query);
++        $this->assertArrayHasKey('client_id', $query);
++        $this->assertArrayHasKey('redirect_uri', $query);
++        $this->assertArrayHasKey('state', $query);
++        $this->assertArrayHasKey('scope', $query);
++
++        $this->assertEquals('code', $query['response_type']);
++        $this->assertEquals('http://localhost/login/callback', $query['redirect_uri']);
++    }
++
++    public function testLoginCallback()
++    {
++        $client = $this->createClient();
++        $crawler = $client->request('GET', '/login/callback');
++
++        $response = $client->getResponse();
++        $this->assertEquals(400, $response->getStatusCode());
++        $this->assertEquals('Code required', (string) $response->getContent());
++
++        $crawler = $client->request('GET', '/login/callback?code=123');
++
++        $response = $client->getResponse();
++        $this->assertEquals(400, $response->getStatusCode());
++
++        $idToken = ['sub' => 'fake-id'];
++        $googleClient = $this->getMock('Google_Client');
++        $googleClient->expects($this->once())
++            ->method('fetchAccessTokenWithAuthCode')
++            ->will($this->returnValue(true));
++        $googleClient->expects($this->once())
++            ->method('getAccessToken')
++            ->will($this->returnValue(['access_token' => 'xyz']));
++        $googleClient->expects($this->once())
++            ->method('verifyIdToken')
++            ->will($this->returnValue($idToken));
++
++        $this->app['google_client'] = $googleClient;
++        $crawler = $client->request('GET', '/login/callback?code=123');
++        $response = $client->getResponse();
++        $cookies = $response->headers->getCookies();
++
++        $this->assertEquals(1, count($cookies));
++        $this->assertEquals('google_user_info', $cookies[0]->getName());
++        $this->assertEquals(json_encode($idToken), $cookies[0]->getValue());
++    }
++
++    public function testLogout()
++    {
++        $client = $this->createClient();
++
++        // set the logged-in user info on the request
++        $userInfo = [
++            'sub' => 'fake-id',
++        ];
++        $cookie = new Cookie('google_user_info', json_encode($userInfo));
++        $client->getCookieJar()->set($cookie);
++
++        // make the request
++        $crawler = $client->request('GET', '/logout');
++        $response = $client->getResponse();
++        $cookies = $response->headers->getCookies();
++
++        $this->assertEquals(1, count($cookies));
++        $this->assertEquals('google_user_info', $cookies[0]->getName());
++        $this->assertNull($cookies[0]->getValue());
++    }
+ }
 diff --git a/test/unit/User/SimpleUserTest.php b/test/unit/User/SimpleUserTest.php
 new file mode 100644
 index 0000000..d9ef01e
