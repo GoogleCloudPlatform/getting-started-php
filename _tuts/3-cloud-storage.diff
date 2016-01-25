@@ -178,6 +178,59 @@ index f1986f6..9ea0b8c 100644
    <button id="submit" type="submit" class="btn btn-success">Save</button>
  </form>
  
+diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
+index cd2e32f..a959177 100644
+--- a/test/functional/ControllersTest.php
++++ b/test/functional/ControllersTest.php
+@@ -81,11 +81,22 @@ class ControllersTest extends WebTestCase
+         $submitButton = $crawler->selectButton('submit');
+         $form = $submitButton->form();
+ 
++        $photo = new UploadedFile(
++            __DIR__ . '/../lib/CatHat.jpg',
++            'CatHat.jpg',
++            'image/jpg',
++            filesize(__DIR__ . '/../lib/CatHat.jpg')
++        );
+         $crawler = $client->submit($form, array(
+             'title' => 'The Cat in the Hat',
+             'author' => 'Dr. Suess',
+             'publishedDate' => '1957-01-01',
++            'image' => $photo,
+         ));
++        $this->assertEquals(
++            'img1',
++            $crawler->filter('.book-image')->attr('src')
++        );
+ 
+         // Capture the delete button.
+         $deleteCatHat = $crawler->selectButton('submit');
+@@ -140,10 +151,17 @@ class ControllersTest extends WebTestCase
+         $submitButton = $crawler->selectButton('submit');
+         $form = $submitButton->form();
+ 
++        $photo = new UploadedFile(
++            __DIR__ . '/../lib/CatHat.jpg',
++            'CatHat.jpg',
++            'image/jpg',
++            filesize(__DIR__ . '/../lib/CatHat.jpg')
++        );
+         $crawler = $client->submit($form, array(
+             'title' => 'Where the Red Fern Grows',
+             'author' => 'Will Rawls',
+             'publishedDate' => '1961',
++            'image' => $photo,
+         ));
+ 
+         // Make sure the page contents match what we just submitted.
+@@ -164,6 +182,7 @@ class ControllersTest extends WebTestCase
+             'title' => 'Where the Red Fern Grows',
+             'author' => 'Wilson Rawls',
+             'publishedDate' => '1961',
++            'image' => $photo,
+         ));
+ 
+         // Make sure the page contents match what we just submitted.
 diff --git a/test/unit/FileSystem/CloudStorageTest.php b/test/unit/FileSystem/CloudStorageTest.php
 new file mode 100644
 index 0000000..4f571a9
