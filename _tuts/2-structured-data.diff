@@ -1637,10 +1637,10 @@ index 0000000..eb8e434
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..918f708
+index 0000000..6bc447f
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,128 @@
+@@ -0,0 +1,127 @@
 +<?php
 +
 +/*
@@ -1768,7 +1768,6 @@ index 0000000..918f708
 +        return new Response('', Response::HTTP_NOT_FOUND);
 +    }
 +);
-+
 diff --git a/templates/base.html.twig b/templates/base.html.twig
 new file mode 100644
 index 0000000..db1be8f
@@ -3988,7 +3987,7 @@ index 0000000..97761aa
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index d507ca2..28375cf 100644
+index d507ca2..7cdeb9b 100644
 --- a/web/index.php
 +++ b/web/index.php
 @@ -1,13 +1,12 @@
@@ -4007,7 +4006,7 @@ index d507ca2..28375cf 100644
   *
   * Unless required by applicable law or agreed to in writing, software
   * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -16,25 +15,44 @@
+@@ -16,25 +15,43 @@
   * limitations under the License.
   */
  
@@ -4064,8 +4063,8 @@ index d507ca2..28375cf 100644
 +            . "Possible values are cloudsql, mongodb, or datastore.");
  }
 -// @codeCoverageIgnoreEnd
- 
+-
 -return $app;
 -// [END index_php]
-+$app->run();
  
++$app->run();

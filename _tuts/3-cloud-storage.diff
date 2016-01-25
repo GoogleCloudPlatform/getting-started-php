@@ -109,7 +109,7 @@ index eb8e434..cf1c569 100644
  $app['debug'] = !in_array(
      getenv('BOOKSHELF_DEBUG'),
 diff --git a/src/controllers.php b/src/controllers.php
-index 918f708..85b7a45 100644
+index 6bc447f..cdc8a10 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Cookie;
@@ -280,7 +280,7 @@ index 0000000..4f571a9
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index 28375cf..3cd686d 100644
+index 7cdeb9b..a4da94c 100644
 --- a/web/index.php
 +++ b/web/index.php
 @@ -29,6 +29,9 @@ require __DIR__ . '/../src/controllers.php';
