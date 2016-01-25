@@ -1,8 +1,8 @@
 diff --git a/composer.json b/composer.json
-index 9f8b3b6..971a288 100644
+index 9f8b3b6..49e52b1 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -1,11 +1,19 @@
+@@ -1,11 +1,20 @@
  {
 +  "autoload": {
 +    "psr-4": {
@@ -14,7 +14,8 @@ index 9f8b3b6..971a288 100644
 -    "silex/silex": "^1.3"
 +    "silex/silex": "^1.3",
 +    "twig/twig": "^1.22",
-+    "mongodb/mongodb": "^1.0.0@beta"
++    "mongodb/mongodb": "^1.0.0@beta",
++    "google/apiclient": "~2.0@RC"
    },
    "require-dev": {
      "phpunit/phpunit": "~4",
@@ -24,19 +25,335 @@ index 9f8b3b6..971a288 100644
    }
  }
 diff --git a/composer.lock b/composer.lock
-index 1e26669..a1b0105 100644
+index 1e26669..e7df17a 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,10 +4,70 @@
+@@ -4,10 +4,552 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
 -    "hash": "99564f3400cca5903769d636142313a9",
 -    "content-hash": "5370fe3ed21bd2015c8ed9ea3c1494fa",
-+    "hash": "b29938c246301dcf7805b4cd739d2d7a",
-+    "content-hash": "2069950a30309dfff534083499affd5e",
++    "hash": "75cb0fe81cd5bb45662f0d4938db22d0",
++    "content-hash": "6d1c10b93c1371ce5ece62984ac99b59",
      "packages": [
          {
++            "name": "firebase/php-jwt",
++            "version": "v3.0.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/firebase/php-jwt.git",
++                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
++                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.0"
++            },
++            "type": "library",
++            "autoload": {
++                "psr-4": {
++                    "Firebase\\JWT\\": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "BSD-3-Clause"
++            ],
++            "authors": [
++                {
++                    "name": "Neuman Vong",
++                    "email": "neuman+pear@twilio.com",
++                    "role": "Developer"
++                },
++                {
++                    "name": "Anant Narayanan",
++                    "email": "anant@php.net",
++                    "role": "Developer"
++                }
++            ],
++            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
++            "homepage": "https://github.com/firebase/php-jwt",
++            "time": "2015-07-22 18:31:08"
++        },
++        {
++            "name": "google/apiclient",
++            "version": "v2.0.0-RC4",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/google/google-api-php-client.git",
++                "reference": "5620e578b495942a3b60eb99e2f0c1aeca23fbed"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/5620e578b495942a3b60eb99e2f0c1aeca23fbed",
++                "reference": "5620e578b495942a3b60eb99e2f0c1aeca23fbed",
++                "shasum": ""
++            },
++            "require": {
++                "firebase/php-jwt": "~2.0|~3.0",
++                "google/auth": "0.5",
++                "guzzlehttp/guzzle": "~5.2|~6.0",
++                "guzzlehttp/psr7": "1.2.*",
++                "monolog/monolog": "^1.17",
++                "php": ">=5.4",
++                "phpseclib/phpseclib": "~2.0",
++                "psr/http-message": "1.0.*"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4",
++                "squizlabs/php_codesniffer": "~2.3",
++                "symfony/css-selector": "~2.0",
++                "symfony/dom-crawler": "~2.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "2.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Google_": "src/"
++                },
++                "classmap": [
++                    "src/Google/Service/"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "Apache-2.0"
++            ],
++            "description": "Client library for Google APIs",
++            "homepage": "http://developers.google.com/api-client-library/php",
++            "keywords": [
++                "google"
++            ],
++            "time": "2015-12-28 18:50:26"
++        },
++        {
++            "name": "google/auth",
++            "version": "v0.5",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/google/google-auth-library-php.git",
++                "reference": "7ff4cce0c9d3c6bcba154e15fba76b89d1847340"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/7ff4cce0c9d3c6bcba154e15fba76b89d1847340",
++                "reference": "7ff4cce0c9d3c6bcba154e15fba76b89d1847340",
++                "shasum": ""
++            },
++            "require": {
++                "firebase/php-jwt": "~2.0|~3.0",
++                "guzzlehttp/guzzle": "~5.2|~6.0",
++                "guzzlehttp/psr7": "1.2.*",
++                "php": ">=5.4",
++                "psr/http-message": "1.0.*"
++            },
++            "require-dev": {
++                "phplint/phplint": "0.0.1",
++                "phpunit/phpunit": "3.7.*"
++            },
++            "type": "library",
++            "autoload": {
++                "classmap": [
++                    "src/"
++                ],
++                "psr-4": {
++                    "Google\\Auth\\": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "Apache-2.0"
++            ],
++            "description": "Google Auth Library for PHP",
++            "homepage": "http://github.com/google/google-auth-library-php",
++            "keywords": [
++                "Authentication",
++                "google",
++                "oauth2"
++            ],
++            "time": "2015-12-17 21:16:21"
++        },
++        {
++            "name": "guzzlehttp/guzzle",
++            "version": "6.1.1",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/guzzle/guzzle.git",
++                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/c6851d6e48f63b69357cbfa55bca116448140e0c",
++                "reference": "c6851d6e48f63b69357cbfa55bca116448140e0c",
++                "shasum": ""
++            },
++            "require": {
++                "guzzlehttp/promises": "~1.0",
++                "guzzlehttp/psr7": "~1.1",
++                "php": ">=5.5.0"
++            },
++            "require-dev": {
++                "ext-curl": "*",
++                "phpunit/phpunit": "~4.0",
++                "psr/log": "~1.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "6.1-dev"
++                }
++            },
++            "autoload": {
++                "files": [
++                    "src/functions_include.php"
++                ],
++                "psr-4": {
++                    "GuzzleHttp\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "Guzzle is a PHP HTTP client library",
++            "homepage": "http://guzzlephp.org/",
++            "keywords": [
++                "client",
++                "curl",
++                "framework",
++                "http",
++                "http client",
++                "rest",
++                "web service"
++            ],
++            "time": "2015-11-23 00:47:50"
++        },
++        {
++            "name": "guzzlehttp/promises",
++            "version": "1.0.3",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/guzzle/promises.git",
++                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/guzzle/promises/zipball/b1e1c0d55f8083c71eda2c28c12a228d708294ea",
++                "reference": "b1e1c0d55f8083c71eda2c28c12a228d708294ea",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.5.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.0-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "GuzzleHttp\\Promise\\": "src/"
++                },
++                "files": [
++                    "src/functions_include.php"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "Guzzle promises library",
++            "keywords": [
++                "promise"
++            ],
++            "time": "2015-10-15 22:28:00"
++        },
++        {
++            "name": "guzzlehttp/psr7",
++            "version": "1.2.2",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/guzzle/psr7.git",
++                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5d04bdd2881ac89abde1fb78cc234bce24327bb",
++                "reference": "f5d04bdd2881ac89abde1fb78cc234bce24327bb",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.4.0",
++                "psr/http-message": "~1.0"
++            },
++            "provide": {
++                "psr/http-message-implementation": "1.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.0-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "GuzzleHttp\\Psr7\\": "src/"
++                },
++                "files": [
++                    "src/functions_include.php"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "PSR-7 message implementation",
++            "keywords": [
++                "http",
++                "message",
++                "stream",
++                "uri"
++            ],
++            "time": "2016-01-23 01:23:02"
++        },
++        {
 +            "name": "mongodb/mongodb",
 +            "version": "1.0.0",
 +            "source": {
@@ -97,26 +414,248 @@ index 1e26669..a1b0105 100644
 +            "time": "2016-01-21 19:43:25"
 +        },
 +        {
++            "name": "monolog/monolog",
++            "version": "1.17.2",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/Seldaek/monolog.git",
++                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
++                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.0",
++                "psr/log": "~1.0"
++            },
++            "provide": {
++                "psr/log-implementation": "1.0.0"
++            },
++            "require-dev": {
++                "aws/aws-sdk-php": "^2.4.9",
++                "doctrine/couchdb": "~1.0@dev",
++                "graylog2/gelf-php": "~1.0",
++                "jakub-onderka/php-parallel-lint": "0.9",
++                "php-console/php-console": "^3.1.3",
++                "phpunit/phpunit": "~4.5",
++                "phpunit/phpunit-mock-objects": "2.3.0",
++                "raven/raven": "^0.13",
++                "ruflin/elastica": ">=0.90 <3.0",
++                "swiftmailer/swiftmailer": "~5.3",
++                "videlalvaro/php-amqplib": "~2.4"
++            },
++            "suggest": {
++                "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
++                "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
++                "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
++                "ext-mongo": "Allow sending log messages to a MongoDB server",
++                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
++                "php-console/php-console": "Allow sending log messages to Google Chrome",
++                "raven/raven": "Allow sending log messages to a Sentry server",
++                "rollbar/rollbar": "Allow sending log messages to Rollbar",
++                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
++                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.16.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Monolog\\": "src/Monolog"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Jordi Boggiano",
++                    "email": "j.boggiano@seld.be",
++                    "homepage": "http://seld.be"
++                }
++            ],
++            "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
++            "homepage": "http://github.com/Seldaek/monolog",
++            "keywords": [
++                "log",
++                "logging",
++                "psr-3"
++            ],
++            "time": "2015-10-14 12:51:02"
++        },
++        {
++            "name": "phpseclib/phpseclib",
++            "version": "2.0.1",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/phpseclib/phpseclib.git",
++                "reference": "ba6fb78f727cd09f2a649113b95468019e490585"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ba6fb78f727cd09f2a649113b95468019e490585",
++                "reference": "ba6fb78f727cd09f2a649113b95468019e490585",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.3"
++            },
++            "require-dev": {
++                "phing/phing": "~2.7",
++                "phpunit/phpunit": "~4.0",
++                "sami/sami": "~2.0",
++                "squizlabs/php_codesniffer": "~2.0"
++            },
++            "suggest": {
++                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
++                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
++                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
++                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
++            },
++            "type": "library",
++            "autoload": {
++                "psr-4": {
++                    "phpseclib\\": "phpseclib/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Jim Wigginton",
++                    "email": "terrafrost@php.net",
++                    "role": "Lead Developer"
++                },
++                {
++                    "name": "Patrick Monnerat",
++                    "email": "pm@datasphere.ch",
++                    "role": "Developer"
++                },
++                {
++                    "name": "Andreas Fischer",
++                    "email": "bantu@phpbb.com",
++                    "role": "Developer"
++                },
++                {
++                    "name": "Hans-Jürgen Petrich",
++                    "email": "petrich@tronic-media.com",
++                    "role": "Developer"
++                },
++                {
++                    "name": "Graham Campbell",
++                    "email": "graham@alt-three.com",
++                    "role": "Developer"
++                }
++            ],
++            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
++            "homepage": "http://phpseclib.sourceforge.net",
++            "keywords": [
++                "BigInteger",
++                "aes",
++                "asn.1",
++                "asn1",
++                "blowfish",
++                "crypto",
++                "cryptography",
++                "encryption",
++                "rsa",
++                "security",
++                "sftp",
++                "signature",
++                "signing",
++                "ssh",
++                "twofish",
++                "x.509",
++                "x509"
++            ],
++            "time": "2016-01-18 17:07:21"
++        },
++        {
              "name": "pimple/pimple",
              "version": "v1.1.1",
              "source": {
-@@ -492,6 +552,67 @@
+@@ -54,6 +596,55 @@
+             "time": "2013-11-22 08:30:29"
+         },
+         {
++            "name": "psr/http-message",
++            "version": "1.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/php-fig/http-message.git",
++                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
++                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "1.0.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Psr\\Http\\Message\\": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "PHP-FIG",
++                    "homepage": "http://www.php-fig.org/"
++                }
++            ],
++            "description": "Common interface for HTTP messages",
++            "keywords": [
++                "http",
++                "http-message",
++                "psr",
++                "psr-7",
++                "request",
++                "response"
++            ],
++            "time": "2015-05-04 20:22:00"
++        },
++        {
+             "name": "psr/log",
+             "version": "1.0.0",
+             "source": {
+@@ -492,6 +1083,67 @@
                  "url"
              ],
              "time": "2015-12-23 08:00:11"
 +        },
 +        {
 +            "name": "twig/twig",
-+            "version": "v1.23.3",
++            "version": "v1.24.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/twigphp/Twig.git",
-+                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08"
++                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae53fc2c312fdee63773b75cb570304f85388b08",
-+                "reference": "ae53fc2c312fdee63773b75cb570304f85388b08",
++                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
++                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -129,7 +668,7 @@ index 1e26669..a1b0105 100644
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.23-dev"
++                    "dev-master": "1.24-dev"
 +                }
 +            },
 +            "autoload": {
@@ -164,11 +703,11 @@ index 1e26669..a1b0105 100644
 +            "keywords": [
 +                "templating"
 +            ],
-+            "time": "2016-01-11 14:02:19"
++            "time": "2016-01-25 21:22:18"
          }
      ],
      "packages-dev": [
-@@ -1455,6 +1576,59 @@
+@@ -1455,6 +2107,59 @@
              "time": "2015-12-26 13:39:53"
          },
          {
@@ -228,13 +767,53 @@ index 1e26669..a1b0105 100644
              "name": "symfony/dom-crawler",
              "version": "v3.0.1",
              "source": {
-@@ -1621,7 +1795,9 @@
+@@ -1512,16 +2217,16 @@
+         },
+         {
+             "name": "symfony/polyfill-mbstring",
+-            "version": "v1.0.1",
++            "version": "v1.1.0",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/polyfill-mbstring.git",
+-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
++                "reference": "1289d16209491b584839022f29257ad859b8532d"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
+-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
++                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
++                "reference": "1289d16209491b584839022f29257ad859b8532d",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1533,7 +2238,7 @@
+             "type": "library",
+             "extra": {
+                 "branch-alias": {
+-                    "dev-master": "1.0-dev"
++                    "dev-master": "1.1-dev"
+                 }
+             },
+             "autoload": {
+@@ -1567,7 +2272,7 @@
+                 "portable",
+                 "shim"
+             ],
+-            "time": "2015-11-20 09:19:13"
++            "time": "2016-01-20 09:13:37"
+         },
+         {
+             "name": "symfony/yaml",
+@@ -1621,7 +2326,10 @@
      ],
      "aliases": [],
      "minimum-stability": "stable",
 -    "stability-flags": [],
 +    "stability-flags": {
-+        "mongodb/mongodb": 10
++        "mongodb/mongodb": 10,
++        "google/apiclient": 5
 +    },
      "prefer-stable": false,
      "prefer-lowest": false,
@@ -1410,12 +1989,72 @@ index 0000000..676e8c5
 +</div>
 +
 +{% endblock %}
+diff --git a/test/MySilexAppTest.php b/test/MySilexAppTest.php
+deleted file mode 100644
+index a7ea1fe..0000000
+--- a/test/MySilexAppTest.php
++++ /dev/null
+@@ -1,54 +0,0 @@
+-<?php
+-
+-/*
+- * Copyright 2015 Google Inc.
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-namespace Google\Cloud\Samples\Helloworld;
+-
+-use Silex\WebTestCase;
+-
+-/**
+- * WebTestCase for the sample Hello World application.
+- */
+-class MySilexAppTest extends WebTestCase
+-{
+-    public function createApplication()
+-    {
+-        $app = require __DIR__ . '/../web/index.php';
+-        $app['debug'] = true;
+-        unset($app['exception_handler']);
+-
+-        return $app;
+-    }
+-
+-    public function testTopPage()
+-    {
+-        $client = $this->createClient();
+-        $crawlerexport = $client->request('GET', '/');
+-        $resp = $client->getResponse();
+-        $this->assertTrue($resp->isOk());
+-        $this->assertContains('Hello World', $resp->getContent());
+-    }
+-
+-    public function testBlog()
+-    {
+-        $client = $this->createClient();
+-        $crawlerexport = $client->request('GET', '/goodbye');
+-        $resp = $client->getResponse();
+-        $this->assertTrue($resp->isOk());
+-        $this->assertContains('Goodbye World', $resp->getContent());
+-    }
+-}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
 new file mode 100644
-index 0000000..0fb184b
+index 0000000..cd2e32f
 --- /dev/null
 +++ b/test/functional/ControllersTest.php
-@@ -0,0 +1,295 @@
+@@ -0,0 +1,194 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -1499,22 +2138,11 @@ index 0000000..0fb184b
 +        $submitButton = $crawler->selectButton('submit');
 +        $form = $submitButton->form();
 +
-+        $photo = new UploadedFile(
-+            __DIR__ . '/../lib/CatHat.jpg',
-+            'CatHat.jpg',
-+            'image/jpg',
-+            filesize(__DIR__ . '/../lib/CatHat.jpg')
-+        );
 +        $crawler = $client->submit($form, array(
 +            'title' => 'The Cat in the Hat',
 +            'author' => 'Dr. Suess',
 +            'publishedDate' => '1957-01-01',
-+            'image' => $photo,
 +        ));
-+        $this->assertEquals(
-+            'img1',
-+            $crawler->filter('.book-image')->attr('src')
-+        );
 +
 +        // Capture the delete button.
 +        $deleteCatHat = $crawler->selectButton('submit');
@@ -1569,17 +2197,10 @@ index 0000000..0fb184b
 +        $submitButton = $crawler->selectButton('submit');
 +        $form = $submitButton->form();
 +
-+        $photo = new UploadedFile(
-+            __DIR__ . '/../lib/CatHat.jpg',
-+            'CatHat.jpg',
-+            'image/jpg',
-+            filesize(__DIR__ . '/../lib/CatHat.jpg')
-+        );
 +        $crawler = $client->submit($form, array(
 +            'title' => 'Where the Red Fern Grows',
 +            'author' => 'Will Rawls',
 +            'publishedDate' => '1961',
-+            'image' => $photo,
 +        ));
 +
 +        // Make sure the page contents match what we just submitted.
@@ -1600,7 +2221,6 @@ index 0000000..0fb184b
 +            'title' => 'Where the Red Fern Grows',
 +            'author' => 'Wilson Rawls',
 +            'publishedDate' => '1961',
-+            'image' => $photo,
 +        ));
 +
 +        // Make sure the page contents match what we just submitted.
@@ -1627,139 +2247,6 @@ index 0000000..0fb184b
 +        $this->assertEquals(404, $client->getResponse()->getStatusCode());
 +        $client->submit($submitButton->form());
 +        $this->assertEquals(404, $client->getResponse()->getStatusCode());
-+    }
-+
-+    public function testLogin()
-+    {
-+        $client = $this->createClient();
-+        $crawler = $client->request('GET', '/books/');
-+        $loginLink = $crawler->filter('a:contains("Login")')->link();
-+
-+        $crawler = $client->click($loginLink);
-+        $response = $client->getResponse();
-+        $this->assertEquals(302, $response->getStatusCode());
-+        $url = $response->headers->get('Location');
-+        $this->assertNotNull($url);
-+
-+        $parts = parse_url($url);
-+        parse_str($parts['query'], $query);
-+
-+        $this->assertArrayHasKey('response_type', $query);
-+        $this->assertArrayHasKey('client_id', $query);
-+        $this->assertArrayHasKey('redirect_uri', $query);
-+        $this->assertArrayHasKey('state', $query);
-+        $this->assertArrayHasKey('scope', $query);
-+
-+        $this->assertEquals('code', $query['response_type']);
-+        $this->assertEquals('http://localhost/login/callback', $query['redirect_uri']);
-+    }
-+
-+    public function testLoginCallback()
-+    {
-+        $client = $this->createClient();
-+        $crawler = $client->request('GET', '/login/callback');
-+
-+        $response = $client->getResponse();
-+        $this->assertEquals(400, $response->getStatusCode());
-+        $this->assertEquals('Code required', (string) $response->getContent());
-+
-+        $crawler = $client->request('GET', '/login/callback?code=123');
-+
-+        $response = $client->getResponse();
-+        $this->assertEquals(400, $response->getStatusCode());
-+
-+        $idToken = ['sub' => 'fake-id'];
-+        $googleClient = $this->getMock('Google_Client');
-+        $googleClient->expects($this->once())
-+            ->method('fetchAccessTokenWithAuthCode')
-+            ->will($this->returnValue(true));
-+        $googleClient->expects($this->once())
-+            ->method('getAccessToken')
-+            ->will($this->returnValue(['access_token' => 'xyz']));
-+        $googleClient->expects($this->once())
-+            ->method('verifyIdToken')
-+            ->will($this->returnValue($idToken));
-+
-+        $this->app['google_client'] = $googleClient;
-+        $crawler = $client->request('GET', '/login/callback?code=123');
-+        $response = $client->getResponse();
-+        $cookies = $response->headers->getCookies();
-+
-+        $this->assertEquals(1, count($cookies));
-+        $this->assertEquals('google_user_info', $cookies[0]->getName());
-+        $this->assertEquals(json_encode($idToken), $cookies[0]->getValue());
-+    }
-+
-+    public function testLogout()
-+    {
-+        $client = $this->createClient();
-+
-+        // set the logged-in user info on the request
-+        $userInfo = [
-+            'sub' => 'fake-id',
-+        ];
-+        $cookie = new Cookie('google_user_info', json_encode($userInfo));
-+        $client->getCookieJar()->set($cookie);
-+
-+        // make the request
-+        $crawler = $client->request('GET', '/logout');
-+        $response = $client->getResponse();
-+        $cookies = $response->headers->getCookies();
-+
-+        $this->assertEquals(1, count($cookies));
-+        $this->assertEquals('google_user_info', $cookies[0]->getName());
-+        $this->assertNull($cookies[0]->getValue());
-+    }
-+}
-diff --git a/test/functional/LoggerTest.php b/test/functional/LoggerTest.php
-new file mode 100644
-index 0000000..8e96919
---- /dev/null
-+++ b/test/functional/LoggerTest.php
-@@ -0,0 +1,45 @@
-+<?php
-+/*
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+namespace Google\Cloud\Samples\Bookshelf;
-+
-+use Silex\WebTestCase;
-+
-+/**
-+ * Class ControllersTest.
-+ */
-+class LoggerTest extends WebTestCase
-+{
-+    /**
-+     * Creates the application.
-+     *
-+     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-+     */
-+    public function createApplication()
-+    {
-+        $app = require __DIR__ . '/../../src/app.php';
-+        require __DIR__ . '/../../src/controllers.php';
-+
-+        return $app;
-+    }
-+
-+    public function testLogger()
-+    {
-+        $this->assertInstanceOf('Monolog\Logger', $this->app['monolog']);
-+        $this->assertInstanceOf('Monolog\Handler\ErrorLogHandler', $this->app['monolog.handler']);
 +    }
 +}
 diff --git a/test/lib/CatHat.jpg b/test/lib/CatHat.jpg
@@ -3256,10 +3743,10 @@ index 0000000..7882a18
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
 new file mode 100644
-index 0000000..979f725
+index 0000000..ec90bd5
 --- /dev/null
 +++ b/test/lib/GetConfigTrait.php
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,51 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -3291,7 +3778,13 @@ index 0000000..979f725
 +{
 +    protected function getConfig()
 +    {
-+        $config = array(
++        // if a local config exists, use it
++        if (file_exists($f = __DIR__ . '/../../config/settings.yml')) {
++            return Yaml::parse($f);
++        }
++
++        // allow the setting of environment variables for testing
++        return array(
 +            'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
 +            'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
 +            'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
@@ -3303,8 +3796,6 @@ index 0000000..979f725
 +            'mongo_url' => getenv('MONGO_URL'),
 +            'mongo_namespace' => getenv('MONGO_NAMESPACE'),
 +        );
-+
-+        return $config;
 +    }
 +}
 diff --git a/test/lib/SkipTestsIfMissingCredentialsTrait.php b/test/lib/SkipTestsIfMissingCredentialsTrait.php

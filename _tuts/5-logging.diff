@@ -13,16 +13,16 @@ index 49e52b1..6483105 100644
    "require-dev": {
      "phpunit/phpunit": "~4",
 diff --git a/composer.lock b/composer.lock
-index 6df3088..455ca23 100644
+index e7df17a..6958d26 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "9ab83f808a6a17db791783ec9614c05f",
+-    "hash": "75cb0fe81cd5bb45662f0d4938db22d0",
 -    "content-hash": "6d1c10b93c1371ce5ece62984ac99b59",
-+    "hash": "f28df3701fd982ed8adc8711d87699de",
++    "hash": "eef07d96ff376c87041134f705adbb2b",
 +    "content-hash": "9eb662c3f2bfcbb4853af5087212587d",
      "packages": [
          {
