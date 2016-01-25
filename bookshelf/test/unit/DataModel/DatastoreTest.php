@@ -29,7 +29,7 @@ class DatastoreTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $config = $this->getConfig();
+        $config = self::getConfig();
 
         $this->model = new Datastore($config['google_project_id']);
     }

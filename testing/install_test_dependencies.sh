@@ -74,3 +74,11 @@ gcloud config set app/promote_by_default false
 
 # Dump the credentials
 php testing/dump_credentials.php
+
+# Activate the service account
+if [ -z "{$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+    echo "No service account key, skipping service account activation."
+else
+    gcloud auth activate-service-account --key-file \
+        "${GOOGLE_APPLICATION_CREDENTIALS}"
+fi

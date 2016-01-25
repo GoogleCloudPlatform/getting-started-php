@@ -39,8 +39,11 @@ $app->register(new TwigServiceProvider(), array(
 // register the url generator
 $app->register(new UrlGeneratorServiceProvider);
 
+$config = getenv('BOOKSHELF_CONFIG') ?:
+    __DIR__ . '/../config/' . 'settings.yml';
+
 // parse configuration
-$app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
+$app['config'] = Yaml::parse(file_get_contents($config));
 
 // turn debug on by default
 $app['debug'] = !in_array(

@@ -29,7 +29,7 @@ class CloudSqlTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $config = $this->getConfig();
+        $config = self::getConfig();
 
         $this->model = new CloudSql(
             $config['mysql_dsn'],

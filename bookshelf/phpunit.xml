@@ -19,6 +19,7 @@
         <testsuite name="AllTests">
             <directory>test/functional</directory>
             <directory>test/unit</directory>
+            <directory>test/e2e</directory>
         </testsuite>
     </testsuites>
     <logging>

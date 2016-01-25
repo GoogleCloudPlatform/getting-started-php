@@ -14,4 +14,5 @@ mysql_password: YOUR_MYSQL_PASSWORD
 
 # configure Mongo backend
 mongo_url: YOUR_MONGODB_URL
-mongo_namespace: YOUR_MONGO_NAMESPACE
+mongo_database: YOUR_MONGO_DATABASE
+mongo_collection: YOUR_MONGO_COLLECTION

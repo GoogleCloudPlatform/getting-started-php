@@ -40,11 +40,13 @@ trait SkipTestsIfMissingCredentialsTrait
         return $hasCredentials;
     }
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function checkCredentials()
     {
         if (!self::hasCredentials()) {
             $this->markTestSkipped('No application credentials were found.');
         }
-        return parent::setUp();
     }
 }

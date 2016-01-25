@@ -6,4 +6,4 @@
 *.iml
 composer.phar
 bookshelf/config/settings.yml
-
+bookshelf/config/settings-e2e.yml
