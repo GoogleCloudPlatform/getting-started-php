@@ -1,9 +1,9 @@
 diff --git a/src/Session/GoogleAccount.php b/src/Session/GoogleAccount.php
 new file mode 100644
-index 0000000..ffc36af
+index 0000000..8a7b591
 --- /dev/null
 +++ b/src/Session/GoogleAccount.php
-@@ -0,0 +1,62 @@
+@@ -0,0 +1,63 @@
 +<?php
 +
 +/*
@@ -66,6 +66,7 @@ index 0000000..ffc36af
 +    }
 +}
 +// [END google_account]
++
 diff --git a/src/app.php b/src/app.php
 index 621a6d6..639a767 100644
 --- a/src/app.php
