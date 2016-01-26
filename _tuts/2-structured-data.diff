@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index 5d13630..49c14ae 100644
+index 5d13630..4c04e30 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -6,11 +6,15 @@
@@ -9,7 +9,7 @@ index 5d13630..49c14ae 100644
 -    "silex/silex": "^1.3"
 +    "silex/silex": "^1.3",
 +    "twig/twig": "^1.22",
-+    "mongodb/mongodb": "^1.0.0@beta",
++    "mongodb/mongodb": "^1.0.0",
 +    "google/apiclient": "~2.0@RC"
    },
    "require-dev": {
@@ -20,7 +20,7 @@ index 5d13630..49c14ae 100644
      "behat/mink": "^1.7",
      "behat/mink-goutte-driver": "^1.2"
 diff --git a/composer.lock b/composer.lock
-index 39f7499..810c836 100644
+index 39f7499..f0f7766 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,10 +4,552 @@
@@ -29,8 +29,8 @@ index 39f7499..810c836 100644
      ],
 -    "hash": "dcbf68eee17473825134eedb44ae4018",
 -    "content-hash": "2bc964af18907f06737142d1fb06cf46",
-+    "hash": "ac0fbf1ee11f761bd1eb564f3052909f",
-+    "content-hash": "5574ff7b1329b5b99658575cd2d3ccb9",
++    "hash": "fcd747adbaed9c260031d437714b60fe",
++    "content-hash": "07c66cf2d3c706f802d6fcf7d6ceec56",
      "packages": [
          {
 +            "name": "firebase/php-jwt",
@@ -1004,13 +1004,12 @@ index 39f7499..810c836 100644
              "name": "sebastian/comparator",
              "version": "1.2.0",
              "source": {
-@@ -2112,7 +2544,10 @@
+@@ -2112,7 +2544,9 @@
      ],
      "aliases": [],
      "minimum-stability": "stable",
 -    "stability-flags": [],
 +    "stability-flags": {
-+        "mongodb/mongodb": 10,
 +        "google/apiclient": 5
 +    },
      "prefer-stable": false,
@@ -1780,10 +1779,10 @@ index 0000000..a30f12c
 +}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..eb8e434
+index 0000000..833c03c
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,53 @@
 +<?php
 +
 +/*
@@ -1822,7 +1821,10 @@ index 0000000..eb8e434
 +));
 +
 +// parse configuration
-+$app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
++$config = getenv('BOOKSHELF_CONFIG') ?:
++    __DIR__ . '/../config/' . 'settings.yml';
++
++$app['config'] = Yaml::parse(file_get_contents($config));
 +
 +// turn debug on by default
 +$app['debug'] = !in_array(

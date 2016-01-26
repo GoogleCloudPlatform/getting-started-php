@@ -86,12 +86,12 @@ index 0000000..451f8bc
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index eb8e434..cf1c569 100644
+index 833c03c..621a6d6 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -38,6 +38,18 @@ $app->register(new TwigServiceProvider(), array(
- // parse configuration
- $app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
+@@ -41,6 +41,18 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
+ 
+ $app['config'] = Yaml::parse(file_get_contents($config));
  
 +// create the google authorization client
 +$app['google_client'] = function ($app) {

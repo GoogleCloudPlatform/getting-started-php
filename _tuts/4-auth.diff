@@ -68,7 +68,7 @@ index 0000000..b5ce58f
 +// [END google_account]
 \ No newline at end of file
 diff --git a/src/app.php b/src/app.php
-index cf1c569..e85551d 100644
+index 621a6d6..639a767 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -24,6 +24,7 @@ use Silex\Application;
@@ -79,7 +79,7 @@ index cf1c569..e85551d 100644
  
  $app = new Application();
  
-@@ -35,9 +36,19 @@ $app->register(new TwigServiceProvider(), array(
+@@ -35,12 +36,22 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  
@@ -87,7 +87,10 @@ index cf1c569..e85551d 100644
 +$app->register(new UrlGeneratorServiceProvider);
 +
  // parse configuration
- $app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
+ $config = getenv('BOOKSHELF_CONFIG') ?:
+     __DIR__ . '/../config/' . 'settings.yml';
+ 
+ $app['config'] = Yaml::parse(file_get_contents($config));
  
 +// create the user object
 +// [START create_user]
