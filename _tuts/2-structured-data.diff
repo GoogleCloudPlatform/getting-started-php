@@ -3894,24 +3894,30 @@ index 0000000..7882a18
 +    }
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index 25d77fc..9873f58 100644
+index 25d77fc..417e08f 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
-@@ -29,7 +29,13 @@ trait GetConfigTrait
+@@ -29,6 +29,7 @@ trait GetConfigTrait
  {
      protected static function getConfig()
      {
--        $config = array(
-+        // if a local config exists, use it
-+        if (file_exists($f = __DIR__ . '/../../config/settings.yml')) {
-+            return Yaml::parse(file_get_contents($f));
-+        }
-+
 +        // allow the setting of environment variables for testing
-+        return array(
+         $config = array(
              'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
              'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
-             'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
+@@ -43,6 +44,12 @@ trait GetConfigTrait
+             'mongo_collection' => getenv('MONGO_COLLECTION'),
+         );
+ 
++        // if a local config exists, use it
++        if (file_exists($f = __DIR__ . '/../../config/settings.yml')) {
++            $settings = Yaml::parse(file_get_contents($f));
++            $config = array_merge($settings, array_filter($config));
++        }
++
+         return $config;
+     }
+ }
 diff --git a/test/unit/DataModel/CloudSqlTest.php b/test/unit/DataModel/CloudSqlTest.php
 new file mode 100644
 index 0000000..984f065
