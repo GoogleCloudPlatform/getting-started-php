@@ -2274,10 +2274,10 @@ index 0000000..54fe66c
 +require_once __DIR__ . '/../vendor/autoload.php';
 diff --git a/test/e2e/BookshelfTest.php b/test/e2e/BookshelfTest.php
 new file mode 100644
-index 0000000..6a2dcae
+index 0000000..769e07d
 --- /dev/null
 +++ b/test/e2e/BookshelfTest.php
-@@ -0,0 +1,65 @@
+@@ -0,0 +1,64 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -2342,7 +2342,6 @@ index 0000000..6a2dcae
 +        $page = $this->session->getPage();
 +    }
 +}
-+
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
 new file mode 100644
 index 0000000..3aecfc4
