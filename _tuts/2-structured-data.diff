@@ -3893,7 +3893,7 @@ index 0000000..7882a18
 +    }
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index 25d77fc..0bc1ec2 100644
+index 25d77fc..9873f58 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
 @@ -29,7 +29,13 @@ trait GetConfigTrait
@@ -3903,7 +3903,7 @@ index 25d77fc..0bc1ec2 100644
 -        $config = array(
 +        // if a local config exists, use it
 +        if (file_exists($f = __DIR__ . '/../../config/settings.yml')) {
-+            return Yaml::parse($f);
++            return Yaml::parse(file_get_contents($f));
 +        }
 +
 +        // allow the setting of environment variables for testing
