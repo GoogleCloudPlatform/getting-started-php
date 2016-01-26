@@ -28,26 +28,44 @@ index 810c836..f91f3cc 100644
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index e85551d..c859596 100644
+index e85551d..a401f62 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -49,6 +49,10 @@ $app['user'] = function ($app) {
+@@ -49,6 +49,12 @@ $app['user'] = function ($app) {
  };
  // [END create_user]
  
 +// add logging to stderr
++// [START logging]
 +$app->register(new Silex\Provider\MonologServiceProvider());
 +$app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
++// [END logging]
 +
  // create the google authorization client
  $app['google_client'] = function ($app) {
    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
+diff --git a/src/controllers.php b/src/controllers.php
+index fedd753..582bb9d 100644
+--- a/src/controllers.php
++++ b/src/controllers.php
+@@ -159,6 +159,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+                 $storage->deleteFile($book['imageUrl']);
+             }
+             // [END delete_image]
++
++            // [START logging]
++            $app['monolog']->notice('Deleted Book: ' . $book['id']);
++            // [END logging]
++
+             return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
+         }
+ 
 diff --git a/test/functional/LoggerTest.php b/test/functional/LoggerTest.php
 new file mode 100644
-index 0000000..8e96919
+index 0000000..70733d2
 --- /dev/null
 +++ b/test/functional/LoggerTest.php
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,65 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -68,6 +86,7 @@ index 0000000..8e96919
 +namespace Google\Cloud\Samples\Bookshelf;
 +
 +use Silex\WebTestCase;
++use Monolog\Handler\TestHandler;
 +
 +/**
 + * Class ControllersTest.
@@ -91,5 +110,24 @@ index 0000000..8e96919
 +    {
 +        $this->assertInstanceOf('Monolog\Logger', $this->app['monolog']);
 +        $this->assertInstanceOf('Monolog\Handler\ErrorLogHandler', $this->app['monolog.handler']);
++    }
++
++    public function testDeleteLogsId()
++    {
++        $model = $this->getMock('Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface');
++        $model
++            ->expects($this->once())
++            ->method('read')
++            ->will($this->returnValue(array('id' => '123', 'imageUrl' => null)));
++        $model
++            ->expects($this->once())
++            ->method('delete');
++
++        $this->app['bookshelf.model'] = $model;
++        $this->app['monolog.handler'] = new TestHandler;
++
++        $client = $this->createClient();
++        $crawler = $client->request('POST', '/books/123/delete');
++        $this->assertTrue($this->app['monolog.handler']->hasNotice('Deleted Book: 123'));
 +    }
 +}
