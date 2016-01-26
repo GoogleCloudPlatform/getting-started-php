@@ -288,7 +288,7 @@ index 0000000..417ff18
 +fastcgi_param   REDIRECT_STATUS         200;
 diff --git a/gce/startup-script.sh b/gce/startup-script.sh
 new file mode 100644
-index 0000000..385aa80
+index 0000000..296a0d2
 --- /dev/null
 +++ b/gce/startup-script.sh
 @@ -0,0 +1,90 @@
@@ -362,11 +362,11 @@ index 0000000..385aa80
 +composer install -d /opt/app/bookshelf --no-ansi --no-progress
 +# [END php]
 +
-+# [START project-config]
++# [START project_config]
 +# pull our custom config file from the metadata server and add it to the project
 +curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/project-config" \
 +  -H "Metadata-Flavor: Google" >> /opt/app/bookshelf/config/settings.yml
-+# [END project-config]
++# [END project_config]
 +
 +# [START nginx]
 +# disable the default nginx configuration
