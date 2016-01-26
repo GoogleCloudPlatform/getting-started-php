@@ -68,7 +68,7 @@ index 0000000..8a7b591
 +// [END google_account]
 +
 diff --git a/src/app.php b/src/app.php
-index 621a6d6..639a767 100644
+index 833c03c..c9d19a9 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -24,6 +24,7 @@ use Silex\Application;
@@ -79,7 +79,7 @@ index 621a6d6..639a767 100644
  
  $app = new Application();
  
-@@ -35,12 +36,22 @@ $app->register(new TwigServiceProvider(), array(
+@@ -35,12 +36,36 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  
@@ -93,15 +93,29 @@ index 621a6d6..639a767 100644
  $app['config'] = Yaml::parse(file_get_contents($config));
  
 +// create the user object
-+// [START create_user]
++// [START google_account]
 +$app['user'] = function ($app) {
 +  return GoogleAccount::createFromRequest($app['request']);
 +};
-+// [END create_user]
++// [END google_account]
 +
- // create the google authorization client
- $app['google_client'] = function ($app) {
-   /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
++// create the google authorization client
++// [START google_client]
++$app['google_client'] = function ($app) {
++  /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
++  $urlGen = $app['url_generator'];
++  $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
++  return new Google_Client([
++    'client_id'     => $app['config']['google_client_id'],
++    'client_secret' => $app['config']['google_client_secret'],
++    'redirect_uri'  => $redirectUri,
++  ]);
++};
++// [END google_client]
++
+ // turn debug on by default
+ $app['debug'] = !in_array(
+     getenv('BOOKSHELF_DEBUG'),
 diff --git a/src/controllers.php b/src/controllers.php
 index 70b7307..6ae4fb5 100644
 --- a/src/controllers.php

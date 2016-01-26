@@ -28,12 +28,12 @@ index f0f7766..1037ee2 100644
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index 639a767..d4b413b 100644
+index c9d19a9..6efc83e 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -52,6 +52,12 @@ $app['user'] = function ($app) {
  };
- // [END create_user]
+ // [END google_account]
  
 +// add logging to stderr
 +// [START logging]
@@ -42,8 +42,8 @@ index 639a767..d4b413b 100644
 +// [END logging]
 +
  // create the google authorization client
+ // [START google_client]
  $app['google_client'] = function ($app) {
-   /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
 diff --git a/src/controllers.php b/src/controllers.php
 index 6ae4fb5..07c50a0 100644
 --- a/src/controllers.php
