@@ -1,6 +1,6 @@
 diff --git a/src/Session/GoogleAccount.php b/src/Session/GoogleAccount.php
 new file mode 100644
-index 0000000..b5ce58f
+index 0000000..ffc36af
 --- /dev/null
 +++ b/src/Session/GoogleAccount.php
 @@ -0,0 +1,62 @@
@@ -66,7 +66,6 @@ index 0000000..b5ce58f
 +    }
 +}
 +// [END google_account]
-\ No newline at end of file
 diff --git a/src/app.php b/src/app.php
 index 621a6d6..639a767 100644
 --- a/src/app.php
@@ -103,7 +102,7 @@ index 621a6d6..639a767 100644
  $app['google_client'] = function ($app) {
    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
 diff --git a/src/controllers.php b/src/controllers.php
-index 55ddd21..fda9e02 100644
+index 70b7307..6ae4fb5 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -21,11 +21,11 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -130,11 +129,10 @@ index 55ddd21..fda9e02 100644
      $id = $model->create($book);
  
      return $app->redirect("/books/$id");
-@@ -161,3 +165,53 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
-     return new Response('', Response::HTTP_NOT_FOUND);
+@@ -162,3 +166,53 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
  });
  // [END delete]
-+
+ 
 +# [START login]
 +$app->get('/login', function () use ($app) {
 +    /** @var Google_Client $client */
@@ -184,6 +182,7 @@ index 55ddd21..fda9e02 100644
 +    return $response;
 +})->bind('logout');
 +# [END logout]
++
 diff --git a/templates/base.html.twig b/templates/base.html.twig
 index db1be8f..7ddcf37 100644
 --- a/templates/base.html.twig

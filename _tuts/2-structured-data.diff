@@ -1838,10 +1838,10 @@ index 0000000..833c03c
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..f584652
+index 0000000..c46cb3b
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,134 @@
+@@ -0,0 +1,135 @@
 +<?php
 +
 +/*
@@ -1976,6 +1976,7 @@ index 0000000..f584652
 +    return new Response('', Response::HTTP_NOT_FOUND);
 +});
 +// [END delete]
++
 diff --git a/templates/base.html.twig b/templates/base.html.twig
 new file mode 100644
 index 0000000..db1be8f

@@ -45,7 +45,7 @@ index 639a767..d4b413b 100644
  $app['google_client'] = function ($app) {
    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
 diff --git a/src/controllers.php b/src/controllers.php
-index fda9e02..a8c2fef 100644
+index 6ae4fb5..07c50a0 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -159,6 +159,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
