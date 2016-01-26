@@ -1047,10 +1047,10 @@ index 0000000..45969d0
 @@ -0,0 +1 @@
 +extension=mongodb.so
 diff --git a/phpunit.xml b/phpunit.xml
-index 3e43624..1e38a7e 100644
+index 3e43624..8745f1f 100644
 --- a/phpunit.xml
 +++ b/phpunit.xml
-@@ -24,14 +24,9 @@
+@@ -24,14 +24,8 @@
          <log type="coverage-clover" target="build/logs/clover.xml"/>
      </logging>
      <filter>
@@ -1065,7 +1065,6 @@ index 3e43624..1e38a7e 100644
 -      </whitelist>
 +        <whitelist>
 +             <directory suffix=".php">./src</directory>
-+             <directory suffix=".php">./web</directory>
 +        </whitelist>
      </filter>
  </phpunit>
