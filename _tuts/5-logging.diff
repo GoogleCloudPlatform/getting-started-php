@@ -28,12 +28,12 @@ index 810c836..f91f3cc 100644
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index 1de13f3..0a9d1e9 100644
+index e85551d..c859596 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -47,6 +47,10 @@ $app['user'] = function ($app) {
-   return SimpleUser::createFromRequest($app['request']);
+@@ -49,6 +49,10 @@ $app['user'] = function ($app) {
  };
+ // [END create_user]
  
 +// add logging to stderr
 +$app->register(new Silex\Provider\MonologServiceProvider());

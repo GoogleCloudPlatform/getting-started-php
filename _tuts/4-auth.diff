@@ -1,9 +1,9 @@
-diff --git a/src/User/SimpleUser.php b/src/User/SimpleUser.php
+diff --git a/src/Session/GoogleAccount.php b/src/Session/GoogleAccount.php
 new file mode 100644
-index 0000000..20d0cf3
+index 0000000..b5ce58f
 --- /dev/null
-+++ b/src/User/SimpleUser.php
-@@ -0,0 +1,54 @@
++++ b/src/Session/GoogleAccount.php
+@@ -0,0 +1,62 @@
 +<?php
 +
 +/*
@@ -22,14 +22,16 @@ index 0000000..20d0cf3
 + * limitations under the License.
 + */
 +
-+namespace Google\Cloud\Samples\Bookshelf\User;
++namespace Google\Cloud\Samples\Bookshelf\Session;
 +
++use Symfony\Component\HttpFoundation\Cookie;
 +use Symfony\Component\HttpFoundation\Request;
 +
 +/**
-+ * class SimepleUser controlls the user in the session
++ * class SessionUser represents an authenticated user in the browser session
 + */
-+class SimpleUser
++// [START google_account]
++class GoogleAccount
 +{
 +    public $id;
 +    public $name;
@@ -52,25 +54,32 @@ index 0000000..20d0cf3
 +        if ($userInfo = $request->cookies->get('google_user_info')) {
 +            $userInfo = json_decode($userInfo, true);
 +
-+            return new SimpleUser($userInfo['sub'], $userInfo['name'], $userInfo['picture']);
++            return new GoogleAccount($userInfo['sub'], $userInfo['name'], $userInfo['picture']);
 +        }
 +
-+        return new SimpleUser;
++        return new GoogleAccount;
++    }
++
++    public static function createCookie(array $userInfo)
++    {
++        return new Cookie('google_user_info', json_encode($userInfo));
 +    }
 +}
++// [END google_account]
+\ No newline at end of file
 diff --git a/src/app.php b/src/app.php
-index cf1c569..1de13f3 100644
+index cf1c569..e85551d 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -24,6 +24,7 @@ use Silex\Application;
  use Silex\Provider\TwigServiceProvider;
  use Silex\Provider\UrlGeneratorServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-+use Google\Cloud\Samples\Bookshelf\User\SimpleUser;
++use Google\Cloud\Samples\Bookshelf\Session\GoogleAccount;
  
  $app = new Application();
  
-@@ -35,9 +36,17 @@ $app->register(new TwigServiceProvider(), array(
+@@ -35,9 +36,19 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  
@@ -81,17 +90,32 @@ index cf1c569..1de13f3 100644
  $app['config'] = Yaml::parse(file_get_contents(__DIR__ . '/../config/settings.yml'));
  
 +// create the user object
++// [START create_user]
 +$app['user'] = function ($app) {
-+  return SimpleUser::createFromRequest($app['request']);
++  return GoogleAccount::createFromRequest($app['request']);
 +};
++// [END create_user]
 +
  // create the google authorization client
  $app['google_client'] = function ($app) {
    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
 diff --git a/src/controllers.php b/src/controllers.php
-index 2c57d7b..22a92a1 100644
+index 2c57d7b..fedd753 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
+@@ -21,11 +21,11 @@ namespace Google\Cloud\Samples\Bookshelf;
+ /*
+  * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
+  */
+-use Symfony\Component\HttpFoundation\Cookie;
+ use Symfony\Component\HttpFoundation\Request;
+ use Symfony\Component\HttpFoundation\Response;
+ use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
+ use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
++use Google\Cloud\Samples\Bookshelf\Session\GoogleAccount;
+ 
+ $app->get('/', function (Request $request) use ($app) {
+     return $app->redirect('/books/');
 @@ -75,6 +75,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
      if (!empty($book['publishedDate'])) {
          $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
@@ -103,11 +127,12 @@ index 2c57d7b..22a92a1 100644
      $id = $model->create($book);
  
      return $app->redirect("/books/$id");
-@@ -162,3 +166,48 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+@@ -162,3 +166,53 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      }
  );
  // [END delete]
 +
++# [START login]
 +$app->get('/login', function () use ($app) {
 +    /** @var Google_Client $client */
 +    $client = $app['google_client'];
@@ -117,7 +142,9 @@ index 2c57d7b..22a92a1 100644
 +
 +    return $app->redirect($authUrl);
 +})->bind('login');
++# [END login]
 +
++# [START login_callback]
 +$app->get('/login/callback', function () use ($app) {
 +    /** @var Request $request */
 +    $request = $app['request'];
@@ -134,9 +161,8 @@ index 2c57d7b..22a92a1 100644
 +        $userInfo = $client->verifyIdToken();
 +
 +        // set the user info in a cookie and redirect to the homepage
-+        $cookie = new Cookie('google_user_info', json_encode($userInfo));
 +        $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
-+        $response->headers->setCookie($cookie);
++        $response->headers->setCookie(GoogleAccount::createCookie($userInfo));
 +
 +        return $response;
 +    }
@@ -145,22 +171,26 @@ index 2c57d7b..22a92a1 100644
 +    return new Response($authResponse['error_description'], 400);
 +
 +})->bind('login_callback');
++# [END login_callback]
 +
++# [START logout]
 +$app->get('/logout', function () use ($app) {
 +    $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
 +    $response->headers->clearCookie('google_user_info');
 +
 +    return $response;
 +})->bind('logout');
++# [END logout]
 diff --git a/templates/base.html.twig b/templates/base.html.twig
-index db1be8f..b6a8cb4 100644
+index db1be8f..7ddcf37 100644
 --- a/templates/base.html.twig
 +++ b/templates/base.html.twig
-@@ -30,6 +30,19 @@
+@@ -30,6 +30,22 @@
          <ul class="nav navbar-nav">
            <li><a href="/books">Books</a></li>
          </ul>
 +        <p class="navbar-text navbar-right">
++          {# [START login] #}
 +          {% if app.user.loggedIn %}
 +            {% if app.user.imageUrl %}
 +              <img src="{{ app.user.imageUrl }}" class="img-circle" width="24" alt="Photo" />
@@ -172,7 +202,9 @@ index db1be8f..b6a8cb4 100644
 +          {% else %}
 +            <a href="/login">Login</a>
 +          {% endif %}
++          {# [END login] #}
 +        </p>
++
        </div>
      </div>
      <div class="container">
@@ -267,11 +299,11 @@ index a959177..0fb184b 100644
 +        $this->assertNull($cookies[0]->getValue());
 +    }
  }
-diff --git a/test/unit/User/SimpleUserTest.php b/test/unit/User/SimpleUserTest.php
+diff --git a/test/unit/Session/GoogleAccountTest.php b/test/unit/Session/GoogleAccountTest.php
 new file mode 100644
-index 0000000..d9ef01e
+index 0000000..2150d76
 --- /dev/null
-+++ b/test/unit/User/SimpleUserTest.php
++++ b/test/unit/Session/GoogleAccountTest.php
 @@ -0,0 +1,70 @@
 +<?php
 +/*
@@ -289,16 +321,16 @@ index 0000000..d9ef01e
 + * See the License for the specific language governing permissions and
 + * limitations under the License.
 + */
-+namespace Google\Cloud\Samples\Bookshelf\User;
++namespace Google\Cloud\Samples\Bookshelf\Session;
 +
 +use Symfony\Component\HttpFoundation\Request;
 +
-+class SimpleUserTest extends \PHPUnit_Framework_TestCase
++class GoogleAccountTest extends \PHPUnit_Framework_TestCase
 +{
 +    public function testLoggedIn()
 +    {
 +        $id = 'fake-id';
-+        $user = new SimpleUser($id);
++        $user = new GoogleAccount($id);
 +
 +        $this->assertTrue($user->getLoggedIn());
 +        $this->assertNull($user->name);
@@ -307,7 +339,7 @@ index 0000000..d9ef01e
 +
 +    public function testNotLoggedIn()
 +    {
-+        $user = new SimpleUser();
++        $user = new GoogleAccount();
 +
 +        $this->assertFalse($user->getLoggedIn());
 +        $this->assertNull($user->name);
@@ -325,7 +357,7 @@ index 0000000..d9ef01e
 +        $request = new Request();
 +        $request->cookies->set('google_user_info', json_encode($userInfo));
 +
-+        $user = SimpleUser::createFromRequest($request);
++        $user = GoogleAccount::createFromRequest($request);
 +
 +        $this->assertTrue($user->getLoggedIn());
 +        $this->assertEquals($userInfo['sub'], $user->id);
@@ -336,7 +368,7 @@ index 0000000..d9ef01e
 +    public function testCreateFromRequestWithoutCookie()
 +    {
 +        $request = new Request();
-+        $user = SimpleUser::createFromRequest($request);
++        $user = GoogleAccount::createFromRequest($request);
 +
 +        $this->assertFalse($user->getLoggedIn());
 +        $this->assertNull($user->name);
