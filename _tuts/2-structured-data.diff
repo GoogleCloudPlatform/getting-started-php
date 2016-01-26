@@ -1836,10 +1836,10 @@ index 0000000..eb8e434
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..9135cb6
+index 0000000..f584652
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,135 @@
+@@ -0,0 +1,134 @@
 +<?php
 +
 +/*
@@ -1962,18 +1962,17 @@ index 0000000..9135cb6
 +
 +// [START delete]
 +$app->post('/books/{id}/delete', function ($id) use ($app) {
-+        /** @var DataModelInterface $model */
-+        $model = $app['bookshelf.model'];
-+        $book = $model->read($id);
-+        if ($book) {
-+            $model->delete($id);
++    /** @var DataModelInterface $model */
++    $model = $app['bookshelf.model'];
++    $book = $model->read($id);
++    if ($book) {
++        $model->delete($id);
 +
-+            return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
-+        }
-+
-+        return new Response('', Response::HTTP_NOT_FOUND);
++        return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
 +    }
-+);
++
++    return new Response('', Response::HTTP_NOT_FOUND);
++});
 +// [END delete]
 diff --git a/templates/base.html.twig b/templates/base.html.twig
 new file mode 100644

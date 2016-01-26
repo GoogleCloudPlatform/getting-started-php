@@ -100,7 +100,7 @@ index cf1c569..e85551d 100644
  $app['google_client'] = function ($app) {
    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
 diff --git a/src/controllers.php b/src/controllers.php
-index 2c57d7b..fedd753 100644
+index 55ddd21..fda9e02 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -21,11 +21,11 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -127,9 +127,9 @@ index 2c57d7b..fedd753 100644
      $id = $model->create($book);
  
      return $app->redirect("/books/$id");
-@@ -162,3 +166,53 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
-     }
- );
+@@ -161,3 +165,53 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+     return new Response('', Response::HTTP_NOT_FOUND);
+ });
  // [END delete]
 +
 +# [START login]

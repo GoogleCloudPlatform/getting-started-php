@@ -109,7 +109,7 @@ index eb8e434..cf1c569 100644
  $app['debug'] = !in_array(
      getenv('BOOKSHELF_DEBUG'),
 diff --git a/src/controllers.php b/src/controllers.php
-index 9135cb6..2c57d7b 100644
+index f584652..55ddd21 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Cookie;
@@ -160,19 +160,19 @@ index 9135cb6..2c57d7b 100644
          $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
      }
 @@ -125,7 +148,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
-         $book = $model->read($id);
-         if ($book) {
-             $model->delete($id);
+     $book = $model->read($id);
+     if ($book) {
+         $model->delete($id);
 -
-+            // [START delete_image]
-+            if ($book['imageUrl']) {
-+                /** @var CloudStorage $storage */
-+                $storage = $app['bookshelf.storage'];
-+                $storage->deleteFile($book['imageUrl']);
-+            }
-+            // [END delete_image]
-             return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
-         }
++        // [START delete_image]
++        if ($book['imageUrl']) {
++            /** @var CloudStorage $storage */
++            $storage = $app['bookshelf.storage'];
++            $storage->deleteFile($book['imageUrl']);
++        }
++        // [END delete_image]
+         return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
+     }
  
 diff --git a/templates/form.html.twig b/templates/form.html.twig
 index 9679ef6..9188524 100644

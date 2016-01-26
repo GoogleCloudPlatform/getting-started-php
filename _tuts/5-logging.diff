@@ -45,20 +45,20 @@ index e85551d..a401f62 100644
  $app['google_client'] = function ($app) {
    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
 diff --git a/src/controllers.php b/src/controllers.php
-index fedd753..582bb9d 100644
+index fda9e02..a8c2fef 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -159,6 +159,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
-                 $storage->deleteFile($book['imageUrl']);
-             }
-             // [END delete_image]
-+
-+            // [START logging]
-+            $app['monolog']->notice('Deleted Book: ' . $book['id']);
-+            // [END logging]
-+
-             return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
+             $storage->deleteFile($book['imageUrl']);
          }
+         // [END delete_image]
++
++        // [START logging]
++        $app['monolog']->notice('Deleted Book: ' . $book['id']);
++        // [END logging]
++
+         return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
+     }
  
 diff --git a/test/functional/LoggerTest.php b/test/functional/LoggerTest.php
 new file mode 100644
