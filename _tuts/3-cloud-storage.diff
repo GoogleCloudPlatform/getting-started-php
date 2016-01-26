@@ -109,7 +109,7 @@ index eb8e434..cf1c569 100644
  $app['debug'] = !in_array(
      getenv('BOOKSHELF_DEBUG'),
 diff --git a/src/controllers.php b/src/controllers.php
-index 9135cb6..17f3dc1 100644
+index 9135cb6..2c57d7b 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Cookie;
@@ -138,7 +138,7 @@ index 9135cb6..17f3dc1 100644
      if (!empty($book['publishedDate'])) {
          $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
      }
-@@ -105,8 +116,18 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
+@@ -105,8 +116,20 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
  $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      $book = $request->request->all();
      $book['id'] = $id;
@@ -146,6 +146,7 @@ index 9135cb6..17f3dc1 100644
 +    $storage = $app['bookshelf.storage'];
      /** @var DataModelInterface $model */
      $model = $app['bookshelf.model'];
++    // [START add_image]
 +    $files = $request->files;
 +    $image = $files->get('image');
 +    if ($image && $image->isValid()) {
@@ -154,17 +155,34 @@ index 9135cb6..17f3dc1 100644
 +            $image->getMimeType()
 +        );
 +    }
++    // [END add_image]
      if (!empty($book['publishedDate'])) {
          $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
      }
+@@ -125,7 +148,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+         $book = $model->read($id);
+         if ($book) {
+             $model->delete($id);
+-
++            // [START delete_image]
++            if ($book['imageUrl']) {
++                /** @var CloudStorage $storage */
++                $storage = $app['bookshelf.storage'];
++                $storage->deleteFile($book['imageUrl']);
++            }
++            // [END delete_image]
+             return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
+         }
+ 
 diff --git a/templates/form.html.twig b/templates/form.html.twig
-index 9679ef6..9ca0588 100644
+index 9679ef6..9188524 100644
 --- a/templates/form.html.twig
 +++ b/templates/form.html.twig
-@@ -42,6 +42,16 @@
+@@ -42,6 +42,18 @@
      <textarea name="description" id="description" class="form-control">{{book.description}}</textarea>
    </div>
  
++  {# [START book_form_image] #}
 +  <div class="form-group">
 +    <label for="image">Cover Image</label>
 +    <input type="file" name="image" id="image" class="form-control"/>
@@ -174,17 +192,20 @@ index 9679ef6..9ca0588 100644
 +    <label for="imageUrl">Cover Image URL</label>
 +    <input type="text" name="imageUrl" id="imageUrl" value="{{book.imageUrl}}" class="form-control"/>
 +  </div>
++  {# [END book_form_image] #}
 +
    <button id="submit" type="submit" class="btn btn-success">Save</button>
  </form>
  
 diff --git a/templates/list.html.twig b/templates/list.html.twig
-index 5643436..8200e94 100644
+index 5643436..d1eff14 100644
 --- a/templates/list.html.twig
 +++ b/templates/list.html.twig
-@@ -29,7 +29,11 @@
+@@ -28,9 +28,15 @@
+ {% for book in books %}
  <div class="media">
    <a href="/books/{{book.id}}">
++    {# [START book_image] #}
      <div class="media-left">
 -      <img src="http://placekitten.com/g/128/192">
 +      {% if book.imageUrl %}
@@ -193,9 +214,11 @@ index 5643436..8200e94 100644
 +        <img src="http://placekitten.com/g/128/192">
 +      {% endif %}
      </div>
++    {# [END book_image] #}
      <div class="media-body">
        <h4>{{book.title}}</h4>
-@@ -40,7 +44,7 @@
+       <p>{{book.author}}</p>
+@@ -40,7 +46,7 @@
  {% else %}
  <p>No books found</p>
  {% endfor %}
