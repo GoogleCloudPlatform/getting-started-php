@@ -2274,10 +2274,10 @@ index 0000000..54fe66c
 +require_once __DIR__ . '/../vendor/autoload.php';
 diff --git a/test/e2e/BookshelfTest.php b/test/e2e/BookshelfTest.php
 new file mode 100644
-index 0000000..132fea7
+index 0000000..769e07d
 --- /dev/null
 +++ b/test/e2e/BookshelfTest.php
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,64 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -2310,10 +2310,6 @@ index 0000000..132fea7
 +
 +    public static function setUpBeforeClass()
 +    {
-+        // explicit check to run E2E tests
-+        if (!getenv('BOOKSHELF_E2E')) {
-+            return;
-+        }
 +        if (self::$step = getenv('STEP_NAME')) {
 +            self::deployApp(self::$step);
 +        }
