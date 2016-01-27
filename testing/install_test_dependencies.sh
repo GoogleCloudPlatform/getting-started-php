@@ -33,14 +33,20 @@ if [ "${PREREQ}" = "false" ]; then
     exit 1
 fi
 
-# Install composer
-mkdir -p ${HOME}/bin
-curl -sS https://getcomposer.org/installer | php -- --install-dir=${HOME}/bin --filename=composer
+# set github token to speed up composer if possible
+if [ -n "$GH_TOKEN" ]; then
+    composer config --global github-oauth.github.com ${GH_TOKEN};
+fi;
 
 # Run composer
-for DIR in "${DIRS[@]}"; do
-    cd ${DIR}
+# Run tests for each directories.
+for STEP in "${STEPS[@]}"; do
+    pushd $STEP
     composer install --ignore-platform-reqs
+    if [ -f config/settings.yml.dist ]; then
+        cp config/settings.yml.dist config/settings.yml
+    fi;
+    popd
 done
 
 cd "${TEST_BUILD_DIR}"
@@ -50,6 +56,7 @@ cd "${TEST_BUILD_DIR}"
 # php-coveralls depends some legacy libs which may conflicts with the
 # dependencies of modern applications. To avoid such conflicts, it is
 # best to use the phar file (which includes all the deps).
+mkdir -p ${HOME}/bin
 
 wget https://github.com/satooshi/php-coveralls/releases/download/v0.7.1/coveralls.phar -O ${HOME}/bin/coveralls
 chmod +x ${HOME}/bin/coveralls

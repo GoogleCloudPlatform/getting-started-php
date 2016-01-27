@@ -26,8 +26,11 @@ VARS=(
     TEST_BUILD_DIR
 )
 
-DIRS=(
-    ${TEST_BUILD_DIR}/helloworld/silex
-    ${TEST_BUILD_DIR}/bookshelf
+STEPS=(
+    1-hello-world
+    2-structured-data
+    3-cloud-storage
+    4-auth
+    5-logging
+    6-compute-engine
 )
-

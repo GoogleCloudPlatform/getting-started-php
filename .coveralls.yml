@@ -3,8 +3,12 @@
 service_name: travis-ci
 
 coverage_clover:
-  - bookshelf/build/logs/clover.xml
-  - helloworld/silex/build/logs/clover.xml
+  - 1-hello-world/build/logs/clover.xml
+  - 2-structured-data/build/logs/clover.xml
+  - 3-cloud-storage/build/logs/clover.xml
+  - 4-auth/build/logs/clover.xml
+  - 5-logging/build/logs/clover.xml
+  - 6-compute-engine/build/logs/clover.xml
 
 json_path: build/logs/coveralls-upload.json
 exclude_no_stmt: true
