@@ -1,10 +1,10 @@
 diff --git a/composer.json b/composer.json
-index 4c04e30..682c5d4 100644
+index f6f1b2e..e91bca6 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -9,7 +9,8 @@
-     "silex/silex": "^1.3",
+@@ -10,7 +10,8 @@
      "twig/twig": "^1.22",
+     "symfony/yaml": "^3.0",
      "mongodb/mongodb": "^1.0.0",
 -    "google/apiclient": "~2.0@RC"
 +    "google/apiclient": "~2.0@RC",
@@ -13,17 +13,17 @@ index 4c04e30..682c5d4 100644
    "require-dev": {
      "phpunit/phpunit": "~4",
 diff --git a/composer.lock b/composer.lock
-index f0f7766..1037ee2 100644
+index 1313def..8830e16 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "fcd747adbaed9c260031d437714b60fe",
--    "content-hash": "07c66cf2d3c706f802d6fcf7d6ceec56",
-+    "hash": "f0c5983c8aafd12023a9f80ca9b03b50",
-+    "content-hash": "9391d78820e940d212f54a10a4746cb0",
+-    "hash": "0f275ff1c81a6b3b49789e9e6d12af46",
+-    "content-hash": "1a45991b625ad016e066a5ea55a35949",
++    "hash": "3a52f2d6bbd079e80eafd361539bff75",
++    "content-hash": "03fad00318df41bcbd31e29fb82f0c76",
      "packages": [
          {
              "name": "firebase/php-jwt",
