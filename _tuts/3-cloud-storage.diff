@@ -175,7 +175,7 @@ index 9679ef6..9188524 100644
  </form>
  
 diff --git a/templates/list.html.twig b/templates/list.html.twig
-index 5643436..d1eff14 100644
+index af00157..d1eff14 100644
 --- a/templates/list.html.twig
 +++ b/templates/list.html.twig
 @@ -28,9 +28,15 @@
@@ -195,15 +195,6 @@ index 5643436..d1eff14 100644
      <div class="media-body">
        <h4>{{book.title}}</h4>
        <p>{{book.author}}</p>
-@@ -40,7 +46,7 @@
- {% else %}
- <p>No books found</p>
- {% endfor %}
--{# [end book_list] #}
-+{# [END book_list] #}
- 
- {% if next_page_token %}
- <nav>
 diff --git a/templates/view.html.twig b/templates/view.html.twig
 index d5c839e..db27f94 100644
 --- a/templates/view.html.twig

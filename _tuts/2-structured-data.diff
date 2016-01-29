@@ -2102,7 +2102,7 @@ index 0000000..9679ef6
 +{# [END book_form] #}
 diff --git a/templates/list.html.twig b/templates/list.html.twig
 new file mode 100644
-index 0000000..5643436
+index 0000000..af00157
 --- /dev/null
 +++ b/templates/list.html.twig
 @@ -0,0 +1,53 @@
@@ -2148,7 +2148,7 @@ index 0000000..5643436
 +{% else %}
 +<p>No books found</p>
 +{% endfor %}
-+{# [end book_list] #}
++{# [END book_list] #}
 +
 +{% if next_page_token %}
 +<nav>
