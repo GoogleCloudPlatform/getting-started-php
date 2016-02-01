@@ -211,6 +211,48 @@ class ControllersTest extends WebTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
+    public function testAddBookWhenLoggedIn()
+    {
+        $client = $this->createClient();
+
+        // set the logged-in user info on the request
+        $userInfo = [
+            'sub' => 'fake-id',
+            'name' => 'Tester Joe',
+            'picture' => null
+        ];
+        $cookie = new Cookie('google_user_info', json_encode($userInfo));
+        $client->getCookieJar()->set($cookie);
+        $crawler = $client->request('GET', '/books/');
+
+        $editLink = $crawler
+            ->filter('a:contains("Add")') // find all links with the text "Add"
+            ->link();
+
+        // and click it
+        $crawler = $client->click($editLink);
+
+        // Fill the form and submit it.
+        $submitButton = $crawler->selectButton('submit');
+        $form = $submitButton->form();
+
+        $crawler = $client->submit($form, array(
+            'title' => 'Gödel, Escher, Bach',
+            'author' => 'Douglas Hofstadter',
+            'publishedDate' => '1979',
+        ));
+
+        // get the created book ID and read it
+        $url = $client->getResponse()->headers->get('location');
+        $id = str_replace('/books/', '', $url);
+        $book = $this->app['bookshelf.model']->read($id);
+        $this->assertNotNull($book);
+        $this->assertArrayHasKey('createdBy', $book);
+        $this->assertEquals($userInfo['name'], $book['createdBy']);
+        $this->assertArrayHasKey('createdById', $book);
+        $this->assertEquals($userInfo['sub'], $book['createdById']);
+    }
+
     public function testLogin()
     {
         $client = $this->createClient();
