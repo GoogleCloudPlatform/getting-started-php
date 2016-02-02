@@ -45,7 +45,7 @@ index c9d19a9..6efc83e 100644
  // [START google_client]
  $app['google_client'] = function ($app) {
 diff --git a/src/controllers.php b/src/controllers.php
-index 6ae4fb5..07c50a0 100644
+index 6ae4fb5..f924296 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -159,6 +159,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
@@ -60,6 +60,34 @@ index 6ae4fb5..07c50a0 100644
          return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
      }
  
+@@ -216,3 +221,6 @@ $app->get('/logout', function () use ($app) {
+ })->bind('logout');
+ # [END logout]
+ 
++$app->get('/_ah/health', function (Request $request) use ($app) {
++    return 'OK';
++});
+diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
+index 41af3c1..29564da 100644
+--- a/test/functional/ControllersTest.php
++++ b/test/functional/ControllersTest.php
+@@ -334,4 +334,16 @@ class ControllersTest extends WebTestCase
+         $this->assertEquals('google_user_info', $cookies[0]->getName());
+         $this->assertNull($cookies[0]->getValue());
+     }
++
++    public function testHealthCheck()
++    {
++        $client = $this->createClient();
++        $client->followRedirects();
++        $crawler = $client->request('GET', '/_ah/health');
++
++        $response = $client->getResponse();
++
++        $this->assertEquals(200, $response->getStatusCode());
++        $this->assertEquals('OK', $response->getContent());
++    }
+ }
 diff --git a/test/functional/LoggerTest.php b/test/functional/LoggerTest.php
 new file mode 100644
 index 0000000..70733d2
