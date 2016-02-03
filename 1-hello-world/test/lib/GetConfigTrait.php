@@ -17,8 +17,6 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Symfony\Component\Yaml\Yaml;
-
 /**
  * Class GetConfigTrait
  * @package Google\Cloud\Samples\Bookshelf
