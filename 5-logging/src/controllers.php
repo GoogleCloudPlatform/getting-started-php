@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
 use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
-use Google\Cloud\Samples\Bookshelf\Session\GoogleAccount;
 
 $app->get('/', function (Request $request) use ($app) {
     return $app->redirect('/books/');
@@ -75,9 +74,9 @@ $app->post('/books/add', function (Request $request) use ($app) {
     if (!empty($book['publishedDate'])) {
         $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
     }
-    if ($app['user']->getLoggedIn()) {
-        $book['createdBy'] = $app['user']->name;
-        $book['createdById'] = $app['user']->id;
+    if ($app['user']) {
+        $book['createdBy'] = $app['user']['name'];
+        $book['createdById'] = $app['user']['id'];
     }
     $id = $model->create($book);
 
@@ -199,11 +198,15 @@ $app->get('/login/callback', function () use ($app) {
     if ($client->getAccessToken()) {
         $userInfo = $client->verifyIdToken();
 
-        // set the user info in a cookie and redirect to the homepage
-        $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
-        $response->headers->setCookie(GoogleAccount::createCookie($userInfo));
+        /** @var Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $app['session'];
+        $session->set('user', [
+            'id'      => $userInfo['sub'],
+            'name'    => $userInfo['name'],
+            'picture' => $userInfo['picture'],
+        ]);
 
-        return $response;
+        return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
     }
 
     // an error occured while trying to authorize - display it
@@ -214,10 +217,11 @@ $app->get('/login/callback', function () use ($app) {
 
 # [START logout]
 $app->get('/logout', function () use ($app) {
-    $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
-    $response->headers->clearCookie('google_user_info');
+    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
+    $session = $app['session'];
+    $session->remove('user');
 
-    return $response;
+    return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
 })->bind('logout');
 # [END logout]
 

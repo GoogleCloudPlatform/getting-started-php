@@ -32,9 +32,9 @@
         </ul>
         <p class="navbar-text navbar-right">
           {# [START login] #}
-          {% if app.user.loggedIn %}
-            {% if app.user.imageUrl %}
-              <img src="{{ app.user.imageUrl }}" class="img-circle" width="24" alt="Photo" />
+          {% if app.user %}
+            {% if app.user.picture %}
+              <img src="{{ app.user.picture }}" class="img-circle" width="24" alt="Photo" />
             {% endif %}
             <span>
               {{ app.user.name }} &nbsp;

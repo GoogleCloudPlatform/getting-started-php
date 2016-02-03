@@ -21,10 +21,10 @@
  * Follows Silex Skeleton pattern.
  */
 use Silex\Application;
+use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Symfony\Component\Yaml\Yaml;
-use Google\Cloud\Samples\Bookshelf\Session\GoogleAccount;
 
 $app = new Application();
 
@@ -45,12 +45,16 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
 
 $app['config'] = Yaml::parse(file_get_contents($config));
 
-// create the user object
-// [START google_account]
+// register the session handler
+// [START session]
+$app->register(new SessionServiceProvider);
 $app['user'] = function ($app) {
-  return GoogleAccount::createFromRequest($app['request']);
+    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
+    $session = $app['session'];
+
+    return $session->has('user') ? $session->get('user') : null;
 };
-// [END google_account]
+// [END session]
 
 // create the google authorization client
 // [START google_client]
