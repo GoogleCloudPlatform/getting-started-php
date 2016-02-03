@@ -68,18 +68,18 @@ index 0000000..8a7b591
 +// [END google_account]
 +
 diff --git a/src/app.php b/src/app.php
-index 833c03c..c9d19a9 100644
+index 833c03c..5a6219d 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -24,6 +24,7 @@ use Silex\Application;
+@@ -21,6 +21,7 @@
+  * Follows Silex Skeleton pattern.
+  */
+ use Silex\Application;
++use Silex\Provider\SessionServiceProvider;
  use Silex\Provider\TwigServiceProvider;
  use Silex\Provider\UrlGeneratorServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-+use Google\Cloud\Samples\Bookshelf\Session\GoogleAccount;
- 
- $app = new Application();
- 
-@@ -35,12 +36,36 @@ $app->register(new TwigServiceProvider(), array(
+@@ -35,12 +36,40 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  
@@ -92,12 +92,16 @@ index 833c03c..c9d19a9 100644
  
  $app['config'] = Yaml::parse(file_get_contents($config));
  
-+// create the user object
-+// [START google_account]
++// register the session handler
++// [START session]
++$app->register(new SessionServiceProvider);
 +$app['user'] = function ($app) {
-+  return GoogleAccount::createFromRequest($app['request']);
++    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
++    $session = $app['session'];
++
++    return $session->has('user') ? $session->get('user') : null;
 +};
-+// [END google_account]
++// [END session]
 +
 +// create the google authorization client
 +// [START google_client]
@@ -117,10 +121,10 @@ index 833c03c..c9d19a9 100644
  $app['debug'] = !in_array(
      getenv('BOOKSHELF_DEBUG'),
 diff --git a/src/controllers.php b/src/controllers.php
-index 70b7307..6ae4fb5 100644
+index 70b7307..76c7c3c 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
-@@ -21,11 +21,11 @@ namespace Google\Cloud\Samples\Bookshelf;
+@@ -21,7 +21,6 @@ namespace Google\Cloud\Samples\Bookshelf;
  /*
   * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
   */
@@ -128,23 +132,18 @@ index 70b7307..6ae4fb5 100644
  use Symfony\Component\HttpFoundation\Request;
  use Symfony\Component\HttpFoundation\Response;
  use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
- use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
-+use Google\Cloud\Samples\Bookshelf\Session\GoogleAccount;
- 
- $app->get('/', function (Request $request) use ($app) {
-     return $app->redirect('/books/');
-@@ -75,6 +75,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
+@@ -75,6 +74,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
      if (!empty($book['publishedDate'])) {
          $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
      }
-+    if ($app['user']->getLoggedIn()) {
-+        $book['createdBy'] = $app['user']->name;
-+        $book['createdById'] = $app['user']->id;
++    if ($app['user']) {
++        $book['createdBy'] = $app['user']['name'];
++        $book['createdById'] = $app['user']['id'];
 +    }
      $id = $model->create($book);
  
      return $app->redirect("/books/$id");
-@@ -162,3 +166,53 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+@@ -162,3 +165,58 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
  });
  // [END delete]
  
@@ -176,11 +175,15 @@ index 70b7307..6ae4fb5 100644
 +    if ($client->getAccessToken()) {
 +        $userInfo = $client->verifyIdToken();
 +
-+        // set the user info in a cookie and redirect to the homepage
-+        $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
-+        $response->headers->setCookie(GoogleAccount::createCookie($userInfo));
++        /** @var Symfony\Component\HttpFoundation\Session\Session $session */
++        $session = $app['session'];
++        $session->set('user', [
++            'id'      => $userInfo['sub'],
++            'name'    => $userInfo['name'],
++            'picture' => $userInfo['picture'],
++        ]);
 +
-+        return $response;
++        return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
 +    }
 +
 +    // an error occured while trying to authorize - display it
@@ -191,15 +194,16 @@ index 70b7307..6ae4fb5 100644
 +
 +# [START logout]
 +$app->get('/logout', function () use ($app) {
-+    $response = new Response('', Response::HTTP_FOUND, ['Location' => '/']);
-+    $response->headers->clearCookie('google_user_info');
++    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
++    $session = $app['session'];
++    $session->remove('user');
 +
-+    return $response;
++    return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
 +})->bind('logout');
 +# [END logout]
 +
 diff --git a/templates/base.html.twig b/templates/base.html.twig
-index db1be8f..7ddcf37 100644
+index db1be8f..e73f8bb 100644
 --- a/templates/base.html.twig
 +++ b/templates/base.html.twig
 @@ -30,6 +30,22 @@
@@ -208,9 +212,9 @@ index db1be8f..7ddcf37 100644
          </ul>
 +        <p class="navbar-text navbar-right">
 +          {# [START login] #}
-+          {% if app.user.loggedIn %}
-+            {% if app.user.imageUrl %}
-+              <img src="{{ app.user.imageUrl }}" class="img-circle" width="24" alt="Photo" />
++          {% if app.user %}
++            {% if app.user.picture %}
++              <img src="{{ app.user.picture }}" class="img-circle" width="24" alt="Photo" />
 +            {% endif %}
 +            <span>
 +              {{ app.user.name }} &nbsp;
@@ -226,10 +230,18 @@ index db1be8f..7ddcf37 100644
      </div>
      <div class="container">
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index a959177..41af3c1 100644
+index a959177..582a085 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -210,4 +210,128 @@ class ControllersTest extends WebTestCase
+@@ -53,6 +53,7 @@ class ControllersTest extends WebTestCase
+         $app['bookshelf.page_size'] = 1;
+         $app['bookshelf.storage'] = new FakeFileStorage();
+         $app['monolog.handler'] = new TestHandler();
++        $app['session.test'] = true;
+ 
+         return $app;
+     }
+@@ -210,4 +211,127 @@ class ControllersTest extends WebTestCase
          $client->submit($submitButton->form());
          $this->assertEquals(404, $client->getResponse()->getStatusCode());
      }
@@ -240,12 +252,12 @@ index a959177..41af3c1 100644
 +
 +        // set the logged-in user info on the request
 +        $userInfo = [
-+            'sub' => 'fake-id',
-+            'name' => 'Tester Joe',
++            'id'      => 'fake-id',
++            'name'    => 'Tester Joe',
 +            'picture' => null
 +        ];
-+        $cookie = new Cookie('google_user_info', json_encode($userInfo));
-+        $client->getCookieJar()->set($cookie);
++
++        $this->app['session']->set('user', $userInfo);
 +        $crawler = $client->request('GET', '/books/');
 +
 +        $editLink = $crawler
@@ -269,11 +281,11 @@ index a959177..41af3c1 100644
 +        $url = $client->getResponse()->headers->get('location');
 +        $id = str_replace('/books/', '', $url);
 +        $book = $this->app['bookshelf.model']->read($id);
-+        $this->assertNotNull($book);
++        $this->assertNotEquals(false, $book);
 +        $this->assertArrayHasKey('createdBy', $book);
 +        $this->assertEquals($userInfo['name'], $book['createdBy']);
 +        $this->assertArrayHasKey('createdById', $book);
-+        $this->assertEquals($userInfo['sub'], $book['createdById']);
++        $this->assertEquals($userInfo['id'], $book['createdById']);
 +    }
 +
 +    public function testLogin()
@@ -315,7 +327,11 @@ index a959177..41af3c1 100644
 +        $response = $client->getResponse();
 +        $this->assertEquals(400, $response->getStatusCode());
 +
-+        $idToken = ['sub' => 'fake-id'];
++        $idToken = [
++            'sub' => 'fake-id',
++            'name' => 'Fake Name',
++            'picture' => null
++        ];
 +        $googleClient = $this->getMock('Google_Client');
 +        $googleClient->expects($this->once())
 +            ->method('fetchAccessTokenWithAuthCode')
@@ -329,12 +345,12 @@ index a959177..41af3c1 100644
 +
 +        $this->app['google_client'] = $googleClient;
 +        $crawler = $client->request('GET', '/login/callback?code=123');
-+        $response = $client->getResponse();
-+        $cookies = $response->headers->getCookies();
 +
-+        $this->assertEquals(1, count($cookies));
-+        $this->assertEquals('google_user_info', $cookies[0]->getName());
-+        $this->assertEquals(json_encode($idToken), $cookies[0]->getValue());
++        $userInfo = $this->app['session']->get('user');
++
++        $this->assertNotNull($userInfo);
++        $this->assertArrayHasKey('id', $userInfo);
++        $this->assertEquals($idToken['sub'], $userInfo['id']);
 +    }
 +
 +    public function testLogout()
@@ -343,19 +359,14 @@ index a959177..41af3c1 100644
 +
 +        // set the logged-in user info on the request
 +        $userInfo = [
-+            'sub' => 'fake-id',
++            'id' => 'fake-id',
 +        ];
-+        $cookie = new Cookie('google_user_info', json_encode($userInfo));
-+        $client->getCookieJar()->set($cookie);
++        $this->app['session']->set('user', $userInfo);
 +
 +        // make the request
 +        $crawler = $client->request('GET', '/logout');
-+        $response = $client->getResponse();
-+        $cookies = $response->headers->getCookies();
 +
-+        $this->assertEquals(1, count($cookies));
-+        $this->assertEquals('google_user_info', $cookies[0]->getName());
-+        $this->assertNull($cookies[0]->getValue());
++        $this->assertNull($this->app['session']->get('user'));
 +    }
  }
 diff --git a/test/unit/Session/GoogleAccountTest.php b/test/unit/Session/GoogleAccountTest.php
