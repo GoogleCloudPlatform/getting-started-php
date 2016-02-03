@@ -28,10 +28,10 @@ index 1313def..8830e16 100644
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index 5a6219d..3966800 100644
+index 1441db3..b5f371c 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -56,6 +56,12 @@ $app['user'] = function ($app) {
+@@ -58,6 +58,12 @@ $app['user'] = function ($app) {
  };
  // [END session]
  
