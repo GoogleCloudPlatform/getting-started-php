@@ -48,6 +48,8 @@ $app['config'] = Yaml::parse(file_get_contents($config));
 // register the session handler
 // [START session]
 $app->register(new SessionServiceProvider);
+// fall back on PHP's "session.save_handler" for session storage
+$app['session.storage.handler'] = null;
 $app['user'] = function ($app) {
     /** @var Symfony\Component\HttpFoundation\Session\Session $session */
     $session = $app['session'];
