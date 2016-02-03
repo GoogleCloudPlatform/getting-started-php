@@ -53,6 +53,7 @@ class ControllersTest extends WebTestCase
         $app['bookshelf.page_size'] = 1;
         $app['bookshelf.storage'] = new FakeFileStorage();
         $app['monolog.handler'] = new TestHandler();
+        $app['session.test'] = true;
 
         return $app;
     }
@@ -217,12 +218,12 @@ class ControllersTest extends WebTestCase
 
         // set the logged-in user info on the request
         $userInfo = [
-            'sub' => 'fake-id',
-            'name' => 'Tester Joe',
+            'id'      => 'fake-id',
+            'name'    => 'Tester Joe',
             'picture' => null
         ];
-        $cookie = new Cookie('google_user_info', json_encode($userInfo));
-        $client->getCookieJar()->set($cookie);
+
+        $this->app['session']->set('user', $userInfo);
         $crawler = $client->request('GET', '/books/');
 
         $editLink = $crawler
@@ -246,11 +247,11 @@ class ControllersTest extends WebTestCase
         $url = $client->getResponse()->headers->get('location');
         $id = str_replace('/books/', '', $url);
         $book = $this->app['bookshelf.model']->read($id);
-        $this->assertNotNull($book);
+        $this->assertNotEquals(false, $book);
         $this->assertArrayHasKey('createdBy', $book);
         $this->assertEquals($userInfo['name'], $book['createdBy']);
         $this->assertArrayHasKey('createdById', $book);
-        $this->assertEquals($userInfo['sub'], $book['createdById']);
+        $this->assertEquals($userInfo['id'], $book['createdById']);
     }
 
     public function testLogin()
@@ -292,7 +293,11 @@ class ControllersTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertEquals(400, $response->getStatusCode());
 
-        $idToken = ['sub' => 'fake-id'];
+        $idToken = [
+            'sub' => 'fake-id',
+            'name' => 'Fake Name',
+            'picture' => null
+        ];
         $googleClient = $this->getMock('Google_Client');
         $googleClient->expects($this->once())
             ->method('fetchAccessTokenWithAuthCode')
@@ -306,12 +311,12 @@ class ControllersTest extends WebTestCase
 
         $this->app['google_client'] = $googleClient;
         $crawler = $client->request('GET', '/login/callback?code=123');
-        $response = $client->getResponse();
-        $cookies = $response->headers->getCookies();
 
-        $this->assertEquals(1, count($cookies));
-        $this->assertEquals('google_user_info', $cookies[0]->getName());
-        $this->assertEquals(json_encode($idToken), $cookies[0]->getValue());
+        $userInfo = $this->app['session']->get('user');
+
+        $this->assertNotNull($userInfo);
+        $this->assertArrayHasKey('id', $userInfo);
+        $this->assertEquals($idToken['sub'], $userInfo['id']);
     }
 
     public function testLogout()
@@ -320,18 +325,13 @@ class ControllersTest extends WebTestCase
 
         // set the logged-in user info on the request
         $userInfo = [
-            'sub' => 'fake-id',
+            'id' => 'fake-id',
         ];
-        $cookie = new Cookie('google_user_info', json_encode($userInfo));
-        $client->getCookieJar()->set($cookie);
+        $this->app['session']->set('user', $userInfo);
 
         // make the request
         $crawler = $client->request('GET', '/logout');
-        $response = $client->getResponse();
-        $cookies = $response->headers->getCookies();
 
-        $this->assertEquals(1, count($cookies));
-        $this->assertEquals('google_user_info', $cookies[0]->getName());
-        $this->assertNull($cookies[0]->getValue());
+        $this->assertNull($this->app['session']->get('user'));
     }
 }
