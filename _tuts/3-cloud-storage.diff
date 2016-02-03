@@ -86,10 +86,10 @@ index 0000000..451f8bc
 +    }
 +}
 diff --git a/src/controllers.php b/src/controllers.php
-index c46cb3b..70b7307 100644
+index 8812ef7..e7bc28e 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
-@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Cookie;
+@@ -24,6 +24,7 @@ namespace Google\Cloud\Samples\Bookshelf;
  use Symfony\Component\HttpFoundation\Request;
  use Symfony\Component\HttpFoundation\Response;
  use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
@@ -97,7 +97,7 @@ index c46cb3b..70b7307 100644
  
  $app->get('/', function (Request $request) use ($app) {
      return $app->redirect('/books/');
-@@ -60,7 +61,17 @@ $app->get('/books/add', function () use ($app) {
+@@ -59,7 +60,17 @@ $app->get('/books/add', function () use ($app) {
  $app->post('/books/add', function (Request $request) use ($app) {
      /** @var DataModelInterface $model */
      $model = $app['bookshelf.model'];
@@ -115,7 +115,7 @@ index c46cb3b..70b7307 100644
      if (!empty($book['publishedDate'])) {
          $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
      }
-@@ -105,8 +116,20 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
+@@ -104,8 +115,20 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
  $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      $book = $request->request->all();
      $book['id'] = $id;
@@ -136,7 +136,7 @@ index c46cb3b..70b7307 100644
      if (!empty($book['publishedDate'])) {
          $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
      }
-@@ -125,7 +148,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+@@ -124,7 +147,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      $book = $model->read($id);
      if ($book) {
          $model->delete($id);
@@ -213,10 +213,18 @@ index d5c839e..db27f94 100644
      <h4 class="book-title">
        {{book.title}}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index cd2e32f..a959177 100644
+index 445321b..9691ca7 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -81,11 +81,22 @@ class ControllersTest extends WebTestCase
+@@ -21,6 +21,7 @@ use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+ use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
+ use Monolog\Handler\TestHandler;
+ use Silex\WebTestCase;
++use Symfony\Component\HttpFoundation\File\UploadedFile;
+ 
+ /**
+  * Class ControllersTest.
+@@ -79,11 +80,22 @@ class ControllersTest extends WebTestCase
          $submitButton = $crawler->selectButton('submit');
          $form = $submitButton->form();
  
@@ -239,7 +247,7 @@ index cd2e32f..a959177 100644
  
          // Capture the delete button.
          $deleteCatHat = $crawler->selectButton('submit');
-@@ -140,10 +151,17 @@ class ControllersTest extends WebTestCase
+@@ -138,10 +150,17 @@ class ControllersTest extends WebTestCase
          $submitButton = $crawler->selectButton('submit');
          $form = $submitButton->form();
  
@@ -257,7 +265,7 @@ index cd2e32f..a959177 100644
          ));
  
          // Make sure the page contents match what we just submitted.
-@@ -164,6 +182,7 @@ class ControllersTest extends WebTestCase
+@@ -162,6 +181,7 @@ class ControllersTest extends WebTestCase
              'title' => 'Where the Red Fern Grows',
              'author' => 'Wilson Rawls',
              'publishedDate' => '1961',
@@ -314,10 +322,18 @@ index 0000000..4f571a9
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index 7cdeb9b..a4da94c 100644
+index 5b528d2..a4da94c 100644
 --- a/web/index.php
 +++ b/web/index.php
-@@ -29,6 +29,9 @@ require __DIR__ . '/../src/controllers.php';
+@@ -18,6 +18,7 @@
+ use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+ use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
++use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
+ 
+ require_once __DIR__ . '/../vendor/autoload.php';
+ 
+@@ -28,6 +29,9 @@ require __DIR__ . '/../src/controllers.php';
  /** @var array $config */
  $config = $app['config'];
  

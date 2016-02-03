@@ -2206,10 +2206,10 @@ index 0000000..a30f12c
 +}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..833c03c
+index 0000000..cae9cba
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,53 @@
+@@ -0,0 +1,52 @@
 +<?php
 +
 +/*
@@ -2234,7 +2234,6 @@ index 0000000..833c03c
 + */
 +use Silex\Application;
 +use Silex\Provider\TwigServiceProvider;
-+use Silex\Provider\UrlGeneratorServiceProvider;
 +use Symfony\Component\Yaml\Yaml;
 +
 +$app = new Application();
@@ -2265,10 +2264,10 @@ index 0000000..833c03c
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..c46cb3b
+index 0000000..8812ef7
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,135 @@
+@@ -0,0 +1,134 @@
 +<?php
 +
 +/*
@@ -2292,7 +2291,6 @@ index 0000000..c46cb3b
 +/*
 + * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
 + */
-+use Symfony\Component\HttpFoundation\Cookie;
 +use Symfony\Component\HttpFoundation\Request;
 +use Symfony\Component\HttpFoundation\Response;
 +use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
@@ -2619,7 +2617,7 @@ index 0000000..d5c839e
 +
 +{% endblock %}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 3aecfc4..cd2e32f 100644
+index 3aecfc4..445321b 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -1,13 +1,12 @@
@@ -2638,7 +2636,7 @@ index 3aecfc4..cd2e32f 100644
   *
   * Unless required by applicable law or agreed to in writing, software
   * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -18,37 +17,178 @@
+@@ -18,37 +17,176 @@
  
  namespace Google\Cloud\Samples\Bookshelf;
  
@@ -2646,8 +2644,6 @@ index 3aecfc4..cd2e32f 100644
 +use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
 +use Monolog\Handler\TestHandler;
  use Silex\WebTestCase;
-+use Symfony\Component\BrowserKit\Cookie;
-+use Symfony\Component\HttpFoundation\File\UploadedFile;
  
  /**
 - * WebTestCase for the sample Hello World application.
@@ -4324,10 +4320,19 @@ index 0000000..7882a18
 +    }
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index 25d77fc..417e08f 100644
+index 6c9b60d..417e08f 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
-@@ -29,6 +29,7 @@ trait GetConfigTrait
+@@ -17,6 +17,8 @@
+ 
+ namespace Google\Cloud\Samples\Bookshelf;
+ 
++use Symfony\Component\Yaml\Yaml;
++
+ /**
+  * Class GetConfigTrait
+  * @package Google\Cloud\Samples\Bookshelf
+@@ -27,6 +29,7 @@ trait GetConfigTrait
  {
      protected static function getConfig()
      {
@@ -4335,7 +4340,7 @@ index 25d77fc..417e08f 100644
          $config = array(
              'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
              'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
-@@ -43,6 +44,12 @@ trait GetConfigTrait
+@@ -41,6 +44,12 @@ trait GetConfigTrait
              'mongo_collection' => getenv('MONGO_COLLECTION'),
          );
  
@@ -4483,7 +4488,7 @@ index 0000000..4f746a9
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index d507ca2..7cdeb9b 100644
+index d507ca2..5b528d2 100644
 --- a/web/index.php
 +++ b/web/index.php
 @@ -1,13 +1,12 @@
@@ -4502,7 +4507,7 @@ index d507ca2..7cdeb9b 100644
   *
   * Unless required by applicable law or agreed to in writing, software
   * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -16,25 +15,43 @@
+@@ -16,25 +15,42 @@
   * limitations under the License.
   */
  
@@ -4513,7 +4518,6 @@ index d507ca2..7cdeb9b 100644
 +use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 +use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 +use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
-+use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
  
 -$app->get('/', function () {
 -    return 'Hello World';

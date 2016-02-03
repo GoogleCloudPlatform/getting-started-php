@@ -28,7 +28,7 @@ index 1313def..8830e16 100644
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index 1441db3..b5f371c 100644
+index b3fe866..29928e2 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -58,6 +58,12 @@ $app['user'] = function ($app) {
@@ -68,10 +68,10 @@ index 76c7c3c..9c317a0 100644
 +    return 'OK';
 +});
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 582a085..6f2c402 100644
+index 22ae346..1b56b15 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -334,4 +334,16 @@ class ControllersTest extends WebTestCase
+@@ -333,4 +333,16 @@ class ControllersTest extends WebTestCase
  
          $this->assertNull($this->app['session']->get('user'));
      }
