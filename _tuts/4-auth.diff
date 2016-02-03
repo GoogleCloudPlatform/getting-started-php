@@ -68,7 +68,7 @@ index 0000000..8a7b591
 +// [END google_account]
 +
 diff --git a/src/app.php b/src/app.php
-index 833c03c..5a6219d 100644
+index 833c03c..1441db3 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -21,6 +21,7 @@
@@ -79,7 +79,7 @@ index 833c03c..5a6219d 100644
  use Silex\Provider\TwigServiceProvider;
  use Silex\Provider\UrlGeneratorServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-@@ -35,12 +36,40 @@ $app->register(new TwigServiceProvider(), array(
+@@ -35,12 +36,42 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  
@@ -95,6 +95,8 @@ index 833c03c..5a6219d 100644
 +// register the session handler
 +// [START session]
 +$app->register(new SessionServiceProvider);
++// fall back on PHP's "session.save_handler" for session storage
++$app['session.storage.handler'] = null;
 +$app['user'] = function ($app) {
 +    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
 +    $session = $app['session'];
