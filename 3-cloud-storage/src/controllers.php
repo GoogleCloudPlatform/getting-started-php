@@ -21,7 +21,6 @@ namespace Google\Cloud\Samples\Bookshelf;
 /*
  * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
  */
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;

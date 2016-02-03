@@ -67,14 +67,14 @@ $app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
 // create the google authorization client
 // [START google_client]
 $app['google_client'] = function ($app) {
-  /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
-  $urlGen = $app['url_generator'];
-  $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
-  return new Google_Client([
-    'client_id'     => $app['config']['google_client_id'],
-    'client_secret' => $app['config']['google_client_secret'],
-    'redirect_uri'  => $redirectUri,
-  ]);
+    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
+    $urlGen = $app['url_generator'];
+    $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
+    return new Google_Client([
+        'client_id'     => $app['config']['google_client_id'],
+        'client_secret' => $app['config']['google_client_secret'],
+        'redirect_uri'  => $redirectUri,
+    ]);
 };
 // [END google_client]
 

@@ -21,7 +21,6 @@ use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
 use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**

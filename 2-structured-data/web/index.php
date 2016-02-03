@@ -18,7 +18,6 @@
 use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
-use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
