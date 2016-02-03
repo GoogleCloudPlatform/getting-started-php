@@ -221,3 +221,6 @@ $app->get('/logout', function () use ($app) {
 })->bind('logout');
 # [END logout]
 
+$app->get('/_ah/health', function (Request $request) use ($app) {
+    return 'OK';
+});
