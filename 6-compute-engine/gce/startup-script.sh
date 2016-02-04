@@ -16,75 +16,63 @@
 
 # [START all]
 set -e
-
 export HOME=/root
-
-# Talk to the metadata server to get the project id
-PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
-
-# [START logging]
-curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
-cat >/etc/google-fluentd/config.d/bookshelf.conf << EOF
-<source>
-  type tail
-  format none
-  path /opt/app/log/*.log
-  pos_file /var/tmp/fluentd.app.pos
-  read_from_head true
-  rotate_wait 10s
-  tag bookshelf
-</source>
-EOF
-service google-fluentd restart &
-# [END logging]
 
 # [START php]
 # Install PHP and dependencies from apt
 apt-get update
-apt-get install -y git nginx mongodb-clients php5 php5-fpm php5-dev php-pear pkg-config
+apt-get install -y git nginx mongodb-clients php5 php5-fpm php5-mysql php5-dev php-pear pkg-config
 pecl install mongodb
 
-# enable the pecl-installed mongodb extension
-cat >/etc/php5/mods-available/20-mongodb.ini << EOF
-extension=mongodb.so
-EOF
+# Enable the MongoDB PHP extension
+echo "extension=mongodb.so" >> /etc/php5/mods-available/mongodb.ini
+php5enmod mongodb
 
-ln -s /etc/php5/mods-available/20-mongodb.ini /etc/php5/fpm/conf.d/20-mongodb.ini
-ln -s /etc/php5/mods-available/20-mongodb.ini /etc/php5/cli/conf.d/20-mongodb.ini
-
-# Install composer
+# Install Composer
 curl -sS https://getcomposer.org/installer | \
     /usr/bin/php -- \
     --install-dir=/usr/local/bin \
     --filename=composer
 
-# Get the source code
+# Fetch the project ID from the Metadata server
+PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
+
+# Get the application source code
 git config --global credential.helper gcloud.sh
+git clone https://source.developers.google.com/p/$PROJECTID /opt/src -b master
+ln -s /opt/src/6-compute-engine /opt/app
 
-# Change branch from master if not using master
-git clone https://source.developers.google.com/p/$PROJECTID /opt/app -b master
-
-# run composer
-composer install -d /opt/app/bookshelf --no-ansi --no-progress
+# Run Composer
+composer install -d /opt/app --no-ansi --no-progress
 # [END php]
 
 # [START project_config]
-# pull our custom config file from the metadata server and add it to the project
+# Fetch the application config file from the Metadata server and add it to the project
 curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/project-config" \
-  -H "Metadata-Flavor: Google" >> /opt/app/bookshelf/config/settings.yml
+  -H "Metadata-Flavor: Google" >> /opt/app/config/settings.yml
 # [END project_config]
 
 # [START nginx]
-# disable the default nginx configuration
+# Disable the default NGINX configuration
 rm /etc/nginx/sites-enabled/default
 
-# enable our nginx configuration
-cp /opt/app/bookshelf/gce/nginx/bookshelf.conf /etc/nginx/sites-available/bookshelf.conf
+# Enable our NGINX configuration
+cp /opt/app/gce/nginx/bookshelf.conf /etc/nginx/sites-available/bookshelf.conf
 ln -s /etc/nginx/sites-available/bookshelf.conf /etc/nginx/sites-enabled/bookshelf.conf
+cp /opt/app/gce/nginx/fastcgi_params /etc/nginx/fastcgi_params
 
-# add fastcgi params for PHP
-cp /opt/app/bookshelf/gce/nginx/fastcgi_params /etc/nginx/fastcgi_params
-
+# Start NGINX
 systemctl restart nginx.service
 # [END nginx]
+
+# [START logging]
+# Install Fluentd
+curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
+
+# Enable our Fluentd configuration
+cp /opt/app/gce/fluentd/bookshelf.conf /etc/google-fluentd/config.d/bookshelf.conf
+
+# Start Fluentd
+service google-fluentd restart &
+# [END logging]
 # [END all]
