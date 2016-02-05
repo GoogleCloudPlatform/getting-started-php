@@ -24,7 +24,7 @@ use Silex\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class ControllersTest.
+ * Test for application controllers
  */
 class ControllersTest extends WebTestCase
 {

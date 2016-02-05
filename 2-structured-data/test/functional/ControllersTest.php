@@ -23,7 +23,7 @@ use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
 
 /**
- * Class ControllersTest.
+ * Test for application controllers
  */
 class ControllersTest extends WebTestCase
 {
