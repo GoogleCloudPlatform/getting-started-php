@@ -1,5 +1,5 @@
 diff --git a/composer.json b/composer.json
-index f6f1b2e..e91bca6 100644
+index 6c1de1e..d8d8fae 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -10,7 +10,8 @@
@@ -13,17 +13,17 @@ index f6f1b2e..e91bca6 100644
    "require-dev": {
      "phpunit/phpunit": "~4",
 diff --git a/composer.lock b/composer.lock
-index 1313def..8830e16 100644
+index 80f4550..0318380 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "0f275ff1c81a6b3b49789e9e6d12af46",
--    "content-hash": "1a45991b625ad016e066a5ea55a35949",
-+    "hash": "3a52f2d6bbd079e80eafd361539bff75",
-+    "content-hash": "03fad00318df41bcbd31e29fb82f0c76",
+-    "hash": "ccd7890e85caf283a2749e6e5e54033f",
+-    "content-hash": "8a6ea20794710d65ecdd58388fde2991",
++    "hash": "98f1e479ca95970c166be6733196a062",
++    "content-hash": "7f2b251503976b61e478a508dffc11fa",
      "packages": [
          {
              "name": "firebase/php-jwt",
