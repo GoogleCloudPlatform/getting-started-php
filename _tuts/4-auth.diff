@@ -226,7 +226,7 @@ index db1be8f..e73f8bb 100644
      </div>
      <div class="container">
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 9691ca7..22ae346 100644
+index ead3b49..ac6cc60 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -52,6 +52,7 @@ class ControllersTest extends WebTestCase

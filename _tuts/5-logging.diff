@@ -68,7 +68,7 @@ index 76c7c3c..9c317a0 100644
 +    return 'OK';
 +});
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 22ae346..1b56b15 100644
+index ac6cc60..e964aeb 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -333,4 +333,16 @@ class ControllersTest extends WebTestCase
