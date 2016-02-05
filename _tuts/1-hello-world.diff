@@ -2206,10 +2206,10 @@ index 0000000..c13edbf
 +}
 diff --git a/phpunit.xml b/phpunit.xml
 new file mode 100644
-index 0000000..3e43624
+index 0000000..5526a43
 --- /dev/null
 +++ b/phpunit.xml
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,31 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<!--
 +  Copyright 2015 Google Inc.
@@ -2236,15 +2236,9 @@ index 0000000..3e43624
 +        <log type="coverage-clover" target="build/logs/clover.xml"/>
 +    </logging>
 +    <filter>
-+      <whitelist>
-+        <directory suffix=".php">./web</directory>
-+        <exclude>
-+          <directory suffix=".php">./vendor/</directory>
-+          <directory suffix=".phtml">./vendor/</directory>
-+          <file>./test/bootstrap.php</file>
-+          <!-- add more directories with relative or absolute path -->
-+        </exclude>
-+      </whitelist>
++        <whitelist>
++             <directory suffix=".php">./web</directory>
++        </whitelist>
 +    </filter>
 +</phpunit>
 diff --git a/test/bootstrap.php b/test/bootstrap.php
@@ -2344,20 +2338,20 @@ index 0000000..769e07d
 +}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
 new file mode 100644
-index 0000000..3aecfc4
+index 0000000..ab11aa8
 --- /dev/null
 +++ b/test/functional/ControllersTest.php
 @@ -0,0 +1,54 @@
 +<?php
 +
 +/*
-+ * Copyright 2015 Google Inc.
++ * Copyright 2015 Google Inc. All Rights Reserved.
 + *
 + * Licensed under the Apache License, Version 2.0 (the "License");
 + * you may not use this file except in compliance with the License.
 + * You may obtain a copy of the License at
 + *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
++ *   http://www.apache.org/licenses/LICENSE-2.0
 + *
 + * Unless required by applicable law or agreed to in writing, software
 + * distributed under the License is distributed on an "AS IS" BASIS,
@@ -2371,7 +2365,7 @@ index 0000000..3aecfc4
 +use Silex\WebTestCase;
 +
 +/**
-+ * WebTestCase for the sample Hello World application.
++ * Test for application controllers
 + */
 +class ControllersTest extends WebTestCase
 +{

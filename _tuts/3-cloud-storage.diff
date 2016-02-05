@@ -213,7 +213,7 @@ index d5c839e..db27f94 100644
      <h4 class="book-title">
        {{book.title}}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 445321b..9691ca7 100644
+index 423c0b5..ead3b49 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -21,6 +21,7 @@ use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
@@ -223,7 +223,7 @@ index 445321b..9691ca7 100644
 +use Symfony\Component\HttpFoundation\File\UploadedFile;
  
  /**
-  * Class ControllersTest.
+  * Test for application controllers
 @@ -79,11 +80,22 @@ class ControllersTest extends WebTestCase
          $submitButton = $crawler->selectButton('submit');
          $form = $submitButton->form();

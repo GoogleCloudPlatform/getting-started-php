@@ -1391,25 +1391,16 @@ index 0000000..45969d0
 @@ -0,0 +1 @@
 +extension=mongodb.so
 diff --git a/phpunit.xml b/phpunit.xml
-index 3e43624..8745f1f 100644
+index 5526a43..8745f1f 100644
 --- a/phpunit.xml
 +++ b/phpunit.xml
-@@ -24,14 +24,8 @@
-         <log type="coverage-clover" target="build/logs/clover.xml"/>
+@@ -25,7 +25,7 @@
      </logging>
      <filter>
--      <whitelist>
--        <directory suffix=".php">./web</directory>
--        <exclude>
--          <directory suffix=".php">./vendor/</directory>
--          <directory suffix=".phtml">./vendor/</directory>
--          <file>./test/bootstrap.php</file>
--          <!-- add more directories with relative or absolute path -->
--        </exclude>
--      </whitelist>
-+        <whitelist>
+         <whitelist>
+-             <directory suffix=".php">./web</directory>
 +             <directory suffix=".php">./src</directory>
-+        </whitelist>
+         </whitelist>
      </filter>
  </phpunit>
 diff --git a/src/DataModel/CloudSql.php b/src/DataModel/CloudSql.php
@@ -2556,26 +2547,16 @@ index 0000000..d5c839e
 +
 +{% endblock %}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 3aecfc4..445321b 100644
+index ab11aa8..423c0b5 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -1,13 +1,12 @@
+@@ -1,5 +1,4 @@
  <?php
 -
  /*
-- * Copyright 2015 Google Inc.
-+ * Copyright 2015 Google Inc. All Rights Reserved.
+  * Copyright 2015 Google Inc. All Rights Reserved.
   *
-  * Licensed under the Apache License, Version 2.0 (the "License");
-  * you may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at
-  *
-- *     http://www.apache.org/licenses/LICENSE-2.0
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-  *
-  * Unless required by applicable law or agreed to in writing, software
-  * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -18,37 +17,176 @@
+@@ -18,6 +17,9 @@
  
  namespace Google\Cloud\Samples\Bookshelf;
  
@@ -2585,8 +2566,7 @@ index 3aecfc4..445321b 100644
  use Silex\WebTestCase;
  
  /**
-- * WebTestCase for the sample Hello World application.
-+ * Class ControllersTest.
+@@ -25,30 +27,166 @@ use Silex\WebTestCase;
   */
  class ControllersTest extends WebTestCase
  {
