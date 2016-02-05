@@ -1,16 +1,15 @@
 diff --git a/composer.json b/composer.json
-index 5d13630..f6f1b2e 100644
+index 66aef78..97180d4 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -6,11 +6,16 @@
+@@ -6,11 +6,15 @@
    },
    "require": {
-     "php": "^5.5",
+     "php": "^5.5|^7.0",
 -    "silex/silex": "^1.3"
 +    "silex/silex": "^1.3",
 +    "twig/twig": "^1.22",
 +    "symfony/yaml": "^3.0",
-+    "mongodb/mongodb": "^1.0.0",
 +    "google/apiclient": "~2.0@RC"
    },
    "require-dev": {
@@ -21,17 +20,17 @@ index 5d13630..f6f1b2e 100644
      "behat/mink": "^1.7",
      "behat/mink-goutte-driver": "^1.2"
 diff --git a/composer.lock b/composer.lock
-index 39f7499..1313def 100644
+index 50115f0..e4ae33b 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,21 +4,609 @@
+@@ -4,21 +4,549 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "dcbf68eee17473825134eedb44ae4018",
--    "content-hash": "2bc964af18907f06737142d1fb06cf46",
-+    "hash": "0f275ff1c81a6b3b49789e9e6d12af46",
-+    "content-hash": "1a45991b625ad016e066a5ea55a35949",
+-    "hash": "4f1780570136cbbaffe273be23c9e94e",
+-    "content-hash": "a2aeea3631596eda9adbad42f343b7d4",
++    "hash": "1f45f15ba13cd155f1f652dff3b4d80c",
++    "content-hash": "1a2ce8a9602e6377cf2f8247accd57fd",
      "packages": [
          {
 +            "name": "firebase/php-jwt",
@@ -350,66 +349,6 @@ index 39f7499..1313def 100644
 +            "time": "2016-01-23 01:23:02"
 +        },
 +        {
-+            "name": "mongodb/mongodb",
-+            "version": "1.0.0",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/mongodb/mongo-php-library.git",
-+                "reference": "851a560864281cbf91fe182aefed85bfc3395031"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/851a560864281cbf91fe182aefed85bfc3395031",
-+                "reference": "851a560864281cbf91fe182aefed85bfc3395031",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "ext-mongodb": "^1.1.0",
-+                "php": ">=5.4"
-+            },
-+            "type": "library",
-+            "extra": {
-+                "branch-alias": {
-+                    "dev-master": "1.0.x-dev"
-+                }
-+            },
-+            "autoload": {
-+                "psr-4": {
-+                    "MongoDB\\": "src/"
-+                },
-+                "files": [
-+                    "src/functions.php"
-+                ]
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "Apache-2.0"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "Jeremy Mikola",
-+                    "email": "jmikola@gmail.com"
-+                },
-+                {
-+                    "name": "Hannes Magnusson",
-+                    "email": "bjori@mongodb.com"
-+                },
-+                {
-+                    "name": "Derick Rethans",
-+                    "email": "github@derickrethans.nl"
-+                }
-+            ],
-+            "description": "MongoDB driver library",
-+            "homepage": "https://jira.mongodb.org/browse/PHPLIB",
-+            "keywords": [
-+                "database",
-+                "driver",
-+                "mongodb",
-+                "persistence"
-+            ],
-+            "time": "2016-01-21 19:43:25"
-+        },
-+        {
 +            "name": "monolog/monolog",
 +            "version": "1.17.2",
 +            "source": {
@@ -640,7 +579,7 @@ index 39f7499..1313def 100644
                  "shasum": ""
              },
              "require": {
-@@ -27,12 +615,12 @@
+@@ -27,12 +555,12 @@
              "type": "library",
              "extra": {
                  "branch-alias": {
@@ -656,7 +595,7 @@ index 39f7499..1313def 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -41,17 +629,20 @@
+@@ -41,17 +569,20 @@
              ],
              "authors": [
                  {
@@ -684,10 +623,10 @@ index 39f7499..1313def 100644
          },
          {
              "name": "psr/log",
-@@ -492,46 +1083,37 @@
+@@ -492,46 +1023,37 @@
                  "url"
              ],
-             "time": "2015-12-23 08:00:11"
+             "time": "2016-01-27 05:14:46"
 -        }
 -    ],
 -    "packages-dev": [
@@ -696,20 +635,20 @@ index 39f7499..1313def 100644
 -            "name": "behat/mink",
 -            "version": "v1.7.0",
 +            "name": "symfony/yaml",
-+            "version": "v3.0.1",
++            "version": "v3.0.2",
              "source": {
                  "type": "git",
 -                "url": "https://github.com/minkphp/Mink.git",
 -                "reference": "6c129030ec2cc029905cf969a56ca8f087b2dfdf"
 +                "url": "https://github.com/symfony/yaml.git",
-+                "reference": "3df409958a646dad2bc5046c3fb671ee24a1a691"
++                "reference": "3cf0709d7fe936e97bee9e954382e449003f1d9a"
              },
              "dist": {
                  "type": "zip",
 -                "url": "https://api.github.com/repos/minkphp/Mink/zipball/6c129030ec2cc029905cf969a56ca8f087b2dfdf",
 -                "reference": "6c129030ec2cc029905cf969a56ca8f087b2dfdf",
-+                "url": "https://api.github.com/repos/symfony/yaml/zipball/3df409958a646dad2bc5046c3fb671ee24a1a691",
-+                "reference": "3df409958a646dad2bc5046c3fb671ee24a1a691",
++                "url": "https://api.github.com/repos/symfony/yaml/zipball/3cf0709d7fe936e97bee9e954382e449003f1d9a",
++                "reference": "3cf0709d7fe936e97bee9e954382e449003f1d9a",
                  "shasum": ""
              },
              "require": {
@@ -745,7 +684,7 @@ index 39f7499..1313def 100644
              },
              "notification-url": "https://packagist.org/downloads/",
              "license": [
-@@ -539,108 +1121,117 @@
+@@ -539,108 +1061,117 @@
              ],
              "authors": [
                  {
@@ -770,7 +709,7 @@ index 39f7499..1313def 100644
 -            "time": "2015-09-20 20:24:03"
 +            "description": "Symfony Yaml Component",
 +            "homepage": "https://symfony.com",
-+            "time": "2015-12-26 13:39:53"
++            "time": "2016-02-02 13:44:19"
          },
          {
 -            "name": "behat/mink-browserkit-driver",
@@ -915,7 +854,7 @@ index 39f7499..1313def 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -654,100 +1245,48 @@
+@@ -654,100 +1185,48 @@
                      "homepage": "http://everzet.com"
                  }
              ],
@@ -1035,7 +974,7 @@ index 39f7499..1313def 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -756,53 +1295,53 @@
+@@ -756,53 +1235,53 @@
              ],
              "authors": [
                  {
@@ -1113,7 +1052,7 @@ index 39f7499..1313def 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -811,57 +1350,55 @@
+@@ -811,57 +1290,55 @@
              ],
              "authors": [
                  {
@@ -1196,7 +1135,7 @@ index 39f7499..1313def 100644
              },
              "notification-url": "https://packagist.org/downloads/",
              "license": [
-@@ -869,54 +1406,50 @@
+@@ -869,54 +1346,50 @@
              ],
              "authors": [
                  {
@@ -1274,7 +1213,7 @@ index 39f7499..1313def 100644
              },
              "notification-url": "https://packagist.org/downloads/",
              "license": [
-@@ -924,19 +1457,16 @@
+@@ -924,19 +1397,16 @@
              ],
              "authors": [
                  {
@@ -1300,7 +1239,7 @@ index 39f7499..1313def 100644
          },
          {
              "name": "phpdocumentor/reflection-docblock",
-@@ -1416,55 +1946,6 @@
+@@ -1416,55 +1886,6 @@
              "time": "2015-10-02 06:51:40"
          },
          {
@@ -1356,23 +1295,23 @@ index 39f7499..1313def 100644
              "name": "sebastian/comparator",
              "version": "1.2.0",
              "source": {
-@@ -2059,60 +2540,13 @@
+@@ -2059,60 +2480,13 @@
                  "shim"
              ],
              "time": "2016-01-20 09:13:37"
 -        },
 -        {
 -            "name": "symfony/yaml",
--            "version": "v3.0.1",
+-            "version": "v3.0.2",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/symfony/yaml.git",
--                "reference": "3df409958a646dad2bc5046c3fb671ee24a1a691"
+-                "reference": "3cf0709d7fe936e97bee9e954382e449003f1d9a"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/symfony/yaml/zipball/3df409958a646dad2bc5046c3fb671ee24a1a691",
--                "reference": "3df409958a646dad2bc5046c3fb671ee24a1a691",
+-                "url": "https://api.github.com/repos/symfony/yaml/zipball/3cf0709d7fe936e97bee9e954382e449003f1d9a",
+-                "reference": "3cf0709d7fe936e97bee9e954382e449003f1d9a",
 -                "shasum": ""
 -            },
 -            "require": {
@@ -1408,7 +1347,7 @@ index 39f7499..1313def 100644
 -            ],
 -            "description": "Symfony Yaml Component",
 -            "homepage": "https://symfony.com",
--            "time": "2015-12-26 13:39:53"
+-            "time": "2016-02-02 13:44:19"
          }
      ],
      "aliases": [],
