@@ -18,21 +18,6 @@ index 0000000..3b50bda
 +# The docker image will configure the document root according to this
 +# environment variable.
 +ENV DOCUMENT_ROOT /app/web
-diff --git a/app-e2e.yaml b/app-e2e.yaml
-new file mode 100644
-index 0000000..7aaf1f1
---- /dev/null
-+++ b/app-e2e.yaml
-@@ -0,0 +1,9 @@
-+runtime: custom
-+vm: true
-+
-+env_variables:
-+  DOCUMENT_ROOT: /app/web
-+  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
-+
-+manual_scaling:
-+  instances: 1
 diff --git a/app.yaml b/app.yaml
 new file mode 100644
 index 0000000..67656f0
