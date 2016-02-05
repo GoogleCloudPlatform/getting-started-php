@@ -24,14 +24,8 @@
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
     <filter>
-      <whitelist>
-        <directory suffix=".php">./web</directory>
-        <exclude>
-          <directory suffix=".php">./vendor/</directory>
-          <directory suffix=".phtml">./vendor/</directory>
-          <file>./test/bootstrap.php</file>
-          <!-- add more directories with relative or absolute path -->
-        </exclude>
-      </whitelist>
+        <whitelist>
+             <directory suffix=".php">./web</directory>
+        </whitelist>
     </filter>
 </phpunit>
