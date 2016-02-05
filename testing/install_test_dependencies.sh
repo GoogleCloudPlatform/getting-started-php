@@ -42,9 +42,12 @@ fi;
 # Run tests for each directories.
 for STEP in "${STEPS[@]}"; do
     pushd $STEP
-    composer install --ignore-platform-reqs
+    composer install
     if [ -f config/settings.yml.dist ]; then
         cp config/settings.yml.dist config/settings.yml
+
+        # require mongo library, as this isn't included by default
+        composer require "mongodb/mongodb:^1.0.0" --ignore-platform-reqs
     fi;
     popd
 done
