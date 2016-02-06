@@ -75,7 +75,9 @@ class Datastore implements DataModelInterface
         $books = [];
         foreach ($batch->getEntityResults() as $entityResult) {
             $entity = $entityResult->getEntity();
-            $books[] = $this->propertiesToBook($entity->getProperties());
+            $book = $this->propertiesToBook($entity->getProperties());
+            $book['id'] = $entity->getKey()->getPath()[0]->getId();
+            $books[] = $book;
         }
 
         return array(
