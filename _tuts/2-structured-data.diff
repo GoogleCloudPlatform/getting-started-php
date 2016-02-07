@@ -1681,10 +1681,10 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..46ae3ff
+index 0000000..d7b45b2
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,242 @@
 +<?php
 +
 +/*
@@ -1762,7 +1762,9 @@ index 0000000..46ae3ff
 +        $books = [];
 +        foreach ($batch->getEntityResults() as $entityResult) {
 +            $entity = $entityResult->getEntity();
-+            $books[] = $this->propertiesToBook($entity->getProperties());
++            $book = $this->propertiesToBook($entity->getProperties());
++            $book['id'] = $entity->getKey()->getPath()[0]->getId();
++            $books[] = $book;
 +        }
 +
 +        return array(
@@ -4071,10 +4073,10 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..1bb3f10
+index 0000000..afd16b6
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
-@@ -0,0 +1,114 @@
+@@ -0,0 +1,119 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4142,7 +4144,12 @@ index 0000000..1bb3f10
 +        do {
 +            // Only fetch one book at a time to test that code path.
 +            $fetch = $model->listBooks(1, $fetch['cursor']);
-+            $newCount += count($fetch['books']);
++            $count = count($fetch['books']);
++            $newCount += $count;
++            // Check if ids are correctly set.
++            if ($count === 1) {
++                $this->assertNotNull($fetch['books'][0]['id']);
++            }
 +        } while ($fetch['cursor']);
 +        $this->assertEquals($rowCount + 2, $newCount);
 +
