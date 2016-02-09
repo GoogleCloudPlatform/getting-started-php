@@ -2,7 +2,6 @@
 google_client_id:      YOUR_CLIENT_ID
 google_client_secret:  YOUR_CLIENT_SECRET
 google_project_id:     YOUR_PROJECT_ID
-google_storage_bucket: YOUR_STORAGE_BUCKET_NAME
 
 # options are "cloudsql", "mongo", or "datastore"
 bookshelf_backend: cloudsql
