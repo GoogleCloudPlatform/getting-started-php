@@ -30,7 +30,7 @@ require __DIR__ . '/../src/controllers.php';
 $config = $app['config'];
 
 // Cloud Storage
-$app['bookshelf.storage'] = new CloudStorage($config['google_storage_bucket']);
+$app['bookshelf.storage'] = new CloudStorage($config['google_project_id']);
 
 // Data Model
 switch ($config['bookshelf_backend']) {
