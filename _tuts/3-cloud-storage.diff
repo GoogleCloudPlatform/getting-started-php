@@ -275,7 +275,7 @@ index 423c0b5..ead3b49 100644
          // Make sure the page contents match what we just submitted.
 diff --git a/test/unit/FileSystem/CloudStorageTest.php b/test/unit/FileSystem/CloudStorageTest.php
 new file mode 100644
-index 0000000..4f571a9
+index 0000000..e53061d
 --- /dev/null
 +++ b/test/unit/FileSystem/CloudStorageTest.php
 @@ -0,0 +1,42 @@
@@ -308,7 +308,7 @@ index 0000000..4f571a9
 +    public function testOne()
 +    {
 +        $config = $this->getConfig();
-+        $bucket = $config['google_storage_bucket'];
++        $bucket = $config['google_project_id'];
 +        $storage = new CloudStorage($bucket);
 +        $url = $storage->storeFile(__DIR__ . '/../../lib/CatHat.jpg', 'image/jpg');
 +        try {
@@ -322,7 +322,7 @@ index 0000000..4f571a9
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index 5b528d2..a4da94c 100644
+index 5b528d2..d99e88d 100644
 --- a/web/index.php
 +++ b/web/index.php
 @@ -18,6 +18,7 @@
@@ -338,7 +338,7 @@ index 5b528d2..a4da94c 100644
  $config = $app['config'];
  
 +// Cloud Storage
-+$app['bookshelf.storage'] = new CloudStorage($config['google_storage_bucket']);
++$app['bookshelf.storage'] = new CloudStorage($config['google_project_id']);
 +
  // Data Model
  switch ($config['bookshelf_backend']) {
