@@ -2590,10 +2590,10 @@ index 0000000..954602f
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
 new file mode 100644
-index 0000000..6c9b60d
+index 0000000..52c8550
 --- /dev/null
 +++ b/test/lib/GetConfigTrait.php
-@@ -0,0 +1,46 @@
+@@ -0,0 +1,45 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -2627,7 +2627,6 @@ index 0000000..6c9b60d
 +            'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
 +            'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
 +            'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
-+            'google_storage_bucket' => getenv('GOOGLE_STORAGE_BUCKET'),
 +            'bookshelf_backend' => 'cloudsql',
 +            'mysql_dsn' => getenv('MYSQL_DSN'),
 +            'mysql_user' => getenv('MYSQL_USER'),

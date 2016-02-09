@@ -1356,15 +1356,14 @@ index ef28057..ad28d88 100644
      "platform": {
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
 new file mode 100644
-index 0000000..56bbfec
+index 0000000..606934a
 --- /dev/null
 +++ b/config/settings.yml.dist
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,17 @@
 +# Google credentials and configuration
 +google_client_id:      YOUR_CLIENT_ID
 +google_client_secret:  YOUR_CLIENT_SECRET
 +google_project_id:     YOUR_PROJECT_ID
-+google_storage_bucket: YOUR_STORAGE_BUCKET_NAME
 +
 +# options are "cloudsql", "mongo", or "datastore"
 +bookshelf_backend: cloudsql
@@ -4241,7 +4240,7 @@ index 0000000..7882a18
 +    }
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index 6c9b60d..417e08f 100644
+index 52c8550..6082162 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
 @@ -17,6 +17,8 @@
@@ -4261,7 +4260,7 @@ index 6c9b60d..417e08f 100644
          $config = array(
              'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
              'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
-@@ -41,6 +44,12 @@ trait GetConfigTrait
+@@ -40,6 +43,12 @@ trait GetConfigTrait
              'mongo_collection' => getenv('MONGO_COLLECTION'),
          );
  
