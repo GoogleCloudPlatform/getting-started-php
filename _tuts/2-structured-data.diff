@@ -1356,7 +1356,7 @@ index ef28057..ad28d88 100644
      "platform": {
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
 new file mode 100644
-index 0000000..606934a
+index 0000000..4763bc6
 --- /dev/null
 +++ b/config/settings.yml.dist
 @@ -0,0 +1,17 @@
@@ -1365,7 +1365,7 @@ index 0000000..606934a
 +google_client_secret:  YOUR_CLIENT_SECRET
 +google_project_id:     YOUR_PROJECT_ID
 +
-+# options are "cloudsql", "mongo", or "datastore"
++# options are "cloudsql", "mongodb", or "datastore"
 +bookshelf_backend: cloudsql
 +
 +# configure CloudSQL backend
@@ -4408,7 +4408,7 @@ index 0000000..4f746a9
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index d507ca2..5b528d2 100644
+index d507ca2..cb64002 100644
 --- a/web/index.php
 +++ b/web/index.php
 @@ -1,13 +1,12 @@
@@ -4427,7 +4427,7 @@ index d507ca2..5b528d2 100644
   *
   * Unless required by applicable law or agreed to in writing, software
   * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -16,25 +15,42 @@
+@@ -16,25 +15,43 @@
   * limitations under the License.
   */
  
@@ -4463,7 +4463,8 @@ index d507ca2..5b528d2 100644
 +    case 'mongodb':
 +        $app['bookshelf.model'] = new MongoDb(
 +            $config['mongo_url'],
-+            $config['mongo_namespace']
++            $config['mongo_database'],
++            $config['mongo_collection']
 +        );
 +        break;
 +    case 'datastore':
