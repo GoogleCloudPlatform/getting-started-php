@@ -1,3 +1,37 @@
+diff --git a/composer.lock b/composer.lock
+index ad28d88..9731c06 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -52,16 +52,16 @@
+         },
+         {
+             "name": "google/apiclient",
+-            "version": "v2.0.0-RC4",
++            "version": "v2.0.0-RC5",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/google/google-api-php-client.git",
+-                "reference": "5620e578b495942a3b60eb99e2f0c1aeca23fbed"
++                "reference": "fb16405770d7a4e3c4c3af6ece8a2aebc549eafe"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/5620e578b495942a3b60eb99e2f0c1aeca23fbed",
+-                "reference": "5620e578b495942a3b60eb99e2f0c1aeca23fbed",
++                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/fb16405770d7a4e3c4c3af6ece8a2aebc549eafe",
++                "reference": "fb16405770d7a4e3c4c3af6ece8a2aebc549eafe",
+                 "shasum": ""
+             },
+             "require": {
+@@ -103,7 +103,7 @@
+             "keywords": [
+                 "google"
+             ],
+-            "time": "2015-12-28 18:50:26"
++            "time": "2016-02-10 23:39:47"
+         },
+         {
+             "name": "google/auth",
 diff --git a/src/FileSystem/CloudStorage.php b/src/FileSystem/CloudStorage.php
 new file mode 100644
 index 0000000..451f8bc
