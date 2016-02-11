@@ -26,6 +26,16 @@ use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Symfony\Component\Yaml\Yaml;
 
+// Temporary workaround for phpseclib.
+if (filter_var(getenv('GAE_VM'), FILTER_VALIDATE_BOOLEAN)) {
+    if (!defined('MATH_BIGINTEGER_OPENSSL_ENABLED')) {
+        define('MATH_BIGINTEGER_OPENSSL_ENABLED', true);
+    }
+    if (!defined('CRYPT_RSA_MODE')) {
+        define('CRYPT_RSA_MODE', \phpseclib\Crypt\RSA::MODE_OPENSSL);
+    }
+}
+
 $app = new Application();
 
 // register twig
