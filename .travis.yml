@@ -39,7 +39,8 @@ env:
 
 install:
 - testing/install_test_dependencies.sh
-- pecl install mongodb && /bin/true
+- pecl install mongodb || /bin/true
+- phpenv config-add testing/mongodb.ini
 
 script:
 - testing/run_test_suite.sh
