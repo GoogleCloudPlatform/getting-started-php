@@ -17,39 +17,16 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Session;
+require_once('BookshelfTestBase.php');
 
 /**
- * Class BookshelfTest
+ * Class MongoDbTest
  */
-class BookshelfTest extends \PHPUnit_Framework_TestCase
+class MongoDbTest extends BookshelfTestBase
 {
-    protected static $step;
-    use E2EDeploymentTrait;
-
-    public static function setUpBeforeClass()
+    protected static function setBackEnd()
     {
-        if (self::$step = getenv('STEP_NAME')) {
-            self::deployApp(self::$step);
-        }
-    }
-
-    public static function tearDownAfterClass()
-    {
-        if (self::$step) {
-            self::deleteApp(self::$step);
-        }
-    }
-
-    public function setUp()
-    {
-        if (!self::$step) {
-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
-        }
-        $this->url = self::getUrl(self::$step);
-        $driver = new GoutteDriver();
-        $this->session = new Session($driver);
+        putenv('BOOKSHELF_BACKEND=mongodb');
     }
 
     public function testIndex()
@@ -57,7 +34,7 @@ class BookshelfTest extends \PHPUnit_Framework_TestCase
         $this->assertNotNull(self::$versions[self::$step]);
         $this->session->visit($this->url . '/');
         $this->assertEquals('200', $this->session->getStatusCode(),
-                            'Book index status code');
+                            'Root URL status code.');
         // TODO: content check
         $page = $this->session->getPage();
     }
