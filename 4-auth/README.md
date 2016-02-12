@@ -1,4 +1,7 @@
-# Getting started with PHP on GCP
+# 4 - Authenticating users
 
-[![Coverage Status](https://coveralls.io/repos/GoogleCloudPlatform/getting-started-php/badge.svg?branch=master&service=github)](https://coveralls.io/github/GoogleCloudPlatform/getting-started-php?branch=master)
+This folder contains the sample code for the [Authenticating users][step-4]
+tutorial. Please refer to the tutorial for instructions on configuring, running,
+and deploying this sample.
 
+[step-4]: https://cloud.google.com/php/getting-started/authenticate-users

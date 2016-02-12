@@ -1,4 +1,7 @@
-# Getting started with PHP on GCP
+# 2 - Structured data
 
-[![Coverage Status](https://coveralls.io/repos/GoogleCloudPlatform/getting-started-php/badge.svg?branch=master&service=github)](https://coveralls.io/github/GoogleCloudPlatform/getting-started-php?branch=master)
+This folder contains the sample code for the [Structured data][step-2]
+tutorial. Please refer to the tutorial for instructions on configuring, running,
+and deploying this sample.
 
+[step-2]: https://cloud.google.com/php/getting-started/using-structured-data
