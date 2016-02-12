@@ -18,6 +18,22 @@ index 3b50bda..0000000
 -# The docker image will configure the document root according to this
 -# environment variable.
 -ENV DOCUMENT_ROOT /app/web
+diff --git a/README.md b/README.md
+index ead2f61..91cd922 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,8 @@
+-# 5 - Logging app events
++# 6 - Deploying to Google Compute Engine
+ 
+-This folder contains the sample code for the [Logging app events][step-5]
++This folder contains the sample code for the [Deploying to Google Compute Engine][step-6]
+ tutorial. Please refer to the tutorial for instructions on configuring, running,
+ and deploying this sample.
+ 
+-[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
++[step-6]: https://cloud.google.com/php/getting-started/run-on-compute-engine
+ 
 diff --git a/app.yaml b/app.yaml
 deleted file mode 100644
 index 67656f0..0000000
