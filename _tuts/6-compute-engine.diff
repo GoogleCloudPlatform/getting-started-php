@@ -449,10 +449,10 @@ index 45969d0..0000000
 +++ /dev/null
 @@ -1 +0,0 @@
 -extension=mongodb.so
-diff --git a/test/e2e/BookShelfTestBase.php b/test/e2e/BookShelfTestBase.php
+diff --git a/test/e2e/BookshelfTestBase.php b/test/e2e/BookshelfTestBase.php
 index e295a1e..466199f 100644
---- a/test/e2e/BookShelfTestBase.php
-+++ b/test/e2e/BookShelfTestBase.php
+--- a/test/e2e/BookshelfTestBase.php
++++ b/test/e2e/BookshelfTestBase.php
 @@ -44,6 +44,7 @@ class BookshelfTestBase extends \PHPUnit_Framework_TestCase
  
      public function setUp()
