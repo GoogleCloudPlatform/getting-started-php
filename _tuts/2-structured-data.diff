@@ -2542,6 +2542,300 @@ index 0000000..d5c839e
 +{# [END book_details] #}
 +
 +{% endblock %}
+diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
+index 6515c50..c97ffe5 100644
+--- a/test/app-e2e.yaml
++++ b/test/app-e2e.yaml
+@@ -1,5 +1,8 @@
+ runtime: custom
+ vm: true
+ 
++env_variables:
++  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
++
+ manual_scaling:
+   instances: 1
+diff --git a/test/e2e/BookShelfTestBase.php b/test/e2e/BookShelfTestBase.php
+new file mode 100644
+index 0000000..e295a1e
+--- /dev/null
++++ b/test/e2e/BookShelfTestBase.php
+@@ -0,0 +1,64 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Behat\Mink\Driver\GoutteDriver;
++use Behat\Mink\Session;
++
++/**
++ * Class BookshelfTestBase
++ */
++class BookshelfTestBase extends \PHPUnit_Framework_TestCase
++{
++    protected static $step;
++    use E2EDeploymentTrait;
++
++    public static function setUpBeforeClass()
++    {
++        if (self::$step = getenv('STEP_NAME')) {
++            self::deployApp(self::$step);
++        }
++    }
++
++    public static function tearDownAfterClass()
++    {
++        if (self::$step) {
++            self::deleteApp(self::$step);
++        }
++    }
++
++    public function setUp()
++    {
++        if (!self::$step) {
++            $this->markTestSkipped('must set STEP_NAME for e2e testing');
++        }
++        $this->url = self::getUrl(self::$step);
++        $driver = new GoutteDriver();
++        $this->session = new Session($driver);
++    }
++
++    public function testIndex()
++    {
++        $this->assertNotNull(self::$versions[self::$step]);
++        $this->session->visit($this->url . '/');
++        $this->assertEquals('200', $this->session->getStatusCode(),
++                            'Book index status code');
++        // TODO: content check
++        $page = $this->session->getPage();
++    }
++}
+diff --git a/test/e2e/BookshelfTest.php b/test/e2e/BookshelfTest.php
+deleted file mode 100644
+index 769e07d..0000000
+--- a/test/e2e/BookshelfTest.php
++++ /dev/null
+@@ -1,64 +0,0 @@
+-<?php
+-/*
+- * Copyright 2015 Google Inc. All Rights Reserved.
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-namespace Google\Cloud\Samples\Bookshelf;
+-
+-use Behat\Mink\Driver\GoutteDriver;
+-use Behat\Mink\Session;
+-
+-/**
+- * Class BookshelfTest
+- */
+-class BookshelfTest extends \PHPUnit_Framework_TestCase
+-{
+-    protected static $step;
+-    use E2EDeploymentTrait;
+-
+-    public static function setUpBeforeClass()
+-    {
+-        if (self::$step = getenv('STEP_NAME')) {
+-            self::deployApp(self::$step);
+-        }
+-    }
+-
+-    public static function tearDownAfterClass()
+-    {
+-        if (self::$step) {
+-            self::deleteApp(self::$step);
+-        }
+-    }
+-
+-    public function setUp()
+-    {
+-        if (!self::$step) {
+-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
+-        }
+-        $this->url = self::getUrl(self::$step);
+-        $driver = new GoutteDriver();
+-        $this->session = new Session($driver);
+-    }
+-
+-    public function testIndex()
+-    {
+-        $this->assertNotNull(self::$versions[self::$step]);
+-        $this->session->visit($this->url . '/');
+-        $this->assertEquals('200', $this->session->getStatusCode(),
+-                            'Book index status code');
+-        // TODO: content check
+-        $page = $this->session->getPage();
+-    }
+-}
+diff --git a/test/e2e/CloudSqlTest.php b/test/e2e/CloudSqlTest.php
+new file mode 100644
+index 0000000..86640dc
+--- /dev/null
++++ b/test/e2e/CloudSqlTest.php
+@@ -0,0 +1,41 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++require_once('BookShelfTestBase.php');
++
++/**
++ * Class CloudSqlTest
++ */
++class CloudSqlTest extends BookShelfTestBase
++{
++    protected static function setBackEnd()
++    {
++        putenv('BOOKSHELF_BACKEND=cloudsql');
++    }
++
++    public function testIndex()
++    {
++        $this->assertNotNull(self::$versions[self::$step]);
++        $this->session->visit($this->url . '/');
++        $this->assertEquals('200', $this->session->getStatusCode(),
++                            'Root URL status code.');
++        // TODO: content check
++        $page = $this->session->getPage();
++    }
++}
+diff --git a/test/e2e/DatastoreTest.php b/test/e2e/DatastoreTest.php
+new file mode 100644
+index 0000000..1b92790
+--- /dev/null
++++ b/test/e2e/DatastoreTest.php
+@@ -0,0 +1,41 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++require_once('BookShelfTestBase.php');
++
++/**
++ * Class DatastoreTest
++ */
++class DatastoreTest extends BookShelfTestBase
++{
++    protected static function setBackEnd()
++    {
++        putenv('BOOKSHELF_BACKEND=datastore');
++    }
++
++    public function testIndex()
++    {
++        $this->assertNotNull(self::$versions[self::$step]);
++        $this->session->visit($this->url . '/');
++        $this->assertEquals('200', $this->session->getStatusCode(),
++                            'Root URL status code.');
++        // TODO: content check
++        $page = $this->session->getPage();
++    }
++}
+diff --git a/test/e2e/MongoDbTest.php b/test/e2e/MongoDbTest.php
+new file mode 100644
+index 0000000..32efac9
+--- /dev/null
++++ b/test/e2e/MongoDbTest.php
+@@ -0,0 +1,41 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++require_once('BookShelfTestBase.php');
++
++/**
++ * Class MongoDbTest
++ */
++class MongoDbTest extends BookShelfTestBase
++{
++    protected static function setBackEnd()
++    {
++        putenv('BOOKSHELF_BACKEND=mongodb');
++    }
++
++    public function testIndex()
++    {
++        $this->assertNotNull(self::$versions[self::$step]);
++        $this->session->visit($this->url . '/');
++        $this->assertEquals('200', $this->session->getStatusCode(),
++                            'Root URL status code.');
++        // TODO: content check
++        $page = $this->session->getPage();
++    }
++}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
 index ab11aa8..423c0b5 100644
 --- a/test/functional/ControllersTest.php
@@ -4240,7 +4534,7 @@ index 0000000..7882a18
 +    }
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index 52c8550..6082162 100644
+index 52c8550..c6d4c8f 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
 @@ -17,6 +17,8 @@
@@ -4252,7 +4546,7 @@ index 52c8550..6082162 100644
  /**
   * Class GetConfigTrait
   * @package Google\Cloud\Samples\Bookshelf
-@@ -27,6 +29,7 @@ trait GetConfigTrait
+@@ -27,11 +29,12 @@ trait GetConfigTrait
  {
      protected static function getConfig()
      {
@@ -4260,6 +4554,12 @@ index 52c8550..6082162 100644
          $config = array(
              'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
              'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
+             'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
+-            'bookshelf_backend' => 'cloudsql',
++            'bookshelf_backend' => getenv('BOOKSHELF_BACKEND') ?: 'cloudsql',
+             'mysql_dsn' => getenv('MYSQL_DSN'),
+             'mysql_user' => getenv('MYSQL_USER'),
+             'mysql_password' => getenv('MYSQL_PASSWORD'),
 @@ -40,6 +43,12 @@ trait GetConfigTrait
              'mongo_collection' => getenv('MONGO_COLLECTION'),
          );

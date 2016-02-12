@@ -20,13 +20,12 @@ index 3b50bda..0000000
 -ENV DOCUMENT_ROOT /app/web
 diff --git a/app.yaml b/app.yaml
 deleted file mode 100644
-index 67656f0..0000000
+index e8b7397..0000000
 --- a/app.yaml
 +++ /dev/null
 @@ -1,2 +0,0 @@
 -runtime: custom
 -vm: true
-\ No newline at end of file
 diff --git a/gce/deploy.sh b/gce/deploy.sh
 new file mode 100644
 index 0000000..61b2846
@@ -450,3 +449,15 @@ index 45969d0..0000000
 +++ /dev/null
 @@ -1 +0,0 @@
 -extension=mongodb.so
+diff --git a/test/e2e/BookShelfTestBase.php b/test/e2e/BookShelfTestBase.php
+index e295a1e..466199f 100644
+--- a/test/e2e/BookShelfTestBase.php
++++ b/test/e2e/BookShelfTestBase.php
+@@ -44,6 +44,7 @@ class BookshelfTestBase extends \PHPUnit_Framework_TestCase
+ 
+     public function setUp()
+     {
++        $this->markTestSkipped('Temporary skipping');
+         if (!self::$step) {
+             $this->markTestSkipped('must set STEP_NAME for e2e testing');
+         }
