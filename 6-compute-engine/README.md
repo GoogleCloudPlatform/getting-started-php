@@ -1,4 +1,8 @@
-# Getting started with PHP on GCP
+# 6 - Deploying to Google Compute Engine
 
-[![Coverage Status](https://coveralls.io/repos/GoogleCloudPlatform/getting-started-php/badge.svg?branch=master&service=github)](https://coveralls.io/github/GoogleCloudPlatform/getting-started-php?branch=master)
+This folder contains the sample code for the [Deploying to Google Compute Engine][step-6]
+tutorial. Please refer to the tutorial for instructions on configuring, running,
+and deploying this sample.
+
+[step-6]: https://cloud.google.com/php/getting-started/run-on-compute-engine
 
