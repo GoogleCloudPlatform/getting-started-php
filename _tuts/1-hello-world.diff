@@ -20,13 +20,12 @@ index 0000000..3b50bda
 +ENV DOCUMENT_ROOT /app/web
 diff --git a/app.yaml b/app.yaml
 new file mode 100644
-index 0000000..67656f0
+index 0000000..e8b7397
 --- /dev/null
 +++ b/app.yaml
 @@ -0,0 +1,2 @@
 +runtime: custom
 +vm: true
-\ No newline at end of file
 diff --git a/composer.json b/composer.json
 new file mode 100644
 index 0000000..088f870
@@ -2226,6 +2225,17 @@ index 0000000..5526a43
 +        </whitelist>
 +    </filter>
 +</phpunit>
+diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
+new file mode 100644
+index 0000000..6515c50
+--- /dev/null
++++ b/test/app-e2e.yaml
+@@ -0,0 +1,5 @@
++runtime: custom
++vm: true
++
++manual_scaling:
++  instances: 1
 diff --git a/test/bootstrap.php b/test/bootstrap.php
 new file mode 100644
 index 0000000..54fe66c
@@ -2492,10 +2502,10 @@ index 0000000..7eefc9e
 +E2EDeploymentTrait::$gcloud = new Gcloud();
 diff --git a/test/lib/Gcloud.php b/test/lib/Gcloud.php
 new file mode 100644
-index 0000000..954602f
+index 0000000..03e634c
 --- /dev/null
 +++ b/test/lib/Gcloud.php
-@@ -0,0 +1,92 @@
+@@ -0,0 +1,94 @@
 +<?php
 +
 +/**
@@ -2535,12 +2545,14 @@ index 0000000..954602f
 +        // deploy this $stepName to gcloud
 +        // try 3 times in case of intermittent deploy error
 +        $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
++        copy(sprintf('%s/../app-e2e.yaml', __DIR__), $appYamlPath);
 +        for ($i = 0; $i < 3; $i++) {
 +            $result = $this->exec("gcloud preview app deploy {$appYamlPath} --version={$version} -q --no-promote");
 +            if ($result == 0) {
 +                break;
 +            }
 +        }
++        unlink($appYamlPath);
 +
 +        // if status is not 0, we tried 3 times and failed
 +        if ($result != 0) {
