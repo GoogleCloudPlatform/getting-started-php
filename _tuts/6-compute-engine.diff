@@ -466,10 +466,10 @@ index 45969d0..0000000
 @@ -1 +0,0 @@
 -extension=mongodb.so
 diff --git a/test/e2e/BookshelfTestBase.php b/test/e2e/BookshelfTestBase.php
-index 91052bd..36c682f 100644
+index d0bdfe4..5837a54 100644
 --- a/test/e2e/BookshelfTestBase.php
 +++ b/test/e2e/BookshelfTestBase.php
-@@ -33,20 +33,17 @@ abstract class BookshelfTestBase extends \PHPUnit_Framework_TestCase
+@@ -35,20 +35,17 @@ abstract class BookshelfTestBase extends \PHPUnit_Framework_TestCase
      public static function setUpBeforeClass()
      {
          static::setBackEnd();

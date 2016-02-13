@@ -2671,10 +2671,10 @@ index 769e07d..0000000
 -}
 diff --git a/test/e2e/BookshelfTestBase.php b/test/e2e/BookshelfTestBase.php
 new file mode 100644
-index 0000000..91052bd
+index 0000000..d0bdfe4
 --- /dev/null
 +++ b/test/e2e/BookshelfTestBase.php
-@@ -0,0 +1,57 @@
+@@ -0,0 +1,59 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -2705,7 +2705,9 @@ index 0000000..91052bd
 +    protected static $step;
 +    use E2EDeploymentTrait;
 +
-+    abstract protected static function setBackEnd();
++    protected static function setBackEnd()
++    {
++    }
 +
 +    public static function setUpBeforeClass()
 +    {
