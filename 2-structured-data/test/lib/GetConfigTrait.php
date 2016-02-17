@@ -34,7 +34,7 @@ trait GetConfigTrait
             'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
             'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
             'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
-            'bookshelf_backend' => 'cloudsql',
+            'bookshelf_backend' => getenv('BOOKSHELF_BACKEND') ?: 'cloudsql',
             'mysql_dsn' => getenv('MYSQL_DSN'),
             'mysql_user' => getenv('MYSQL_USER'),
             'mysql_password' => getenv('MYSQL_PASSWORD'),

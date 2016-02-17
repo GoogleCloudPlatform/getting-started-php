@@ -1,0 +1,8 @@
+runtime: custom
+vm: true
+
+env_variables:
+  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
+
+manual_scaling:
+  instances: 1
