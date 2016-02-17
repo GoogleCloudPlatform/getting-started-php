@@ -37,12 +37,14 @@ class Gcloud
         // deploy this $stepName to gcloud
         // try 3 times in case of intermittent deploy error
         $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
+        copy(sprintf('%s/../app-e2e.yaml', __DIR__), $appYamlPath);
         for ($i = 0; $i < 3; $i++) {
             $result = $this->exec("gcloud preview app deploy {$appYamlPath} --version={$version} -q --no-promote");
             if ($result == 0) {
                 break;
             }
         }
+        unlink($appYamlPath);
 
         // if status is not 0, we tried 3 times and failed
         if ($result != 0) {

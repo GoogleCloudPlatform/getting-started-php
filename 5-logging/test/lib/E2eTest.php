@@ -21,15 +21,20 @@ use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Session;
 
 /**
- * Class BookshelfTest
+ * Class E2eTest
  */
-class BookshelfTest extends \PHPUnit_Framework_TestCase
+abstract class E2eTest extends \PHPUnit_Framework_TestCase
 {
     protected static $step;
     use E2EDeploymentTrait;
 
+    protected static function setBackEnd()
+    {
+    }
+
     public static function setUpBeforeClass()
     {
+        static::setBackEnd();
         if (self::$step = getenv('STEP_NAME')) {
             self::deployApp(self::$step);
         }
@@ -50,15 +55,5 @@ class BookshelfTest extends \PHPUnit_Framework_TestCase
         $this->url = self::getUrl(self::$step);
         $driver = new GoutteDriver();
         $this->session = new Session($driver);
-    }
-
-    public function testIndex()
-    {
-        $this->assertNotNull(self::$versions[self::$step]);
-        $this->session->visit($this->url . '/');
-        $this->assertEquals('200', $this->session->getStatusCode(),
-                            'Book index status code');
-        // TODO: content check
-        $page = $this->session->getPage();
     }
 }
