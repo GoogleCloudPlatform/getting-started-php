@@ -15,22 +15,17 @@ index ea0038e..ead2f61 100644
 +[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
  
 diff --git a/composer.json b/composer.json
-index 9e58d7b..bae1f35 100644
+index 951f336..bae1f35 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -7,9 +7,10 @@
+@@ -7,6 +7,7 @@
    "require": {
      "php": "~5.5.0|~5.6.0|~7.0.0",
      "google/apiclient": "~2.0@RC",
 +    "monolog/monolog": "^1.17",
      "silex/silex": "^1.3",
--    "twig/twig": "^1.22",
--    "symfony/yaml": "^3.0"
-+    "symfony/yaml": "^3.0",
-+    "twig/twig": "^1.22"
-   },
-   "require-dev": {
-     "behat/mink": "^1.7",
+     "symfony/yaml": "^3.0",
+     "twig/twig": "^1.22"
 diff --git a/composer.lock b/composer.lock
 index 9731c06..f967f6c 100644
 --- a/composer.lock
@@ -86,6 +81,18 @@ index 76c7c3c..9c317a0 100644
 +$app->get('/_ah/health', function (Request $request) use ($app) {
 +    return 'OK';
 +});
+diff --git a/test/composer-mongodb.json b/test/composer-mongodb.json
+index d2f9240..0823861 100644
+--- a/test/composer-mongodb.json
++++ b/test/composer-mongodb.json
+@@ -7,6 +7,7 @@
+   "require": {
+     "php": "~5.5.0|~5.6.0|~7.0.0",
+     "google/apiclient": "~2.0@RC",
++    "monolog/monolog": "^1.17",
+     "mongodb/mongodb": "^1.0.0",
+     "silex/silex": "^1.3",
+     "symfony/yaml": "^3.0",
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
 index ac6cc60..e964aeb 100644
 --- a/test/functional/ControllersTest.php
