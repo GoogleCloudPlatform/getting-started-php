@@ -15,7 +15,7 @@ index 5a6b401..c23b619 100644
 +[step-2]: https://cloud.google.com/php/getting-started/using-structured-data
  
 diff --git a/composer.json b/composer.json
-index 088f870..951f336 100644
+index 088f870..deb46ea 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -6,7 +6,10 @@
@@ -23,7 +23,7 @@ index 088f870..951f336 100644
    "require": {
      "php": "~5.5.0|~5.6.0|~7.0.0",
 -    "silex/silex": "^1.3"
-+    "google/apiclient": "~2.0@RC",
++    "google/apiclient": "~2.0@dev",
 +    "silex/silex": "^1.3",
 +    "symfony/yaml": "^3.0",
 +    "twig/twig": "^1.22"
@@ -31,17 +31,17 @@ index 088f870..951f336 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index ef28057..9731c06 100644
+index ef28057..2cd3e58 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,21 +4,549 @@
+@@ -4,10 +4,492 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
 -    "hash": "c295fd92211985db8f3d5793e55aa149",
 -    "content-hash": "69ebccadc3bd08bf9fd78866d9fa4f2c",
-+    "hash": "570fd67a43fdeaa06dabfc2a3ee26710",
-+    "content-hash": "432300c23b9632ed39c2d1ca30cf8de3",
++    "hash": "82106a863aaf2913e38f49436dac8172",
++    "content-hash": "c28726b5efcb2fa3688238ff040eb951",
      "packages": [
          {
 +            "name": "firebase/php-jwt",
@@ -88,16 +88,16 @@ index ef28057..9731c06 100644
 +        },
 +        {
 +            "name": "google/apiclient",
-+            "version": "v2.0.0-RC5",
++            "version": "dev-master",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/google/google-api-php-client.git",
-+                "reference": "fb16405770d7a4e3c4c3af6ece8a2aebc549eafe"
++                "reference": "91afc209835afb0e3795d98c82a9701b6fc3abea"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/fb16405770d7a4e3c4c3af6ece8a2aebc549eafe",
-+                "reference": "fb16405770d7a4e3c4c3af6ece8a2aebc549eafe",
++                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/91afc209835afb0e3795d98c82a9701b6fc3abea",
++                "reference": "91afc209835afb0e3795d98c82a9701b6fc3abea",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -139,7 +139,7 @@ index ef28057..9731c06 100644
 +            "keywords": [
 +                "google"
 +            ],
-+            "time": "2016-02-10 23:39:47"
++            "time": "2016-02-12 22:19:58"
 +        },
 +        {
 +            "name": "google/auth",
@@ -529,14 +529,12 @@ index ef28057..9731c06 100644
              "name": "pimple/pimple",
              "version": "v1.1.1",
              "source": {
-                 "type": "git",
--                "url": "https://github.com/silexphp/Pimple.git",
--                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d"
-+                "url": "https://github.com/silexphp/Pimple.git",
-+                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d"
-+            },
-+            "dist": {
-+                "type": "zip",
+@@ -17,8 +499,54 @@
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
+-                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
 +                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
 +                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
 +                "shasum": ""
@@ -580,11 +578,9 @@ index ef28057..9731c06 100644
 +                "type": "git",
 +                "url": "https://github.com/php-fig/http-message.git",
 +                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
-             },
-             "dist": {
-                 "type": "zip",
--                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
--                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
++            },
++            "dist": {
++                "type": "zip",
 +                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
 +                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
                  "shasum": ""
@@ -1250,7 +1246,85 @@ index ef28057..9731c06 100644
          },
          {
              "name": "phpdocumentor/reflection-docblock",
-@@ -1416,55 +1886,6 @@
+@@ -989,22 +1459,24 @@
+         },
+         {
+             "name": "phpspec/prophecy",
+-            "version": "v1.5.0",
++            "version": "v1.6.0",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/phpspec/prophecy.git",
+-                "reference": "4745ded9307786b730d7a60df5cb5a6c43cf95f7"
++                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4745ded9307786b730d7a60df5cb5a6c43cf95f7",
+-                "reference": "4745ded9307786b730d7a60df5cb5a6c43cf95f7",
++                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/3c91bdf81797d725b14cb62906f9a4ce44235972",
++                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972",
+                 "shasum": ""
+             },
+             "require": {
+                 "doctrine/instantiator": "^1.0.2",
++                "php": "^5.3|^7.0",
+                 "phpdocumentor/reflection-docblock": "~2.0",
+-                "sebastian/comparator": "~1.1"
++                "sebastian/comparator": "~1.1",
++                "sebastian/recursion-context": "~1.0"
+             },
+             "require-dev": {
+                 "phpspec/phpspec": "~2.0"
+@@ -1012,7 +1484,7 @@
+             "type": "library",
+             "extra": {
+                 "branch-alias": {
+-                    "dev-master": "1.4.x-dev"
++                    "dev-master": "1.5.x-dev"
+                 }
+             },
+             "autoload": {
+@@ -1045,7 +1517,7 @@
+                 "spy",
+                 "stub"
+             ],
+-            "time": "2015-08-13 10:07:40"
++            "time": "2016-02-15 07:46:21"
+         },
+         {
+             "name": "phpunit/php-code-coverage",
+@@ -1289,16 +1761,16 @@
+         },
+         {
+             "name": "phpunit/phpunit",
+-            "version": "4.8.22",
++            "version": "4.8.23",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/sebastianbergmann/phpunit.git",
+-                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72"
++                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/dfb11aa5236376b4fc63853cf746af39fe780e72",
+-                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72",
++                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6e351261f9cd33daf205a131a1ba61c6d33bd483",
++                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1357,7 +1829,7 @@
+                 "testing",
+                 "xunit"
+             ],
+-            "time": "2016-02-02 09:01:21"
++            "time": "2016-02-11 14:56:33"
+         },
+         {
+             "name": "phpunit/phpunit-mock-objects",
+@@ -1416,55 +1888,6 @@
              "time": "2015-10-02 06:51:40"
          },
          {
@@ -1306,7 +1380,7 @@ index ef28057..9731c06 100644
              "name": "sebastian/comparator",
              "version": "1.2.0",
              "source": {
-@@ -2059,60 +2480,13 @@
+@@ -2059,60 +2482,13 @@
                  "shim"
              ],
              "time": "2016-01-20 09:13:37"
@@ -1365,7 +1439,7 @@ index ef28057..9731c06 100644
      "minimum-stability": "stable",
 -    "stability-flags": [],
 +    "stability-flags": {
-+        "google/apiclient": 5
++        "google/apiclient": 20
 +    },
      "prefer-stable": false,
      "prefer-lowest": false,
