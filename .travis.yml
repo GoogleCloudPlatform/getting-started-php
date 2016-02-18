@@ -37,7 +37,7 @@ env:
     - CLOUDSDK_ACTIVE_CONFIG_NAME=getting-started-php
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
     - TEST_BUILD_DIR=${TRAVIS_BUILD_DIR}
-    - FIREWALL_PREFIX=travis-test
+    - FIREWALL_NAME=travis-job-${TRAVIS_JOB_ID}
 
 install:
 - testing/install_test_dependencies.sh
