@@ -6,3 +6,6 @@ env_variables:
 
 manual_scaling:
   instances: 1
+
+network:
+  instance_tag: bookshelf-e2e
