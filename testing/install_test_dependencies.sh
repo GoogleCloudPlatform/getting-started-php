@@ -101,3 +101,9 @@ gcloud compute firewall-rules create ${FIREWALL_NAME} \
     --source-ranges ${IP}/32 \
     --target-tags mongodb \
     --description "Allow mongodb access for ${FIREWALL_NAME}"
+
+gcloud compute firewall-rules create mongodb-e2e \
+    --allow tcp:27017 \
+    --source-tags bookshelf-e2e \
+    --target-tags mongodb \
+    --description "Allow mongodb access for e2e tests" || /bin/true
