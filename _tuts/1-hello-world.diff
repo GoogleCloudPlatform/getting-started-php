@@ -6,6 +6,14 @@ index 0000000..305612c
 @@ -0,0 +1,2 @@
 +test/*
 +coverage/*
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..0b08f40
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,2 @@
++**/vendor
++**/settings.yml
 diff --git a/Dockerfile b/Dockerfile
 new file mode 100644
 index 0000000..3b50bda
@@ -19,20 +27,19 @@ index 0000000..3b50bda
 +# environment variable.
 +ENV DOCUMENT_ROOT /app/web
 diff --git a/README.md b/README.md
-index d6db6fd..5a6b401 100644
---- a/README.md
+new file mode 100644
+index 0000000..5a6b401
+--- /dev/null
 +++ b/README.md
-@@ -1,4 +1,8 @@
--# Getting started with PHP on GCP
+@@ -0,0 +1,8 @@
 +# 1 - Hello world
- 
--[![Coverage Status](https://coveralls.io/repos/GoogleCloudPlatform/getting-started-php/badge.svg?branch=master&service=github)](https://coveralls.io/github/GoogleCloudPlatform/getting-started-php?branch=master)
++
 +This folder contains the sample code for the [Hello world][step-1]
 +tutorial. Please refer to the tutorial for instructions on configuring, running,
 +and deploying this sample.
 +
 +[step-1]: https://cloud.google.com/php/getting-started/hello-world
- 
++
 diff --git a/app.yaml b/app.yaml
 new file mode 100644
 index 0000000..e8b7397
