@@ -13,25 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Defines some variables
-
-VARS=(
-    CLOUDSDK_ACTIVE_CONFIG_NAME
-    GOOGLE_PROJECT_ID
-    GOOGLE_STORAGE_BUCKET
-    MYSQL_DSN
-    MYSQL_USER
-    MYSQL_PASSWORD
-    GOOGLE_CREDENTIALS_BASE64
-    TEST_BUILD_DIR
-    FIREWALL_PREFIX
-)
-
-STEPS=(
-    1-hello-world
-    2-structured-data
-    3-cloud-storage
-    4-auth
-    5-logging
-    6-compute-engine
-)
+gcloud compute firewall-rules delete ${FIREWALL_NAME} || /bin/true

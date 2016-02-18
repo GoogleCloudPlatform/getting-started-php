@@ -35,7 +35,9 @@ env:
     - PATH=${HOME}/bin:${GCLOUD_DIR}/google-cloud-sdk/bin:${PATH}
     - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/credentials.json
     - CLOUDSDK_ACTIVE_CONFIG_NAME=getting-started-php
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
     - TEST_BUILD_DIR=${TRAVIS_BUILD_DIR}
+    - FIREWALL_PREFIX=travis-test
 
 install:
 - testing/install_test_dependencies.sh
@@ -44,3 +46,6 @@ install:
 
 script:
 - testing/run_test_suite.sh
+
+after_script:
+- testing/test_cleanup.sh
