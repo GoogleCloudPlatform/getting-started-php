@@ -94,10 +94,10 @@ index d2f9240..0823861 100644
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index ac6cc60..e964aeb 100644
+index d874a79..85d1ad2 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -333,4 +333,16 @@ class ControllersTest extends WebTestCase
+@@ -337,4 +337,16 @@ class ControllersTest extends WebTestCase
  
          $this->assertNull($this->app['session']->get('user'));
      }

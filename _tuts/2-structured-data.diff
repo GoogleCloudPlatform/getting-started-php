@@ -4430,7 +4430,7 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..afd16b6
+index 0000000..7deb447
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
 @@ -0,0 +1,119 @@
@@ -4503,8 +4503,8 @@ index 0000000..afd16b6
 +            $fetch = $model->listBooks(1, $fetch['cursor']);
 +            $count = count($fetch['books']);
 +            $newCount += $count;
-+            // Check if ids are correctly set.
-+            if ($count === 1) {
++            // Check if id is correctly set.
++            if ($newCount === 1) {
 +                $this->assertNotNull($fetch['books'][0]['id']);
 +            }
 +        } while ($fetch['cursor']);

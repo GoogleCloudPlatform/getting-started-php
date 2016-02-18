@@ -173,7 +173,7 @@ index db1be8f..e73f8bb 100644
      </div>
      <div class="container">
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index ead3b49..ac6cc60 100644
+index ead3b49..d874a79 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -52,6 +52,7 @@ class ControllersTest extends WebTestCase
@@ -184,7 +184,7 @@ index ead3b49..ac6cc60 100644
  
          return $app;
      }
-@@ -209,4 +210,127 @@ class ControllersTest extends WebTestCase
+@@ -209,4 +210,131 @@ class ControllersTest extends WebTestCase
          $client->submit($submitButton->form());
          $this->assertEquals(404, $client->getResponse()->getStatusCode());
      }
@@ -229,6 +229,10 @@ index ead3b49..ac6cc60 100644
 +        $this->assertEquals($userInfo['name'], $book['createdBy']);
 +        $this->assertArrayHasKey('createdById', $book);
 +        $this->assertEquals($userInfo['id'], $book['createdById']);
++        // clean up
++        $this->app['bookshelf.model']->delete($id);
++        $book = $this->app['bookshelf.model']->read($id);
++        $this->assertEquals(false, $book);
 +    }
 +
 +    public function testLogin()
