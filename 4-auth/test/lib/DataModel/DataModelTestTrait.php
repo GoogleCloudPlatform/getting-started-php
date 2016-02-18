@@ -67,8 +67,8 @@ trait DataModelTestTrait
             $fetch = $model->listBooks(1, $fetch['cursor']);
             $count = count($fetch['books']);
             $newCount += $count;
-            // Check if ids are correctly set.
-            if ($count === 1) {
+            // Check if id is correctly set.
+            if ($newCount === 1) {
                 $this->assertNotNull($fetch['books'][0]['id']);
             }
         } while ($fetch['cursor']);
