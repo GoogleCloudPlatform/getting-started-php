@@ -251,6 +251,10 @@ class ControllersTest extends WebTestCase
         $this->assertEquals($userInfo['name'], $book['createdBy']);
         $this->assertArrayHasKey('createdById', $book);
         $this->assertEquals($userInfo['id'], $book['createdById']);
+        // clean up
+        $this->app['bookshelf.model']->delete($id);
+        $book = $this->app['bookshelf.model']->read($id);
+        $this->assertEquals(false, $book);
     }
 
     public function testLogin()
