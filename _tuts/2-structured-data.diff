@@ -2633,10 +2633,10 @@ index 0000000..d5c839e
 +
 +{% endblock %}
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index 6515c50..c97ffe5 100644
+index 6515c50..d29e365 100644
 --- a/test/app-e2e.yaml
 +++ b/test/app-e2e.yaml
-@@ -1,5 +1,8 @@
+@@ -1,5 +1,11 @@
  runtime: custom
  vm: true
  
@@ -2645,6 +2645,9 @@ index 6515c50..c97ffe5 100644
 +
  manual_scaling:
    instances: 1
++
++network:
++  instance_tag: bookshelf-e2e
 diff --git a/test/composer-mongodb.json b/test/composer-mongodb.json
 new file mode 100644
 index 0000000..d2f9240
