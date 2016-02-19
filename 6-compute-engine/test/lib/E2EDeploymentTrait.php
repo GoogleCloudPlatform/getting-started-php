@@ -39,6 +39,7 @@ trait E2EDeploymentTrait
     private static function dumpConfig()
     {
         $config = self::getConfig();
+        $config['mongo_url'] = getenv('MONGO_E2E_URL');
         $dumper = new Dumper();
         $yaml = $dumper->dump($config);
         // TODO: Use different filename
