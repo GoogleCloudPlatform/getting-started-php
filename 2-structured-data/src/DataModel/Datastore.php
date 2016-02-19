@@ -39,7 +39,10 @@ class Datastore implements DataModelInterface
     public function __construct($datastoreDatasetId)
     {
         $this->datasetId = $datastoreDatasetId;
-        $client = new \Google_Client();
+        // Datastore API has intermittent failures, so we set the
+        // Google Client to retry in the event of a 503 Backend Error
+        $retryConfig = [ 'retries' => 2 ];
+        $client = new \Google_Client([ 'retry' => $retryConfig ]);
         $client->setScopes([
             Google_Service_Datastore::CLOUD_PLATFORM,
             Google_Service_Datastore::DATASTORE,
