@@ -4559,6 +4559,18 @@ index 0000000..7deb447
 +        $this->assertFalse($model->read($bellId));
 +    }
 +}
+diff --git a/test/lib/E2EDeploymentTrait.php b/test/lib/E2EDeploymentTrait.php
+index 7eefc9e..aef007f 100644
+--- a/test/lib/E2EDeploymentTrait.php
++++ b/test/lib/E2EDeploymentTrait.php
+@@ -39,6 +39,7 @@ trait E2EDeploymentTrait
+     private static function dumpConfig()
+     {
+         $config = self::getConfig();
++        $config['mongo_url'] = getenv('MONGO_E2E_URL');
+         $dumper = new Dumper();
+         $yaml = $dumper->dump($config);
+         // TODO: Use different filename
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
 new file mode 100644
 index 0000000..249accc
