@@ -1,0 +1,318 @@
+diff --git a/README.md b/README.md
+index 4df4bde..ea0038e 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,8 @@
+-# 3 - Cloud Storage
++# 4 - Authenticating users
+ 
+-This folder contains the sample code for the [Cloud Storage][step-3]
++This folder contains the sample code for the [Authenticating users][step-4]
+ tutorial. Please refer to the tutorial for instructions on configuring, running,
+ and deploying this sample.
+ 
+-[step-3]: https://cloud.google.com/php/getting-started/using-cloud-storage
++[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
+ 
+diff --git a/src/app.php b/src/app.php
+index cae9cba..b3fe866 100644
+--- a/src/app.php
++++ b/src/app.php
+@@ -21,7 +21,9 @@
+  * Follows Silex Skeleton pattern.
+  */
+ use Silex\Application;
++use Silex\Provider\SessionServiceProvider;
+ use Silex\Provider\TwigServiceProvider;
++use Silex\Provider\UrlGeneratorServiceProvider;
+ use Symfony\Component\Yaml\Yaml;
+ 
+ $app = new Application();
+@@ -34,12 +36,42 @@ $app->register(new TwigServiceProvider(), array(
+     ),
+ ));
+ 
++// register the url generator
++$app->register(new UrlGeneratorServiceProvider);
++
+ // parse configuration
+ $config = getenv('BOOKSHELF_CONFIG') ?:
+     __DIR__ . '/../config/' . 'settings.yml';
+ 
+ $app['config'] = Yaml::parse(file_get_contents($config));
+ 
++// register the session handler
++// [START session]
++$app->register(new SessionServiceProvider);
++// fall back on PHP's "session.save_handler" for session storage
++$app['session.storage.handler'] = null;
++$app['user'] = function ($app) {
++    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
++    $session = $app['session'];
++
++    return $session->has('user') ? $session->get('user') : null;
++};
++// [END session]
++
++// create the google authorization client
++// [START google_client]
++$app['google_client'] = function ($app) {
++    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
++    $urlGen = $app['url_generator'];
++    $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
++    return new Google_Client([
++        'client_id'     => $app['config']['google_client_id'],
++        'client_secret' => $app['config']['google_client_secret'],
++        'redirect_uri'  => $redirectUri,
++    ]);
++};
++// [END google_client]
++
+ // turn debug on by default
+ $app['debug'] = !in_array(
+     getenv('BOOKSHELF_DEBUG'),
+diff --git a/src/controllers.php b/src/controllers.php
+index e7bc28e..76c7c3c 100644
+--- a/src/controllers.php
++++ b/src/controllers.php
+@@ -74,6 +74,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
+     if (!empty($book['publishedDate'])) {
+         $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
+     }
++    if ($app['user']) {
++        $book['createdBy'] = $app['user']['name'];
++        $book['createdById'] = $app['user']['id'];
++    }
+     $id = $model->create($book);
+ 
+     return $app->redirect("/books/$id");
+@@ -161,3 +165,58 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+ });
+ // [END delete]
+ 
++# [START login]
++$app->get('/login', function () use ($app) {
++    /** @var Google_Client $client */
++    $client = $app['google_client'];
++
++    $scopes = [ \Google_Service_Oauth2::USERINFO_PROFILE ];
++    $authUrl = $client->createAuthUrl($scopes);
++
++    return $app->redirect($authUrl);
++})->bind('login');
++# [END login]
++
++# [START login_callback]
++$app->get('/login/callback', function () use ($app) {
++    /** @var Request $request */
++    $request = $app['request'];
++
++    if (!$code = $request->query->get('code')) {
++        return new Response('Code required', Response::HTTP_BAD_REQUEST);
++    }
++
++    /** @var Google_Client $client */
++    $client = $app['google_client'];
++    $authResponse = $client->fetchAccessTokenWithAuthCode($code);
++
++    if ($client->getAccessToken()) {
++        $userInfo = $client->verifyIdToken();
++
++        /** @var Symfony\Component\HttpFoundation\Session\Session $session */
++        $session = $app['session'];
++        $session->set('user', [
++            'id'      => $userInfo['sub'],
++            'name'    => $userInfo['name'],
++            'picture' => $userInfo['picture'],
++        ]);
++
++        return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
++    }
++
++    // an error occured while trying to authorize - display it
++    return new Response($authResponse['error_description'], 400);
++
++})->bind('login_callback');
++# [END login_callback]
++
++# [START logout]
++$app->get('/logout', function () use ($app) {
++    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
++    $session = $app['session'];
++    $session->remove('user');
++
++    return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
++})->bind('logout');
++# [END logout]
++
+diff --git a/templates/base.html.twig b/templates/base.html.twig
+index db1be8f..e73f8bb 100644
+--- a/templates/base.html.twig
++++ b/templates/base.html.twig
+@@ -30,6 +30,22 @@
+         <ul class="nav navbar-nav">
+           <li><a href="/books">Books</a></li>
+         </ul>
++        <p class="navbar-text navbar-right">
++          {# [START login] #}
++          {% if app.user %}
++            {% if app.user.picture %}
++              <img src="{{ app.user.picture }}" class="img-circle" width="24" alt="Photo" />
++            {% endif %}
++            <span>
++              {{ app.user.name }} &nbsp;
++              <a href="/logout">(logout)</a>
++            </span>
++          {% else %}
++            <a href="/login">Login</a>
++          {% endif %}
++          {# [END login] #}
++        </p>
++
+       </div>
+     </div>
+     <div class="container">
+diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
+index ead3b49..d874a79 100644
+--- a/test/functional/ControllersTest.php
++++ b/test/functional/ControllersTest.php
+@@ -52,6 +52,7 @@ class ControllersTest extends WebTestCase
+         $app['bookshelf.page_size'] = 1;
+         $app['bookshelf.storage'] = new FakeFileStorage();
+         $app['monolog.handler'] = new TestHandler();
++        $app['session.test'] = true;
+ 
+         return $app;
+     }
+@@ -209,4 +210,131 @@ class ControllersTest extends WebTestCase
+         $client->submit($submitButton->form());
+         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+     }
++
++    public function testAddBookWhenLoggedIn()
++    {
++        $client = $this->createClient();
++
++        // set the logged-in user info on the request
++        $userInfo = [
++            'id'      => 'fake-id',
++            'name'    => 'Tester Joe',
++            'picture' => null
++        ];
++
++        $this->app['session']->set('user', $userInfo);
++        $crawler = $client->request('GET', '/books/');
++
++        $editLink = $crawler
++            ->filter('a:contains("Add")') // find all links with the text "Add"
++            ->link();
++
++        // and click it
++        $crawler = $client->click($editLink);
++
++        // Fill the form and submit it.
++        $submitButton = $crawler->selectButton('submit');
++        $form = $submitButton->form();
++
++        $crawler = $client->submit($form, array(
++            'title' => 'Gödel, Escher, Bach',
++            'author' => 'Douglas Hofstadter',
++            'publishedDate' => '1979',
++        ));
++
++        // get the created book ID and read it
++        $url = $client->getResponse()->headers->get('location');
++        $id = str_replace('/books/', '', $url);
++        $book = $this->app['bookshelf.model']->read($id);
++        $this->assertNotEquals(false, $book);
++        $this->assertArrayHasKey('createdBy', $book);
++        $this->assertEquals($userInfo['name'], $book['createdBy']);
++        $this->assertArrayHasKey('createdById', $book);
++        $this->assertEquals($userInfo['id'], $book['createdById']);
++        // clean up
++        $this->app['bookshelf.model']->delete($id);
++        $book = $this->app['bookshelf.model']->read($id);
++        $this->assertEquals(false, $book);
++    }
++
++    public function testLogin()
++    {
++        $client = $this->createClient();
++        $crawler = $client->request('GET', '/books/');
++        $loginLink = $crawler->filter('a:contains("Login")')->link();
++
++        $crawler = $client->click($loginLink);
++        $response = $client->getResponse();
++        $this->assertEquals(302, $response->getStatusCode());
++        $url = $response->headers->get('Location');
++        $this->assertNotNull($url);
++
++        $parts = parse_url($url);
++        parse_str($parts['query'], $query);
++
++        $this->assertArrayHasKey('response_type', $query);
++        $this->assertArrayHasKey('client_id', $query);
++        $this->assertArrayHasKey('redirect_uri', $query);
++        $this->assertArrayHasKey('state', $query);
++        $this->assertArrayHasKey('scope', $query);
++
++        $this->assertEquals('code', $query['response_type']);
++        $this->assertEquals('http://localhost/login/callback', $query['redirect_uri']);
++    }
++
++    public function testLoginCallback()
++    {
++        $client = $this->createClient();
++        $crawler = $client->request('GET', '/login/callback');
++
++        $response = $client->getResponse();
++        $this->assertEquals(400, $response->getStatusCode());
++        $this->assertEquals('Code required', (string) $response->getContent());
++
++        $crawler = $client->request('GET', '/login/callback?code=123');
++
++        $response = $client->getResponse();
++        $this->assertEquals(400, $response->getStatusCode());
++
++        $idToken = [
++            'sub' => 'fake-id',
++            'name' => 'Fake Name',
++            'picture' => null
++        ];
++        $googleClient = $this->getMock('Google_Client');
++        $googleClient->expects($this->once())
++            ->method('fetchAccessTokenWithAuthCode')
++            ->will($this->returnValue(true));
++        $googleClient->expects($this->once())
++            ->method('getAccessToken')
++            ->will($this->returnValue(['access_token' => 'xyz']));
++        $googleClient->expects($this->once())
++            ->method('verifyIdToken')
++            ->will($this->returnValue($idToken));
++
++        $this->app['google_client'] = $googleClient;
++        $crawler = $client->request('GET', '/login/callback?code=123');
++
++        $userInfo = $this->app['session']->get('user');
++
++        $this->assertNotNull($userInfo);
++        $this->assertArrayHasKey('id', $userInfo);
++        $this->assertEquals($idToken['sub'], $userInfo['id']);
++    }
++
++    public function testLogout()
++    {
++        $client = $this->createClient();
++
++        // set the logged-in user info on the request
++        $userInfo = [
++            'id' => 'fake-id',
++        ];
++        $this->app['session']->set('user', $userInfo);
++
++        // make the request
++        $crawler = $client->request('GET', '/logout');
++
++        $this->assertNull($this->app['session']->get('user'));
++    }
+ }

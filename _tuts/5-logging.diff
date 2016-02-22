@@ -1,0 +1,187 @@
+diff --git a/README.md b/README.md
+index ea0038e..ead2f61 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,8 @@
+-# 4 - Authenticating users
++# 5 - Logging app events
+ 
+-This folder contains the sample code for the [Authenticating users][step-4]
++This folder contains the sample code for the [Logging app events][step-5]
+ tutorial. Please refer to the tutorial for instructions on configuring, running,
+ and deploying this sample.
+ 
+-[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
++[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
+ 
+diff --git a/composer.json b/composer.json
+index deb46ea..fb0e263 100644
+--- a/composer.json
++++ b/composer.json
+@@ -7,6 +7,7 @@
+   "require": {
+     "php": "~5.5.0|~5.6.0|~7.0.0",
+     "google/apiclient": "~2.0@dev",
++    "monolog/monolog": "^1.17",
+     "silex/silex": "^1.3",
+     "symfony/yaml": "^3.0",
+     "twig/twig": "^1.22"
+diff --git a/composer.lock b/composer.lock
+index 2cd3e58..8efaa0c 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,8 +4,8 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+         "This file is @generated automatically"
+     ],
+-    "hash": "82106a863aaf2913e38f49436dac8172",
+-    "content-hash": "c28726b5efcb2fa3688238ff040eb951",
++    "hash": "80e011dc4ad2161486c0b285246272ca",
++    "content-hash": "7b84a57a4234a96e14a75a930c4839b9",
+     "packages": [
+         {
+             "name": "firebase/php-jwt",
+diff --git a/src/app.php b/src/app.php
+index b3fe866..29928e2 100644
+--- a/src/app.php
++++ b/src/app.php
+@@ -58,6 +58,12 @@ $app['user'] = function ($app) {
+ };
+ // [END session]
+ 
++// add logging to stderr
++// [START logging]
++$app->register(new Silex\Provider\MonologServiceProvider());
++$app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
++// [END logging]
++
+ // create the google authorization client
+ // [START google_client]
+ $app['google_client'] = function ($app) {
+diff --git a/src/controllers.php b/src/controllers.php
+index 76c7c3c..9c317a0 100644
+--- a/src/controllers.php
++++ b/src/controllers.php
+@@ -158,6 +158,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+             $storage->deleteFile($book['imageUrl']);
+         }
+         // [END delete_image]
++
++        // [START logging]
++        $app['monolog']->notice('Deleted Book: ' . $book['id']);
++        // [END logging]
++
+         return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
+     }
+ 
+@@ -220,3 +225,6 @@ $app->get('/logout', function () use ($app) {
+ })->bind('logout');
+ # [END logout]
+ 
++$app->get('/_ah/health', function (Request $request) use ($app) {
++    return 'OK';
++});
+diff --git a/test/composer-mongodb.json b/test/composer-mongodb.json
+index d2f9240..0823861 100644
+--- a/test/composer-mongodb.json
++++ b/test/composer-mongodb.json
+@@ -7,6 +7,7 @@
+   "require": {
+     "php": "~5.5.0|~5.6.0|~7.0.0",
+     "google/apiclient": "~2.0@RC",
++    "monolog/monolog": "^1.17",
+     "mongodb/mongodb": "^1.0.0",
+     "silex/silex": "^1.3",
+     "symfony/yaml": "^3.0",
+diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
+index d874a79..85d1ad2 100644
+--- a/test/functional/ControllersTest.php
++++ b/test/functional/ControllersTest.php
+@@ -337,4 +337,16 @@ class ControllersTest extends WebTestCase
+ 
+         $this->assertNull($this->app['session']->get('user'));
+     }
++
++    public function testHealthCheck()
++    {
++        $client = $this->createClient();
++        $client->followRedirects();
++        $crawler = $client->request('GET', '/_ah/health');
++
++        $response = $client->getResponse();
++
++        $this->assertEquals(200, $response->getStatusCode());
++        $this->assertEquals('OK', $response->getContent());
++    }
+ }
+diff --git a/test/functional/LoggerTest.php b/test/functional/LoggerTest.php
+new file mode 100644
+index 0000000..70733d2
+--- /dev/null
++++ b/test/functional/LoggerTest.php
+@@ -0,0 +1,65 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Silex\WebTestCase;
++use Monolog\Handler\TestHandler;
++
++/**
++ * Class ControllersTest.
++ */
++class LoggerTest extends WebTestCase
++{
++    /**
++     * Creates the application.
++     *
++     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
++     */
++    public function createApplication()
++    {
++        $app = require __DIR__ . '/../../src/app.php';
++        require __DIR__ . '/../../src/controllers.php';
++
++        return $app;
++    }
++
++    public function testLogger()
++    {
++        $this->assertInstanceOf('Monolog\Logger', $this->app['monolog']);
++        $this->assertInstanceOf('Monolog\Handler\ErrorLogHandler', $this->app['monolog.handler']);
++    }
++
++    public function testDeleteLogsId()
++    {
++        $model = $this->getMock('Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface');
++        $model
++            ->expects($this->once())
++            ->method('read')
++            ->will($this->returnValue(array('id' => '123', 'imageUrl' => null)));
++        $model
++            ->expects($this->once())
++            ->method('delete');
++
++        $this->app['bookshelf.model'] = $model;
++        $this->app['monolog.handler'] = new TestHandler;
++
++        $client = $this->createClient();
++        $crawler = $client->request('POST', '/books/123/delete');
++        $this->assertTrue($this->app['monolog.handler']->hasNotice('Deleted Book: 123'));
++    }
++}

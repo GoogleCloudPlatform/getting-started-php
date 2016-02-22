@@ -1,0 +1,40 @@
+{
+    "steps": [
+        {
+            "id": "start",
+            "name": "start",
+            "description": null
+        },
+        {
+            "id": "1-hello-world",
+            "name": "1-hello-world",
+            "description": null
+        },
+        {
+            "id": "2-structured-data",
+            "name": "2-structured-data",
+            "description": null
+        },
+        {
+            "id": "3-cloud-storage",
+            "name": "3-cloud-storage",
+            "description": null
+        },
+        {
+            "id": "4-auth",
+            "name": "4-auth",
+            "description": null
+        },
+        {
+            "id": "5-logging",
+            "name": "5-logging",
+            "description": null
+        },
+        {
+            "id": "6-compute-engine",
+            "name": "6-compute-engine",
+            "description": null
+        }
+    ],
+    "sha": false
+}
