@@ -40,11 +40,8 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
 
 $app['config'] = Yaml::parse(file_get_contents($config));
 
-// turn debug on by default
-$app['debug'] = !in_array(
-    getenv('BOOKSHELF_DEBUG'),
-    ['false', '', '0', 'off', 'no']
-);
+// turn debug off by default
+$app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'), FILTER_VALIDATE_BOOLEAN);
 
 // add service parameters
 $app['bookshelf.page_size'] = 10;
