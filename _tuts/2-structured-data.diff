@@ -2225,10 +2225,10 @@ index 0000000..a30f12c
 +}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..cae9cba
+index 0000000..82d2c3b
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,49 @@
 +<?php
 +
 +/*
@@ -2271,11 +2271,8 @@ index 0000000..cae9cba
 +
 +$app['config'] = Yaml::parse(file_get_contents($config));
 +
-+// turn debug on by default
-+$app['debug'] = !in_array(
-+    getenv('BOOKSHELF_DEBUG'),
-+    ['false', '', '0', 'off', 'no']
-+);
++// turn debug off by default
++$app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'), FILTER_VALIDATE_BOOLEAN);
 +
 +// add service parameters
 +$app['bookshelf.page_size'] = 10;
