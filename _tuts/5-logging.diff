@@ -42,7 +42,7 @@ index 2cd3e58..8efaa0c 100644
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index 8cc66cb..f1d70f6 100644
+index 0db984b..10e9ad8 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -58,6 +58,12 @@ $app['user'] = function ($app) {
@@ -59,7 +59,7 @@ index 8cc66cb..f1d70f6 100644
  // [START google_client]
  $app['google_client'] = function ($app) {
 diff --git a/src/controllers.php b/src/controllers.php
-index 76c7c3c..9c317a0 100644
+index 471de40..9c317a0 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -158,6 +158,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
@@ -74,10 +74,11 @@ index 76c7c3c..9c317a0 100644
          return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
      }
  
-@@ -220,3 +225,6 @@ $app->get('/logout', function () use ($app) {
+@@ -219,3 +224,7 @@ $app->get('/logout', function () use ($app) {
+     return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
  })->bind('logout');
  # [END logout]
- 
++
 +$app->get('/_ah/health', function (Request $request) use ($app) {
 +    return 'OK';
 +});

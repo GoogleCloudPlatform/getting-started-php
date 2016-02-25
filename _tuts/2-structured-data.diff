@@ -2225,10 +2225,10 @@ index 0000000..a30f12c
 +}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..82d2c3b
+index 0000000..1c1d9df
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,56 @@
 +<?php
 +
 +/*
@@ -2271,8 +2271,15 @@ index 0000000..82d2c3b
 +
 +$app['config'] = Yaml::parse(file_get_contents($config));
 +
-+// turn debug off by default
-+$app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'), FILTER_VALIDATE_BOOLEAN);
++// Turn on debug locally
++if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
++    || php_sapi_name() === 'cli-server'
++) {
++    $app['debug'] = true;
++} else {
++    $app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'),
++                               FILTER_VALIDATE_BOOLEAN);
++}
 +
 +// add service parameters
 +$app['bookshelf.page_size'] = 10;
@@ -2280,10 +2287,10 @@ index 0000000..82d2c3b
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..8812ef7
+index 0000000..2647b6f
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,134 @@
+@@ -0,0 +1,133 @@
 +<?php
 +
 +/*
@@ -2417,7 +2424,6 @@ index 0000000..8812ef7
 +    return new Response('', Response::HTTP_NOT_FOUND);
 +});
 +// [END delete]
-+
 diff --git a/templates/base.html.twig b/templates/base.html.twig
 new file mode 100644
 index 0000000..db1be8f
@@ -4857,7 +4863,7 @@ index 0000000..4f746a9
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index d507ca2..cb64002 100644
+index e6c22e0..cb64002 100644
 --- a/web/index.php
 +++ b/web/index.php
 @@ -1,13 +1,12 @@
@@ -4876,37 +4882,35 @@ index d507ca2..cb64002 100644
   *
   * Unless required by applicable law or agreed to in writing, software
   * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -16,25 +15,43 @@
+@@ -16,24 +15,43 @@
   * limitations under the License.
   */
  
 -// [START index_php]
 -require_once __DIR__ . '/../vendor/autoload.php';
--
--$app = new Silex\Application();
 +use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 +use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 +use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
  
+-$app = new Silex\Application();
++require_once __DIR__ . '/../vendor/autoload.php';
+ 
 -$app->get('/', function () {
 -    return 'Hello World';
 -});
--
++/** @var Silex\Application $app */
++$app = require __DIR__ . '/../src/app.php';
++require __DIR__ . '/../src/controllers.php';
+ 
 -$app->get('/goodbye', function () {
 -    return 'Goodbye World';
 -});
-+require_once __DIR__ . '/../vendor/autoload.php';
++/** @var array $config */
++$config = $app['config'];
  
 -// @codeCoverageIgnoreStart
 -if (PHP_SAPI != 'cli') {
 -    $app->run();
-+/** @var Silex\Application $app */
-+$app = require __DIR__ . '/../src/app.php';
-+require __DIR__ . '/../src/controllers.php';
-+
-+/** @var array $config */
-+$config = $app['config'];
-+
 +// Data Model
 +switch ($config['bookshelf_backend']) {
 +    case 'mongodb':
@@ -4933,8 +4937,7 @@ index d507ca2..cb64002 100644
 +            . "Possible values are cloudsql, mongodb, or datastore.");
  }
 -// @codeCoverageIgnoreEnd
--
+ 
 -return $app;
 -// [END index_php]
- 
 +$app->run();

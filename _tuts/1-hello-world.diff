@@ -2733,10 +2733,10 @@ index 0000000..929cc3a
 +}
 diff --git a/web/index.php b/web/index.php
 new file mode 100644
-index 0000000..d507ca2
+index 0000000..e6c22e0
 --- /dev/null
 +++ b/web/index.php
-@@ -0,0 +1,40 @@
+@@ -0,0 +1,39 @@
 +<?php
 +
 +/*
@@ -2776,4 +2776,3 @@ index 0000000..d507ca2
 +
 +return $app;
 +// [END index_php]
-+

@@ -131,4 +131,3 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
     return new Response('', Response::HTTP_NOT_FOUND);
 });
 // [END delete]
-
