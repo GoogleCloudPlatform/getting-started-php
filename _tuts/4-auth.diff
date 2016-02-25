@@ -15,7 +15,7 @@ index 4df4bde..ea0038e 100644
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
 diff --git a/src/app.php b/src/app.php
-index cae9cba..b3fe866 100644
+index 82d2c3b..8cc66cb 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -21,7 +21,9 @@
@@ -68,9 +68,9 @@ index cae9cba..b3fe866 100644
 +};
 +// [END google_client]
 +
- // turn debug on by default
- $app['debug'] = !in_array(
-     getenv('BOOKSHELF_DEBUG'),
+ // turn debug off by default
+ $app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'), FILTER_VALIDATE_BOOLEAN);
+ 
 diff --git a/src/controllers.php b/src/controllers.php
 index e7bc28e..76c7c3c 100644
 --- a/src/controllers.php
