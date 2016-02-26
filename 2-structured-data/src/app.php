@@ -40,8 +40,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
 
 $app['config'] = Yaml::parse(file_get_contents($config));
 
-// turn debug off by default
-$app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'), FILTER_VALIDATE_BOOLEAN);
+// Turn on debug locally
+if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
+    || php_sapi_name() === 'cli-server'
+) {
+    $app['debug'] = true;
+} else {
+    $app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'),
+                               FILTER_VALIDATE_BOOLEAN);
+}
 
 // add service parameters
 $app['bookshelf.page_size'] = 10;

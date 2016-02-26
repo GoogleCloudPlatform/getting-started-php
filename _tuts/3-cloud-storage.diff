@@ -102,7 +102,7 @@ index 0000000..451f8bc
 +    }
 +}
 diff --git a/src/controllers.php b/src/controllers.php
-index 8812ef7..e7bc28e 100644
+index 2647b6f..db20ca3 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -24,6 +24,7 @@ namespace Google\Cloud\Samples\Bookshelf;

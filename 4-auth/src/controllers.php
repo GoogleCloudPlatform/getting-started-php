@@ -219,4 +219,3 @@ $app->get('/logout', function () use ($app) {
     return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
 })->bind('logout');
 # [END logout]
-
