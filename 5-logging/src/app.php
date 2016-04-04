@@ -62,7 +62,7 @@ $app['user'] = function ($app) {
 // add AppEngineFlexHandler on prod
 // [START logging]
 $app->register(new Silex\Provider\MonologServiceProvider());
-if ($_SERVER['GAE_VM'] === 'true') {
+if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
     $app['monolog.handler'] = new AppEngineFlexHandler();
 } else {
     $app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
