@@ -915,7 +915,7 @@ index 2cd3e58..4fe19fc 100644
      ],
      "aliases": [],
 diff --git a/src/app.php b/src/app.php
-index 0db984b..dfab9e8 100644
+index 0db984b..f44d90c 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -20,6 +20,7 @@
@@ -933,7 +933,7 @@ index 0db984b..dfab9e8 100644
 +// add AppEngineFlexHandler on prod
 +// [START logging]
 +$app->register(new Silex\Provider\MonologServiceProvider());
-+if ($_SERVER['GAE_VM'] === 'true') {
++if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
 +    $app['monolog.handler'] = new AppEngineFlexHandler();
 +} else {
 +    $app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();

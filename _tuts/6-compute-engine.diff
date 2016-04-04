@@ -609,7 +609,7 @@ index 45969d0..0000000
 @@ -1 +0,0 @@
 -extension=mongodb.so
 diff --git a/src/app.php b/src/app.php
-index dfab9e8..10e9ad8 100644
+index f44d90c..10e9ad8 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -20,7 +20,6 @@
@@ -628,7 +628,7 @@ index dfab9e8..10e9ad8 100644
 +// add logging to stderr
  // [START logging]
  $app->register(new Silex\Provider\MonologServiceProvider());
--if ($_SERVER['GAE_VM'] === 'true') {
+-if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
 -    $app['monolog.handler'] = new AppEngineFlexHandler();
 -} else {
 -    $app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
