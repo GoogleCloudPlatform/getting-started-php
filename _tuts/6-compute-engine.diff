@@ -42,6 +42,149 @@ index e8b7397..0000000
 @@ -1,2 +0,0 @@
 -runtime: custom
 -vm: true
+diff --git a/composer.json b/composer.json
+index 4de964a..fb0e263 100644
+--- a/composer.json
++++ b/composer.json
+@@ -7,7 +7,6 @@
+   "require": {
+     "php": "~5.5.0|~5.6.0|~7.0.0",
+     "google/apiclient": "~2.0@dev",
+-    "google/cloud": "^0.2",
+     "monolog/monolog": "^1.17",
+     "silex/silex": "^1.3",
+     "symfony/yaml": "^3.0",
+diff --git a/composer.lock b/composer.lock
+index 4fe19fc..63cd610 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,8 +4,8 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+         "This file is @generated automatically"
+     ],
+-    "hash": "6d471bcd0761ec3456bd49694261544f",
+-    "content-hash": "3c98247ae90b798d8fdabc9f3252ab69",
++    "hash": "80e011dc4ad2161486c0b285246272ca",
++    "content-hash": "7b84a57a4234a96e14a75a930c4839b9",
+     "packages": [
+         {
+             "name": "firebase/php-jwt",
+@@ -153,64 +153,6 @@
+             "time": "2016-03-03 02:03:58"
+         },
+         {
+-            "name": "google/cloud",
+-            "version": "v0.2.0",
+-            "source": {
+-                "type": "git",
+-                "url": "https://github.com/GoogleCloudPlatform/gcloud-php.git",
+-                "reference": "bda29bb6c531ecdb49a4fd351b84ba62ca869760"
+-            },
+-            "dist": {
+-                "type": "zip",
+-                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/bda29bb6c531ecdb49a4fd351b84ba62ca869760",
+-                "reference": "bda29bb6c531ecdb49a4fd351b84ba62ca869760",
+-                "shasum": ""
+-            },
+-            "require": {
+-                "google/auth": "0.7",
+-                "guzzlehttp/guzzle": "~5.2|~6.0",
+-                "guzzlehttp/psr7": "1.2.*",
+-                "monolog/monolog": "~1",
+-                "php": ">=5.5",
+-                "psr/http-message": "1.0.*",
+-                "rize/uri-template": "~0.3"
+-            },
+-            "require-dev": {
+-                "phpdocumentor/phpdocumentor": "2.8.*",
+-                "phpunit/phpunit": "4.8.*",
+-                "squizlabs/php_codesniffer": "2.*"
+-            },
+-            "type": "library",
+-            "autoload": {
+-                "psr-4": {
+-                    "Google\\Cloud\\": "src"
+-                }
+-            },
+-            "notification-url": "https://packagist.org/downloads/",
+-            "license": [
+-                "Apache-2.0"
+-            ],
+-            "authors": [
+-                {
+-                    "name": "Dave Supplee",
+-                    "email": "dwsupplee@gmail.com"
+-                }
+-            ],
+-            "description": "Google Cloud Client Library",
+-            "homepage": "http://github.com/GoogleCloudPlatform/gcloud-php",
+-            "keywords": [
+-                "cloud",
+-                "google",
+-                "google api",
+-                "google api client",
+-                "google apis",
+-                "google apis client",
+-                "google cloud",
+-                "google cloud platform"
+-            ],
+-            "time": "2016-04-03 01:02:32"
+-        },
+-        {
+             "name": "guzzlehttp/guzzle",
+             "version": "6.2.0",
+             "source": {
+@@ -682,50 +624,6 @@
+             "time": "2012-12-21 11:40:51"
+         },
+         {
+-            "name": "rize/uri-template",
+-            "version": "0.3.0",
+-            "source": {
+-                "type": "git",
+-                "url": "https://github.com/rize/UriTemplate.git",
+-                "reference": "2496aa674438f1c48fce122ffc44291ad7014717"
+-            },
+-            "dist": {
+-                "type": "zip",
+-                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/2496aa674438f1c48fce122ffc44291ad7014717",
+-                "reference": "2496aa674438f1c48fce122ffc44291ad7014717",
+-                "shasum": ""
+-            },
+-            "require": {
+-                "php": ">=5.3.0"
+-            },
+-            "require-dev": {
+-                "phpunit/phpunit": "~4.0.0"
+-            },
+-            "type": "library",
+-            "autoload": {
+-                "psr-0": {
+-                    "Rize\\UriTemplate": "src/"
+-                }
+-            },
+-            "notification-url": "https://packagist.org/downloads/",
+-            "license": [
+-                "MIT"
+-            ],
+-            "authors": [
+-                {
+-                    "name": "Marut K",
+-                    "homepage": "http://twitter.com/rezigned"
+-                }
+-            ],
+-            "description": "PHP URI Template (RFC 6570) supports both expansion & extraction",
+-            "keywords": [
+-                "RFC 6570",
+-                "template",
+-                "uri"
+-            ],
+-            "time": "2015-04-17 16:12:22"
+-        },
+-        {
+             "name": "silex/silex",
+             "version": "v1.3.5",
+             "source": {
 diff --git a/gce/deploy.sh b/gce/deploy.sh
 new file mode 100644
 index 0000000..61b2846
@@ -465,6 +608,35 @@ index 45969d0..0000000
 +++ /dev/null
 @@ -1 +0,0 @@
 -extension=mongodb.so
+diff --git a/src/app.php b/src/app.php
+index dfab9e8..10e9ad8 100644
+--- a/src/app.php
++++ b/src/app.php
+@@ -20,7 +20,6 @@
+  * Create a new Silex Application with Twig.  Configure it for debugging.
+  * Follows Silex Skeleton pattern.
+  */
+-use Google\Cloud\Logger\AppEngineFlexHandler;
+ use Silex\Application;
+ use Silex\Provider\SessionServiceProvider;
+ use Silex\Provider\TwigServiceProvider;
+@@ -59,14 +58,10 @@ $app['user'] = function ($app) {
+ };
+ // [END session]
+ 
+-// add AppEngineFlexHandler on prod
++// add logging to stderr
+ // [START logging]
+ $app->register(new Silex\Provider\MonologServiceProvider());
+-if ($_SERVER['GAE_VM'] === 'true') {
+-    $app['monolog.handler'] = new AppEngineFlexHandler();
+-} else {
+-    $app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
+-}
++$app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
+ // [END logging]
+ 
+ // create the google authorization client
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
 index 249accc..0fb509d 100644
 --- a/test/lib/E2eTest.php
