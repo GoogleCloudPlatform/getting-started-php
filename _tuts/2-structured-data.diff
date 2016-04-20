@@ -2249,10 +2249,10 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..3184433
+index 0000000..b69655a
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
-@@ -0,0 +1,245 @@
+@@ -0,0 +1,243 @@
 +<?php
 +
 +/*
@@ -2301,8 +2301,6 @@ index 0000000..3184433
 +        $client->setScopes([
 +            Google_Service_Datastore::CLOUD_PLATFORM,
 +            Google_Service_Datastore::DATASTORE,
-+            // @TODO: remove this scope when we move to Datastore v3
-+            Google_Service_Datastore::USERINFO_EMAIL,
 +        ]);
 +        $client->useApplicationDefaultCredentials();
 +        $this->datastore = new \Google_Service_Datastore($client);
