@@ -29,7 +29,7 @@ class Datastore implements DataModelInterface
         'id'            => 'integer',
         'title'         => 'string',
         'author'        => 'string',
-        'publishedDate' => 'dateTime',
+        'publishedDate' => 'timestamp',
         'imageUrl'      => 'string',
         'description'   => 'string',
         'createdBy'     => 'string',

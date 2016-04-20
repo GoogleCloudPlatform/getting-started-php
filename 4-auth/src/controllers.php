@@ -72,7 +72,9 @@ $app->post('/books/add', function (Request $request) use ($app) {
         );
     }
     if (!empty($book['publishedDate'])) {
-        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
+        $d = new \DateTime($book['publishedDate']);
+        $book['publishedDate'] = $d->setTimezone(
+            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
     }
     if ($app['user']) {
         $book['createdBy'] = $app['user']['name'];
@@ -134,7 +136,9 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     }
     // [END add_image]
     if (!empty($book['publishedDate'])) {
-        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
+        $d = new \DateTime($book['publishedDate']);
+        $book['publishedDate'] = $d->setTimezone(
+            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
     }
     if ($model->update($book)) {
         return $app->redirect("/books/$id");
