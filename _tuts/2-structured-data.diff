@@ -2249,7 +2249,7 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..b69655a
+index 0000000..58ec134
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
 @@ -0,0 +1,243 @@
@@ -2321,7 +2321,7 @@ index 0000000..b69655a
 +
 +        $request = new \Google_Service_Datastore_RunQueryRequest();
 +        $request->setQuery($query);
-+        $response = $this->datastore->datasets->
++        $response = $this->datastore->projects->
 +            runQuery($this->datasetId, $request);
 +
 +        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
@@ -2365,7 +2365,7 @@ index 0000000..b69655a
 +            ]
 +        ]);
 +
-+        $response = $this->datastore->datasets->commit($this->datasetId, $request);
++        $response = $this->datastore->projects->commit($this->datasetId, $request);
 +
 +        $keys = $response->getMutationResult()->getInsertAutoIdKeys();
 +
@@ -2380,7 +2380,7 @@ index 0000000..b69655a
 +            'keys' => [$key]
 +        ]);
 +
-+        $response = $this->datastore->datasets->
++        $response = $this->datastore->projects->
 +            lookup($this->datasetId, $request);
 +
 +        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
@@ -2418,7 +2418,7 @@ index 0000000..b69655a
 +            ]
 +        ]);
 +
-+        $response = $this->datastore->datasets->commit($this->datasetId, $request);
++        $response = $this->datastore->projects->commit($this->datasetId, $request);
 +
 +        // return the number of updated rows
 +        return 1;
@@ -2436,7 +2436,7 @@ index 0000000..b69655a
 +            ]
 +        ]);
 +
-+        $response = $this->datastore->datasets->commit($this->datasetId, $request);
++        $response = $this->datastore->projects->commit($this->datasetId, $request);
 +
 +        return true;
 +    }
