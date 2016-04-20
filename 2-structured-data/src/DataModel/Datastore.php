@@ -60,7 +60,7 @@ class Datastore implements DataModelInterface
                 ],
             ],
             'order' => [
-                "property" => [
+                'property' => [
                     'name' => 'title',
                 ],
             ],
@@ -230,7 +230,7 @@ class Datastore implements DataModelInterface
         $properties = [];
         foreach ($book as $colName => $colValue) {
             $propName = $this->columns[$colName] . 'Value';
-            if (! empty($colValue)) {
+            if (!empty($colValue)) {
                 $properties[$colName] = [
                     $propName => $colValue
                 ];
