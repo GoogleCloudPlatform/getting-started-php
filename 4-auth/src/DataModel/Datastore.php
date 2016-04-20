@@ -46,8 +46,6 @@ class Datastore implements DataModelInterface
         $client->setScopes([
             Google_Service_Datastore::CLOUD_PLATFORM,
             Google_Service_Datastore::DATASTORE,
-            // @TODO: remove this scope when we move to Datastore v3
-            Google_Service_Datastore::USERINFO_EMAIL,
         ]);
         $client->useApplicationDefaultCredentials();
         $this->datastore = new \Google_Service_Datastore($client);
