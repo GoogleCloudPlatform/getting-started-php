@@ -2249,7 +2249,7 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..f1ce7a7
+index 0000000..a05b3de
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
 @@ -0,0 +1,256 @@
@@ -2315,7 +2315,7 @@ index 0000000..f1ce7a7
 +                ],
 +            ],
 +            'order' => [
-+                "property" => [
++                'property' => [
 +                    'name' => 'title',
 +                ],
 +            ],
@@ -2485,7 +2485,7 @@ index 0000000..f1ce7a7
 +        $properties = [];
 +        foreach ($book as $colName => $colValue) {
 +            $propName = $this->columns[$colName] . 'Value';
-+            if (! empty($colValue)) {
++            if (!empty($colValue)) {
 +                $properties[$colName] = [
 +                    $propName => $colValue
 +                ];
