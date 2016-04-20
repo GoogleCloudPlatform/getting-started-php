@@ -188,10 +188,10 @@ index 0db984b..f44d90c 100644
  // [START google_client]
  $app['google_client'] = function ($app) {
 diff --git a/src/controllers.php b/src/controllers.php
-index 471de40..9c317a0 100644
+index 0695cc9..5e87fc8 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
-@@ -158,6 +158,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+@@ -162,6 +162,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
              $storage->deleteFile($book['imageUrl']);
          }
          // [END delete_image]
@@ -203,7 +203,7 @@ index 471de40..9c317a0 100644
          return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
      }
  
-@@ -219,3 +224,7 @@ $app->get('/logout', function () use ($app) {
+@@ -223,3 +228,7 @@ $app->get('/logout', function () use ($app) {
      return new Response('', Response::HTTP_FOUND, ['Location' => '/']);
  })->bind('logout');
  # [END logout]

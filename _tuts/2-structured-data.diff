@@ -2249,7 +2249,7 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..80bbb21
+index 0000000..f1ce7a7
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
 @@ -0,0 +1,256 @@
@@ -2284,7 +2284,7 @@ index 0000000..80bbb21
 +        'id'            => 'integer',
 +        'title'         => 'string',
 +        'author'        => 'string',
-+        'publishedDate' => 'dateTime',
++        'publishedDate' => 'timestamp',
 +        'imageUrl'      => 'string',
 +        'description'   => 'string',
 +        'createdBy'     => 'string',
@@ -2782,10 +2782,10 @@ index 0000000..1c1d9df
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..2647b6f
+index 0000000..d936e68
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,133 @@
+@@ -0,0 +1,137 @@
 +<?php
 +
 +/*
@@ -2849,7 +2849,9 @@ index 0000000..2647b6f
 +    $model = $app['bookshelf.model'];
 +    $book = $request->request->all();
 +    if (!empty($book['publishedDate'])) {
-+        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
++        $d = new \DateTime($book['publishedDate']);
++        $book['publishedDate'] = $d->setTimezone(
++            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
 +    }
 +    $id = $model->create($book);
 +
@@ -2895,7 +2897,9 @@ index 0000000..2647b6f
 +    /** @var DataModelInterface $model */
 +    $model = $app['bookshelf.model'];
 +    if (!empty($book['publishedDate'])) {
-+        $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
++        $d = new \DateTime($book['publishedDate']);
++        $book['publishedDate'] = $d->setTimezone(
++            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
 +    }
 +    if ($model->update($book)) {
 +        return $app->redirect("/books/$id");
@@ -4864,10 +4868,10 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..7deb447
+index 0000000..2be1153
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,132 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4910,9 +4914,13 @@ index 0000000..7deb447
 +        } while ($fetch['cursor']);
 +
 +        // Insert two books.
++        $d = new \DateTime('April 20th, 2016');
 +        $breakfastId = $model->create(array(
 +            'title' => 'Breakfast of Champions',
-+            'author' => 'Kurt Vonnegut'
++            'author' => 'Kurt Vonnegut',
++            'publishedDate' => $d->setTimezone(
++                new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z")
++
 +        ));
 +
 +        $bellId = $model->create(array(
@@ -4950,9 +4958,15 @@ index 0000000..7deb447
 +        $this->assertEquals('Kurt Vonnegut', $breakfastBook['author']);
 +        $this->assertEquals($breakfastId, $breakfastBook['id']);
 +        $this->assertNull($breakfastBook['description']);
++        $dateString = date(
++            'F jS, Y', strtotime($breakfastBook['publishedDate']));
++        $this->assertEquals('April 20th, 2016', $dateString);
 +
 +        // Try updating a book.
 +        $breakfastBook['description'] = 'A really fun read.';
++        $d = new \DateTime('April 21st, 2016');
++        $breakfastBook['publishedDate'] = $d->setTimezone(
++            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
 +        $model->update($breakfastBook);
 +        $breakfastBookCopy = $model->read($breakfastId);
 +        // And confirm it was correctly updated.
@@ -4960,6 +4974,9 @@ index 0000000..7deb447
 +            'A really fun read.',
 +            $breakfastBookCopy['description']
 +        );
++        $dateString = date(
++            'F jS, Y', strtotime($breakfastBookCopy['publishedDate']));
++        $this->assertEquals('April 21st, 2016', $dateString);
 +
 +        // Update it again and delete the description.
 +        unset($breakfastBook['description']);

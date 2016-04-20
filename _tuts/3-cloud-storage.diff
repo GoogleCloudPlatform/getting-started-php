@@ -102,7 +102,7 @@ index 0000000..451f8bc
 +    }
 +}
 diff --git a/src/controllers.php b/src/controllers.php
-index 2647b6f..db20ca3 100644
+index d936e68..de46b63 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -24,6 +24,7 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -129,9 +129,9 @@ index 2647b6f..db20ca3 100644
 +        );
 +    }
      if (!empty($book['publishedDate'])) {
-         $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
-     }
-@@ -104,8 +115,20 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
+         $d = new \DateTime($book['publishedDate']);
+         $book['publishedDate'] = $d->setTimezone(
+@@ -106,8 +117,20 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
  $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      $book = $request->request->all();
      $book['id'] = $id;
@@ -150,9 +150,9 @@ index 2647b6f..db20ca3 100644
 +    }
 +    // [END add_image]
      if (!empty($book['publishedDate'])) {
-         $book['publishedDate'] = date('c', strtotime($book['publishedDate']));
-     }
-@@ -124,7 +147,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+         $d = new \DateTime($book['publishedDate']);
+         $book['publishedDate'] = $d->setTimezone(
+@@ -128,7 +151,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      $book = $model->read($id);
      if ($book) {
          $model->delete($id);
