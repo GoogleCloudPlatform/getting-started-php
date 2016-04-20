@@ -54,12 +54,16 @@ class Datastore implements DataModelInterface
     public function listBooks($limit = 10, $cursor = null)
     {
         $query = new \Google_Service_Datastore_Query([
-            'kinds' => [
+            'kind' => [
                 [
                     'name' => 'Book',
                 ],
             ],
-            'order' => 'title',
+            'order' => [
+                "property" => [
+                    'name' => 'title',
+                ],
+            ],
             'limit' => $limit,
             'startCursor' => $cursor,
         ]);
@@ -105,17 +109,20 @@ class Datastore implements DataModelInterface
         // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
         $request = new \Google_Service_Datastore_CommitRequest([
             'mode' => 'NON_TRANSACTIONAL',
-            'mutation' => [
-                'insertAutoId' => [$entity]
+            'mutations' => [
+                [
+                    'upsert' => $entity,
+                ]
             ]
         ]);
 
         $response = $this->datastore->projects->commit($this->datasetId, $request);
 
-        $keys = $response->getMutationResult()->getInsertAutoIdKeys();
+        $key = $response->getMutationResults()[0]->getKey();
+
 
         // return the ID of the created datastore item
-        return $keys[0]->getPath()[0]->getId();
+        return $key->getPath()[0]->getId();
     }
 
     public function read($id)
@@ -158,8 +165,10 @@ class Datastore implements DataModelInterface
         // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
         $request = new \Google_Service_Datastore_CommitRequest([
             'mode' => 'NON_TRANSACTIONAL',
-            'mutation' => [
-                'update' => [$entity]
+            'mutations' => [
+                [
+                    'update' => $entity
+                ]
             ]
         ]);
 
@@ -176,8 +185,10 @@ class Datastore implements DataModelInterface
         // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
         $request = new \Google_Service_Datastore_CommitRequest([
             'mode' => 'NON_TRANSACTIONAL',
-            'mutation' => [
-                'delete' => [$key]
+            'mutations' => [
+                [
+                    'delete' => $key
+                ]
             ]
         ]);
 
@@ -219,9 +230,11 @@ class Datastore implements DataModelInterface
         $properties = [];
         foreach ($book as $colName => $colValue) {
             $propName = $this->columns[$colName] . 'Value';
-            $properties[$colName] = [
-                 $propName => $colValue
-            ];
+            if (! empty($colValue)) {
+                $properties[$colName] = [
+                    $propName => $colValue
+                ];
+            }
         }
 
         return $properties;
