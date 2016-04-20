@@ -2249,10 +2249,10 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..58ec134
+index 0000000..80bbb21
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
-@@ -0,0 +1,243 @@
+@@ -0,0 +1,256 @@
 +<?php
 +
 +/*
@@ -2309,12 +2309,16 @@ index 0000000..58ec134
 +    public function listBooks($limit = 10, $cursor = null)
 +    {
 +        $query = new \Google_Service_Datastore_Query([
-+            'kinds' => [
++            'kind' => [
 +                [
 +                    'name' => 'Book',
 +                ],
 +            ],
-+            'order' => 'title',
++            'order' => [
++                "property" => [
++                    'name' => 'title',
++                ],
++            ],
 +            'limit' => $limit,
 +            'startCursor' => $cursor,
 +        ]);
@@ -2360,17 +2364,20 @@ index 0000000..58ec134
 +        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
 +        $request = new \Google_Service_Datastore_CommitRequest([
 +            'mode' => 'NON_TRANSACTIONAL',
-+            'mutation' => [
-+                'insertAutoId' => [$entity]
++            'mutations' => [
++                [
++                    'upsert' => $entity,
++                ]
 +            ]
 +        ]);
 +
 +        $response = $this->datastore->projects->commit($this->datasetId, $request);
 +
-+        $keys = $response->getMutationResult()->getInsertAutoIdKeys();
++        $key = $response->getMutationResults()[0]->getKey();
++
 +
 +        // return the ID of the created datastore item
-+        return $keys[0]->getPath()[0]->getId();
++        return $key->getPath()[0]->getId();
 +    }
 +
 +    public function read($id)
@@ -2413,8 +2420,10 @@ index 0000000..58ec134
 +        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
 +        $request = new \Google_Service_Datastore_CommitRequest([
 +            'mode' => 'NON_TRANSACTIONAL',
-+            'mutation' => [
-+                'update' => [$entity]
++            'mutations' => [
++                [
++                    'update' => $entity
++                ]
 +            ]
 +        ]);
 +
@@ -2431,8 +2440,10 @@ index 0000000..58ec134
 +        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
 +        $request = new \Google_Service_Datastore_CommitRequest([
 +            'mode' => 'NON_TRANSACTIONAL',
-+            'mutation' => [
-+                'delete' => [$key]
++            'mutations' => [
++                [
++                    'delete' => $key
++                ]
 +            ]
 +        ]);
 +
@@ -2474,9 +2485,11 @@ index 0000000..58ec134
 +        $properties = [];
 +        foreach ($book as $colName => $colValue) {
 +            $propName = $this->columns[$colName] . 'Value';
-+            $properties[$colName] = [
-+                 $propName => $colValue
-+            ];
++            if (! empty($colValue)) {
++                $properties[$colName] = [
++                    $propName => $colValue
++                ];
++            }
 +        }
 +
 +        return $properties;
