@@ -66,7 +66,7 @@ class Datastore implements DataModelInterface
 
         $request = new \Google_Service_Datastore_RunQueryRequest();
         $request->setQuery($query);
-        $response = $this->datastore->datasets->
+        $response = $this->datastore->projects->
             runQuery($this->datasetId, $request);
 
         /** @var \Google_Service_Datastore_QueryResultBatch $batch */
@@ -110,7 +110,7 @@ class Datastore implements DataModelInterface
             ]
         ]);
 
-        $response = $this->datastore->datasets->commit($this->datasetId, $request);
+        $response = $this->datastore->projects->commit($this->datasetId, $request);
 
         $keys = $response->getMutationResult()->getInsertAutoIdKeys();
 
@@ -125,7 +125,7 @@ class Datastore implements DataModelInterface
             'keys' => [$key]
         ]);
 
-        $response = $this->datastore->datasets->
+        $response = $this->datastore->projects->
             lookup($this->datasetId, $request);
 
         /** @var \Google_Service_Datastore_QueryResultBatch $batch */
@@ -163,7 +163,7 @@ class Datastore implements DataModelInterface
             ]
         ]);
 
-        $response = $this->datastore->datasets->commit($this->datasetId, $request);
+        $response = $this->datastore->projects->commit($this->datasetId, $request);
 
         // return the number of updated rows
         return 1;
@@ -181,7 +181,7 @@ class Datastore implements DataModelInterface
             ]
         ]);
 
-        $response = $this->datastore->datasets->commit($this->datasetId, $request);
+        $response = $this->datastore->projects->commit($this->datasetId, $request);
 
         return true;
     }
