@@ -29,7 +29,7 @@ class Datastore implements DataModelInterface
         'id'            => 'integer',
         'title'         => 'string',
         'author'        => 'string',
-        'publishedDate' => 'dateTime',
+        'publishedDate' => 'timestamp',
         'imageUrl'      => 'string',
         'description'   => 'string',
         'createdBy'     => 'string',
@@ -46,8 +46,6 @@ class Datastore implements DataModelInterface
         $client->setScopes([
             Google_Service_Datastore::CLOUD_PLATFORM,
             Google_Service_Datastore::DATASTORE,
-            // @TODO: remove this scope when we move to Datastore v3
-            Google_Service_Datastore::USERINFO_EMAIL,
         ]);
         $client->useApplicationDefaultCredentials();
         $this->datastore = new \Google_Service_Datastore($client);
@@ -56,19 +54,23 @@ class Datastore implements DataModelInterface
     public function listBooks($limit = 10, $cursor = null)
     {
         $query = new \Google_Service_Datastore_Query([
-            'kinds' => [
+            'kind' => [
                 [
                     'name' => 'Book',
                 ],
             ],
-            'order' => 'title',
+            'order' => [
+                'property' => [
+                    'name' => 'title',
+                ],
+            ],
             'limit' => $limit,
             'startCursor' => $cursor,
         ]);
 
         $request = new \Google_Service_Datastore_RunQueryRequest();
         $request->setQuery($query);
-        $response = $this->datastore->datasets->
+        $response = $this->datastore->projects->
             runQuery($this->datasetId, $request);
 
         /** @var \Google_Service_Datastore_QueryResultBatch $batch */
@@ -107,17 +109,20 @@ class Datastore implements DataModelInterface
         // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
         $request = new \Google_Service_Datastore_CommitRequest([
             'mode' => 'NON_TRANSACTIONAL',
-            'mutation' => [
-                'insertAutoId' => [$entity]
+            'mutations' => [
+                [
+                    'upsert' => $entity,
+                ]
             ]
         ]);
 
-        $response = $this->datastore->datasets->commit($this->datasetId, $request);
+        $response = $this->datastore->projects->commit($this->datasetId, $request);
 
-        $keys = $response->getMutationResult()->getInsertAutoIdKeys();
+        $key = $response->getMutationResults()[0]->getKey();
+
 
         // return the ID of the created datastore item
-        return $keys[0]->getPath()[0]->getId();
+        return $key->getPath()[0]->getId();
     }
 
     public function read($id)
@@ -127,7 +132,7 @@ class Datastore implements DataModelInterface
             'keys' => [$key]
         ]);
 
-        $response = $this->datastore->datasets->
+        $response = $this->datastore->projects->
             lookup($this->datasetId, $request);
 
         /** @var \Google_Service_Datastore_QueryResultBatch $batch */
@@ -160,12 +165,14 @@ class Datastore implements DataModelInterface
         // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
         $request = new \Google_Service_Datastore_CommitRequest([
             'mode' => 'NON_TRANSACTIONAL',
-            'mutation' => [
-                'update' => [$entity]
+            'mutations' => [
+                [
+                    'update' => $entity
+                ]
             ]
         ]);
 
-        $response = $this->datastore->datasets->commit($this->datasetId, $request);
+        $response = $this->datastore->projects->commit($this->datasetId, $request);
 
         // return the number of updated rows
         return 1;
@@ -178,12 +185,14 @@ class Datastore implements DataModelInterface
         // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
         $request = new \Google_Service_Datastore_CommitRequest([
             'mode' => 'NON_TRANSACTIONAL',
-            'mutation' => [
-                'delete' => [$key]
+            'mutations' => [
+                [
+                    'delete' => $key
+                ]
             ]
         ]);
 
-        $response = $this->datastore->datasets->commit($this->datasetId, $request);
+        $response = $this->datastore->projects->commit($this->datasetId, $request);
 
         return true;
     }
@@ -221,9 +230,11 @@ class Datastore implements DataModelInterface
         $properties = [];
         foreach ($book as $colName => $colValue) {
             $propName = $this->columns[$colName] . 'Value';
-            $properties[$colName] = [
-                 $propName => $colValue
-            ];
+            if (!empty($colValue)) {
+                $properties[$colName] = [
+                    $propName => $colValue
+                ];
+            }
         }
 
         return $properties;
