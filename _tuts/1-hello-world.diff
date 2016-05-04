@@ -14,18 +14,6 @@ index 0000000..0b08f40
 @@ -0,0 +1,2 @@
 +**/vendor
 +**/settings.yml
-diff --git a/Dockerfile b/Dockerfile
-new file mode 100644
-index 0000000..3b50bda
---- /dev/null
-+++ b/Dockerfile
-@@ -0,0 +1,6 @@
-+# This file will go away once gcloud implements fingerprinting.
-+FROM gcr.io/php-mvm-a/php-nginx:latest
-+
-+# The docker image will configure the document root according to this
-+# environment variable.
-+ENV DOCUMENT_ROOT /app/web
 diff --git a/README.md b/README.md
 new file mode 100644
 index 0000000..5a6b401
@@ -42,12 +30,15 @@ index 0000000..5a6b401
 +
 diff --git a/app.yaml b/app.yaml
 new file mode 100644
-index 0000000..e8b7397
+index 0000000..2177c5c
 --- /dev/null
 +++ b/app.yaml
-@@ -0,0 +1,2 @@
-+runtime: custom
+@@ -0,0 +1,5 @@
++runtime: php
 +vm: true
++
++env_variables:
++  DOCUMENT_ROOT: /app/web
 diff --git a/composer.json b/composer.json
 new file mode 100644
 index 0000000..088f870
