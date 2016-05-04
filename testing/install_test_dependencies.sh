@@ -79,6 +79,9 @@ if [ ! -d ${HOME}/gcloud/google-cloud-sdk ]; then
 fi
 
 # gcloud configurations
+if [ ! -z $CLOUDSDK_ACTIVE_CONFIG_NAME ]; then
+  gcloud config configurations create $CLOUDSDK_ACTIVE_CONFIG_NAME || true;
+fi;
 gcloud config set project ${GOOGLE_PROJECT_ID}
 gcloud config set app/promote_by_default false
 
