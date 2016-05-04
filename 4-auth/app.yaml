@@ -1,5 +1,5 @@
 runtime: php
 vm: true
 
-env_variables:
-  DOCUMENT_ROOT: /app/web
+runtime_config:
+  document_root: web
