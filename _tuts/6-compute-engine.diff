@@ -24,15 +24,15 @@ index ead2f61..91cd922 100644
  
 diff --git a/app.yaml b/app.yaml
 deleted file mode 100644
-index 2177c5c..0000000
+index a53b035..0000000
 --- a/app.yaml
 +++ /dev/null
 @@ -1,5 +0,0 @@
 -runtime: php
 -vm: true
 -
--env_variables:
--  DOCUMENT_ROOT: /app/web
+-runtime_config:
+-  document_root: web
 diff --git a/composer.json b/composer.json
 index 4de964a..fb0e263 100644
 --- a/composer.json
