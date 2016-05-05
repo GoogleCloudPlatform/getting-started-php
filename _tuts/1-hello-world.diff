@@ -2240,12 +2240,15 @@ index 0000000..5526a43
 +</phpunit>
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
 new file mode 100644
-index 0000000..6515c50
+index 0000000..cefdec3
 --- /dev/null
 +++ b/test/app-e2e.yaml
-@@ -0,0 +1,5 @@
-+runtime: custom
+@@ -0,0 +1,8 @@
++runtime: php
 +vm: true
++
++runtime_config:
++  document_root: web
 +
 +manual_scaling:
 +  instances: 1

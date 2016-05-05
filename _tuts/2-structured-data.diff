@@ -3138,16 +3138,19 @@ index 0000000..d5c839e
 +
 +{% endblock %}
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index 6515c50..d29e365 100644
+index cefdec3..ae1a580 100644
 --- a/test/app-e2e.yaml
 +++ b/test/app-e2e.yaml
-@@ -1,5 +1,11 @@
- runtime: custom
+@@ -1,8 +1,14 @@
+ runtime: php
  vm: true
  
 +env_variables:
 +  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
 +
+ runtime_config:
+   document_root: web
+ 
  manual_scaling:
    instances: 1
 +
