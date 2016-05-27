@@ -7,3 +7,4 @@
 composer.phar
 **/config/settings.yml
 **/config/settings-e2e.yml
+.php_cs.cache

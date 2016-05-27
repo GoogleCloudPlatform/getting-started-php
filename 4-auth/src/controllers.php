@@ -210,7 +210,6 @@ $app->get('/login/callback', function () use ($app) {
 
     // an error occured while trying to authorize - display it
     return new Response($authResponse['error_description'], 400);
-
 })->bind('login_callback');
 # [END login_callback]
 
