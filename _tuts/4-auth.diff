@@ -72,7 +72,7 @@ index 1c1d9df..0db984b 100644
  if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
      || php_sapi_name() === 'cli-server'
 diff --git a/src/controllers.php b/src/controllers.php
-index de46b63..0695cc9 100644
+index de46b63..95885e3 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -76,6 +76,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
@@ -86,7 +86,7 @@ index de46b63..0695cc9 100644
      $id = $model->create($book);
  
      return $app->redirect("/books/$id");
-@@ -164,3 +168,58 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+@@ -164,3 +168,57 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      return new Response('', Response::HTTP_NOT_FOUND);
  });
  // [END delete]
@@ -132,7 +132,6 @@ index de46b63..0695cc9 100644
 +
 +    // an error occured while trying to authorize - display it
 +    return new Response($authResponse['error_description'], 400);
-+
 +})->bind('login_callback');
 +# [END login_callback]
 +
