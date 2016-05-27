@@ -129,7 +129,6 @@ class CloudSql implements DataModelInterface
         $names = array_keys($book);
         $placeHolders = array_map(function ($key) {
             return ":$key";
-
         }, $names);
         $sql = sprintf(
             'INSERT INTO books (%s) VALUES (%s)',
