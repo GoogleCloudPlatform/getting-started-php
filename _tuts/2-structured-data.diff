@@ -2719,10 +2719,10 @@ index 0000000..a30f12c
 +}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..1c1d9df
+index 0000000..43e478d
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,56 @@
+@@ -0,0 +1,91 @@
 +<?php
 +
 +/*
@@ -2745,6 +2745,9 @@ index 0000000..1c1d9df
 + * Create a new Silex Application with Twig.  Configure it for debugging.
 + * Follows Silex Skeleton pattern.
 + */
++use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
++use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
++use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 +use Silex\Application;
 +use Silex\Provider\TwigServiceProvider;
 +use Symfony\Component\Yaml\Yaml;
@@ -2764,6 +2767,38 @@ index 0000000..1c1d9df
 +    __DIR__ . '/../config/' . 'settings.yml';
 +
 +$app['config'] = Yaml::parse(file_get_contents($config));
++
++// determine the datamodel backend using the app configuration
++$app['bookshelf.model'] = function ($app) {
++    /** @var array $config */
++    $config = $app['config'];
++    if (empty($config['bookshelf_backend'])) {
++        throw new \DomainException('"bookshelf_backend" must be set in bookshelf config');
++    }
++
++    // Data Model
++    switch ($config['bookshelf_backend']) {
++        case 'mongodb':
++            return new MongoDb(
++                $config['mongo_url'],
++                $config['mongo_database'],
++                $config['mongo_collection']
++            );
++        case 'datastore':
++            return new Datastore(
++                $config['google_project_id']
++            );
++        case 'cloudsql':
++            return new CloudSql(
++                $config['mysql_dsn'],
++                $config['mysql_user'],
++                $config['mysql_password']
++            );
++        default:
++            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
++                . "Possible values are cloudsql, mongodb, or datastore.");
++    }
++};
 +
 +// Turn on debug locally
 +if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
@@ -3343,6 +3378,116 @@ index 0000000..c51399a
 +                            'Root URL status code.');
 +        // TODO: content check
 +        $page = $this->session->getPage();
++    }
++}
+diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
+new file mode 100644
+index 0000000..dd8d5d8
+--- /dev/null
++++ b/test/functional/AppTest.php
+@@ -0,0 +1,104 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Silex\WebTestCase;
++
++/**
++ * Test for application controllers
++ */
++class AppTest extends WebTestCase
++{
++    use GetConfigTrait;
++
++    /**
++     * Creates the application.
++     *
++     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
++     */
++    public function createApplication()
++    {
++        $app = require __DIR__ . '/../../src/app.php';
++
++        $app['config'] = $this->getConfig();
++
++        return $app;
++    }
++
++    public function testBookshelfModel()
++    {
++        $config = $this->app['config'];
++
++        // Test CloudSql
++        $config['bookshelf_backend'] = 'cloudsql';
++        $this->app['config'] = $config;
++
++        $this->assertInstanceOf(
++            'Google\Cloud\Samples\Bookshelf\DataModel\CloudSql',
++            $this->app['bookshelf.model']
++        );
++
++        // Test Datastore
++        $config['bookshelf_backend'] = 'datastore';
++        $this->app['config'] = $config;
++
++        $this->assertInstanceOf(
++            'Google\Cloud\Samples\Bookshelf\DataModel\Datastore',
++            $this->app['bookshelf.model']
++        );
++
++        // Test MongoDB
++        $config['bookshelf_backend'] = 'mongodb';
++        $this->app['config'] = $config;
++
++        $this->assertInstanceOf(
++            'Google\Cloud\Samples\Bookshelf\DataModel\MongoDb',
++            $this->app['bookshelf.model']
++        );
++    }
++
++    /**
++     * @expectedException DomainException
++     * @expectedExceptionMessage "bookshelf_backend" must be set in bookshelf config
++     */
++    public function testBookshelfBackendException()
++    {
++        $config = $this->app['config'];
++
++        // Test invalid backend
++        $config['bookshelf_backend'] = '';
++        $this->app['config'] = $config;
++
++        $model = $this->app['bookshelf.model'];
++    }
++
++    /**
++     * @expectedException DomainException
++     * @expectedExceptionMessage Invalid "bookshelf_backend" given: foo. Possible values are cloudsql, mongodb, or datastore.
++     */
++    public function testBookshelfModelException()
++    {
++        $config = $this->app['config'];
++
++        // Test invalid backend
++        $config['bookshelf_backend'] = 'foo';
++        $this->app['config'] = $config;
++
++        $model = $this->app['bookshelf.model'];
 +    }
 +}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
@@ -5018,51 +5163,71 @@ index 7eefc9e..aef007f 100644
          $dumper = new Dumper();
          $yaml = $dumper->dump($config);
          // TODO: Use different filename
-diff --git a/test/e2e/BookshelfTest.php b/test/lib/E2eTest.php
-similarity index 76%
-rename from test/e2e/BookshelfTest.php
-rename to test/lib/E2eTest.php
-index 769e07d..249accc 100644
---- a/test/e2e/BookshelfTest.php
+diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
+new file mode 100644
+index 0000000..249accc
+--- /dev/null
 +++ b/test/lib/E2eTest.php
-@@ -21,15 +21,20 @@ use Behat\Mink\Driver\GoutteDriver;
- use Behat\Mink\Session;
- 
- /**
-- * Class BookshelfTest
+@@ -0,0 +1,59 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++use Behat\Mink\Driver\GoutteDriver;
++use Behat\Mink\Session;
++
++/**
 + * Class E2eTest
-  */
--class BookshelfTest extends \PHPUnit_Framework_TestCase
++ */
 +abstract class E2eTest extends \PHPUnit_Framework_TestCase
- {
-     protected static $step;
-     use E2EDeploymentTrait;
- 
++{
++    protected static $step;
++    use E2EDeploymentTrait;
++
 +    protected static function setBackEnd()
 +    {
 +    }
 +
-     public static function setUpBeforeClass()
-     {
++    public static function setUpBeforeClass()
++    {
 +        static::setBackEnd();
-         if (self::$step = getenv('STEP_NAME')) {
-             self::deployApp(self::$step);
-         }
-@@ -51,14 +56,4 @@ class BookshelfTest extends \PHPUnit_Framework_TestCase
-         $driver = new GoutteDriver();
-         $this->session = new Session($driver);
-     }
--
--    public function testIndex()
--    {
--        $this->assertNotNull(self::$versions[self::$step]);
--        $this->session->visit($this->url . '/');
--        $this->assertEquals('200', $this->session->getStatusCode(),
--                            'Book index status code');
--        // TODO: content check
--        $page = $this->session->getPage();
--    }
- }
++        if (self::$step = getenv('STEP_NAME')) {
++            self::deployApp(self::$step);
++        }
++    }
++
++    public static function tearDownAfterClass()
++    {
++        if (self::$step) {
++            self::deleteApp(self::$step);
++        }
++    }
++
++    public function setUp()
++    {
++        if (!self::$step) {
++            $this->markTestSkipped('must set STEP_NAME for e2e testing');
++        }
++        $this->url = self::getUrl(self::$step);
++        $driver = new GoutteDriver();
++        $this->session = new Session($driver);
++    }
++}
 diff --git a/test/lib/FileSystem/FakeFileStorage.php b/test/lib/FileSystem/FakeFileStorage.php
 new file mode 100644
 index 0000000..7882a18
@@ -5287,7 +5452,7 @@ index 0000000..4f746a9
 +    }
 +}
 diff --git a/web/index.php b/web/index.php
-index e6c22e0..cb64002 100644
+index e6c22e0..89c5750 100644
 --- a/web/index.php
 +++ b/web/index.php
 @@ -1,13 +1,12 @@
@@ -5306,61 +5471,33 @@ index e6c22e0..cb64002 100644
   *
   * Unless required by applicable law or agreed to in writing, software
   * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -16,24 +15,43 @@
+@@ -16,24 +15,13 @@
   * limitations under the License.
   */
  
 -// [START index_php]
--require_once __DIR__ . '/../vendor/autoload.php';
-+use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
-+use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
-+use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
+ require_once __DIR__ . '/../vendor/autoload.php';
  
 -$app = new Silex\Application();
-+require_once __DIR__ . '/../vendor/autoload.php';
- 
+-
 -$app->get('/', function () {
 -    return 'Hello World';
+-});
+-
+-$app->get('/goodbye', function () {
+-    return 'Goodbye World';
 -});
 +/** @var Silex\Application $app */
 +$app = require __DIR__ . '/../src/app.php';
 +require __DIR__ . '/../src/controllers.php';
  
--$app->get('/goodbye', function () {
--    return 'Goodbye World';
--});
-+/** @var array $config */
-+$config = $app['config'];
- 
 -// @codeCoverageIgnoreStart
 -if (PHP_SAPI != 'cli') {
 -    $app->run();
-+// Data Model
-+switch ($config['bookshelf_backend']) {
-+    case 'mongodb':
-+        $app['bookshelf.model'] = new MongoDb(
-+            $config['mongo_url'],
-+            $config['mongo_database'],
-+            $config['mongo_collection']
-+        );
-+        break;
-+    case 'datastore':
-+        $app['bookshelf.model'] = new Datastore(
-+            $config['google_project_id']
-+        );
-+        break;
-+    case 'cloudsql':
-+        $app['bookshelf.model'] = new CloudSql(
-+            $config['mysql_dsn'],
-+            $config['mysql_user'],
-+            $config['mysql_password']
-+        );
-+        break;
-+    default:
-+        throw new Exception("Invalid BOOKSHELF_DATA_BACKEND given: $config[bookshelf_backend]. "
-+            . "Possible values are cloudsql, mongodb, or datastore.");
- }
+-}
 -// @codeCoverageIgnoreEnd
++/** @var array $config */
++$config = $app['config'];
  
 -return $app;
 -// [END index_php]

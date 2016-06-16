@@ -20,6 +20,10 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
+use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
+use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
 use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -71,6 +75,45 @@ $app['google_client'] = function ($app) {
     ]);
 };
 // [END google_client]
+
+// Cloud Storage
+$app['bookshelf.storage'] = function ($app) {
+    /** @var array $config */
+    $config = $app['config'];
+    return new CloudStorage($config['google_project_id']);
+};
+
+// determine the datamodel backend using the app configuration
+$app['bookshelf.model'] = function ($app) {
+    /** @var array $config */
+    $config = $app['config'];
+    if (empty($config['bookshelf_backend'])) {
+        throw new \DomainException('"bookshelf_backend" must be set in bookshelf config');
+    }
+
+    // Data Model
+    switch ($config['bookshelf_backend']) {
+        case 'mongodb':
+            return new MongoDb(
+                $config['mongo_url'],
+                $config['mongo_database'],
+                $config['mongo_collection']
+            );
+        case 'datastore':
+            return new Datastore(
+                $config['google_project_id']
+            );
+        case 'cloudsql':
+            return new CloudSql(
+                $config['mysql_dsn'],
+                $config['mysql_user'],
+                $config['mysql_password']
+            );
+        default:
+            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
+                . "Possible values are cloudsql, mongodb, or datastore.");
+    }
+};
 
 // Turn on debug locally
 if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
