@@ -20,6 +20,11 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
+use Google\Cloud\Logger\AppEngineFlexHandler;
+use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
+use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
 use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -58,10 +63,14 @@ $app['user'] = function ($app) {
 };
 // [END session]
 
-// add logging to stderr
+// add AppEngineFlexHandler on prod
 // [START logging]
 $app->register(new Silex\Provider\MonologServiceProvider());
-$app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
+if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
+    $app['monolog.handler'] = new AppEngineFlexHandler();
+} else {
+    $app['monolog.handler'] = new Monolog\Handler\ErrorLogHandler();
+}
 // [END logging]
 
 // create the google authorization client
@@ -77,6 +86,42 @@ $app['google_client'] = function ($app) {
     ]);
 };
 // [END google_client]
+
+// Cloud Storage
+$app['bookshelf.storage'] = function ($app) {
+    /** @var array $config */
+    $config = $app['config'];
+    return new CloudStorage($config['google_project_id']);
+};
+
+// determine the datamodel backend using the app configuration
+$app['bookshelf.model'] = function ($app) {
+    /** @var array $config */
+    $config = $app['config'];
+
+    // Data Model
+    switch ($config['bookshelf_backend']) {
+        case 'mongodb':
+            return new MongoDb(
+                $config['mongo_url'],
+                $config['mongo_database'],
+                $config['mongo_collection']
+            );
+        case 'datastore':
+            return new Datastore(
+                $config['google_project_id']
+            );
+        case 'cloudsql':
+            return new CloudSql(
+                $config['mysql_dsn'],
+                $config['mysql_user'],
+                $config['mysql_password']
+            );
+        default:
+            throw new \Exception("Invalid BOOKSHELF_DATA_BACKEND given: $config[bookshelf_backend]. "
+                . "Possible values are cloudsql, mongodb, or datastore.");
+    }
+};
 
 // Turn on debug locally
 if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])

@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
-use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
-use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /** @var Silex\Application $app */
@@ -27,31 +23,5 @@ require __DIR__ . '/../src/controllers.php';
 
 /** @var array $config */
 $config = $app['config'];
-
-// Data Model
-switch ($config['bookshelf_backend']) {
-    case 'mongodb':
-        $app['bookshelf.model'] = new MongoDb(
-            $config['mongo_url'],
-            $config['mongo_database'],
-            $config['mongo_collection']
-        );
-        break;
-    case 'datastore':
-        $app['bookshelf.model'] = new Datastore(
-            $config['google_project_id']
-        );
-        break;
-    case 'cloudsql':
-        $app['bookshelf.model'] = new CloudSql(
-            $config['mysql_dsn'],
-            $config['mysql_user'],
-            $config['mysql_password']
-        );
-        break;
-    default:
-        throw new Exception("Invalid BOOKSHELF_DATA_BACKEND given: $config[bookshelf_backend]. "
-            . "Possible values are cloudsql, mongodb, or datastore.");
-}
 
 $app->run();

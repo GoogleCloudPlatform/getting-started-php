@@ -159,7 +159,7 @@ index 07a7363..811c26a 100644
              "version": "v1.3.5",
              "source": {
 diff --git a/src/app.php b/src/app.php
-index 0db984b..f44d90c 100644
+index c832dd6..6644de8 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -20,6 +20,7 @@
@@ -167,10 +167,10 @@ index 0db984b..f44d90c 100644
   * Follows Silex Skeleton pattern.
   */
 +use Google\Cloud\Logger\AppEngineFlexHandler;
- use Silex\Application;
- use Silex\Provider\SessionServiceProvider;
- use Silex\Provider\TwigServiceProvider;
-@@ -58,6 +59,16 @@ $app['user'] = function ($app) {
+ use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+ use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
+@@ -62,6 +63,16 @@ $app['user'] = function ($app) {
  };
  // [END session]
  

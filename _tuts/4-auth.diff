@@ -15,12 +15,12 @@ index 4df4bde..ea0038e 100644
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
 diff --git a/src/app.php b/src/app.php
-index 1c1d9df..0db984b 100644
+index 7eadb1e..c832dd6 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -21,7 +21,9 @@
-  * Follows Silex Skeleton pattern.
-  */
+@@ -25,7 +25,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+ use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
+ use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
  use Silex\Application;
 +use Silex\Provider\SessionServiceProvider;
  use Silex\Provider\TwigServiceProvider;
@@ -28,7 +28,7 @@ index 1c1d9df..0db984b 100644
  use Symfony\Component\Yaml\Yaml;
  
  $app = new Application();
-@@ -34,12 +36,42 @@ $app->register(new TwigServiceProvider(), array(
+@@ -38,12 +40,42 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  
@@ -68,9 +68,9 @@ index 1c1d9df..0db984b 100644
 +};
 +// [END google_client]
 +
- // Turn on debug locally
- if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
-     || php_sapi_name() === 'cli-server'
+ // Cloud Storage
+ $app['bookshelf.storage'] = function ($app) {
+     /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
 index de46b63..95885e3 100644
 --- a/src/controllers.php
