@@ -47,6 +47,9 @@ $app['config'] = Yaml::parse(file_get_contents($config));
 $app['bookshelf.model'] = function ($app) {
     /** @var array $config */
     $config = $app['config'];
+    if (empty($config['bookshelf_backend'])) {
+        throw new \DomainException('"bookshelf_backend" must be set in bookshelf config');
+    }
 
     // Data Model
     switch ($config['bookshelf_backend']) {
@@ -67,7 +70,7 @@ $app['bookshelf.model'] = function ($app) {
                 $config['mysql_password']
             );
         default:
-            throw new \Exception("Invalid BOOKSHELF_DATA_BACKEND given: $config[bookshelf_backend]. "
+            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
                 . "Possible values are cloudsql, mongodb, or datastore.");
     }
 };

@@ -159,7 +159,7 @@ index 07a7363..811c26a 100644
              "version": "v1.3.5",
              "source": {
 diff --git a/src/app.php b/src/app.php
-index c832dd6..6644de8 100644
+index b014e6f..3777489 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -20,6 +20,7 @@
