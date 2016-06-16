@@ -40,9 +40,12 @@ env:
     - FIREWALL_NAME=travis-job-${TRAVIS_JOB_ID}
 
 install:
-- if [ ! `php -r 'echo extension_loaded("mongodb");'` ]; then
-  pecl install mongodb || /bin/true;
-  phpenv config-add testing/mongodb.ini;
+- if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]]; then
+    # mongodb is preinstalled in php 7.0
+    phpenv config-add testing/mongodb.ini;
+  else
+    # install using pecl
+    pecl install mongodb || /bin/true;
   fi
 - travis_retry testing/install_test_dependencies.sh
 
