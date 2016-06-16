@@ -1,0 +1,1987 @@
+diff --git a/README.md b/README.md
+index ead2f61..1bd64f0 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,8 @@
+-# 5 - Logging app events
++# 6 - Using Pub/Sub
+ 
+-This folder contains the sample code for the [Logging app events][step-5]
++This folder contains the sample code for the [Using Pub/Sub][step-6]
+ tutorial. Please refer to the tutorial for instructions on configuring, running,
+ and deploying this sample.
+ 
+-[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
++[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
+ 
+diff --git a/app.yaml b/app.yaml
+index a53b035..50261f7 100644
+--- a/app.yaml
++++ b/app.yaml
+@@ -3,3 +3,9 @@ vm: true
+ 
+ runtime_config:
+   document_root: web
++
++# [START overrides]
++env_variables:
++  NGINX_CONF_INCLUDE: config/nginx-app.conf
++  PHP_INI_OVERRIDE: config/php-app.ini
++# [END overrides]
+diff --git a/bin/pubsub/entrypoint.php b/bin/pubsub/entrypoint.php
+new file mode 100644
+index 0000000..0b9efb7
+--- /dev/null
++++ b/bin/pubsub/entrypoint.php
+@@ -0,0 +1,25 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++require_once __DIR__ . '/../../vendor/autoload.php';
++
++/** @var Silex\Application $app */
++$app = require __DIR__ . '/../../src/app.php';
++
++/** @var Ratchet\Server\IoServer $server */
++$server = $app['pubsub.server'];
++$server->run();
+diff --git a/composer.json b/composer.json
+index 4de964a..da755dd 100644
+--- a/composer.json
++++ b/composer.json
+@@ -7,11 +7,12 @@
+   "require": {
+     "php": "~5.5.0|~5.6.0|~7.0.0",
+     "google/apiclient": "~2.0@dev",
+-    "google/cloud": "^0.2",
++    "google/cloud": "dev-master",
+     "monolog/monolog": "^1.17",
+     "silex/silex": "^1.3",
+     "symfony/yaml": "^3.0",
+-    "twig/twig": "^1.22"
++    "twig/twig": "^1.22",
++    "cboden/ratchet": " 0.3.*"
+   },
+   "require-dev": {
+     "behat/mink": "^1.7",
+diff --git a/composer.lock b/composer.lock
+index 811c26a..7d258cb 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,10 +4,104 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+         "This file is @generated automatically"
+     ],
+-    "hash": "6d471bcd0761ec3456bd49694261544f",
+-    "content-hash": "3c98247ae90b798d8fdabc9f3252ab69",
++    "hash": "3ee73ececbb0c7d8eb0cfee88b62e5dd",
++    "content-hash": "b98f6e892cd29d1cde0bff9044f14f97",
+     "packages": [
+         {
++            "name": "cboden/ratchet",
++            "version": "v0.3.5",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/ratchetphp/Ratchet.git",
++                "reference": "b5ccecad9390db85d2c8df7cbeb047292fbbf4b8"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/b5ccecad9390db85d2c8df7cbeb047292fbbf4b8",
++                "reference": "b5ccecad9390db85d2c8df7cbeb047292fbbf4b8",
++                "shasum": ""
++            },
++            "require": {
++                "guzzle/http": "^3.6",
++                "php": ">=5.3.9",
++                "react/socket": "^0.3 || ^0.4",
++                "symfony/http-foundation": "^2.2|^3.0",
++                "symfony/routing": "^2.2|^3.0"
++            },
++            "type": "library",
++            "autoload": {
++                "psr-4": {
++                    "Ratchet\\": "src/Ratchet"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Chris Boden",
++                    "email": "cboden@gmail.com",
++                    "role": "Developer"
++                }
++            ],
++            "description": "PHP WebSocket library",
++            "homepage": "http://socketo.me",
++            "keywords": [
++                "Ratchet",
++                "WebSockets",
++                "server",
++                "sockets"
++            ],
++            "time": "2016-05-25 12:55:03"
++        },
++        {
++            "name": "evenement/evenement",
++            "version": "v2.0.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/igorw/evenement.git",
++                "reference": "f6e843799fd4f4184d54d8fc7b5b3551c9fa803e"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/igorw/evenement/zipball/f6e843799fd4f4184d54d8fc7b5b3551c9fa803e",
++                "reference": "f6e843799fd4f4184d54d8fc7b5b3551c9fa803e",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.4.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "2.0-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Evenement": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Igor Wiedler",
++                    "email": "igor@wiedler.ch",
++                    "homepage": "http://wiedler.ch/igor/"
++                }
++            ],
++            "description": "Événement is a very simple event dispatching library for PHP",
++            "keywords": [
++                "event-dispatcher",
++                "event-emitter"
++            ],
++            "time": "2012-11-02 14:49:47"
++        },
++        {
+             "name": "firebase/php-jwt",
+             "version": "v3.0.0",
+             "source": {
+@@ -52,16 +146,16 @@
+         },
+         {
+             "name": "google/apiclient",
+-            "version": "dev-master",
++            "version": "v2.0.0-RC7",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/google/google-api-php-client.git",
+-                "reference": "bb90330039782d1dbcfd8a560740efd032ee4283"
++                "reference": "998067619ce59a849948b0a8647499b90f70ab41"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/bb90330039782d1dbcfd8a560740efd032ee4283",
+-                "reference": "bb90330039782d1dbcfd8a560740efd032ee4283",
++                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/998067619ce59a849948b0a8647499b90f70ab41",
++                "reference": "998067619ce59a849948b0a8647499b90f70ab41",
+                 "shasum": ""
+             },
+             "require": {
+@@ -104,21 +198,21 @@
+             "keywords": [
+                 "google"
+             ],
+-            "time": "2016-04-12 21:51:38"
++            "time": "2016-03-15 18:55:57"
+         },
+         {
+             "name": "google/apiclient-services",
+-            "version": "v0.1",
++            "version": "v0.2",
+             "target-dir": "Google/Service",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/google/google-api-php-client-services.git",
+-                "reference": "e4184c83e818fd198bbab5732af3e43fdc579269"
++                "reference": "b33ee2a338e7e68cf56491da2c0690ef50f8f99b"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/e4184c83e818fd198bbab5732af3e43fdc579269",
+-                "reference": "e4184c83e818fd198bbab5732af3e43fdc579269",
++                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/b33ee2a338e7e68cf56491da2c0690ef50f8f99b",
++                "reference": "b33ee2a338e7e68cf56491da2c0690ef50f8f99b",
+                 "shasum": ""
+             },
+             "require": {
+@@ -139,7 +233,7 @@
+             "keywords": [
+                 "google"
+             ],
+-            "time": "2016-04-08 17:51:53"
++            "time": "2016-05-17 15:34:22"
+         },
+         {
+             "name": "google/auth",
+@@ -190,16 +284,16 @@
+         },
+         {
+             "name": "google/cloud",
+-            "version": "v0.2.0",
++            "version": "dev-master",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/GoogleCloudPlatform/gcloud-php.git",
+-                "reference": "bda29bb6c531ecdb49a4fd351b84ba62ca869760"
++                "reference": "880f758ec404fb933389c8b1a5e210544c9da3db"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/bda29bb6c531ecdb49a4fd351b84ba62ca869760",
+-                "reference": "bda29bb6c531ecdb49a4fd351b84ba62ca869760",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/880f758ec404fb933389c8b1a5e210544c9da3db",
++                "reference": "880f758ec404fb933389c8b1a5e210544c9da3db",
+                 "shasum": ""
+             },
+             "require": {
+@@ -228,6 +322,10 @@
+             ],
+             "authors": [
+                 {
++                    "name": "John Pedrie",
++                    "email": "john@pedrie.com"
++                },
++                {
+                     "name": "Dave Supplee",
+                     "email": "dwsupplee@gmail.com"
+                 }
+@@ -244,7 +342,209 @@
+                 "google cloud",
+                 "google cloud platform"
+             ],
+-            "time": "2016-04-03 01:02:32"
++            "time": "2016-05-16 15:35:09"
++        },
++        {
++            "name": "guzzle/common",
++            "version": "v3.9.2",
++            "target-dir": "Guzzle/Common",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/Guzzle3/common.git",
++                "reference": "2e36af7cf2ce3ea1f2d7c2831843b883a8e7b7dc"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/Guzzle3/common/zipball/2e36af7cf2ce3ea1f2d7c2831843b883a8e7b7dc",
++                "reference": "2e36af7cf2ce3ea1f2d7c2831843b883a8e7b7dc",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.2",
++                "symfony/event-dispatcher": ">=2.1"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "3.7-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Guzzle\\Common": ""
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "description": "Common libraries used by Guzzle",
++            "homepage": "http://guzzlephp.org/",
++            "keywords": [
++                "collection",
++                "common",
++                "event",
++                "exception"
++            ],
++            "abandoned": "guzzle/guzzle",
++            "time": "2014-08-11 04:32:36"
++        },
++        {
++            "name": "guzzle/http",
++            "version": "v3.9.2",
++            "target-dir": "Guzzle/Http",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/Guzzle3/http.git",
++                "reference": "1e8dd1e2ba9dc42332396f39fbfab950b2301dc5"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/Guzzle3/http/zipball/1e8dd1e2ba9dc42332396f39fbfab950b2301dc5",
++                "reference": "1e8dd1e2ba9dc42332396f39fbfab950b2301dc5",
++                "shasum": ""
++            },
++            "require": {
++                "guzzle/common": "self.version",
++                "guzzle/parser": "self.version",
++                "guzzle/stream": "self.version",
++                "php": ">=5.3.2"
++            },
++            "suggest": {
++                "ext-curl": "*"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "3.7-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Guzzle\\Http": ""
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "HTTP libraries used by Guzzle",
++            "homepage": "http://guzzlephp.org/",
++            "keywords": [
++                "Guzzle",
++                "client",
++                "curl",
++                "http",
++                "http client"
++            ],
++            "abandoned": "guzzle/guzzle",
++            "time": "2014-08-11 04:32:36"
++        },
++        {
++            "name": "guzzle/parser",
++            "version": "v3.9.2",
++            "target-dir": "Guzzle/Parser",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/Guzzle3/parser.git",
++                "reference": "6874d171318a8e93eb6d224cf85e4678490b625c"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/Guzzle3/parser/zipball/6874d171318a8e93eb6d224cf85e4678490b625c",
++                "reference": "6874d171318a8e93eb6d224cf85e4678490b625c",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.2"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "3.7-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Guzzle\\Parser": ""
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "description": "Interchangeable parsers used by Guzzle",
++            "homepage": "http://guzzlephp.org/",
++            "keywords": [
++                "URI Template",
++                "cookie",
++                "http",
++                "message",
++                "url"
++            ],
++            "abandoned": "guzzle/guzzle",
++            "time": "2014-02-05 18:29:46"
++        },
++        {
++            "name": "guzzle/stream",
++            "version": "v3.9.2",
++            "target-dir": "Guzzle/Stream",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/Guzzle3/stream.git",
++                "reference": "60c7fed02e98d2c518dae8f97874c8f4622100f0"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/Guzzle3/stream/zipball/60c7fed02e98d2c518dae8f97874c8f4622100f0",
++                "reference": "60c7fed02e98d2c518dae8f97874c8f4622100f0",
++                "shasum": ""
++            },
++            "require": {
++                "guzzle/common": "self.version",
++                "php": ">=5.3.2"
++            },
++            "suggest": {
++                "guzzle/http": "To convert Guzzle request objects to PHP streams"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "3.7-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Guzzle\\Stream": ""
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Michael Dowling",
++                    "email": "mtdowling@gmail.com",
++                    "homepage": "https://github.com/mtdowling"
++                }
++            ],
++            "description": "Guzzle stream wrapper component",
++            "homepage": "http://guzzlephp.org/",
++            "keywords": [
++                "Guzzle",
++                "component",
++                "stream"
++            ],
++            "abandoned": "guzzle/guzzle",
++            "time": "2014-05-01 21:36:02"
+         },
+         {
+             "name": "guzzlehttp/guzzle",
+@@ -310,16 +610,16 @@
+         },
+         {
+             "name": "guzzlehttp/promises",
+-            "version": "1.1.0",
++            "version": "1.2.0",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/guzzle/promises.git",
+-                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8"
++                "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/guzzle/promises/zipball/bb9024c526b22f3fe6ae55a561fd70653d470aa8",
+-                "reference": "bb9024c526b22f3fe6ae55a561fd70653d470aa8",
++                "url": "https://api.github.com/repos/guzzle/promises/zipball/c10d860e2a9595f8883527fa0021c7da9e65f579",
++                "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579",
+                 "shasum": ""
+             },
+             "require": {
+@@ -357,7 +657,7 @@
+             "keywords": [
+                 "promise"
+             ],
+-            "time": "2016-03-08 01:15:46"
++            "time": "2016-05-18 16:56:05"
+         },
+         {
+             "name": "guzzlehttp/psr7",
+@@ -718,6 +1018,139 @@
+             "time": "2012-12-21 11:40:51"
+         },
+         {
++            "name": "react/event-loop",
++            "version": "v0.4.2",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/reactphp/event-loop.git",
++                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/164799f73175e1c80bba92a220ea35df6ca371dd",
++                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.4.0"
++            },
++            "suggest": {
++                "ext-event": "~1.0",
++                "ext-libev": "*",
++                "ext-libevent": ">=0.1.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "0.5-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "React\\EventLoop\\": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "description": "Event loop abstraction layer that libraries can use for evented I/O.",
++            "keywords": [
++                "asynchronous",
++                "event-loop"
++            ],
++            "time": "2016-03-08 02:09:32"
++        },
++        {
++            "name": "react/socket",
++            "version": "v0.4.3",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/reactphp/socket.git",
++                "reference": "ce015ec5879b96f5d30905f035f223aa85013fcc"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/reactphp/socket/zipball/ce015ec5879b96f5d30905f035f223aa85013fcc",
++                "reference": "ce015ec5879b96f5d30905f035f223aa85013fcc",
++                "shasum": ""
++            },
++            "require": {
++                "evenement/evenement": "~2.0|~1.0",
++                "php": ">=5.3.0",
++                "react/event-loop": "0.4.*|0.3.*",
++                "react/stream": "0.4.*|0.3.*"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "0.4-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "React\\Socket\\": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "description": "Library for building an evented socket server.",
++            "keywords": [
++                "Socket"
++            ],
++            "time": "2016-03-01 20:10:35"
++        },
++        {
++            "name": "react/stream",
++            "version": "v0.4.3",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/reactphp/stream.git",
++                "reference": "305b2328d2a2e157bc13b61a0f5c6e41b666b188"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/reactphp/stream/zipball/305b2328d2a2e157bc13b61a0f5c6e41b666b188",
++                "reference": "305b2328d2a2e157bc13b61a0f5c6e41b666b188",
++                "shasum": ""
++            },
++            "require": {
++                "evenement/evenement": "^2.0|^1.0",
++                "php": ">=5.3.8"
++            },
++            "require-dev": {
++                "react/event-loop": "^0.4|^0.3",
++                "react/promise": "^2.0|^1.0"
++            },
++            "suggest": {
++                "react/event-loop": "^0.4",
++                "react/promise": "^2.0"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "0.5-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "React\\Stream\\": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "description": "Basic readable and writable stream interfaces that support piping.",
++            "keywords": [
++                "pipe",
++                "stream"
++            ],
++            "time": "2015-10-07 18:32:58"
++        },
++        {
+             "name": "rize/uri-template",
+             "version": "0.3.0",
+             "source": {
+@@ -840,7 +1273,7 @@
+         },
+         {
+             "name": "symfony/debug",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/debug.git",
+@@ -897,16 +1330,16 @@
+         },
+         {
+             "name": "symfony/event-dispatcher",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/event-dispatcher.git",
+-                "reference": "9002dcf018d884d294b1ef20a6f968efc1128f39"
++                "reference": "807dde98589f9b2b00624dca326740380d78dbbc"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9002dcf018d884d294b1ef20a6f968efc1128f39",
+-                "reference": "9002dcf018d884d294b1ef20a6f968efc1128f39",
++                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/807dde98589f9b2b00624dca326740380d78dbbc",
++                "reference": "807dde98589f9b2b00624dca326740380d78dbbc",
+                 "shasum": ""
+             },
+             "require": {
+@@ -953,20 +1386,20 @@
+             ],
+             "description": "Symfony EventDispatcher Component",
+             "homepage": "https://symfony.com",
+-            "time": "2016-03-10 10:34:12"
++            "time": "2016-05-05 06:56:13"
+         },
+         {
+             "name": "symfony/http-foundation",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/http-foundation.git",
+-                "reference": "99f38445a874e7becb8afc4b4a79ee181cf6ec3f"
++                "reference": "18b24bc32d2495ae79d76e777368786a6536fe31"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/99f38445a874e7becb8afc4b4a79ee181cf6ec3f",
+-                "reference": "99f38445a874e7becb8afc4b4a79ee181cf6ec3f",
++                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/18b24bc32d2495ae79d76e777368786a6536fe31",
++                "reference": "18b24bc32d2495ae79d76e777368786a6536fe31",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1006,20 +1439,20 @@
+             ],
+             "description": "Symfony HttpFoundation Component",
+             "homepage": "https://symfony.com",
+-            "time": "2016-03-27 14:50:32"
++            "time": "2016-04-12 18:09:53"
+         },
+         {
+             "name": "symfony/http-kernel",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/http-kernel.git",
+-                "reference": "579f828489659d7b3430f4bd9b67b4618b387dea"
++                "reference": "6a5010978edf0a9646342232531e53bfc7abbcd3"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/579f828489659d7b3430f4bd9b67b4618b387dea",
+-                "reference": "579f828489659d7b3430f4bd9b67b4618b387dea",
++                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/6a5010978edf0a9646342232531e53bfc7abbcd3",
++                "reference": "6a5010978edf0a9646342232531e53bfc7abbcd3",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1088,20 +1521,20 @@
+             ],
+             "description": "Symfony HttpKernel Component",
+             "homepage": "https://symfony.com",
+-            "time": "2016-03-25 01:41:20"
++            "time": "2016-05-09 22:13:13"
+         },
+         {
+             "name": "symfony/polyfill-mbstring",
+-            "version": "v1.1.1",
++            "version": "v1.2.0",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/polyfill-mbstring.git",
+-                "reference": "1289d16209491b584839022f29257ad859b8532d"
++                "reference": "dff51f72b0706335131b00a7f49606168c582594"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
+-                "reference": "1289d16209491b584839022f29257ad859b8532d",
++                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/dff51f72b0706335131b00a7f49606168c582594",
++                "reference": "dff51f72b0706335131b00a7f49606168c582594",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1113,7 +1546,7 @@
+             "type": "library",
+             "extra": {
+                 "branch-alias": {
+-                    "dev-master": "1.1-dev"
++                    "dev-master": "1.2-dev"
+                 }
+             },
+             "autoload": {
+@@ -1147,20 +1580,20 @@
+                 "portable",
+                 "shim"
+             ],
+-            "time": "2016-01-20 09:13:37"
++            "time": "2016-05-18 14:26:46"
+         },
+         {
+             "name": "symfony/routing",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/routing.git",
+-                "reference": "d061b609f2d0769494c381ec92f5c5cc5e4a20aa"
++                "reference": "a6cd168310066176599442aa21f5da86c3f8e0b3"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/routing/zipball/d061b609f2d0769494c381ec92f5c5cc5e4a20aa",
+-                "reference": "d061b609f2d0769494c381ec92f5c5cc5e4a20aa",
++                "url": "https://api.github.com/repos/symfony/routing/zipball/a6cd168310066176599442aa21f5da86c3f8e0b3",
++                "reference": "a6cd168310066176599442aa21f5da86c3f8e0b3",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1222,11 +1655,11 @@
+                 "uri",
+                 "url"
+             ],
+-            "time": "2016-03-23 13:23:25"
++            "time": "2016-05-03 12:23:49"
+         },
+         {
+             "name": "symfony/yaml",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/yaml.git",
+@@ -1871,21 +2304,24 @@
+         },
+         {
+             "name": "phpunit/php-timer",
+-            "version": "1.0.7",
++            "version": "1.0.8",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/sebastianbergmann/php-timer.git",
+-                "reference": "3e82f4e9fc92665fafd9157568e4dcb01d014e5b"
++                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
+-                "reference": "3e82f4e9fc92665fafd9157568e4dcb01d014e5b",
++                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/38e9124049cf1a164f1e4537caf19c99bf1eb260",
++                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260",
+                 "shasum": ""
+             },
+             "require": {
+                 "php": ">=5.3.3"
+             },
++            "require-dev": {
++                "phpunit/phpunit": "~4|~5"
++            },
+             "type": "library",
+             "autoload": {
+                 "classmap": [
+@@ -1908,7 +2344,7 @@
+             "keywords": [
+                 "timer"
+             ],
+-            "time": "2015-06-21 08:01:12"
++            "time": "2016-05-12 18:03:57"
+         },
+         {
+             "name": "phpunit/php-token-stream",
+@@ -1961,16 +2397,16 @@
+         },
+         {
+             "name": "phpunit/phpunit",
+-            "version": "4.8.24",
++            "version": "4.8.26",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/sebastianbergmann/phpunit.git",
+-                "reference": "a1066c562c52900a142a0e2bbf0582994671385e"
++                "reference": "fc1d8cd5b5de11625979125c5639347896ac2c74"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a1066c562c52900a142a0e2bbf0582994671385e",
+-                "reference": "a1066c562c52900a142a0e2bbf0582994671385e",
++                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fc1d8cd5b5de11625979125c5639347896ac2c74",
++                "reference": "fc1d8cd5b5de11625979125c5639347896ac2c74",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1984,7 +2420,7 @@
+                 "phpunit/php-code-coverage": "~2.1",
+                 "phpunit/php-file-iterator": "~1.4",
+                 "phpunit/php-text-template": "~1.2",
+-                "phpunit/php-timer": ">=1.0.6",
++                "phpunit/php-timer": "^1.0.6",
+                 "phpunit/phpunit-mock-objects": "~2.3",
+                 "sebastian/comparator": "~1.1",
+                 "sebastian/diff": "~1.2",
+@@ -2029,7 +2465,7 @@
+                 "testing",
+                 "xunit"
+             ],
+-            "time": "2016-03-14 06:16:08"
++            "time": "2016-05-17 03:09:28"
+         },
+         {
+             "name": "phpunit/phpunit-mock-objects",
+@@ -2205,16 +2641,16 @@
+         },
+         {
+             "name": "sebastian/environment",
+-            "version": "1.3.5",
++            "version": "1.3.7",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/sebastianbergmann/environment.git",
+-                "reference": "dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf"
++                "reference": "4e8f0da10ac5802913afc151413bc8c53b6c2716"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf",
+-                "reference": "dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf",
++                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/4e8f0da10ac5802913afc151413bc8c53b6c2716",
++                "reference": "4e8f0da10ac5802913afc151413bc8c53b6c2716",
+                 "shasum": ""
+             },
+             "require": {
+@@ -2251,7 +2687,7 @@
+                 "environment",
+                 "hhvm"
+             ],
+-            "time": "2016-02-26 18:40:46"
++            "time": "2016-05-17 03:18:57"
+         },
+         {
+             "name": "sebastian/exporter",
+@@ -2460,7 +2896,7 @@
+         },
+         {
+             "name": "symfony/browser-kit",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/browser-kit.git",
+@@ -2517,7 +2953,7 @@
+         },
+         {
+             "name": "symfony/css-selector",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/css-selector.git",
+@@ -2570,16 +3006,16 @@
+         },
+         {
+             "name": "symfony/dom-crawler",
+-            "version": "v3.0.4",
++            "version": "v3.0.6",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/symfony/dom-crawler.git",
+-                "reference": "18a06d7a9af41718c20764a674a0ebba3bc40d1f"
++                "reference": "49b588841225b205700e5122fa01911cabada857"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/18a06d7a9af41718c20764a674a0ebba3bc40d1f",
+-                "reference": "18a06d7a9af41718c20764a674a0ebba3bc40d1f",
++                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/49b588841225b205700e5122fa01911cabada857",
++                "reference": "49b588841225b205700e5122fa01911cabada857",
+                 "shasum": ""
+             },
+             "require": {
+@@ -2622,13 +3058,14 @@
+             ],
+             "description": "Symfony DomCrawler Component",
+             "homepage": "https://symfony.com",
+-            "time": "2016-03-23 13:23:25"
++            "time": "2016-04-12 18:09:53"
+         }
+     ],
+     "aliases": [],
+     "minimum-stability": "stable",
+     "stability-flags": {
+-        "google/apiclient": 20
++        "google/apiclient": 20,
++        "google/cloud": 20
+     },
+     "prefer-stable": false,
+     "prefer-lowest": false,
+diff --git a/config/nginx-app.conf b/config/nginx-app.conf
+new file mode 100644
+index 0000000..c13edbf
+--- /dev/null
++++ b/config/nginx-app.conf
+@@ -0,0 +1,4 @@
++location / {
++  # try to serve file directly, fallback to front controller
++  try_files $uri /index.php$is_args$args;
++}
+diff --git a/config/php-app.ini b/config/php-app.ini
+new file mode 100644
+index 0000000..45969d0
+--- /dev/null
++++ b/config/php-app.ini
+@@ -0,0 +1 @@
++extension=mongodb.so
+diff --git a/config/php-pubsub.ini b/config/php-pubsub.ini
+new file mode 100644
+index 0000000..1f0dd17
+--- /dev/null
++++ b/config/php-pubsub.ini
+@@ -0,0 +1,3 @@
++extension=mongo.so
++extension=curl.so
++suhosin.executor.func.blacklist=
+\ No newline at end of file
+diff --git a/config/settings.yml.dist b/config/settings.yml.dist
+index 4763bc6..e8a1ee6 100644
+--- a/config/settings.yml.dist
++++ b/config/settings.yml.dist
+@@ -15,3 +15,6 @@ mysql_password: YOUR_MYSQL_PASSWORD
+ mongo_url: YOUR_MONGODB_URL
+ mongo_database: YOUR_MONGO_DATABASE
+ mongo_collection: YOUR_MONGO_COLLECTION
++
++pubsub_topic_name: book-created-or-updated
++pubsub_subscription_name: fill-book-details
+diff --git a/nginx-app.conf b/nginx-app.conf
+deleted file mode 100644
+index c13edbf..0000000
+--- a/nginx-app.conf
++++ /dev/null
+@@ -1,4 +0,0 @@
+-location / {
+-  # try to serve file directly, fallback to front controller
+-  try_files $uri /index.php$is_args$args;
+-}
+diff --git a/php.ini b/php.ini
+deleted file mode 100644
+index 45969d0..0000000
+--- a/php.ini
++++ /dev/null
+@@ -1 +0,0 @@
+-extension=mongodb.so
+diff --git a/src/PubSub/AsyncConnection.php b/src/PubSub/AsyncConnection.php
+new file mode 100644
+index 0000000..ea14436
+--- /dev/null
++++ b/src/PubSub/AsyncConnection.php
+@@ -0,0 +1,70 @@
++<?php
++
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++use Google\Auth\HttpHandler\HttpHandlerFactory;
++use Google\Cloud\PubSub\Connection\Rest;
++use Google\Cloud\PubSub\PubSubClient;
++use Google\Cloud\RequestWrapper;
++use Google\Cloud\RestTrait;
++use GuzzleHttp\Client;
++use GuzzleHttp\HandlerStack;
++use GuzzleHttp\Handler\CurlMultiHandler;
++
++/**
++ * Class AsyncConnection makes async calls to the PubSub API
++ */
++class AsyncConnection extends Rest
++{
++    use RestTrait;
++
++    private $handler;
++
++    public function __construct()
++    {
++        // call parent constructor
++        parent::__construct();
++
++        // create the asyncronous curl handler
++        $this->handler = new CurlMultiHandler;
++        $httpClient = new Client([
++            'handler' => HandlerStack::create($this->handler)
++        ]);
++        // have the request wrapper call guzzle asyncronously
++        $this->setRequestWrapper(new RequestWrapper([
++            'scopes' => PubSubClient::FULL_CONTROL_SCOPE,
++            'httpHandler' =>
++                function ($request, $options = []) use ($httpClient) {
++                    return $httpClient->sendAsync($request, $options);
++                },
++            'authHttpHandler' => HttpHandlerFactory::build(),
++        ]));
++    }
++
++    /**
++     * Delivers an asyncronous request to a pubsub subscroption
++     *
++     * @param array $options
++     * @return GuzzleHttp\Promise\Promise
++     */
++    public function pull(array $options)
++    {
++        $requestOptions = array_intersect_key($options, [
++            'httpOptions' => null,
++            'retries' => null,
++        ]);
++
++        $request = $this->requestBuilder->build('subscriptions', 'pull', $options);
++
++        return $this->requestWrapper->send(
++            $request,
++            $requestOptions
++        );
++    }
++
++    public function tick()
++    {
++        // advance the curl event loop
++        return $this->handler->tick();
++    }
++}
+diff --git a/src/PubSub/HealthCheckListener.php b/src/PubSub/HealthCheckListener.php
+new file mode 100644
+index 0000000..81f1d96
+--- /dev/null
++++ b/src/PubSub/HealthCheckListener.php
+@@ -0,0 +1,53 @@
++<?php
++
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++use Guzzle\Http\Message\RequestInterface;
++use Guzzle\Http\Message\Response;
++use Psr\Log\LoggerInterface;
++use Ratchet\Http\HttpServerInterface;
++use Ratchet\ConnectionInterface;
++
++/**
++ * Class HealthCheckListener responds to the App Engine health checker
++ */
++class HealthCheckListener implements HttpServerInterface
++{
++    private $logger;
++
++    public function __construct(LoggerInterface $logger = null)
++    {
++        $this->logger = $logger;
++    }
++
++    // [START open]
++    public function onOpen(ConnectionInterface $conn, RequestInterface $request = null)
++    {
++        // send the 200 OK health response and return
++        $response = new Response(200, [], 'Pubsub worker is running!');
++        $conn->send((string) $response);
++        $conn->close();
++    }
++    // [END open]
++
++    public function onMessage(ConnectionInterface $from, $msg)
++    {
++    }
++
++    public function onClose(ConnectionInterface $conn)
++    {
++    }
++
++    public function onError(ConnectionInterface $conn, \Exception $e)
++    {
++        $this->log(sprintf('An error has occurred: %s', $e->getMessage()));
++        $conn->close();
++    }
++
++    private function log($message)
++    {
++        if ($this->logger) {
++            $this->logger->error($message);
++        }
++    }
++}
+diff --git a/src/PubSub/LookupBookDetailsJob.php b/src/PubSub/LookupBookDetailsJob.php
+new file mode 100644
+index 0000000..8497f4b
+--- /dev/null
++++ b/src/PubSub/LookupBookDetailsJob.php
+@@ -0,0 +1,49 @@
++<?php
++
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++use Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface;
++use Google_Client;
++use Google_Service_Books;
++
++/**
++ * Class LookupBookDetailsJob looks up book details using the Google API PHP
++ * Client.
++ */
++class LookupBookDetailsJob
++{
++    private $model;
++    private $client;
++
++    public function __construct(DataModelInterface $model, Google_Client $client)
++    {
++        $this->model = $model;
++        $this->client = $client;
++    }
++
++    public function work($id)
++    {
++        if ($book = $this->model->read($id)) {
++            // [START lookup_books]
++            $service = new Google_Service_Books($this->client);
++            $options = ['orderBy' => 'relevance'];
++            $results = $service->volumes->listVolumes($book['title'], $options);
++            // [END lookup_books]
++            // [START update_image]
++            foreach ($results as $result) {
++                $volumeInfo = $result->getVolumeInfo();
++                $imageInfo = $volumeInfo->getImageLinks();
++                if ($thumbnail = $imageInfo->getThumbnail()) {
++                    $book['imageUrl'] = $thumbnail;
++                    $this->client->getLogger()->info(sprintf(
++                        'Updating book "%s" with thumbnail "%s"',
++                        $id, basename($thumbnail)));
++                    return $this->model->update($book);
++                }
++            }
++            // [END update_image]
++        }
++
++        return false;
++    }
++}
+diff --git a/src/PubSub/Worker.php b/src/PubSub/Worker.php
+new file mode 100644
+index 0000000..27eb351
+--- /dev/null
++++ b/src/PubSub/Worker.php
+@@ -0,0 +1,70 @@
++<?php
++
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++use Google\Cloud\PubSub\Subscription;
++use Psr\Log\LoggerInterface;
++
++/**
++ * Class Worker calls the PubSub API and runs a job when work is received.
++ */
++class Worker
++{
++    private $callback;
++    private $connection;
++    private $promise;
++    private $subscription;
++
++    public function __construct(Subscription $subscription, $job, LoggerInterface $logger)
++    {
++        // [START callback]
++        $callback = function ($response) use ($job, $subscription, $logger) {
++            $ackIds = [];
++            $messages = json_decode($response->getBody(), true);
++            if (isset($messages['receivedMessages'])) {
++                foreach ($messages['receivedMessages'] as $message) {
++                    $attributes = $message['message']['attributes'];
++                    $logger->info(sprintf('Message received for book ID "%s" ', $attributes['id']));
++                    // Do the actual work in the LookupBookDetailsJob class
++                    $job->work($attributes['id']);
++                    $ackIds[] = $message['ackId'];
++                }
++            }
++            // Acknowledge the messsages have been handled
++            if (!empty($ackIds)) {
++                $subscription->acknowledgeBatch($ackIds);
++            }
++        };
++        // [END callback]
++        $this->callback = $callback;
++        $this->subscription = $subscription;
++        $this->connection = new AsyncConnection();
++    }
++
++    public function __invoke($timer)
++    {
++        // advance the event loop for our async call to pubsub
++        $this->connection->tick();
++
++        // check the status of the promise and handle completion or error
++        if (!$this->promise || 'fulfilled' == $state = $this->promise->getState()) {
++            $this->asyncPubsubPull();
++        } elseif ('rejected' == $state) {
++            // this will throw the exception and stop the event loop
++            $this->promise->wait();
++        }
++    }
++
++    private function asyncPubsubPull()
++    {
++        $callback = $this->callback;
++        // [START promise]
++        $promise = $this->connection->pull([
++            'maxMessages' => 1000,
++            'subscription' => $this->subscription->info()['name'],
++        ]);
++        $promise->then($callback);
++        // [END promise]
++        $this->promise = $promise;
++    }
++}
+diff --git a/src/app.php b/src/app.php
+index d34b5ed..b6450e5 100644
+--- a/src/app.php
++++ b/src/app.php
+@@ -21,10 +21,22 @@
+  * Follows Silex Skeleton pattern.
+  */
+ use Google\Cloud\Logger\AppEngineFlexHandler;
++// [START pubsub_client]
++use Google\Cloud\PubSub\PubSubClient;
++// [END pubsub_client]
+ use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+ use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
+ use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
++// [START add_worker_ns]
++use Google\Cloud\Samples\Bookshelf\PubSub\LookupBookDetailsJob;
++use Google\Cloud\Samples\Bookshelf\PubSub\Worker;
++// [END add_worker_ns]
++// [START pubsub_server_ns]
++use Google\Cloud\Samples\Bookshelf\PubSub\HealthCheckListener;
++use Ratchet\Http\HttpServer;
++use Ratchet\Server\IoServer;
++// [END pubsub_server_ns]
+ use Silex\Application;
+ use Silex\Provider\SessionServiceProvider;
+ use Silex\Provider\TwigServiceProvider;
+@@ -76,19 +88,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
+ // create the google authorization client
+ // [START google_client]
+ $app['google_client'] = function ($app) {
+-    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
+-    $urlGen = $app['url_generator'];
+-    $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
+     $client = new Google_Client([
+         'client_id'     => $app['config']['google_client_id'],
+         'client_secret' => $app['config']['google_client_secret'],
+-        'redirect_uri'  => $redirectUri,
+     ]);
+     $client->setLogger($app['monolog']);
++    if ($app['routes']->get('login_callback')) {
++        /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
++        $urlGen = $app['url_generator'];
++        $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
++        $client->setRedirectUri($redirectUri);
++    }
+     return $client;
+ };
+ // [END google_client]
+ 
++// [START pubsub_client]
++$app['pubsub.client'] = function ($app) {
++    // create the pubsub client
++    $projectId = $app['config']['google_project_id'];
++    $pubsub = new PubSubClient([
++        'projectId' => $projectId,
++    ]);
++    return $pubsub;
++};
++// [END pubsub_client]
++
++// [START pubsub_topic]
++$app['pubsub.topic'] = function ($app) {
++    // create the topic if it does not exist.
++    /** @var Google\Cloud\PubSub\PubSubClient **/
++    $pubsub = $app['pubsub.client'];
++    $topicName = $app['config']['pubsub_topic_name'];
++    $topic = $pubsub->topic($topicName);
++    if (!$topic->exists()) {
++        $topic->create();
++    }
++    return $topic;
++};
++// [END pubsub_topic]
++
++$app['pubsub.subscription'] = function ($app) {
++    // create the subscription if it does not exist.
++    /** @var Google\Cloud\PubSub\Topic $topic **/
++    $topic = $app['pubsub.topic'];
++    $subName = $app['config']['pubsub_subscription_name'];
++    $subscription = $topic->subscription($subName);
++    if (!$subscription->exists()) {
++        $subscription->create();
++    }
++    return $subscription;
++};
++
++$app['pubsub.server'] = function ($app) {
++    /** @var Monolog\Logger $logger **/
++    $logger = $app['monolog'];
++    // [START pubsub_server]
++    // Listen to port 8080 for our health checker
++    $server = IoServer::factory(
++        new HttpServer(new HealthCheckListener($logger)),
++        8080
++    );
++    // [END pubsub_server]
++    // [START add_worker]
++    // create the job and worker
++    $job = new LookupBookDetailsJob($app['bookshelf.model'], $app['google_client']);
++    $worker = new Worker($app['pubsub.subscription'], $job, $logger);
++    // add our worker to the event loop
++    $server->loop->addPeriodicTimer(0, $worker);
++    // [END add_worker]
++    return $server;
++};
++
+ // Cloud Storage
+ $app['bookshelf.storage'] = function ($app) {
+     /** @var array $config */
+diff --git a/src/controllers.php b/src/controllers.php
+index c2e1dbb..104bb5d 100644
+--- a/src/controllers.php
++++ b/src/controllers.php
+@@ -80,7 +80,19 @@ $app->post('/books/add', function (Request $request) use ($app) {
+         $book['createdBy'] = $app['user']['name'];
+         $book['createdById'] = $app['user']['id'];
+     }
+-    $id = $model->create($book);
++
++    # [START publish_topic]
++    if ($id = $model->create($book)) {
++        /** @var Google\Cloud\PubSub\PubSub\Topic $topic */
++        $topic = $app['pubsub.topic'];
++        $topic->publish([
++            'data' => 'Updated Book',
++            'attributes' => [
++                'id' => $id
++            ]
++        ]);
++    }
++    # [END publish_topic]
+ 
+     return $app->redirect("/books/$id");
+ });
+@@ -144,6 +156,15 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
+             new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
+     }
+     if ($model->update($book)) {
++        /** @var Google\Cloud\PubSub\Topic $topic */
++        $topic = $app['pubsub.topic'];
++        $topic->publish([
++            'data' => 'Edit Book',
++            'attributes' => [
++                'id' => $id
++            ]
++        ]);
++
+         return $app->redirect("/books/$id");
+     }
+ 
+diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
+index dd8d5d8..d7fc4df 100644
+--- a/test/functional/AppTest.php
++++ b/test/functional/AppTest.php
+@@ -101,4 +101,11 @@ class AppTest extends WebTestCase
+ 
+         $model = $this->app['bookshelf.model'];
+     }
++
++    public function testPubsubServer()
++    {
++        // smoke test
++        $server = $this->app['pubsub.server'];
++        $server->loop->tick();
++    }
+ }
+diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
+index c6d4c8f..7d5d2f0 100644
+--- a/test/lib/GetConfigTrait.php
++++ b/test/lib/GetConfigTrait.php
+@@ -41,6 +41,8 @@ trait GetConfigTrait
+             'mongo_url' => getenv('MONGO_URL'),
+             'mongo_database' => getenv('MONGO_DATABASE'),
+             'mongo_collection' => getenv('MONGO_COLLECTION'),
++            'pubsub_topic_name' => getenv('PUBSUB_TOPIC_NAME'),
++            'pubsub_subscription_name' => getenv('PUBSUB_SUBSCRIPTION_NAME'),
+         );
+ 
+         // if a local config exists, use it
+diff --git a/test/unit/PubSub/AsyncConnectionTest.php b/test/unit/PubSub/AsyncConnectionTest.php
+new file mode 100644
+index 0000000..f8e6d5a
+--- /dev/null
++++ b/test/unit/PubSub/AsyncConnectionTest.php
+@@ -0,0 +1,52 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++class AsyncConnectionTest extends \PHPUnit_Framework_TestCase
++{
++    public function testPull()
++    {
++        $connection = new AsyncConnection();
++        $requestWrapper = $this->getMockBuilder('Google\Cloud\RequestWrapper')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $requestWrapper->expects($this->once())
++            ->method('send');
++        $connection->setRequestWrapper($requestWrapper);
++
++        $connection->pull([]);
++    }
++
++    public function testTick()
++    {
++        $handler = $this->getMockBuilder('GuzzleHttp\Handler\CurlMultiHandler')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $handler->expects($this->once())
++            ->method('tick');
++
++        $connection = new AsyncConnection();
++
++        // set the handler property using ReflectionClass
++        $class = new \ReflectionClass($connection);
++        $property = $class->getProperty('handler');
++        $property->setAccessible(true);
++        $property->setValue($connection, $handler);
++
++        $connection->tick();
++    }
++}
+diff --git a/test/unit/PubSub/HealthCheckListenerTest.php b/test/unit/PubSub/HealthCheckListenerTest.php
+new file mode 100644
+index 0000000..eccb58a
+--- /dev/null
++++ b/test/unit/PubSub/HealthCheckListenerTest.php
+@@ -0,0 +1,73 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++class HealthCheckListenerTest extends \PHPUnit_Framework_TestCase
++{
++    public function testOnOpen()
++    {
++        $logger = $this->getMockBuilder('Monolog\Logger')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $conn = $this->getMock('Ratchet\ConnectionInterface');
++        $conn->expects($this->once())
++            ->method('send')
++            ->will($this->returnCallback(function ($o) use (&$output) {
++                $output = $o;
++            }));
++        $listener = new HealthCheckListener($logger);
++        $listener->onOpen($conn);
++
++        $this->assertContains('HTTP/1.1 200 OK', $output);
++        $this->assertContains('Pubsub worker is running!', $output);
++    }
++
++    public function testOnError()
++    {
++        $logger = $this->getMockBuilder('Monolog\Logger')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $logger->expects($this->once())
++            ->method('error')
++            ->will($this->returnCallback(function ($m) use (&$message) {
++                $message = $m;
++            }));
++        $conn = $this->getMock('Ratchet\ConnectionInterface');
++        $e = new \Exception('This is the message');
++        $listener = new HealthCheckListener($logger);
++        $listener->onError($conn, $e);
++
++        $this->assertEquals(
++            sprintf('An error has occurred: %s', $e->getMessage()),
++            $message
++        );
++    }
++
++    public function testOnMessage()
++    {
++        $conn = $this->getMock('Ratchet\ConnectionInterface');
++        $listener = new HealthCheckListener();
++        $listener->onMessage($conn, 'unused message');
++    }
++
++    public function testOnClose()
++    {
++        $conn = $this->getMock('Ratchet\ConnectionInterface');
++        $listener = new HealthCheckListener();
++        $listener->onClose($conn);
++    }
++}
+diff --git a/test/unit/PubSub/LookupBookDetailsJobTest.php b/test/unit/PubSub/LookupBookDetailsJobTest.php
+new file mode 100644
+index 0000000..ce2f9c9
+--- /dev/null
++++ b/test/unit/PubSub/LookupBookDetailsJobTest.php
+@@ -0,0 +1,140 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++class LookupBookDetailsJobTest extends \PHPUnit_Framework_TestCase
++{
++    public function testWork()
++    {
++        $bookId = 123;
++        $volume = new \Google_Service_Books_Volume([
++            'volumeInfo' => [
++                'imageLinks' => ['thumbnail' => 'testImage.jpg']
++            ]
++        ]);
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $client = $this->getMock('Google_Client');
++        $client->expects($this->exactly(2))
++            ->method('getLogger')
++            ->will($this->returnValue($logger));
++        $client->expects($this->once())
++            ->method('execute')
++            ->will($this->returnValue([$volume]));
++        $model = $this->getMock('Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface');
++        $model->expects($this->once())
++            ->method('read')
++            ->will($this->returnValue([
++                'title' => 'My Book Title',
++            ]));
++        $model->expects($this->once())
++            ->method('update')
++            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
++            ->will($this->returnValue(true));
++
++        $job = new LookupBookDetailsJob($model, $client, $logger);
++        $result = $job->work($bookId);
++        $this->assertTrue($result);
++    }
++
++    public function testNoBookMatch()
++    {
++        $bookId = 123;
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $client = $this->getMock('Google_Client');
++        $client->expects($this->once())
++            ->method('getLogger')
++            ->will($this->returnValue($logger));
++        $client->expects($this->once())
++            ->method('execute')
++            ->will($this->returnValue([]));
++        $model = $this->getMock('Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface');
++        $model->expects($this->once())
++            ->method('read')
++            ->will($this->returnValue([
++                'title' => 'My Book Title',
++            ]));
++
++        $job = new LookupBookDetailsJob($model, $client);
++        $result = $job->work($bookId);
++        $this->assertFalse($result);
++    }
++
++    public function testNoBookImages()
++    {
++        $bookId = 123;
++        $volume = new \Google_Service_Books_Volume([
++            'volumeInfo' => [
++                'imageLinks' => ['thumbnail' => '']
++            ]
++        ]);
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $client = $this->getMock('Google_Client');
++        $client->expects($this->once())
++            ->method('getLogger')
++            ->will($this->returnValue($logger));
++        $client->expects($this->once())
++            ->method('execute')
++            ->will($this->returnValue([$volume]));
++        $model = $this->getMock('Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface');
++        $model->expects($this->once())
++            ->method('read')
++            ->will($this->returnValue([
++                'title' => 'My Book Title',
++            ]));
++
++        $job = new LookupBookDetailsJob($model, $client);
++        $result = $job->work($bookId);
++        $this->assertFalse($result);
++    }
++
++    public function testNoBookImageInSecondResult()
++    {
++        $bookId = 123;
++        $volume1 = new \Google_Service_Books_Volume([
++            'volumeInfo' => [
++                'imageLinks' => ['thumbnail' => '']
++            ]
++        ]);
++        $volume2 = new \Google_Service_Books_Volume([
++            'volumeInfo' => [
++                'imageLinks' => ['thumbnail' => 'testImage.jpg']
++            ]
++        ]);
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $client = $this->getMock('Google_Client');
++        $client->expects($this->exactly(2))
++            ->method('getLogger')
++            ->will($this->returnValue($logger));
++        $client->expects($this->once())
++            ->method('execute')
++            ->will($this->returnValue([$volume1, $volume2]));
++        $model = $this->getMock('Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface');
++        $model->expects($this->once())
++            ->method('read')
++            ->will($this->returnValue([
++                'title' => 'My Book Title',
++            ]));
++        $model->expects($this->once())
++            ->method('update')
++            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
++            ->will($this->returnValue(true));
++
++        $job = new LookupBookDetailsJob($model, $client);
++        $result = $job->work($bookId);
++        $this->assertTrue($result);
++    }
++}
+diff --git a/test/unit/PubSub/WorkerTest.php b/test/unit/PubSub/WorkerTest.php
+new file mode 100644
+index 0000000..0564c49
+--- /dev/null
++++ b/test/unit/PubSub/WorkerTest.php
+@@ -0,0 +1,199 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++class WorkerTest extends \PHPUnit_Framework_TestCase
++{
++    public function testInvoke()
++    {
++        $bookId = 123;
++        $ackId = 456;
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $response = $this->getMockBuilder('Guzzle\Http\Message\Response')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $response->expects($this->once())
++            ->method('getBody')
++            ->will($this->returnValue(json_encode([
++                'receivedMessages' => [
++                    [
++                        'message' => ['attributes' => ['id' => $bookId]],
++                        'ackId' => $ackId,
++                    ],
++                ]
++            ])));
++        $subscription = $this->getMockBuilder('Google\Cloud\PubSub\Subscription')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $subscription->expects($this->once())
++            ->method('acknowledgeBatch')
++            ->with([$ackId]);
++        $promise = $this->getMockBuilder('GuzzleHttp\Promise\PromiseInterface')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $promise->expects($this->once())
++            ->method('then')
++            ->will($this->returnCallback(function ($callback) use ($response, $promise) {
++                    // mock the returning of the response
++                    $callback($response);
++                    return $promise;
++                }));
++        $connection = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\AsyncConnection')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $connection->expects($this->once())
++            ->method('pull')
++            ->will($this->returnValue($promise));
++        $job = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\LookupBookDetailsJob')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $job->expects($this->once())
++            ->method('work')
++            ->with($bookId);
++        $worker = new Worker($subscription, $job, $logger);
++
++        // set the connection
++        $class = new \ReflectionClass($worker);
++        $property = $class->getProperty('connection');
++        $property->setAccessible(true);
++        $property->setValue($worker, $connection);
++
++        $timer = null; // not used
++        $worker($timer);
++    }
++
++    /**
++     * @expectedException Exception
++     * @expectedExceptionMessage Testing an exception is thrown!
++     */
++    public function testExceptionIsThrown()
++    {
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $subscription = $this->getMockBuilder('Google\Cloud\PubSub\Subscription')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $promise = $this->getMockBuilder('GuzzleHttp\Promise\PromiseInterface')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $thenFn = function ($callback) use ($promise, &$called) {
++            throw new \Exception('Testing an exception is thrown!');
++        };
++        $promise->expects($this->once())
++            ->method('then')
++            ->will($this->returnCallback($thenFn));
++        $connection = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\AsyncConnection')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $connection->expects($this->once())
++            ->method('pull')
++            ->will($this->returnValue($promise));
++        $job = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\LookupBookDetailsJob')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $worker = new Worker($subscription, $job, $logger);
++
++        // set the connection
++        $class = new \ReflectionClass($worker);
++        $property = $class->getProperty('connection');
++        $property->setAccessible(true);
++        $property->setValue($worker, $connection);
++
++        $timer = null; // not used
++        $worker($timer);
++    }
++
++    public function testPromiseRejected()
++    {
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $subscription = $this->getMockBuilder('Google\Cloud\PubSub\Subscription')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $promise = $this->getMockBuilder('GuzzleHttp\Promise\PromiseInterface')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $promise->expects($this->exactly(1))
++            ->method('getState')
++            ->will($this->returnValue('rejected'));
++        $promise->expects($this->exactly(1))
++            ->method('wait');
++        $job = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\LookupBookDetailsJob')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $worker = new Worker($subscription, $job, $logger);
++
++        // set the promise
++        $class = new \ReflectionClass($worker);
++        $property = $class->getProperty('promise');
++        $property->setAccessible(true);
++        $property->setValue($worker, $promise);
++
++        $timer = null; // not used
++        $worker($timer);
++    }
++
++    public function testMarkTaskComplete()
++    {
++        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->disableOriginalConstructor()->getMock();
++        $subscription = $this->getMockBuilder('Google\Cloud\PubSub\Subscription')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $promise = $this->getMockBuilder('GuzzleHttp\Promise\PromiseInterface')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $thenFn = function ($callback) use ($promise, &$called) {
++            // skip the callback, mark as called
++            $called++;
++            return $promise;
++        };
++        $promise->expects($this->exactly(2))
++            ->method('then')
++            ->will($this->returnCallback($thenFn));
++        $promise->expects($this->exactly(2))
++            ->method('getState')
++            ->will($this->onConsecutiveCalls(
++                $this->returnValue('pending'),
++                $this->returnValue('fulfilled')
++            ));
++        $connection = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\AsyncConnection')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $connection->expects($this->exactly(2))
++            ->method('pull')
++            ->will($this->returnValue($promise));
++        $job = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\LookupBookDetailsJob')
++            ->disableOriginalConstructor()
++            ->getMock();
++        $worker = new Worker($subscription, $job, $logger);
++
++        // set the connection
++        $class = new \ReflectionClass($worker);
++        $property = $class->getProperty('connection');
++        $property->setAccessible(true);
++        $property->setValue($worker, $connection);
++
++        $timer = null; // not used
++        $worker($timer);
++        $this->assertEquals(1, $called);
++
++        // call again to ensure the method is not called again
++        $worker($timer);
++        $this->assertEquals(1, $called);
++
++        $worker($timer);
++        $this->assertEquals(2, $called);
++    }
++}
+diff --git a/worker.yaml b/worker.yaml
+new file mode 100644
+index 0000000..2695352
+--- /dev/null
++++ b/worker.yaml
+@@ -0,0 +1,11 @@
++#runtime: php
++vm: true
++service: worker
++# [START entrypoint]
++entrypoint: php bin/pubsub/entrypoint.php
++# [END entrypoint]
++
++# [START overrides]
++env_variables:
++  PHP_INI_OVERRIDE: config/php-pubsub.ini
++# [END overrides]

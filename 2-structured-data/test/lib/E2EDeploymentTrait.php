@@ -36,10 +36,9 @@ trait E2EDeploymentTrait
     /** @staticvar Gcloud $gcloud */
     public static $gcloud;
 
-    private static function dumpConfig()
+    private static function dumpConfig($config = [])
     {
-        $config = self::getConfig();
-        $config['mongo_url'] = getenv('MONGO_E2E_URL');
+        $config = $config + self::getConfig();
         $dumper = new Dumper();
         $yaml = $dumper->dump($config);
         // TODO: Use different filename
@@ -51,14 +50,14 @@ trait E2EDeploymentTrait
      *
      * @return bool
      */
-    protected static function deployApp($step)
+    protected static function deployApp($step, $config = [])
     {
         // TODO: allow changing the data backend.
         if (!self::hasCredentials()) {
             // Just return here for avoiding errors.
             return false;
         }
-        self::dumpConfig();
+        self::dumpConfig($config);
         $version = self::$gcloud->deployApp($step);
         if ($version === false) {
             return false;

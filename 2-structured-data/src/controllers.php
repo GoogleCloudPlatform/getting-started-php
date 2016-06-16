@@ -108,6 +108,9 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     $book['id'] = $id;
     /** @var DataModelInterface $model */
     $model = $app['bookshelf.model'];
+    if (!$model->read($id)) {
+        return new Response('', Response::HTTP_NOT_FOUND);
+    }
     if (!empty($book['publishedDate'])) {
         $d = new \DateTime($book['publishedDate']);
         $book['publishedDate'] = $d->setTimezone(
@@ -117,7 +120,7 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
         return $app->redirect("/books/$id");
     }
 
-    return new Response('', Response::HTTP_NOT_FOUND);
+    return new Response('Could not update book');
 });
 // [END edit]
 

@@ -79,11 +79,13 @@ $app['google_client'] = function ($app) {
     /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
     $urlGen = $app['url_generator'];
     $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
-    return new Google_Client([
+    $client = new Google_Client([
         'client_id'     => $app['config']['google_client_id'],
         'client_secret' => $app['config']['google_client_secret'],
         'redirect_uri'  => $redirectUri,
     ]);
+    $client->setLogger($app['monolog']);
+    return $client;
 };
 // [END google_client]
 

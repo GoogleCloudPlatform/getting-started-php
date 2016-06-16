@@ -22,7 +22,16 @@ namespace Google\Cloud\Samples\Bookshelf;
  */
 class MongoDbTest extends E2eTest
 {
-    protected static function setBackEnd()
+    protected static function getCustomConfig()
+    {
+        self::setComposerJson();
+        return [
+            'bookshelf_backend' => 'mongodb',
+            'mongo_url' => getenv('MONGO_E2E_URL'),
+        ];
+    }
+
+    private static function setComposerJson()
     {
         copy(
             sprintf('%s/../../composer.json', __DIR__),
@@ -36,7 +45,6 @@ class MongoDbTest extends E2eTest
             sprintf('%s/../../composer.lock', __DIR__),
             sprintf('%s/../../composer.lock.org', __DIR__)
         );
-        putenv('BOOKSHELF_BACKEND=mongodb');
     }
 
     /**
@@ -44,14 +52,16 @@ class MongoDbTest extends E2eTest
      */
     public static function restoreComposerJson()
     {
-        rename(
-            sprintf('%s/../../composer.json.org', __DIR__),
-            sprintf('%s/../../composer.json', __DIR__)
-        );
-        rename(
-            sprintf('%s/../../composer.lock.org', __DIR__),
-            sprintf('%s/../../composer.lock', __DIR__)
-        );
+        if (self::$step) {
+            rename(
+                sprintf('%s/../../composer.json.org', __DIR__),
+                sprintf('%s/../../composer.json', __DIR__)
+            );
+            rename(
+                sprintf('%s/../../composer.lock.org', __DIR__),
+                sprintf('%s/../../composer.lock', __DIR__)
+            );
+        }
     }
 
     public function testIndex()

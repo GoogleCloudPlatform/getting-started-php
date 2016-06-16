@@ -1,0 +1,20 @@
+# Google credentials and configuration
+google_client_id:      YOUR_CLIENT_ID
+google_client_secret:  YOUR_CLIENT_SECRET
+google_project_id:     YOUR_PROJECT_ID
+
+# options are "cloudsql", "mongodb", or "datastore"
+bookshelf_backend: cloudsql
+
+# configure CloudSQL backend
+mysql_dsn: "mysql:host=IP_ADDRESS;port=3306;dbname=YOUR_DB_NAME"
+mysql_user: YOUR_MYSQL_USER
+mysql_password: YOUR_MYSQL_PASSWORD
+
+# configure Mongo backend
+mongo_url: YOUR_MONGODB_URL
+mongo_database: YOUR_MONGO_DATABASE
+mongo_collection: YOUR_MONGO_COLLECTION
+
+pubsub_topic_name: book-created-or-updated
+pubsub_subscription_name: fill-book-details

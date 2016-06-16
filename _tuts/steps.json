@@ -31,8 +31,13 @@
             "description": null
         },
         {
-            "id": "6-compute-engine",
-            "name": "6-compute-engine",
+            "id": "6-pubsub",
+            "name": "6-pubsub",
+            "description": null
+        },
+        {
+            "id": "optional-compute-engine",
+            "name": "optional-compute-engine",
             "description": null
         }
     ],

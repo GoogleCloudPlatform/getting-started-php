@@ -1,0 +1,11 @@
+#runtime: php
+vm: true
+service: worker
+# [START entrypoint]
+entrypoint: php bin/pubsub/entrypoint.php
+# [END entrypoint]
+
+# [START overrides]
+env_variables:
+  PHP_INI_OVERRIDE: config/php-pubsub.ini
+# [END overrides]

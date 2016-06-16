@@ -22,9 +22,9 @@ namespace Google\Cloud\Samples\Bookshelf;
  */
 class DatastoreTest extends E2eTest
 {
-    protected static function setBackEnd()
+    protected static function getCustomConfig()
     {
-        putenv('BOOKSHELF_BACKEND=datastore');
+        return ['bookshelf_backend' => 'datastore'];
     }
 
     public function testIndex()

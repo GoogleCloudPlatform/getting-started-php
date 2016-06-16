@@ -59,10 +59,22 @@ trait DataModelTestTrait
             $model->create(array(
                 'bogus' => 'Teach your owl to drive!'
             ));
-            $this->assertFalse(true);
+            $this->fail('Should have thrown exception');
         } catch (\Exception $e) {
             // Good.  An exception is expected.
         }
+
+        // account for eventual consistencty
+        $retries = 10;
+        do {
+            $result = $model->listBooks($rowCount + 2);
+            $newCount = count($result['books']);
+            $retries--;
+            if ($newCount < $rowCount + 2) {
+                sleep(1);
+            }
+        } while ($newCount < $rowCount + 2 && $retries);
+        $this->assertEquals($rowCount + 2, $newCount);
 
         // Iterate over the books again and verify there are now 2 more.
         $newCount = 0;
@@ -117,16 +129,18 @@ trait DataModelTestTrait
         try {
             $book['bogus'] = 'The power of scratching.';
             $model->update($book);
-            $this->assertFalse(true);
+            $this->fail('Should have thrown exception');
         } catch (\Exception $e) {
             // Good.  An exception is expected.
         }
 
         // Clean up.
-        $model->delete($breakfastId);
+        $result = $model->delete($breakfastId);
+        $this->assertTrue((bool)$result);
         $this->assertFalse($model->read($breakfastId));
         $this->assertTrue((bool)$model->read($bellId));
-        $model->delete($bellId);
+        $result = $model->delete($bellId);
+        $this->assertTrue((bool)$result);
         $this->assertFalse($model->read($bellId));
     }
 }
