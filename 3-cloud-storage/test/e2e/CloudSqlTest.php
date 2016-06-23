@@ -22,9 +22,9 @@ namespace Google\Cloud\Samples\Bookshelf;
  */
 class CloudSqlTest extends E2eTest
 {
-    protected static function setBackEnd()
+    protected static function getCustomConfig()
     {
-        putenv('BOOKSHELF_BACKEND=cloudsql');
+        return ['bookshelf_backend' => 'cloudsql'];
     }
 
     public function testIndex()

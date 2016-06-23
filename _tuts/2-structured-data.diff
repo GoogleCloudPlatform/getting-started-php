@@ -1973,10 +1973,10 @@ index 5526a43..8745f1f 100644
  </phpunit>
 diff --git a/src/DataModel/CloudSql.php b/src/DataModel/CloudSql.php
 new file mode 100644
-index 0000000..cf6b67e
+index 0000000..11606d5
 --- /dev/null
 +++ b/src/DataModel/CloudSql.php
-@@ -0,0 +1,185 @@
+@@ -0,0 +1,183 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -2147,9 +2147,7 @@ index 0000000..cf6b67e
 +            array_fill_keys($this->columnNames, null),
 +            $book
 +        );
-+        $statement->execute($values);
-+
-+        return $statement->rowCount();
++        return $statement->execute($values);
 +    }
 +
 +    public function delete($id)
@@ -2816,10 +2814,10 @@ index 0000000..43e478d
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..d936e68
+index 0000000..cf1a6bb
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,137 @@
+@@ -0,0 +1,140 @@
 +<?php
 +
 +/*
@@ -2930,6 +2928,9 @@ index 0000000..d936e68
 +    $book['id'] = $id;
 +    /** @var DataModelInterface $model */
 +    $model = $app['bookshelf.model'];
++    if (!$model->read($id)) {
++        return new Response('', Response::HTTP_NOT_FOUND);
++    }
 +    if (!empty($book['publishedDate'])) {
 +        $d = new \DateTime($book['publishedDate']);
 +        $book['publishedDate'] = $d->setTimezone(
@@ -2939,7 +2940,7 @@ index 0000000..d936e68
 +        return $app->redirect("/books/$id");
 +    }
 +
-+    return new Response('', Response::HTTP_NOT_FOUND);
++    return new Response('Could not update book');
 +});
 +// [END edit]
 +
@@ -3218,9 +3219,79 @@ index 0000000..d2f9240
 +    "symfony/http-kernel": "^3.0"
 +  }
 +}
+diff --git a/test/e2e/BookshelfTest.php b/test/e2e/BookshelfTest.php
+deleted file mode 100644
+index 769e07d..0000000
+--- a/test/e2e/BookshelfTest.php
++++ /dev/null
+@@ -1,64 +0,0 @@
+-<?php
+-/*
+- * Copyright 2015 Google Inc. All Rights Reserved.
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-namespace Google\Cloud\Samples\Bookshelf;
+-
+-use Behat\Mink\Driver\GoutteDriver;
+-use Behat\Mink\Session;
+-
+-/**
+- * Class BookshelfTest
+- */
+-class BookshelfTest extends \PHPUnit_Framework_TestCase
+-{
+-    protected static $step;
+-    use E2EDeploymentTrait;
+-
+-    public static function setUpBeforeClass()
+-    {
+-        if (self::$step = getenv('STEP_NAME')) {
+-            self::deployApp(self::$step);
+-        }
+-    }
+-
+-    public static function tearDownAfterClass()
+-    {
+-        if (self::$step) {
+-            self::deleteApp(self::$step);
+-        }
+-    }
+-
+-    public function setUp()
+-    {
+-        if (!self::$step) {
+-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
+-        }
+-        $this->url = self::getUrl(self::$step);
+-        $driver = new GoutteDriver();
+-        $this->session = new Session($driver);
+-    }
+-
+-    public function testIndex()
+-    {
+-        $this->assertNotNull(self::$versions[self::$step]);
+-        $this->session->visit($this->url . '/');
+-        $this->assertEquals('200', $this->session->getStatusCode(),
+-                            'Book index status code');
+-        // TODO: content check
+-        $page = $this->session->getPage();
+-    }
+-}
 diff --git a/test/e2e/CloudSqlTest.php b/test/e2e/CloudSqlTest.php
 new file mode 100644
-index 0000000..e0949e2
+index 0000000..1f883dc
 --- /dev/null
 +++ b/test/e2e/CloudSqlTest.php
 @@ -0,0 +1,39 @@
@@ -3248,9 +3319,9 @@ index 0000000..e0949e2
 + */
 +class CloudSqlTest extends E2eTest
 +{
-+    protected static function setBackEnd()
++    protected static function getCustomConfig()
 +    {
-+        putenv('BOOKSHELF_BACKEND=cloudsql');
++        return ['bookshelf_backend' => 'cloudsql'];
 +    }
 +
 +    public function testIndex()
@@ -3265,7 +3336,7 @@ index 0000000..e0949e2
 +}
 diff --git a/test/e2e/DatastoreTest.php b/test/e2e/DatastoreTest.php
 new file mode 100644
-index 0000000..99010c9
+index 0000000..f9ddf71
 --- /dev/null
 +++ b/test/e2e/DatastoreTest.php
 @@ -0,0 +1,39 @@
@@ -3293,9 +3364,9 @@ index 0000000..99010c9
 + */
 +class DatastoreTest extends E2eTest
 +{
-+    protected static function setBackEnd()
++    protected static function getCustomConfig()
 +    {
-+        putenv('BOOKSHELF_BACKEND=datastore');
++        return ['bookshelf_backend' => 'datastore'];
 +    }
 +
 +    public function testIndex()
@@ -3310,10 +3381,10 @@ index 0000000..99010c9
 +}
 diff --git a/test/e2e/MongoDbTest.php b/test/e2e/MongoDbTest.php
 new file mode 100644
-index 0000000..c51399a
+index 0000000..fdf4dcc
 --- /dev/null
 +++ b/test/e2e/MongoDbTest.php
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,76 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -3338,7 +3409,16 @@ index 0000000..c51399a
 + */
 +class MongoDbTest extends E2eTest
 +{
-+    protected static function setBackEnd()
++    protected static function getCustomConfig()
++    {
++        self::setComposerJson();
++        return [
++            'bookshelf_backend' => 'mongodb',
++            'mongo_url' => getenv('MONGO_E2E_URL'),
++        ];
++    }
++
++    private static function setComposerJson()
 +    {
 +        copy(
 +            sprintf('%s/../../composer.json', __DIR__),
@@ -3352,7 +3432,6 @@ index 0000000..c51399a
 +            sprintf('%s/../../composer.lock', __DIR__),
 +            sprintf('%s/../../composer.lock.org', __DIR__)
 +        );
-+        putenv('BOOKSHELF_BACKEND=mongodb');
 +    }
 +
 +    /**
@@ -3360,14 +3439,16 @@ index 0000000..c51399a
 +     */
 +    public static function restoreComposerJson()
 +    {
-+        rename(
-+            sprintf('%s/../../composer.json.org', __DIR__),
-+            sprintf('%s/../../composer.json', __DIR__)
-+        );
-+        rename(
-+            sprintf('%s/../../composer.lock.org', __DIR__),
-+            sprintf('%s/../../composer.lock', __DIR__)
-+        );
++        if (self::$step) {
++            rename(
++                sprintf('%s/../../composer.json.org', __DIR__),
++                sprintf('%s/../../composer.json', __DIR__)
++            );
++            rename(
++                sprintf('%s/../../composer.lock.org', __DIR__),
++                sprintf('%s/../../composer.lock', __DIR__)
++            );
++        }
 +    }
 +
 +    public function testIndex()
@@ -3491,7 +3572,7 @@ index 0000000..dd8d5d8
 +    }
 +}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index ab11aa8..423c0b5 100644
+index ab11aa8..cb30e94 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -1,5 +1,4 @@
@@ -3500,17 +3581,16 @@ index ab11aa8..423c0b5 100644
  /*
   * Copyright 2015 Google Inc. All Rights Reserved.
   *
-@@ -18,6 +17,9 @@
+@@ -18,6 +17,8 @@
  
  namespace Google\Cloud\Samples\Bookshelf;
  
-+use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 +use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
 +use Monolog\Handler\TestHandler;
  use Silex\WebTestCase;
  
  /**
-@@ -25,30 +27,166 @@ use Silex\WebTestCase;
+@@ -25,30 +26,162 @@ use Silex\WebTestCase;
   */
  class ControllersTest extends WebTestCase
  {
@@ -3530,13 +3610,9 @@ index ab11aa8..423c0b5 100644
 +        $app = require __DIR__ . '/../../src/app.php';
 +        require __DIR__ . '/../../src/controllers.php';
 +
-+        $config = $this->getConfig();
++        // set the app config to our test config
++        $app['config'] = $this->getConfig();
 +
-+        $app['bookshelf.model'] = new CloudSql(
-+            $config['mysql_dsn'],
-+            $config['mysql_user'],
-+            $config['mysql_password']
-+        );
 +        // Set a tiny page size so it's easy to test paging.
 +        $app['bookshelf.page_size'] = 1;
 +        $app['bookshelf.storage'] = new FakeFileStorage();
@@ -5015,10 +5091,10 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..2be1153
+index 0000000..59aa1f3
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
-@@ -0,0 +1,132 @@
+@@ -0,0 +1,146 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -5080,10 +5156,22 @@ index 0000000..2be1153
 +            $model->create(array(
 +                'bogus' => 'Teach your owl to drive!'
 +            ));
-+            $this->assertFalse(true);
++            $this->fail('Should have thrown exception');
 +        } catch (\Exception $e) {
 +            // Good.  An exception is expected.
 +        }
++
++        // account for eventual consistencty
++        $retries = 10;
++        do {
++            $result = $model->listBooks($rowCount + 2);
++            $newCount = count($result['books']);
++            $retries--;
++            if ($newCount < $rowCount + 2) {
++                sleep(1);
++            }
++        } while ($newCount < $rowCount + 2 && $retries);
++        $this->assertEquals($rowCount + 2, $newCount);
 +
 +        // Iterate over the books again and verify there are now 2 more.
 +        $newCount = 0;
@@ -5138,37 +5226,27 @@ index 0000000..2be1153
 +        try {
 +            $book['bogus'] = 'The power of scratching.';
 +            $model->update($book);
-+            $this->assertFalse(true);
++            $this->fail('Should have thrown exception');
 +        } catch (\Exception $e) {
 +            // Good.  An exception is expected.
 +        }
 +
 +        // Clean up.
-+        $model->delete($breakfastId);
++        $result = $model->delete($breakfastId);
++        $this->assertTrue((bool)$result);
 +        $this->assertFalse($model->read($breakfastId));
 +        $this->assertTrue((bool)$model->read($bellId));
-+        $model->delete($bellId);
++        $result = $model->delete($bellId);
++        $this->assertTrue((bool)$result);
 +        $this->assertFalse($model->read($bellId));
 +    }
 +}
-diff --git a/test/lib/E2EDeploymentTrait.php b/test/lib/E2EDeploymentTrait.php
-index 7eefc9e..aef007f 100644
---- a/test/lib/E2EDeploymentTrait.php
-+++ b/test/lib/E2EDeploymentTrait.php
-@@ -39,6 +39,7 @@ trait E2EDeploymentTrait
-     private static function dumpConfig()
-     {
-         $config = self::getConfig();
-+        $config['mongo_url'] = getenv('MONGO_E2E_URL');
-         $dumper = new Dumper();
-         $yaml = $dumper->dump($config);
-         // TODO: Use different filename
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
 new file mode 100644
-index 0000000..249accc
+index 0000000..bd5d22a
 --- /dev/null
 +++ b/test/lib/E2eTest.php
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,54 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -5199,15 +5277,10 @@ index 0000000..249accc
 +    protected static $step;
 +    use E2EDeploymentTrait;
 +
-+    protected static function setBackEnd()
-+    {
-+    }
-+
 +    public static function setUpBeforeClass()
 +    {
-+        static::setBackEnd();
 +        if (self::$step = getenv('STEP_NAME')) {
-+            self::deployApp(self::$step);
++            self::deployApp(self::$step, static::getCustomConfig());
 +        }
 +    }
 +

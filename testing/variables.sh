@@ -33,5 +33,6 @@ STEPS=(
     3-cloud-storage
     4-auth
     5-logging
-    6-compute-engine
+    6-pubsub
+    optional-compute-engine
 )

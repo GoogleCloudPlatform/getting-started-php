@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
 use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
 use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
@@ -41,13 +40,9 @@ class ControllersTest extends WebTestCase
         $app = require __DIR__ . '/../../src/app.php';
         require __DIR__ . '/../../src/controllers.php';
 
-        $config = $this->getConfig();
+        // set the app config to our test config
+        $app['config'] = $this->getConfig();
 
-        $app['bookshelf.model'] = new CloudSql(
-            $config['mysql_dsn'],
-            $config['mysql_user'],
-            $config['mysql_password']
-        );
         // Set a tiny page size so it's easy to test paging.
         $app['bookshelf.page_size'] = 1;
         $app['bookshelf.storage'] = new FakeFileStorage();

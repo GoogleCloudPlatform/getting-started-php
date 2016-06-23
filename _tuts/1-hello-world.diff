@@ -2409,7 +2409,7 @@ index 0000000..ab11aa8
 +}
 diff --git a/test/lib/E2EDeploymentTrait.php b/test/lib/E2EDeploymentTrait.php
 new file mode 100644
-index 0000000..7eefc9e
+index 0000000..a6a23e1
 --- /dev/null
 +++ b/test/lib/E2EDeploymentTrait.php
 @@ -0,0 +1,103 @@
@@ -2451,9 +2451,9 @@ index 0000000..7eefc9e
 +    /** @staticvar Gcloud $gcloud */
 +    public static $gcloud;
 +
-+    private static function dumpConfig()
++    private static function dumpConfig($config = [])
 +    {
-+        $config = self::getConfig();
++        $config = $config + self::getConfig();
 +        $dumper = new Dumper();
 +        $yaml = $dumper->dump($config);
 +        // TODO: Use different filename
@@ -2465,14 +2465,14 @@ index 0000000..7eefc9e
 +     *
 +     * @return bool
 +     */
-+    protected static function deployApp($step)
++    protected static function deployApp($step, $config = [])
 +    {
 +        // TODO: allow changing the data backend.
 +        if (!self::hasCredentials()) {
 +            // Just return here for avoiding errors.
 +            return false;
 +        }
-+        self::dumpConfig();
++        self::dumpConfig($config);
 +        $version = self::$gcloud->deployApp($step);
 +        if ($version === false) {
 +            return false;

@@ -28,15 +28,10 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
     protected static $step;
     use E2EDeploymentTrait;
 
-    protected static function setBackEnd()
-    {
-    }
-
     public static function setUpBeforeClass()
     {
-        static::setBackEnd();
         if (self::$step = getenv('STEP_NAME')) {
-            self::deployApp(self::$step);
+            self::deployApp(self::$step, static::getCustomConfig());
         }
     }
 

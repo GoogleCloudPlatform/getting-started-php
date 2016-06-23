@@ -168,9 +168,7 @@ class CloudSql implements DataModelInterface
             array_fill_keys($this->columnNames, null),
             $book
         );
-        $statement->execute($values);
-
-        return $statement->rowCount();
+        return $statement->execute($values);
     }
 
     public function delete($id)

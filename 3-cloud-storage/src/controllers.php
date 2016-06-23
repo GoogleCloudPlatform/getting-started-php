@@ -121,6 +121,9 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     $storage = $app['bookshelf.storage'];
     /** @var DataModelInterface $model */
     $model = $app['bookshelf.model'];
+    if (!$model->read($id)) {
+        return new Response('', Response::HTTP_NOT_FOUND);
+    }
     // [START add_image]
     $files = $request->files;
     $image = $files->get('image');
@@ -140,7 +143,7 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
         return $app->redirect("/books/$id");
     }
 
-    return new Response('', Response::HTTP_NOT_FOUND);
+    return new Response('Could not update book');
 });
 // [END edit]
 
