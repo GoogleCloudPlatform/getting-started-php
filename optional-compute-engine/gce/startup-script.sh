@@ -40,7 +40,7 @@ PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/
 # Get the application source code
 git config --global credential.helper gcloud.sh
 git clone https://source.developers.google.com/p/$PROJECTID /opt/src -b master
-ln -s /opt/src/6-compute-engine /opt/app
+ln -s /opt/src/optional-compute-engine /opt/app
 
 # Run Composer
 composer install -d /opt/app --no-ansi --no-progress

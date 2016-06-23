@@ -1,8 +1,8 @@
-# 7 - Deploying to Google Compute Engine
+# Deploying to Google Compute Engine
 
-This folder contains the sample code for the [Deploying to Google Compute Engine][step-7]
+This folder contains the sample code for the [Deploying to Google Compute Engine][tutorial-gce]
 tutorial. Please refer to the tutorial for instructions on configuring, running,
 and deploying this sample.
 
-[step-7]: https://cloud.google.com/php/getting-started/run-on-compute-engine
+[tutorial-gce]: https://cloud.google.com/php/getting-started/run-on-compute-engine
 

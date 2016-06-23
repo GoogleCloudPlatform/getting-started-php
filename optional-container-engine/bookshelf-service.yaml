@@ -1,0 +1,23 @@
+
+# The bookshelf service provides a load-balancing proxy over the bookshelf
+# frontend pods. By specifying the type as a 'LoadBalancer', Container Engine
+# will create an external HTTP load balancer.
+# For more information about Services see:
+#   https://cloud.google.com/container-engine/docs/services/
+# For more information about external HTTP load balancing see:
+#   https://cloud.google.com/container-engine/docs/load-balancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookshelf-frontend
+  labels:
+    app: bookshelf
+    tier: frontend
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: http-server
+  selector:
+    app: bookshelf
+    tier: frontend

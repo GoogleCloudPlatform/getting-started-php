@@ -34,5 +34,6 @@ STEPS=(
     4-auth
     5-logging
     6-pubsub
+    optional-container-engine
     optional-compute-engine
 )
