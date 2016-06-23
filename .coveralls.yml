@@ -9,6 +9,7 @@ coverage_clover:
   - 4-auth/build/logs/clover.xml
   - 5-logging/build/logs/clover.xml
   - 6-pubsub/build/logs/clover.xml
+  - optional-container-engine/build/logs/clover.xml
   - optional-compute-engine/build/logs/clover.xml
 
 json_path: build/logs/coveralls-upload.json

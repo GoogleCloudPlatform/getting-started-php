@@ -6,21 +6,58 @@ index 305612c..0000000
 @@ -1,2 +0,0 @@
 -test/*
 -coverage/*
+diff --git a/Dockerfile b/Dockerfile
+deleted file mode 100644
+index a0aa4aa..0000000
+--- a/Dockerfile
++++ /dev/null
+@@ -1,14 +0,0 @@
+-# The Google App Engine php runtime is Debian Jessie with PHP installed
+-# and various os-level packages to allow installation of popular PHP
+-# libraries. The source is on github at:
+-#   https://github.com/GoogleCloudPlatform/php-docker
+-FROM gcr.io/google_appengine/php
+-
+-# Add our NGINX and php.ini config
+-ENV DOCUMENT_ROOT=${APP_DIR}/web \
+-    NGINX_CONF_INCLUDE=config/nginx-app.conf \
+-    PHP_INI_OVERRIDE=config/php-app.ini
+-
+-# Workaround for AUFS-related permission issue:
+-# See https://github.com/docker/docker/issues/783#issuecomment-56013588
+-RUN cp -R ${APP_DIR} ${APP_DIR}-copy; rm -r ${APP_DIR}; mv ${APP_DIR}-copy ${APP_DIR}; chmod -R 550 ${APP_DIR}; chown -R root.www-data ${APP_DIR}
+diff --git a/Dockerfile.worker b/Dockerfile.worker
+deleted file mode 100644
+index 906848a..0000000
+--- a/Dockerfile.worker
++++ /dev/null
+@@ -1,11 +0,0 @@
+-# The Google App Engine php runtime is Debian Jessie with PHP installed
+-# and various os-level packages to allow installation of popular PHP
+-# libraries. The source is on github at:
+-#   https://github.com/GoogleCloudPlatform/php-docker
+-FROM gcr.io/google_appengine/php
+-
+-# Add our php.ini config
+-ENV PHP_INI_OVERRIDE=config/php-pubsub.ini
+-
+-# override the default CMD for the pubsub worker
+-CMD php bin/pubsub/entrypoint.php
 diff --git a/README.md b/README.md
-index 1bd64f0..a289726 100644
+index bfb95a5..9d89dda 100644
 --- a/README.md
 +++ b/README.md
 @@ -1,8 +1,8 @@
--# 6 - Using Pub/Sub
-+# 7 - Deploying to Google Compute Engine
+-# 8 - Deploying to Google Container Engine
++# Deploying to Google Compute Engine
  
--This folder contains the sample code for the [Using Pub/Sub][step-6]
-+This folder contains the sample code for the [Deploying to Google Compute Engine][step-7]
+-This folder contains the sample code for the [Deploying to Google Container Engine][tutorial-gke]
++This folder contains the sample code for the [Deploying to Google Compute Engine][tutorial-gce]
  tutorial. Please refer to the tutorial for instructions on configuring, running,
  and deploying this sample.
  
--[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
-+[step-7]: https://cloud.google.com/php/getting-started/run-on-compute-engine
+-[tutorial-gke]: https://cloud.google.com/php/tutorials/bookshelf-on-container-engine
++[tutorial-gce]: https://cloud.google.com/php/getting-started/run-on-compute-engine
  
 diff --git a/app.yaml b/app.yaml
 deleted file mode 100644
@@ -39,6 +76,127 @@ index 50261f7..0000000
 -  NGINX_CONF_INCLUDE: config/nginx-app.conf
 -  PHP_INI_OVERRIDE: config/php-app.ini
 -# [END overrides]
+diff --git a/bookshelf-frontend.yaml b/bookshelf-frontend.yaml
+deleted file mode 100644
+index 041b17c..0000000
+--- a/bookshelf-frontend.yaml
++++ /dev/null
+@@ -1,33 +0,0 @@
+-# This file configures the bookshelf application frontend. The frontend serves
+-# public web traffic.
+-
+-apiVersion: extensions/v1beta1
+-kind: Deployment
+-metadata:
+-  name: bookshelf-frontend
+-  labels:
+-    app: bookshelf
+-# The bookshelf frontend replica set ensures that at least 3
+-# instances of the bookshelf app are running on the cluster.
+-# For more info about Pods see:
+-#   https://cloud.google.com/container-engine/docs/pods/
+-spec:
+-  replicas: 3
+-  template:
+-    metadata:
+-      labels:
+-        app: bookshelf
+-        tier: frontend
+-    spec:
+-      containers:
+-      - name: bookshelf-app
+-        # Replace $GCLOUD_PROJECT with your project ID or use `make template`.
+-        image: gcr.io/$GCLOUD_PROJECT/bookshelf
+-        # This setting makes nodes pull the docker image every time before
+-        # starting the pod. This is useful when debugging, but should be turned
+-        # off in production.
+-        imagePullPolicy: Always
+-        # The bookshelf process listens on port 8080 for web traffic by default.
+-        ports:
+-        - name: http-server
+-          containerPort: 8080
+diff --git a/bookshelf-service.yaml b/bookshelf-service.yaml
+deleted file mode 100644
+index 45290ce..0000000
+--- a/bookshelf-service.yaml
++++ /dev/null
+@@ -1,23 +0,0 @@
+-
+-# The bookshelf service provides a load-balancing proxy over the bookshelf
+-# frontend pods. By specifying the type as a 'LoadBalancer', Container Engine
+-# will create an external HTTP load balancer.
+-# For more information about Services see:
+-#   https://cloud.google.com/container-engine/docs/services/
+-# For more information about external HTTP load balancing see:
+-#   https://cloud.google.com/container-engine/docs/load-balancer
+-apiVersion: v1
+-kind: Service
+-metadata:
+-  name: bookshelf-frontend
+-  labels:
+-    app: bookshelf
+-    tier: frontend
+-spec:
+-  type: LoadBalancer
+-  ports:
+-  - port: 80
+-    targetPort: http-server
+-  selector:
+-    app: bookshelf
+-    tier: frontend
+diff --git a/bookshelf-worker.yaml b/bookshelf-worker.yaml
+deleted file mode 100644
+index a5c0af3..0000000
+--- a/bookshelf-worker.yaml
++++ /dev/null
+@@ -1,47 +0,0 @@
+-# Copyright 2015 Google Inc.
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#     http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License
+-
+-# This file configures the bookshelf task worker. The worker is responsible
+-# for processing book requests and updating book information.
+-
+-apiVersion: extensions/v1beta1
+-kind: Deployment
+-metadata:
+-  name: bookshelf-worker
+-  labels:
+-    app: bookshelf
+-# The bookshelf worker replica set ensures that at least 2 instances of the
+-# bookshelf worker pod are running on the cluster.
+-# For more info about Pods see:
+-#   https://cloud.google.com/container-engine/docs/pods/
+-spec:
+-  replicas: 2
+-  template:
+-    metadata:
+-      labels:
+-        app: bookshelf
+-        tier: worker
+-    spec:
+-      containers:
+-      - name: bookshelf-app
+-        # Replace $GCLOUD_PROJECT with your project ID or use `make template`.
+-        image: gcr.io/$GCLOUD_PROJECT/bookshelf-worker
+-        # This setting makes nodes pull the docker image every time before
+-        # starting the pod. This is useful when debugging, but should be turned
+-        # off in production.
+-        imagePullPolicy: Always
+-        # The bookshelf process listens on port 8080 for web traffic by default.
+-        ports:
+-        - name: ratchet-server
+-          containerPort: 8080
 diff --git a/composer.lock b/composer.lock
 index 7d258cb..4d0597d 100644
 --- a/composer.lock
@@ -1178,7 +1336,7 @@ index 0000000..417ff18
 +fastcgi_param   REDIRECT_STATUS         200;
 diff --git a/gce/startup-script.sh b/gce/startup-script.sh
 new file mode 100644
-index 0000000..85f64d3
+index 0000000..bf6298c
 --- /dev/null
 +++ b/gce/startup-script.sh
 @@ -0,0 +1,78 @@
@@ -1224,7 +1382,7 @@ index 0000000..85f64d3
 +# Get the application source code
 +git config --global credential.helper gcloud.sh
 +git clone https://source.developers.google.com/p/$PROJECTID /opt/src -b master
-+ln -s /opt/src/6-compute-engine /opt/app
++ln -s /opt/src/optional-compute-engine /opt/app
 +
 +# Run Composer
 +composer install -d /opt/app --no-ansi --no-progress

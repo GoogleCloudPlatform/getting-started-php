@@ -1,0 +1,14 @@
+runtime: php
+vm: true
+
+env_variables:
+  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
+
+runtime_config:
+  document_root: web
+
+manual_scaling:
+  instances: 1
+
+network:
+  instance_tag: bookshelf-e2e

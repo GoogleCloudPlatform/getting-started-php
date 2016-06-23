@@ -1,0 +1,11 @@
+runtime: php
+vm: true
+
+runtime_config:
+  document_root: web
+
+# [START overrides]
+env_variables:
+  NGINX_CONF_INCLUDE: config/nginx-app.conf
+  PHP_INI_OVERRIDE: config/php-app.ini
+# [END overrides]
