@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3ee73ececbb0c7d8eb0cfee88b62e5dd",
-    "content-hash": "b98f6e892cd29d1cde0bff9044f14f97",
+    "hash": "654a7c89b374890257d1ca7e06970b4b",
+    "content-hash": "547b1edca277296a883337e54ce5e3e8",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -146,16 +146,16 @@
         },
         {
             "name": "google/apiclient",
-            "version": "dev-master",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client.git",
-                "reference": "feab52d4907589c7140ba6bb96894db8ec601378"
+                "reference": "984f6a96297242e901bde518489374a9dec209df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/feab52d4907589c7140ba6bb96894db8ec601378",
-                "reference": "feab52d4907589c7140ba6bb96894db8ec601378",
+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/984f6a96297242e901bde518489374a9dec209df",
+                "reference": "984f6a96297242e901bde518489374a9dec209df",
                 "shasum": ""
             },
             "require": {
@@ -201,7 +201,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2016-06-08 23:08:49"
+            "time": "2016-06-24 16:44:42"
         },
         {
             "name": "google/apiclient-services",
@@ -292,12 +292,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/gcloud-php.git",
-                "reference": "9bec8050f7c22ac3f05691a163f633ac05cb501b"
+                "reference": "b2bda4fe2ad75285d778c6aee81b8a892862fd66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/9bec8050f7c22ac3f05691a163f633ac05cb501b",
-                "reference": "9bec8050f7c22ac3f05691a163f633ac05cb501b",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/b2bda4fe2ad75285d778c6aee81b8a892862fd66",
+                "reference": "b2bda4fe2ad75285d778c6aee81b8a892862fd66",
                 "shasum": ""
             },
             "require": {
@@ -347,7 +347,7 @@
                 "google cloud",
                 "google cloud platform"
             ],
-            "time": "2016-06-07 18:04:35"
+            "time": "2016-06-28 16:49:24"
         },
         {
             "name": "guzzle/common",
@@ -2842,16 +2842,16 @@
         },
         {
             "name": "sebastian/exporter",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "7ae5513327cb536431847bcc0c10edba2701064e"
+                "reference": "42c4c2eec485ee3e159ec9884f95b431287edde4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/7ae5513327cb536431847bcc0c10edba2701064e",
-                "reference": "7ae5513327cb536431847bcc0c10edba2701064e",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/42c4c2eec485ee3e159ec9884f95b431287edde4",
+                "reference": "42c4c2eec485ee3e159ec9884f95b431287edde4",
                 "shasum": ""
             },
             "require": {
@@ -2859,12 +2859,13 @@
                 "sebastian/recursion-context": "~1.0"
             },
             "require-dev": {
+                "ext-mbstring": "*",
                 "phpunit/phpunit": "~4.4"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -2904,7 +2905,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2015-06-21 07:55:53"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/global-state",
@@ -3264,7 +3265,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "google/apiclient": 20,
         "google/cloud": 20
     },
     "prefer-stable": false,
