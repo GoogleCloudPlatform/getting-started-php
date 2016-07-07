@@ -979,23 +979,14 @@ index 811c26a..7d258cb 100644
      },
      "prefer-stable": false,
      "prefer-lowest": false,
-diff --git a/config/nginx-app.conf b/config/nginx-app.conf
-new file mode 100644
-index 0000000..c13edbf
---- /dev/null
-+++ b/config/nginx-app.conf
-@@ -0,0 +1,4 @@
-+location / {
-+  # try to serve file directly, fallback to front controller
-+  try_files $uri /index.php$is_args$args;
-+}
-diff --git a/config/php-app.ini b/config/php-app.ini
-new file mode 100644
-index 0000000..45969d0
---- /dev/null
-+++ b/config/php-app.ini
-@@ -0,0 +1 @@
-+extension=mongodb.so
+diff --git a/nginx-app.conf b/config/nginx-app.conf
+similarity index 100%
+rename from nginx-app.conf
+rename to config/nginx-app.conf
+diff --git a/php.ini b/config/php-app.ini
+similarity index 100%
+rename from php.ini
+rename to config/php-app.ini
 diff --git a/config/php-pubsub.ini b/config/php-pubsub.ini
 new file mode 100644
 index 0000000..1f0dd17
@@ -1017,23 +1008,6 @@ index 4763bc6..e8a1ee6 100644
 +
 +pubsub_topic_name: book-created-or-updated
 +pubsub_subscription_name: fill-book-details
-diff --git a/nginx-app.conf b/nginx-app.conf
-deleted file mode 100644
-index c13edbf..0000000
---- a/nginx-app.conf
-+++ /dev/null
-@@ -1,4 +0,0 @@
--location / {
--  # try to serve file directly, fallback to front controller
--  try_files $uri /index.php$is_args$args;
--}
-diff --git a/php.ini b/php.ini
-deleted file mode 100644
-index 45969d0..0000000
---- a/php.ini
-+++ /dev/null
-@@ -1 +0,0 @@
--extension=mongodb.so
 diff --git a/src/PubSub/AsyncConnection.php b/src/PubSub/AsyncConnection.php
 new file mode 100644
 index 0000000..ea14436
