@@ -2518,7 +2518,7 @@ index 0000000..a6a23e1
 +E2EDeploymentTrait::$gcloud = new Gcloud();
 diff --git a/test/lib/Gcloud.php b/test/lib/Gcloud.php
 new file mode 100644
-index 0000000..03e634c
+index 0000000..bee152c
 --- /dev/null
 +++ b/test/lib/Gcloud.php
 @@ -0,0 +1,94 @@
@@ -2563,7 +2563,7 @@ index 0000000..03e634c
 +        $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
 +        copy(sprintf('%s/../app-e2e.yaml', __DIR__), $appYamlPath);
 +        for ($i = 0; $i < 3; $i++) {
-+            $result = $this->exec("gcloud preview app deploy {$appYamlPath} --version={$version} -q --no-promote");
++            $result = $this->exec("gcloud app deploy {$appYamlPath} --version={$version} -q --no-promote");
 +            if ($result == 0) {
 +                break;
 +            }
@@ -2586,7 +2586,7 @@ index 0000000..03e634c
 +    public function deleteApp($stepName, $version)
 +    {
 +        // run gcloud command
-+        $result = $this->exec("gcloud preview app modules delete default --version={$version} -q");
++        $result = $this->exec("gcloud app versions delete --service default {$version} -q");
 +
 +        // return the result of the gcloud delete command
 +        if ($result != 0) {

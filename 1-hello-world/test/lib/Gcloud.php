@@ -39,7 +39,7 @@ class Gcloud
         $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
         copy(sprintf('%s/../app-e2e.yaml', __DIR__), $appYamlPath);
         for ($i = 0; $i < 3; $i++) {
-            $result = $this->exec("gcloud preview app deploy {$appYamlPath} --version={$version} -q --no-promote");
+            $result = $this->exec("gcloud app deploy {$appYamlPath} --version={$version} -q --no-promote");
             if ($result == 0) {
                 break;
             }
@@ -62,7 +62,7 @@ class Gcloud
     public function deleteApp($stepName, $version)
     {
         // run gcloud command
-        $result = $this->exec("gcloud preview app modules delete default --version={$version} -q");
+        $result = $this->exec("gcloud app versions delete --service default {$version} -q");
 
         // return the result of the gcloud delete command
         if ($result != 0) {
