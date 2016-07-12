@@ -630,6 +630,16 @@ index 0000000..7452db1
 +gcloud compute instance-templates delete $TEMPLATE 
 +
 +gcloud compute firewall-rules delete default-allow-http-8080
+diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
+index dbeccdf..82b35ee 100644
+--- a/test/app-e2e.yaml
++++ b/test/app-e2e.yaml
+@@ -1,4 +1,4 @@
+-runtime: custom
++runtime: php
+ vm: true
+ 
+ env_variables:
 diff --git a/test/composer-mongodb.json b/test/composer-mongodb.json
 index 63ded67..0823861 100644
 --- a/test/composer-mongodb.json
