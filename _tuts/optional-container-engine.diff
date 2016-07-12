@@ -172,3 +172,13 @@ index 0000000..a5c0af3
 +        ports:
 +        - name: ratchet-server
 +          containerPort: 8080
+diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
+index 82b35ee..dbeccdf 100644
+--- a/test/app-e2e.yaml
++++ b/test/app-e2e.yaml
+@@ -1,4 +1,4 @@
+-runtime: php
++runtime: custom
+ vm: true
+ 
+ env_variables:

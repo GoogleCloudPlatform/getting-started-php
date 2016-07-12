@@ -979,6 +979,19 @@ index c2e1dbb..104bb5d 100644
          return $app->redirect("/books/$id");
      }
  
+diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
+index ae1a580..82b35ee 100644
+--- a/test/app-e2e.yaml
++++ b/test/app-e2e.yaml
+@@ -3,6 +3,8 @@ vm: true
+ 
+ env_variables:
+   BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
++  NGINX_CONF_INCLUDE: config/nginx-app.conf
++  PHP_INI_OVERRIDE: config/php-app.ini
+ 
+ runtime_config:
+   document_root: web
 diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
 index dd8d5d8..d7fc4df 100644
 --- a/test/functional/AppTest.php
