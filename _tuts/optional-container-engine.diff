@@ -51,6 +51,23 @@ index 1bd64f0..bfb95a5 100644
 -[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
 +[tutorial-gke]: https://cloud.google.com/php/tutorials/bookshelf-on-container-engine
  
+diff --git a/app.yaml b/app.yaml
+deleted file mode 100644
+index 50261f7..0000000
+--- a/app.yaml
++++ /dev/null
+@@ -1,11 +0,0 @@
+-runtime: php
+-vm: true
+-
+-runtime_config:
+-  document_root: web
+-
+-# [START overrides]
+-env_variables:
+-  NGINX_CONF_INCLUDE: config/nginx-app.conf
+-  PHP_INI_OVERRIDE: config/php-app.ini
+-# [END overrides]
 diff --git a/bookshelf-frontend.yaml b/bookshelf-frontend.yaml
 new file mode 100644
 index 0000000..041b17c
@@ -182,3 +199,20 @@ index 82b35ee..dbeccdf 100644
  vm: true
  
  env_variables:
+diff --git a/worker.yaml b/worker.yaml
+deleted file mode 100644
+index d788257..0000000
+--- a/worker.yaml
++++ /dev/null
+@@ -1,11 +0,0 @@
+-runtime: php
+-vm: true
+-service: worker
+-# [START entrypoint]
+-entrypoint: php bin/pubsub/entrypoint.php
+-# [END entrypoint]
+-
+-# [START overrides]
+-env_variables:
+-  PHP_INI_OVERRIDE: config/php-pubsub.ini
+-# [END overrides]
