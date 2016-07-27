@@ -1511,11 +1511,11 @@ index 0000000..0564c49
 +}
 diff --git a/worker.yaml b/worker.yaml
 new file mode 100644
-index 0000000..2695352
+index 0000000..d788257
 --- /dev/null
 +++ b/worker.yaml
 @@ -0,0 +1,11 @@
-+#runtime: php
++runtime: php
 +vm: true
 +service: worker
 +# [START entrypoint]

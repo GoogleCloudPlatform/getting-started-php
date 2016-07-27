@@ -1,4 +1,4 @@
-#runtime: php
+runtime: php
 vm: true
 service: worker
 # [START entrypoint]
