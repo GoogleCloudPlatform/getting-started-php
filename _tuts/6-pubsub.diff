@@ -1306,7 +1306,7 @@ index 0000000..ce2f9c9
 +}
 diff --git a/test/unit/PubSub/WorkerTest.php b/test/unit/PubSub/WorkerTest.php
 new file mode 100644
-index 0000000..0564c49
+index 0000000..eead18e
 --- /dev/null
 +++ b/test/unit/PubSub/WorkerTest.php
 @@ -0,0 +1,199 @@
@@ -1360,10 +1360,10 @@ index 0000000..0564c49
 +        $promise->expects($this->once())
 +            ->method('then')
 +            ->will($this->returnCallback(function ($callback) use ($response, $promise) {
-+                    // mock the returning of the response
-+                    $callback($response);
-+                    return $promise;
-+                }));
++                // mock the returning of the response
++                $callback($response);
++                return $promise;
++            }));
 +        $connection = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\AsyncConnection')
 +            ->disableOriginalConstructor()
 +            ->getMock();
