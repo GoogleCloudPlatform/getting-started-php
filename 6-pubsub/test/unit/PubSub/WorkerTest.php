@@ -48,10 +48,10 @@ class WorkerTest extends \PHPUnit_Framework_TestCase
         $promise->expects($this->once())
             ->method('then')
             ->will($this->returnCallback(function ($callback) use ($response, $promise) {
-                    // mock the returning of the response
-                    $callback($response);
-                    return $promise;
-                }));
+                // mock the returning of the response
+                $callback($response);
+                return $promise;
+            }));
         $connection = $this->getMockBuilder('Google\Cloud\Samples\Bookshelf\PubSub\AsyncConnection')
             ->disableOriginalConstructor()
             ->getMock();
