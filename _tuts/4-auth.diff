@@ -15,10 +15,10 @@ index 4df4bde..ea0038e 100644
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
 diff --git a/src/app.php b/src/app.php
-index babfd5e..b014e6f 100644
+index 774c8b8..c040b9c 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -25,7 +25,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+@@ -26,7 +26,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
  use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
  use Silex\Application;
@@ -28,7 +28,7 @@ index babfd5e..b014e6f 100644
  use Symfony\Component\Yaml\Yaml;
  
  $app = new Application();
-@@ -38,12 +40,42 @@ $app->register(new TwigServiceProvider(), array(
+@@ -39,12 +41,42 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  

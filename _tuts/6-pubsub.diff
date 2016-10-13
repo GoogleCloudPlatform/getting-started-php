@@ -15,19 +15,22 @@ index ead2f61..1bd64f0 100644
 +[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
  
 diff --git a/app.yaml b/app.yaml
-index 5ccf142..84edb7f 100644
+index 700b465..bef3f23 100644
 --- a/app.yaml
 +++ b/app.yaml
-@@ -3,3 +3,9 @@ env: flex
- 
+@@ -4,6 +4,12 @@ env: flex
  runtime_config:
    document_root: web
-+
+ 
 +# [START overrides]
 +env_variables:
 +  NGINX_CONF_INCLUDE: config/nginx-app.conf
 +  PHP_INI_OVERRIDE: config/php-app.ini
 +# [END overrides]
++
+ ## Uncomment for Cloud SQL
+ # beta_settings:
+ #   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/bin/pubsub/entrypoint.php b/bin/pubsub/entrypoint.php
 new file mode 100644
 index 0000000..0b9efb7
@@ -74,7 +77,7 @@ index 0e58bda..fefcf9b 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index 9dd0353..54d25da 100644
+index daab142..e64eb4a 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,10 +4,104 @@
@@ -182,9 +185,9 @@ index 9dd0353..54d25da 100644
 +        },
 +        {
              "name": "firebase/php-jwt",
-             "version": "v3.0.0",
+             "version": "v4.0.0",
              "source": {
-@@ -256,6 +350,208 @@
+@@ -255,6 +349,208 @@
              "time": "2016-07-06 15:41:47"
          },
          {
@@ -391,10 +394,10 @@ index 9dd0353..54d25da 100644
 +        },
 +        {
              "name": "guzzlehttp/guzzle",
-             "version": "6.2.0",
+             "version": "6.2.2",
              "source": {
-@@ -776,6 +1072,139 @@
-             "time": "2012-12-21 11:40:51"
+@@ -785,6 +1081,139 @@
+             "time": "2016-10-10 12:19:37"
          },
          {
 +            "name": "react/event-loop",
@@ -552,10 +555,10 @@ index 0000000..1f0dd17
 +suhosin.executor.func.blacklist=
 \ No newline at end of file
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
-index 4763bc6..e8a1ee6 100644
+index a18fbdd..fbe5ebb 100644
 --- a/config/settings.yml.dist
 +++ b/config/settings.yml.dist
-@@ -15,3 +15,6 @@ mysql_password: YOUR_MYSQL_PASSWORD
+@@ -16,3 +16,6 @@ cloudsql_connection_name: "INSTANCE_CONNECTION_NAME"
  mongo_url: YOUR_MONGODB_URL
  mongo_database: YOUR_MONGO_DATABASE
  mongo_collection: YOUR_MONGO_COLLECTION
@@ -829,12 +832,12 @@ index 0000000..27eb351
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index d34b5ed..b6450e5 100644
+index 4c4a573..001d430 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -21,10 +21,22 @@
-  * Follows Silex Skeleton pattern.
+@@ -22,10 +22,22 @@
   */
+ use Google\Auth\Credentials\GCECredentials;
  use Google\Cloud\Logger\AppEngineFlexHandler;
 +// [START pubsub_client]
 +use Google\Cloud\PubSub\PubSubClient;
@@ -855,7 +858,7 @@ index d34b5ed..b6450e5 100644
  use Silex\Application;
  use Silex\Provider\SessionServiceProvider;
  use Silex\Provider\TwigServiceProvider;
-@@ -76,19 +88,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
+@@ -77,19 +89,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
  // create the google authorization client
  // [START google_client]
  $app['google_client'] = function ($app) {
@@ -980,18 +983,18 @@ index c2e1dbb..104bb5d 100644
      }
  
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index ae1a580..82b35ee 100644
+index 574ebd5..8dffa4d 100644
 --- a/test/app-e2e.yaml
 +++ b/test/app-e2e.yaml
-@@ -3,6 +3,8 @@ vm: true
+@@ -6,6 +6,8 @@ runtime_config:
  
  env_variables:
    BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
 +  NGINX_CONF_INCLUDE: config/nginx-app.conf
 +  PHP_INI_OVERRIDE: config/php-app.ini
  
- runtime_config:
-   document_root: web
+ manual_scaling:
+   instances: 1
 diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
 index dd8d5d8..d7fc4df 100644
 --- a/test/functional/AppTest.php
@@ -1009,10 +1012,10 @@ index dd8d5d8..d7fc4df 100644
 +    }
  }
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index c6d4c8f..7d5d2f0 100644
+index 0ada004..a37ebf6 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
-@@ -41,6 +41,8 @@ trait GetConfigTrait
+@@ -42,6 +42,8 @@ trait GetConfigTrait
              'mongo_url' => getenv('MONGO_URL'),
              'mongo_database' => getenv('MONGO_DATABASE'),
              'mongo_collection' => getenv('MONGO_COLLECTION'),

@@ -53,10 +53,10 @@ index 1bd64f0..bfb95a5 100644
  
 diff --git a/app.yaml b/app.yaml
 deleted file mode 100644
-index 84edb7f..0000000
+index bef3f23..0000000
 --- a/app.yaml
 +++ /dev/null
-@@ -1,11 +0,0 @@
+@@ -1,15 +0,0 @@
 -runtime: php
 -env: flex
 -
@@ -68,6 +68,10 @@ index 84edb7f..0000000
 -  NGINX_CONF_INCLUDE: config/nginx-app.conf
 -  PHP_INI_OVERRIDE: config/php-app.ini
 -# [END overrides]
+-
+-## Uncomment for Cloud SQL
+-# beta_settings:
+-#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/bookshelf-frontend.yaml b/bookshelf-frontend.yaml
 new file mode 100644
 index 0000000..041b17c
@@ -190,15 +194,15 @@ index 0000000..a5c0af3
 +        - name: ratchet-server
 +          containerPort: 8080
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index 82b35ee..dbeccdf 100644
+index 8dffa4d..4725e7b 100644
 --- a/test/app-e2e.yaml
 +++ b/test/app-e2e.yaml
 @@ -1,4 +1,4 @@
 -runtime: php
 +runtime: custom
- vm: true
+ env: flex
  
- env_variables:
+ runtime_config:
 diff --git a/worker.yaml b/worker.yaml
 deleted file mode 100644
 index d788257..0000000

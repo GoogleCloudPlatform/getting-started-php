@@ -102,10 +102,10 @@ index 0000000..451f8bc
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 43e478d..babfd5e 100644
+index 2d8f620..774c8b8 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -23,6 +23,7 @@
+@@ -24,6 +24,7 @@ use Google\Auth\Credentials\GCECredentials;
  use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
@@ -113,7 +113,7 @@ index 43e478d..babfd5e 100644
  use Silex\Application;
  use Silex\Provider\TwigServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-@@ -43,6 +44,13 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
+@@ -44,6 +45,13 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
  
  $app['config'] = Yaml::parse(file_get_contents($config));
  
@@ -366,15 +366,3 @@ index 0000000..e53061d
 +        }
 +    }
 +}
-diff --git a/web/index.php b/web/index.php
-index 89c5750..b2976ec 100644
---- a/web/index.php
-+++ b/web/index.php
-@@ -21,7 +21,4 @@ require_once __DIR__ . '/../vendor/autoload.php';
- $app = require __DIR__ . '/../src/app.php';
- require __DIR__ . '/../src/controllers.php';
- 
--/** @var array $config */
--$config = $app['config'];
--
- $app->run();

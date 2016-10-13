@@ -27,6 +27,23 @@ class CloudSqlTest extends E2eTest
         return ['bookshelf_backend' => 'cloudsql'];
     }
 
+    public static function setUpBeforeClass()
+    {
+        if (self::$step = getenv('STEP_NAME')) {
+            // modify app.yaml for cloudsql
+            $config = self::getConfig();
+            $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
+            $appYaml = file_get_contents(sprintf('%s/../app-e2e.yaml', __DIR__));
+            $appYaml = str_replace(
+                ['# ', 'CLOUDSQL_CONNECTION_NAME'],
+                ['', $config['cloudsql_connection_name']],
+                $appYaml
+            );
+            file_put_contents($appYamlPath, $appYaml);
+            self::deployApp(self::$step, static::getCustomConfig(), $appYamlPath);
+        }
+    }
+
     public function testIndex()
     {
         $this->assertNotNull(self::$versions[self::$step]);

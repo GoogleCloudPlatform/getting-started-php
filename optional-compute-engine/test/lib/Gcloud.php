@@ -24,8 +24,7 @@ class Gcloud
      *
      * @return mixed
      */
-    public function deployApp($stepName, $deploySingleInstance = true,
-                              $useComputeEngine = false)
+    public function deployApp($stepName, $appYamlPath)
     {
         $buildId = getenv('TRAVIS_BUILD_ID');
         if ($buildId === false) {
@@ -36,8 +35,6 @@ class Gcloud
 
         // deploy this $stepName to gcloud
         // try 3 times in case of intermittent deploy error
-        $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
-        copy(sprintf('%s/../app-e2e.yaml', __DIR__), $appYamlPath);
         for ($i = 0; $i < 3; $i++) {
             $result = $this->exec("gcloud app deploy {$appYamlPath} --version={$version} -q --no-promote");
             if ($result == 0) {
