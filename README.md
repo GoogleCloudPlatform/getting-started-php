@@ -32,7 +32,7 @@ Tutorial | Folder
 [coveralls-link]: https://coveralls.io/github/GoogleCloudPlatform/getting-started-php?branch=master
 [travis-badge]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php.svg?branch=master
 [travis-link]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php
-[jenkins-badge]: https://storage.googleapis.com/cloud-samples-tests-php/jenkins-e2e-status.svg
+[jenkins-badge]: https://storage.googleapis.com/getting-started-php-jenkins/jenkins-e2e-status.svg
 [getting-started]: http://cloud.google.com/php/getting-started
 [step-1]: https://cloud.google.com/php/getting-started/hello-world
 [step-1-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/1-hello-world
