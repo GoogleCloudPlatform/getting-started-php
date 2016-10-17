@@ -31,9 +31,6 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         // TODO: deploy to GCE
-        if (self::$step = getenv('STEP_NAME')) {
-            self::deployApp(self::$step, static::getCustomConfig());
-        }
     }
 
     public static function tearDownAfterClass()
@@ -44,11 +41,5 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->markTestSkipped('Skipping for now.');
-        if (!self::$step) {
-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
-        }
-        $this->url = self::getUrl(self::$step);
-        $driver = new GoutteDriver();
-        $this->session = new Session($driver);
     }
 }

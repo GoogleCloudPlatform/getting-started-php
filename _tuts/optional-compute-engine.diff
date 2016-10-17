@@ -636,18 +636,18 @@ index 63ded67..0823861 100644
      "mongodb/mongodb": "^1.0.0",
      "silex/silex": "^1.3",
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
-index bd5d22a..d18a503 100644
+index bd5d22a..cf1ec67 100644
 --- a/test/lib/E2eTest.php
 +++ b/test/lib/E2eTest.php
-@@ -30,6 +30,7 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
+@@ -30,25 +30,16 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
  
      public static function setUpBeforeClass()
      {
+-        if (self::$step = getenv('STEP_NAME')) {
+-            self::deployApp(self::$step, static::getCustomConfig());
+-        }
 +        // TODO: deploy to GCE
-         if (self::$step = getenv('STEP_NAME')) {
-             self::deployApp(self::$step, static::getCustomConfig());
-         }
-@@ -37,13 +38,12 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
+     }
  
      public static function tearDownAfterClass()
      {
@@ -659,7 +659,12 @@ index bd5d22a..d18a503 100644
  
      public function setUp()
      {
+-        if (!self::$step) {
+-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
+-        }
+-        $this->url = self::getUrl(self::$step);
+-        $driver = new GoutteDriver();
+-        $this->session = new Session($driver);
 +        $this->markTestSkipped('Skipping for now.');
-         if (!self::$step) {
-             $this->markTestSkipped('must set STEP_NAME for e2e testing');
-         }
+     }
+ }
