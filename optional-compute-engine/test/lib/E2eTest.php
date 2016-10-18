@@ -17,9 +17,6 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Session;
-
 /**
  * Class E2eTest
  */
