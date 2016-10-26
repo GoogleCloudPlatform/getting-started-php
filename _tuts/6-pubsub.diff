@@ -15,10 +15,10 @@ index ead2f61..1bd64f0 100644
 +[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
  
 diff --git a/app.yaml b/app.yaml
-index a53b035..50261f7 100644
+index 5ccf142..84edb7f 100644
 --- a/app.yaml
 +++ b/app.yaml
-@@ -3,3 +3,9 @@ vm: true
+@@ -3,3 +3,9 @@ env: flex
  
  runtime_config:
    document_root: web

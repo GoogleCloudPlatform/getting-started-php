@@ -53,12 +53,12 @@ index 1bd64f0..bfb95a5 100644
  
 diff --git a/app.yaml b/app.yaml
 deleted file mode 100644
-index 50261f7..0000000
+index 84edb7f..0000000
 --- a/app.yaml
 +++ /dev/null
 @@ -1,11 +0,0 @@
 -runtime: php
--vm: true
+-env: flex
 -
 -runtime_config:
 -  document_root: web
