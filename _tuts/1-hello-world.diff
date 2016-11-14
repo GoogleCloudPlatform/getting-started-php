@@ -30,12 +30,12 @@ index 0000000..5a6b401
 +
 diff --git a/app.yaml b/app.yaml
 new file mode 100644
-index 0000000..a53b035
+index 0000000..5ccf142
 --- /dev/null
 +++ b/app.yaml
 @@ -0,0 +1,5 @@
 +runtime: php
-+vm: true
++env: flex
 +
 +runtime_config:
 +  document_root: web
