@@ -15,193 +15,109 @@ index ea0038e..ead2f61 100644
 +[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
  
 diff --git a/composer.json b/composer.json
-index bf24a5a..0e58bda 100644
+index 951295a..3396607 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -7,6 +7,8 @@
+@@ -6,7 +6,8 @@
+   },
    "require": {
      "php": "~5.5.0|~5.6.0|~7.0.0",
-     "google/apiclient": "^2.0",
-+    "google/cloud": "0.4",
+-    "google/cloud": "0.11",
++    "google/cloud": "0.13",
 +    "monolog/monolog": "^1.17",
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
      "twig/twig": "^1.22"
 diff --git a/composer.lock b/composer.lock
-index e0a85f5..daab142 100644
+index 9f4fdad..9eb20cc 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "5db126d8e60a8d407fc3cca46406d04e",
--    "content-hash": "e74cbc2accb3cc3998ce0564b557c855",
-+    "hash": "58c8c6b5a6989a10ba085144823bc755",
-+    "content-hash": "5c691d1f44745b864608c4414d440a7e",
+-    "hash": "2421fc42943a026339e9066b16fe2fe1",
+-    "content-hash": "dae354248c79c33b2e5fe23ff2470906",
++    "hash": "dedf0b4937b72ad30a4a81a5a5a4f352",
++    "content-hash": "eb62bb286cfffe08942e3e3036072de4",
      "packages": [
          {
              "name": "firebase/php-jwt",
-@@ -192,6 +192,69 @@
-             "time": "2016-11-02 14:59:14"
+@@ -100,21 +100,21 @@
          },
          {
-+            "name": "google/cloud",
-+            "version": "v0.4.0",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/GoogleCloudPlatform/gcloud-php.git",
-+                "reference": "8fd286ca6427206d2474fad60da6c926f7ade686"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/8fd286ca6427206d2474fad60da6c926f7ade686",
-+                "reference": "8fd286ca6427206d2474fad60da6c926f7ade686",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "google/auth": "0.9",
-+                "guzzlehttp/guzzle": "~5.2|~6.0",
-+                "guzzlehttp/psr7": "1.2.*",
-+                "monolog/monolog": "~1",
-+                "php": ">=5.5",
-+                "psr/http-message": "1.0.*",
-+                "rize/uri-template": "~0.3"
-+            },
-+            "require-dev": {
-+                "phpdocumentor/phpdocumentor": "2.8.*",
-+                "phpunit/phpunit": "4.8.*",
-+                "satooshi/php-coveralls": "~1.0",
-+                "squizlabs/php_codesniffer": "2.*"
-+            },
-+            "type": "library",
-+            "autoload": {
-+                "psr-4": {
-+                    "Google\\Cloud\\": "src"
-+                }
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "Apache-2.0"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "John Pedrie",
-+                    "email": "john@pedrie.com"
-+                },
-+                {
-+                    "name": "Dave Supplee",
-+                    "email": "dwsupplee@gmail.com"
-+                }
-+            ],
-+            "description": "Google Cloud Client Library",
-+            "homepage": "http://github.com/GoogleCloudPlatform/gcloud-php",
-+            "keywords": [
-+                "cloud",
-+                "google",
-+                "google api",
-+                "google api client",
-+                "google apis",
-+                "google apis client",
-+                "google cloud",
-+                "google cloud platform"
-+            ],
-+            "time": "2016-07-06 15:41:47"
-+        },
-+        {
-             "name": "guzzlehttp/guzzle",
-             "version": "6.2.2",
-             "source": {
-@@ -306,16 +369,16 @@
-         },
-         {
-             "name": "guzzlehttp/psr7",
--            "version": "1.3.1",
-+            "version": "1.2.3",
+             "name": "google/cloud",
+-            "version": "v0.11.0",
++            "version": "v0.13.0",
              "source": {
                  "type": "git",
-                 "url": "https://github.com/guzzle/psr7.git",
--                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b"
-+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b"
+                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
+-                "reference": "2fa7a6b45ae4a784347ef38741713d58b6b2afb1"
++                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f"
              },
              "dist": {
                  "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
--                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
-+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/2e89629ff057ebb49492ba08e6995d3a6a80021b",
-+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b",
+-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/2fa7a6b45ae4a784347ef38741713d58b6b2afb1",
+-                "reference": "2fa7a6b45ae4a784347ef38741713d58b6b2afb1",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/397f0f648b6ff3895753ac8fcea154302eda5c7f",
++                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f",
                  "shasum": ""
              },
              "require": {
-@@ -331,7 +394,7 @@
-             "type": "library",
-             "extra": {
-                 "branch-alias": {
--                    "dev-master": "1.4-dev"
-+                    "dev-master": "1.0-dev"
-                 }
+                 "google/auth": "0.10",
+-                "guzzlehttp/guzzle": "~5.2|~6.0",
++                "guzzlehttp/guzzle": "^5.3|^6.0",
+                 "guzzlehttp/psr7": "^1.2",
+                 "monolog/monolog": "~1",
+                 "php": ">=5.5",
+@@ -123,6 +123,8 @@
              },
-             "autoload": {
-@@ -360,7 +423,7 @@
-                 "stream",
-                 "uri"
+             "require-dev": {
+                 "erusev/parsedown": "^1.6",
++                "google/gax": "^0.3",
++                "google/proto-client-php": "^0.5",
+                 "james-heinrich/getid3": "^1.9",
+                 "league/json-guard": "^0.3",
+                 "phpdocumentor/reflection": "^3.0",
+@@ -180,7 +182,7 @@
+                 "translate",
+                 "vision"
              ],
--            "time": "2016-06-24 23:00:38"
-+            "time": "2016-02-18 21:54:00"
+-            "time": "2016-10-13 18:46:15"
++            "time": "2016-11-14 22:06:59"
          },
          {
-             "name": "monolog/monolog",
-@@ -722,6 +785,50 @@
-             "time": "2016-10-10 12:19:37"
+             "name": "guzzlehttp/guzzle",
+@@ -246,16 +248,16 @@
          },
          {
-+            "name": "rize/uri-template",
-+            "version": "0.3.0",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/rize/UriTemplate.git",
-+                "reference": "2496aa674438f1c48fce122ffc44291ad7014717"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/2496aa674438f1c48fce122ffc44291ad7014717",
-+                "reference": "2496aa674438f1c48fce122ffc44291ad7014717",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "php": ">=5.3.0"
-+            },
-+            "require-dev": {
-+                "phpunit/phpunit": "~4.0.0"
-+            },
-+            "type": "library",
-+            "autoload": {
-+                "psr-0": {
-+                    "Rize\\UriTemplate": "src/"
-+                }
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "MIT"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "Marut K",
-+                    "homepage": "http://twitter.com/rezigned"
-+                }
-+            ],
-+            "description": "PHP URI Template (RFC 6570) supports both expansion & extraction",
-+            "keywords": [
-+                "RFC 6570",
-+                "template",
-+                "uri"
-+            ],
-+            "time": "2015-04-17 16:12:22"
-+        },
-+        {
-             "name": "silex/silex",
-             "version": "v1.3.5",
+             "name": "guzzlehttp/promises",
+-            "version": "1.2.0",
++            "version": "1.3.0",
              "source": {
+                 "type": "git",
+                 "url": "https://github.com/guzzle/promises.git",
+-                "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579"
++                "reference": "2693c101803ca78b27972d84081d027fca790a1e"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/guzzle/promises/zipball/c10d860e2a9595f8883527fa0021c7da9e65f579",
+-                "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579",
++                "url": "https://api.github.com/repos/guzzle/promises/zipball/2693c101803ca78b27972d84081d027fca790a1e",
++                "reference": "2693c101803ca78b27972d84081d027fca790a1e",
+                 "shasum": ""
+             },
+             "require": {
+@@ -293,7 +295,7 @@
+             "keywords": [
+                 "promise"
+             ],
+-            "time": "2016-05-18 16:56:05"
++            "time": "2016-11-18 17:47:58"
+         },
+         {
+             "name": "guzzlehttp/psr7",
 diff --git a/src/app.php b/src/app.php
 index c040b9c..4c4a573 100644
 --- a/src/app.php

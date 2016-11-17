@@ -63,10 +63,10 @@ index 0000000..0b9efb7
 +$server = $app['pubsub.server'];
 +$server->run();
 diff --git a/composer.json b/composer.json
-index 0e58bda..fefcf9b 100644
+index 3396607..d90c4d6 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -11,7 +11,8 @@
+@@ -10,7 +10,8 @@
      "monolog/monolog": "^1.17",
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
@@ -77,17 +77,17 @@ index 0e58bda..fefcf9b 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index daab142..e64eb4a 100644
+index 9eb20cc..35a730f 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,10 +4,104 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "58c8c6b5a6989a10ba085144823bc755",
--    "content-hash": "5c691d1f44745b864608c4414d440a7e",
-+    "hash": "24550eb03b16d37e3f44967b25a58c10",
-+    "content-hash": "5ef25f7d8dcd25b3047593b0836b8f85",
+-    "hash": "dedf0b4937b72ad30a4a81a5a5a4f352",
+-    "content-hash": "eb62bb286cfffe08942e3e3036072de4",
++    "hash": "da1b356278274be81e4de947ed3964bd",
++    "content-hash": "4f4c02335cb98306cd4641a83702e933",
      "packages": [
          {
 +            "name": "cboden/ratchet",
@@ -185,10 +185,10 @@ index daab142..e64eb4a 100644
 +        },
 +        {
              "name": "firebase/php-jwt",
-             "version": "v4.0.0",
+             "version": "v3.0.0",
              "source": {
-@@ -255,6 +349,208 @@
-             "time": "2016-07-06 15:41:47"
+@@ -185,6 +279,208 @@
+             "time": "2016-11-14 22:06:59"
          },
          {
 +            "name": "guzzle/common",
@@ -396,7 +396,7 @@ index daab142..e64eb4a 100644
              "name": "guzzlehttp/guzzle",
              "version": "6.2.2",
              "source": {
-@@ -785,6 +1081,139 @@
+@@ -623,6 +919,135 @@
              "time": "2016-10-10 12:19:37"
          },
          {
@@ -486,16 +486,16 @@ index daab142..e64eb4a 100644
 +        },
 +        {
 +            "name": "react/stream",
-+            "version": "v0.4.3",
++            "version": "v0.4.5",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/reactphp/stream.git",
-+                "reference": "305b2328d2a2e157bc13b61a0f5c6e41b666b188"
++                "reference": "23389503012e1ab721ad498a5a1f4b39f7a43c00"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/reactphp/stream/zipball/305b2328d2a2e157bc13b61a0f5c6e41b666b188",
-+                "reference": "305b2328d2a2e157bc13b61a0f5c6e41b666b188",
++                "url": "https://api.github.com/repos/reactphp/stream/zipball/23389503012e1ab721ad498a5a1f4b39f7a43c00",
++                "reference": "23389503012e1ab721ad498a5a1f4b39f7a43c00",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -503,6 +503,7 @@ index daab142..e64eb4a 100644
 +                "php": ">=5.3.8"
 +            },
 +            "require-dev": {
++                "clue/stream-filter": "~1.2",
 +                "react/event-loop": "^0.4|^0.3",
 +                "react/promise": "^2.0|^1.0"
 +            },
@@ -511,11 +512,6 @@ index daab142..e64eb4a 100644
 +                "react/promise": "^2.0"
 +            },
 +            "type": "library",
-+            "extra": {
-+                "branch-alias": {
-+                    "dev-master": "0.5-dev"
-+                }
-+            },
 +            "autoload": {
 +                "psr-4": {
 +                    "React\\Stream\\": "src"
@@ -530,7 +526,7 @@ index daab142..e64eb4a 100644
 +                "pipe",
 +                "stream"
 +            ],
-+            "time": "2015-10-07 18:32:58"
++            "time": "2016-11-13 17:06:02"
 +        },
 +        {
              "name": "rize/uri-template",

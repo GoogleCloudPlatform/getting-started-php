@@ -35,7 +35,7 @@ index 5ccf142..700b465 100644
 +# beta_settings:
 +#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/composer.json b/composer.json
-index 088f870..bf24a5a 100644
+index 088f870..951295a 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -6,7 +6,10 @@
@@ -43,7 +43,7 @@ index 088f870..bf24a5a 100644
    "require": {
      "php": "~5.5.0|~5.6.0|~7.0.0",
 -    "silex/silex": "^1.3"
-+    "google/apiclient": "^2.0",
++    "google/cloud": "0.11",
 +    "silex/silex": "^1.3",
 +    "symfony/yaml": "^3.0",
 +    "twig/twig": "^1.22"
@@ -51,30 +51,30 @@ index 088f870..bf24a5a 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index ef28057..e0a85f5 100644
+index ef28057..9f4fdad 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,10 +4,535 @@
+@@ -4,21 +4,491 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
 -    "hash": "c295fd92211985db8f3d5793e55aa149",
 -    "content-hash": "69ebccadc3bd08bf9fd78866d9fa4f2c",
-+    "hash": "5db126d8e60a8d407fc3cca46406d04e",
-+    "content-hash": "e74cbc2accb3cc3998ce0564b557c855",
++    "hash": "2421fc42943a026339e9066b16fe2fe1",
++    "content-hash": "dae354248c79c33b2e5fe23ff2470906",
      "packages": [
          {
 +            "name": "firebase/php-jwt",
-+            "version": "v4.0.0",
++            "version": "v3.0.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/firebase/php-jwt.git",
-+                "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35"
++                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
-+                "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
++                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
++                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -104,117 +104,24 @@ index ef28057..e0a85f5 100644
 +            ],
 +            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
 +            "homepage": "https://github.com/firebase/php-jwt",
-+            "time": "2016-07-18 04:51:16"
-+        },
-+        {
-+            "name": "google/apiclient",
-+            "version": "v2.1.0",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/google/google-api-php-client.git",
-+                "reference": "f4a8ef0642cdbea0a07f6966158337bab846d4de"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/f4a8ef0642cdbea0a07f6966158337bab846d4de",
-+                "reference": "f4a8ef0642cdbea0a07f6966158337bab846d4de",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "firebase/php-jwt": "~2.0|~3.0|~4.0",
-+                "google/apiclient-services": "^0.8",
-+                "google/auth": "^0.11",
-+                "guzzlehttp/guzzle": "~5.2|~6.0",
-+                "guzzlehttp/psr7": "^1.2",
-+                "monolog/monolog": "^1.17",
-+                "php": ">=5.4",
-+                "phpseclib/phpseclib": "~2.0"
-+            },
-+            "require-dev": {
-+                "cache/filesystem-adapter": "^0.3.2",
-+                "phpunit/phpunit": "~4",
-+                "squizlabs/php_codesniffer": "~2.3",
-+                "symfony/css-selector": "~2.1",
-+                "symfony/dom-crawler": "~2.1"
-+            },
-+            "suggest": {
-+                "cache/filesystem-adapter": "For caching certs and tokens (using Google_Client::setCache)"
-+            },
-+            "type": "library",
-+            "extra": {
-+                "branch-alias": {
-+                    "dev-master": "2.x-dev"
-+                }
-+            },
-+            "autoload": {
-+                "psr-0": {
-+                    "Google_": "src/"
-+                },
-+                "classmap": [
-+                    "src/Google/Service/"
-+                ]
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "Apache-2.0"
-+            ],
-+            "description": "Client library for Google APIs",
-+            "homepage": "http://developers.google.com/api-client-library/php",
-+            "keywords": [
-+                "google"
-+            ],
-+            "time": "2016-11-02 14:28:02"
-+        },
-+        {
-+            "name": "google/apiclient-services",
-+            "version": "v0.8",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/google/google-api-php-client-services.git",
-+                "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
-+                "reference": "26bcd71cb4fcf78020ec24052ddfb28550e01bc8",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "php": ">=5.4"
-+            },
-+            "type": "library",
-+            "autoload": {
-+                "psr-0": {
-+                    "Google_Service_": "src"
-+                }
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "Apache-2.0"
-+            ],
-+            "description": "Client library for Google APIs",
-+            "homepage": "http://developers.google.com/api-client-library/php",
-+            "keywords": [
-+                "google"
-+            ],
-+            "time": "2016-10-18 01:01:16"
++            "time": "2015-07-22 18:31:08"
 +        },
 +        {
 +            "name": "google/auth",
-+            "version": "v0.11.1",
++            "version": "v0.10",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/google/google-auth-library-php.git",
-+                "reference": "a240674b08a09949fd5597f7590b3ed83663a12d"
++                "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/a240674b08a09949fd5597f7590b3ed83663a12d",
-+                "reference": "a240674b08a09949fd5597f7590b3ed83663a12d",
++                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/760e3fbe4064c0525c22e27e5374eada3c103da8",
++                "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8",
 +                "shasum": ""
 +            },
 +            "require": {
-+                "firebase/php-jwt": "~2.0|~3.0|~4.0",
++                "firebase/php-jwt": "~2.0|~3.0",
 +                "guzzlehttp/guzzle": "~5.3|~6.0",
 +                "guzzlehttp/psr7": "~1.2",
 +                "php": ">=5.4",
@@ -245,7 +152,91 @@ index ef28057..e0a85f5 100644
 +                "google",
 +                "oauth2"
 +            ],
-+            "time": "2016-11-02 14:59:14"
++            "time": "2016-08-02 22:00:48"
++        },
++        {
++            "name": "google/cloud",
++            "version": "v0.11.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
++                "reference": "2fa7a6b45ae4a784347ef38741713d58b6b2afb1"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/2fa7a6b45ae4a784347ef38741713d58b6b2afb1",
++                "reference": "2fa7a6b45ae4a784347ef38741713d58b6b2afb1",
++                "shasum": ""
++            },
++            "require": {
++                "google/auth": "0.10",
++                "guzzlehttp/guzzle": "~5.2|~6.0",
++                "guzzlehttp/psr7": "^1.2",
++                "monolog/monolog": "~1",
++                "php": ">=5.5",
++                "psr/http-message": "1.0.*",
++                "rize/uri-template": "~0.3"
++            },
++            "require-dev": {
++                "erusev/parsedown": "^1.6",
++                "james-heinrich/getid3": "^1.9",
++                "league/json-guard": "^0.3",
++                "phpdocumentor/reflection": "^3.0",
++                "phpunit/phpunit": "4.8.*",
++                "squizlabs/php_codesniffer": "2.*",
++                "symfony/console": "^3.0",
++                "vierbergenlars/php-semver": "^3.0"
++            },
++            "suggest": {
++                "google/gax": "Required to support gRPC",
++                "google/proto-client-php": "Required to support gRPC",
++                "james-heinrich/getid3": "Allows the Google Cloud Speech client to determine sample rate and encoding of audio inputs"
++            },
++            "type": "library",
++            "autoload": {
++                "psr-4": {
++                    "Google\\Cloud\\": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "Apache-2.0"
++            ],
++            "authors": [
++                {
++                    "name": "John Pedrie",
++                    "email": "john@pedrie.com"
++                },
++                {
++                    "name": "Dave Supplee",
++                    "email": "dwsupplee@gmail.com"
++                }
++            ],
++            "description": "Google Cloud Client Library",
++            "homepage": "http://github.com/GoogleCloudPlatform/google-cloud-php",
++            "keywords": [
++                "big query",
++                "bigquery",
++                "cloud",
++                "datastore",
++                "gcs",
++                "google",
++                "google api",
++                "google api client",
++                "google apis",
++                "google apis client",
++                "google cloud",
++                "google cloud platform",
++                "natural language",
++                "pub sub",
++                "pubsub",
++                "speech",
++                "stackdriver logging",
++                "storage",
++                "translate",
++                "vision"
++            ],
++            "time": "2016-10-13 18:46:15"
 +        },
 +        {
 +            "name": "guzzlehttp/guzzle",
@@ -497,116 +488,19 @@ index ef28057..e0a85f5 100644
 +            "time": "2016-07-29 03:23:52"
 +        },
 +        {
-+            "name": "phpseclib/phpseclib",
-+            "version": "2.0.4",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/phpseclib/phpseclib.git",
-+                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
-+                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "php": ">=5.3.3"
-+            },
-+            "require-dev": {
-+                "phing/phing": "~2.7",
-+                "phpunit/phpunit": "~4.0",
-+                "sami/sami": "~2.0",
-+                "squizlabs/php_codesniffer": "~2.0"
-+            },
-+            "suggest": {
-+                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
-+                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
-+                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
-+                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
-+            },
-+            "type": "library",
-+            "autoload": {
-+                "files": [
-+                    "phpseclib/bootstrap.php"
-+                ],
-+                "psr-4": {
-+                    "phpseclib\\": "phpseclib/"
-+                }
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "MIT"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "Jim Wigginton",
-+                    "email": "terrafrost@php.net",
-+                    "role": "Lead Developer"
-+                },
-+                {
-+                    "name": "Patrick Monnerat",
-+                    "email": "pm@datasphere.ch",
-+                    "role": "Developer"
-+                },
-+                {
-+                    "name": "Andreas Fischer",
-+                    "email": "bantu@phpbb.com",
-+                    "role": "Developer"
-+                },
-+                {
-+                    "name": "Hans-Jürgen Petrich",
-+                    "email": "petrich@tronic-media.com",
-+                    "role": "Developer"
-+                },
-+                {
-+                    "name": "Graham Campbell",
-+                    "email": "graham@alt-three.com",
-+                    "role": "Developer"
-+                }
-+            ],
-+            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
-+            "homepage": "http://phpseclib.sourceforge.net",
-+            "keywords": [
-+                "BigInteger",
-+                "aes",
-+                "asn.1",
-+                "asn1",
-+                "blowfish",
-+                "crypto",
-+                "cryptography",
-+                "encryption",
-+                "rsa",
-+                "security",
-+                "sftp",
-+                "signature",
-+                "signing",
-+                "ssh",
-+                "twofish",
-+                "x.509",
-+                "x509"
-+            ],
-+            "time": "2016-10-04 00:57:04"
-+        },
-+        {
              "name": "pimple/pimple",
              "version": "v1.1.1",
              "source": {
-@@ -54,23 +579,127 @@
-             "time": "2013-11-22 08:30:29"
-         },
-         {
-+            "name": "psr/cache",
-+            "version": "1.0.1",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/php-fig/cache.git",
-+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+                 "type": "git",
+-                "url": "https://github.com/silexphp/Pimple.git",
+-                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d"
++                "url": "https://github.com/silexphp/Pimple.git",
++                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
-+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
++                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
++                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -615,12 +509,12 @@ index ef28057..e0a85f5 100644
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.0.x-dev"
++                    "dev-master": "1.1.x-dev"
 +                }
 +            },
 +            "autoload": {
-+                "psr-4": {
-+                    "Psr\\Cache\\": "src/"
++                "psr-0": {
++                    "Pimple": "lib/"
 +                }
 +            },
 +            "notification-url": "https://packagist.org/downloads/",
@@ -629,16 +523,72 @@ index ef28057..e0a85f5 100644
 +            ],
 +            "authors": [
 +                {
-+                    "name": "PHP-FIG",
-+                    "homepage": "http://www.php-fig.org/"
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com"
 +                }
 +            ],
-+            "description": "Common interface for caching libraries",
++            "description": "Pimple is a simple Dependency Injection Container for PHP 5.3",
++            "homepage": "http://pimple.sensiolabs.org",
 +            "keywords": [
++                "container",
++                "dependency injection"
++            ],
++            "time": "2013-11-22 08:30:29"
++        },
++        {
++            "name": "psr/cache",
++            "version": "1.0.1",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/php-fig/cache.git",
++                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
+-                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
++                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
++                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                 "shasum": ""
+             },
+             "require": {
+@@ -27,12 +497,12 @@
+             "type": "library",
+             "extra": {
+                 "branch-alias": {
+-                    "dev-master": "1.1.x-dev"
++                    "dev-master": "1.0.x-dev"
+                 }
+             },
+             "autoload": {
+-                "psr-0": {
+-                    "Pimple": "lib/"
++                "psr-4": {
++                    "Psr\\Cache\\": "src/"
+                 }
+             },
+             "notification-url": "https://packagist.org/downloads/",
+@@ -41,36 +511,94 @@
+             ],
+             "authors": [
+                 {
+-                    "name": "Fabien Potencier",
+-                    "email": "fabien@symfony.com"
++                    "name": "PHP-FIG",
++                    "homepage": "http://www.php-fig.org/"
+                 }
+             ],
+-            "description": "Pimple is a simple Dependency Injection Container for PHP 5.3",
+-            "homepage": "http://pimple.sensiolabs.org",
++            "description": "Common interface for caching libraries",
+             "keywords": [
+-                "container",
+-                "dependency injection"
 +                "cache",
 +                "psr",
 +                "psr-6"
-+            ],
+             ],
+-            "time": "2013-11-22 08:30:29"
 +            "time": "2016-08-06 20:24:11"
 +        },
 +        {
@@ -690,8 +640,8 @@ index ef28057..e0a85f5 100644
 +                "response"
 +            ],
 +            "time": "2016-08-06 14:39:51"
-+        },
-+        {
+         },
+         {
              "name": "psr/log",
 -            "version": "1.0.0",
 +            "version": "1.0.2",
@@ -726,7 +676,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -84,12 +713,13 @@
+@@ -84,12 +612,57 @@
                  }
              ],
              "description": "Common interface for logging libraries",
@@ -738,10 +688,54 @@ index ef28057..e0a85f5 100644
              ],
 -            "time": "2012-12-21 11:40:51"
 +            "time": "2016-10-10 12:19:37"
++        },
++        {
++            "name": "rize/uri-template",
++            "version": "0.3.0",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/rize/UriTemplate.git",
++                "reference": "2496aa674438f1c48fce122ffc44291ad7014717"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/2496aa674438f1c48fce122ffc44291ad7014717",
++                "reference": "2496aa674438f1c48fce122ffc44291ad7014717",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4.0.0"
++            },
++            "type": "library",
++            "autoload": {
++                "psr-0": {
++                    "Rize\\UriTemplate": "src/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Marut K",
++                    "homepage": "http://twitter.com/rezigned"
++                }
++            ],
++            "description": "PHP URI Template (RFC 6570) supports both expansion & extraction",
++            "keywords": [
++                "RFC 6570",
++                "template",
++                "uri"
++            ],
++            "time": "2015-04-17 16:12:22"
          },
          {
              "name": "silex/silex",
-@@ -170,16 +800,16 @@
+@@ -170,16 +743,16 @@
          },
          {
              "name": "symfony/debug",
@@ -762,7 +756,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -196,7 +826,7 @@
+@@ -196,7 +769,7 @@
              "type": "library",
              "extra": {
                  "branch-alias": {
@@ -771,7 +765,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "autoload": {
-@@ -223,20 +853,20 @@
+@@ -223,20 +796,20 @@
              ],
              "description": "Symfony Debug Component",
              "homepage": "https://symfony.com",
@@ -797,7 +791,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -283,24 +913,25 @@
+@@ -283,24 +856,25 @@
              ],
              "description": "Symfony EventDispatcher Component",
              "homepage": "https://symfony.com",
@@ -829,7 +823,7 @@ index ef28057..e0a85f5 100644
              },
              "require-dev": {
                  "symfony/expression-language": "~2.8|~3.0"
-@@ -335,20 +966,20 @@
+@@ -335,20 +909,20 @@
              ],
              "description": "Symfony HttpFoundation Component",
              "homepage": "https://symfony.com",
@@ -855,7 +849,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -356,7 +987,7 @@
+@@ -356,7 +930,7 @@
                  "psr/log": "~1.0",
                  "symfony/debug": "~2.8|~3.0",
                  "symfony/event-dispatcher": "~2.8|~3.0",
@@ -864,7 +858,7 @@ index ef28057..e0a85f5 100644
              },
              "conflict": {
                  "symfony/config": "<2.8"
-@@ -417,20 +1048,79 @@
+@@ -417,20 +991,79 @@
              ],
              "description": "Symfony HttpKernel Component",
              "homepage": "https://symfony.com",
@@ -949,7 +943,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -453,6 +1143,7 @@
+@@ -453,6 +1086,7 @@
                  "symfony/config": "For using the all-in-one router or any loader",
                  "symfony/dependency-injection": "For loading routes from a service",
                  "symfony/expression-language": "For using expression matching",
@@ -957,7 +951,7 @@ index ef28057..e0a85f5 100644
                  "symfony/yaml": "For using the YAML loader"
              },
              "type": "library",
-@@ -486,35 +1177,145 @@
+@@ -486,35 +1120,145 @@
              "description": "Symfony Routing Component",
              "homepage": "https://symfony.com",
              "keywords": [
@@ -1023,16 +1017,16 @@ index ef28057..e0a85f5 100644
 +        },
 +        {
 +            "name": "twig/twig",
-+            "version": "v1.27.0",
++            "version": "v1.28.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/twigphp/Twig.git",
-+                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97"
++                "reference": "60ae30368f7ac50a95de032f16c1e882b0f69813"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
-+                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
++                "url": "https://api.github.com/repos/twigphp/Twig/zipball/60ae30368f7ac50a95de032f16c1e882b0f69813",
++                "reference": "60ae30368f7ac50a95de032f16c1e882b0f69813",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -1045,7 +1039,7 @@ index ef28057..e0a85f5 100644
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.27-dev"
++                    "dev-master": "1.28-dev"
 +                }
 +            },
 +            "autoload": {
@@ -1081,7 +1075,7 @@ index ef28057..e0a85f5 100644
 +                "templating"
              ],
 -            "time": "2016-01-27 05:14:46"
-+            "time": "2016-10-25 19:17:17"
++            "time": "2016-11-17 17:46:53"
          }
      ],
      "packages-dev": [
@@ -1114,7 +1108,7 @@ index ef28057..e0a85f5 100644
              },
              "suggest": {
                  "behat/mink-browserkit-driver": "extremely fast headless driver for Symfony\\Kernel-based apps (Sf2, Silex)",
-@@ -551,24 +1352,24 @@
+@@ -551,24 +1295,24 @@
                  "testing",
                  "web"
              ],
@@ -1145,7 +1139,7 @@ index ef28057..e0a85f5 100644
                  "php": ">=5.3.6",
                  "symfony/browser-kit": "~2.3|~3.0",
                  "symfony/dom-crawler": "~2.3|~3.0"
-@@ -607,20 +1408,20 @@
+@@ -607,20 +1351,20 @@
                  "browser",
                  "testing"
              ],
@@ -1171,7 +1165,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -630,7 +1431,7 @@
+@@ -630,7 +1374,7 @@
                  "php": ">=5.3.1"
              },
              "require-dev": {
@@ -1180,7 +1174,7 @@ index ef28057..e0a85f5 100644
              },
              "type": "mink-driver",
              "extra": {
-@@ -662,7 +1463,7 @@
+@@ -662,7 +1406,7 @@
                  "headless",
                  "testing"
              ],
@@ -1189,7 +1183,7 @@ index ef28057..e0a85f5 100644
          },
          {
              "name": "doctrine/instantiator",
-@@ -720,16 +1521,16 @@
+@@ -720,16 +1464,16 @@
          },
          {
              "name": "fabpot/goutte",
@@ -1210,7 +1204,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -742,7 +1543,7 @@
+@@ -742,7 +1486,7 @@
              "type": "application",
              "extra": {
                  "branch-alias": {
@@ -1219,7 +1213,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "autoload": {
-@@ -765,44 +1566,39 @@
+@@ -765,44 +1509,39 @@
              "keywords": [
                  "scraper"
              ],
@@ -1277,7 +1271,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -811,166 +1607,97 @@
+@@ -811,166 +1550,97 @@
              ],
              "authors": [
                  {
@@ -1486,7 +1480,7 @@ index ef28057..e0a85f5 100644
                          "src/"
                      ]
                  }
-@@ -982,37 +1709,39 @@
+@@ -982,37 +1652,39 @@
              "authors": [
                  {
                      "name": "Mike van Riel",
@@ -1536,7 +1530,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "autoload": {
-@@ -1045,7 +1774,7 @@
+@@ -1045,7 +1717,7 @@
                  "spy",
                  "stub"
              ],
@@ -1545,7 +1539,7 @@ index ef28057..e0a85f5 100644
          },
          {
              "name": "phpunit/php-code-coverage",
-@@ -1199,21 +1928,24 @@
+@@ -1199,21 +1871,24 @@
          },
          {
              "name": "phpunit/php-timer",
@@ -1574,7 +1568,7 @@ index ef28057..e0a85f5 100644
              "type": "library",
              "autoload": {
                  "classmap": [
-@@ -1236,20 +1968,20 @@
+@@ -1236,20 +1911,20 @@
              "keywords": [
                  "timer"
              ],
@@ -1600,7 +1594,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -1285,20 +2017,20 @@
+@@ -1285,20 +1960,20 @@
              "keywords": [
                  "tokenizer"
              ],
@@ -1626,7 +1620,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -1312,7 +2044,7 @@
+@@ -1312,7 +1987,7 @@
                  "phpunit/php-code-coverage": "~2.1",
                  "phpunit/php-file-iterator": "~1.4",
                  "phpunit/php-text-template": "~1.2",
@@ -1635,7 +1629,7 @@ index ef28057..e0a85f5 100644
                  "phpunit/phpunit-mock-objects": "~2.3",
                  "sebastian/comparator": "~1.1",
                  "sebastian/diff": "~1.2",
-@@ -1357,7 +2089,7 @@
+@@ -1357,7 +2032,7 @@
                  "testing",
                  "xunit"
              ],
@@ -1644,7 +1638,7 @@ index ef28057..e0a85f5 100644
          },
          {
              "name": "phpunit/phpunit-mock-objects",
-@@ -1416,55 +2148,6 @@
+@@ -1416,66 +2091,17 @@
              "time": "2015-10-02 06:51:40"
          },
          {
@@ -1698,9 +1692,33 @@ index ef28057..e0a85f5 100644
 -        },
 -        {
              "name": "sebastian/comparator",
-             "version": "1.2.0",
+-            "version": "1.2.0",
++            "version": "1.2.1",
              "source": {
-@@ -1582,23 +2265,23 @@
+                 "type": "git",
+                 "url": "https://github.com/sebastianbergmann/comparator.git",
+-                "reference": "937efb279bd37a375bcadf584dec0726f84dbf22"
++                "reference": "ce2bda23a56456f19e35d98241446b581f648c14"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/937efb279bd37a375bcadf584dec0726f84dbf22",
+-                "reference": "937efb279bd37a375bcadf584dec0726f84dbf22",
++                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/ce2bda23a56456f19e35d98241446b581f648c14",
++                "reference": "ce2bda23a56456f19e35d98241446b581f648c14",
+                 "shasum": ""
+             },
+             "require": {
+@@ -1526,7 +2152,7 @@
+                 "compare",
+                 "equality"
+             ],
+-            "time": "2015-07-26 15:48:44"
++            "time": "2016-11-17 14:39:37"
+         },
+         {
+             "name": "sebastian/diff",
+@@ -1582,23 +2208,23 @@
          },
          {
              "name": "sebastian/environment",
@@ -1730,7 +1748,7 @@ index ef28057..e0a85f5 100644
              },
              "type": "library",
              "extra": {
-@@ -1628,20 +2311,20 @@
+@@ -1628,20 +2254,20 @@
                  "environment",
                  "hhvm"
              ],
@@ -1756,7 +1774,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -1649,12 +2332,13 @@
+@@ -1649,12 +2275,13 @@
                  "sebastian/recursion-context": "~1.0"
              },
              "require-dev": {
@@ -1771,7 +1789,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "autoload": {
-@@ -1694,7 +2378,7 @@
+@@ -1694,7 +2321,7 @@
                  "export",
                  "exporter"
              ],
@@ -1780,7 +1798,7 @@ index ef28057..e0a85f5 100644
          },
          {
              "name": "sebastian/global-state",
-@@ -1749,16 +2433,16 @@
+@@ -1749,16 +2376,16 @@
          },
          {
              "name": "sebastian/recursion-context",
@@ -1801,7 +1819,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -1798,7 +2482,7 @@
+@@ -1798,7 +2425,7 @@
              ],
              "description": "Provides functionality to recursively process PHP variables",
              "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
@@ -1810,7 +1828,7 @@ index ef28057..e0a85f5 100644
          },
          {
              "name": "sebastian/version",
-@@ -1837,16 +2521,16 @@
+@@ -1837,16 +2464,16 @@
          },
          {
              "name": "symfony/browser-kit",
@@ -1831,7 +1849,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -1863,7 +2547,7 @@
+@@ -1863,7 +2490,7 @@
              "type": "library",
              "extra": {
                  "branch-alias": {
@@ -1840,7 +1858,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "autoload": {
-@@ -1890,29 +2574,29 @@
+@@ -1890,29 +2517,29 @@
              ],
              "description": "Symfony BrowserKit Component",
              "homepage": "https://symfony.com",
@@ -1877,7 +1895,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "autoload": {
-@@ -1943,20 +2627,20 @@
+@@ -1943,20 +2570,20 @@
              ],
              "description": "Symfony CssSelector Component",
              "homepage": "https://symfony.com",
@@ -1903,7 +1921,7 @@ index ef28057..e0a85f5 100644
                  "shasum": ""
              },
              "require": {
-@@ -1972,7 +2656,7 @@
+@@ -1972,7 +2599,7 @@
              "type": "library",
              "extra": {
                  "branch-alias": {
@@ -1912,7 +1930,7 @@ index ef28057..e0a85f5 100644
                  }
              },
              "autoload": {
-@@ -1999,41 +2683,39 @@
+@@ -1999,41 +2626,39 @@
              ],
              "description": "Symfony DomCrawler Component",
              "homepage": "https://symfony.com",
@@ -1968,7 +1986,7 @@ index ef28057..e0a85f5 100644
              },
              "notification-url": "https://packagist.org/downloads/",
              "license": [
-@@ -2041,73 +2723,17 @@
+@@ -2041,73 +2666,17 @@
              ],
              "authors": [
                  {
@@ -2368,10 +2386,10 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..a05b3de
+index 0000000..6c4c682
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
-@@ -0,0 +1,256 @@
+@@ -0,0 +1,140 @@
 +<?php
 +
 +/*
@@ -2392,13 +2410,16 @@ index 0000000..a05b3de
 +
 +namespace Google\Cloud\Samples\Bookshelf\DataModel;
 +
-+use Google_Service_Datastore;
++use Google\Cloud\Datastore\DatastoreClient;
++use Google\Cloud\Datastore\Entity;
 +
 +/**
 + * Class Datastore implements the DataModel with a Google Data Store.
 + */
 +class Datastore implements DataModelInterface
 +{
++    private $datasetId;
++    private $datastore;
 +    protected $columns = [
 +        'id'            => 'integer',
 +        'title'         => 'string',
@@ -2410,110 +2431,60 @@ index 0000000..a05b3de
 +        'createdById'   => 'string',
 +    ];
 +
-+    public function __construct($datastoreDatasetId)
++    public function __construct($projectId)
 +    {
-+        $this->datasetId = $datastoreDatasetId;
-+        // Datastore API has intermittent failures, so we set the
-+        // Google Client to retry in the event of a 503 Backend Error
-+        $retryConfig = [ 'retries' => 2 ];
-+        $client = new \Google_Client([ 'retry' => $retryConfig ]);
-+        $client->setScopes([
-+            Google_Service_Datastore::CLOUD_PLATFORM,
-+            Google_Service_Datastore::DATASTORE,
++        $this->datasetId = $projectId;
++        $this->datastore = new DatastoreClient([
++            'projectId' => $projectId,
 +        ]);
-+        $client->useApplicationDefaultCredentials();
-+        $this->datastore = new \Google_Service_Datastore($client);
 +    }
 +
 +    public function listBooks($limit = 10, $cursor = null)
 +    {
-+        $query = new \Google_Service_Datastore_Query([
-+            'kind' => [
-+                [
-+                    'name' => 'Book',
-+                ],
-+            ],
-+            'order' => [
-+                'property' => [
-+                    'name' => 'title',
-+                ],
-+            ],
-+            'limit' => $limit,
-+            'startCursor' => $cursor,
-+        ]);
++        $query = $this->datastore->query()
++            ->kind('Book')
++            ->order('title')
++            ->limit($limit)
++            ->start($cursor);
 +
-+        $request = new \Google_Service_Datastore_RunQueryRequest();
-+        $request->setQuery($query);
-+        $response = $this->datastore->projects->
-+            runQuery($this->datasetId, $request);
-+
-+        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
-+        $batch = $response->getBatch();
-+        $endCursor = $batch->getEndCursor();
++        $results = $this->datastore->runQuery($query);
 +
 +        $books = [];
-+        foreach ($batch->getEntityResults() as $entityResult) {
-+            $entity = $entityResult->getEntity();
-+            $book = $this->propertiesToBook($entity->getProperties());
-+            $book['id'] = $entity->getKey()->getPath()[0]->getId();
++        $nextPageCursor = null;
++        foreach ($results as $entity) {
++            $book = $entity->get();
++            $book['id'] = $entity->key()->pathEnd()['id'];
 +            $books[] = $book;
++            $nextPageCursor = $entity->cursor();
 +        }
 +
-+        return array(
++        return [
 +            'books' => $books,
-+            'cursor' => $endCursor === $cursor ? null : $endCursor,
-+        );
++            'cursor' => $nextPageCursor,
++        ];
 +    }
 +
 +    public function create($book, $key = null)
 +    {
 +        $this->verifyBook($book);
 +
-+        if (is_null($key)) {
-+            $key = $this->createKey();
-+        }
++        $key = $this->datastore->key('Book');
++        $entity = $this->datastore->entity($key, $book);
 +
-+        $properties = $this->bookToProperties($book);
++        $this->datastore->insert($entity);
 +
-+        $entity = new \Google_Service_Datastore_Entity([
-+            'key' => $key,
-+            'properties' => $properties
-+        ]);
-+
-+        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
-+        $request = new \Google_Service_Datastore_CommitRequest([
-+            'mode' => 'NON_TRANSACTIONAL',
-+            'mutations' => [
-+                [
-+                    'upsert' => $entity,
-+                ]
-+            ]
-+        ]);
-+
-+        $response = $this->datastore->projects->commit($this->datasetId, $request);
-+
-+        $key = $response->getMutationResults()[0]->getKey();
-+
-+
-+        // return the ID of the created datastore item
-+        return $key->getPath()[0]->getId();
++        // return the ID of the created datastore entity
++        return $entity->key()->pathEnd()['id'];
 +    }
 +
 +    public function read($id)
 +    {
-+        $key = $this->createKey($id);
-+        $request = new \Google_Service_Datastore_LookupRequest([
-+            'keys' => [$key]
-+        ]);
++        $key = $this->datastore->key('Book', $id);
++        $entity = $this->datastore->lookup($key);
 +
-+        $response = $this->datastore->projects->
-+            lookup($this->datasetId, $request);
-+
-+        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
-+        if ($found = $response->getFound()) {
-+            $book = $this->propertiesToBook($found[0]['entity']['properties']);
++        if ($entity) {
++            $book = $entity->get();
 +            $book['id'] = $id;
-+
 +            return $book;
 +        }
 +
@@ -2525,28 +2496,16 @@ index 0000000..a05b3de
 +        $this->verifyBook($book);
 +
 +        if (!isset($book['id'])) {
-+            throw new InvalidArgumentException('Book must have an "id" attribute');
++            throw new \InvalidArgumentException('Book must have an "id" attribute');
 +        }
 +
-+        $key = $this->createKey($book['id']);
-+        $properties = $this->bookToProperties($book);
-+
-+        $entity = new \Google_Service_Datastore_Entity([
-+            'key' => $key,
-+            'properties' => $properties
-+        ]);
-+
-+        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
-+        $request = new \Google_Service_Datastore_CommitRequest([
-+            'mode' => 'NON_TRANSACTIONAL',
-+            'mutations' => [
-+                [
-+                    'update' => $entity
-+                ]
-+            ]
-+        ]);
-+
-+        $response = $this->datastore->projects->commit($this->datasetId, $request);
++        $transaction = $this->datastore->transaction();
++        $key = $this->datastore->key('Book', $book['id']);
++        $task = $transaction->lookup($key);
++        unset($book['id']);
++        $entity = $this->datastore->entity($key, $book);
++        $transaction->upsert($entity);
++        $transaction->commit();
 +
 +        // return the number of updated rows
 +        return 1;
@@ -2554,78 +2513,21 @@ index 0000000..a05b3de
 +
 +    public function delete($id)
 +    {
-+        $key = $this->createKey($id);
-+
-+        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
-+        $request = new \Google_Service_Datastore_CommitRequest([
-+            'mode' => 'NON_TRANSACTIONAL',
-+            'mutations' => [
-+                [
-+                    'delete' => $key
-+                ]
-+            ]
-+        ]);
-+
-+        $response = $this->datastore->projects->commit($this->datasetId, $request);
-+
-+        return true;
-+    }
-+
-+    protected function createKey($id = null)
-+    {
-+        $key = new \Google_Service_Datastore_Key([
-+            'path' => [
-+                [
-+                    'kind' => 'Book'
-+                ],
-+            ]
-+        ]);
-+
-+        // If we have an ID, set it in the path
-+        if ($id) {
-+            $key->getPath()[0]->setId($id);
-+        }
-+
-+        return $key;
++        $key = $this->datastore->key('Book', $id);
++        return $this->datastore->delete($key);
 +    }
 +
 +    private function verifyBook($book)
 +    {
++        if ($book instanceof Entity) {
++            $book = $book->get();
++        }
 +        if ($invalid = array_diff_key($book, $this->columns)) {
 +            throw new \InvalidArgumentException(sprintf(
 +                'unsupported book properties: "%s"',
 +                implode(', ', $invalid)
 +            ));
 +        }
-+    }
-+
-+    private function bookToProperties(array $book)
-+    {
-+        $properties = [];
-+        foreach ($book as $colName => $colValue) {
-+            $propName = $this->columns[$colName] . 'Value';
-+            if (!empty($colValue)) {
-+                $properties[$colName] = [
-+                    $propName => $colValue
-+                ];
-+            }
-+        }
-+
-+        return $properties;
-+    }
-+
-+    private function propertiesToBook(array $properties)
-+    {
-+        $book = [];
-+        foreach ($this->columns as $colName => $colType) {
-+            $book[$colName] = null;
-+            if (isset($properties[$colName])) {
-+                $propName = $colType . 'Value';
-+                $book[$colName] = $properties[$colName][$propName];
-+            }
-+        }
-+
-+        return $book;
 +    }
 +}
 diff --git a/src/DataModel/MongoDb.php b/src/DataModel/MongoDb.php
@@ -5170,10 +5072,10 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..59aa1f3
+index 0000000..9e91c1a
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
-@@ -0,0 +1,146 @@
+@@ -0,0 +1,147 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -5271,7 +5173,7 @@ index 0000000..59aa1f3
 +        $this->assertEquals('Breakfast of Champions', $breakfastBook['title']);
 +        $this->assertEquals('Kurt Vonnegut', $breakfastBook['author']);
 +        $this->assertEquals($breakfastId, $breakfastBook['id']);
-+        $this->assertNull($breakfastBook['description']);
++        $this->assertFalse(isset($breakfastBook['description']));
 +        $dateString = date(
 +            'F jS, Y', strtotime($breakfastBook['publishedDate']));
 +        $this->assertEquals('April 20th, 2016', $dateString);
@@ -5283,6 +5185,7 @@ index 0000000..59aa1f3
 +            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
 +        $model->update($breakfastBook);
 +        $breakfastBookCopy = $model->read($breakfastId);
++
 +        // And confirm it was correctly updated.
 +        $this->assertEquals(
 +            'A really fun read.',
@@ -5293,13 +5196,13 @@ index 0000000..59aa1f3
 +        $this->assertEquals('April 21st, 2016', $dateString);
 +
 +        // Update it again and delete the description.
-+        unset($breakfastBook['description']);
-+        $breakfastBook['author'] = null;
++        $breakfastBook['description'] = '';
++        $breakfastBook['author'] = '';
 +        $model->update($breakfastBook);
 +        $breakfastBookCopy = $model->read($breakfastId);
 +        // And confirm it was correctly updated.
-+        $this->assertNull($breakfastBookCopy['description']);
-+        $this->assertNull($breakfastBookCopy['author']);
++        $this->assertEquals('', $breakfastBookCopy['description']);
++        $this->assertEquals('', $breakfastBookCopy['author']);
 +
 +        // Try updating the book with a bad property name.
 +        try {
