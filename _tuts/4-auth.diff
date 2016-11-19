@@ -15,7 +15,7 @@ index 4df4bde..ea0038e 100644
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
 diff --git a/src/app.php b/src/app.php
-index 774c8b8..c040b9c 100644
+index e9143c1..c81fcf1 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -26,7 +26,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;

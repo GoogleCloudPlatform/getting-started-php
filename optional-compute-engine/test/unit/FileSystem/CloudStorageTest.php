@@ -27,12 +27,12 @@ class CloudStorageTest extends \PHPUnit_Framework_TestCase
     public function testOne()
     {
         $config = $this->getConfig();
-        $bucket = $config['google_project_id'];
-        $storage = new CloudStorage($bucket);
+        $bucketName = $projectId = $config['google_project_id'];
+        $storage = new CloudStorage($projectId, $bucketName);
         $url = $storage->storeFile(__DIR__ . '/../../lib/CatHat.jpg', 'image/jpg');
         try {
             $this->assertStringStartsWith(
-                "https://www.googleapis.com/download/storage/v1/b/$bucket/o/",
+                "https://www.googleapis.com/download/storage/v1/b/$bucketName/o/",
                 $url
             );
         } finally {  // clean up

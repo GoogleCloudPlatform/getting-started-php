@@ -49,7 +49,8 @@ $app['config'] = Yaml::parse(file_get_contents($config));
 $app['bookshelf.storage'] = function ($app) {
     /** @var array $config */
     $config = $app['config'];
-    return new CloudStorage($config['google_project_id']);
+    $projectId = $bucketName = $config['google_project_id'];
+    return new CloudStorage($projectId, $bucketName);
 };
 
 // determine the datamodel backend using the app configuration

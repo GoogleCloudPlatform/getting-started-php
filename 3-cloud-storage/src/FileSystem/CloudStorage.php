@@ -18,28 +18,27 @@
 
 namespace Google\Cloud\Samples\Bookshelf\FileSystem;
 
+use Google\Cloud\Storage\StorageClient;
+
 /**
  * class CloudStorage stores images in Google Cloud Storage.
  */
 class CloudStorage
 {
+    private $bucket;
+
     /**
      * CloudStorage constructor.
      *
+     * @param string         $projectId The Google Cloud project id
      * @param string         $bucketName The cloud storage bucket name
-     * @param \Google_Client $client     When null, a new Google_client is created
-     *                                   that uses default application credentials.
      */
-    public function __construct($bucketName, \Google_Client $client = null)
+    public function __construct($projectId, $bucketName)
     {
-        if (!$client) {
-            $client = new \Google_Client();
-            $client->useApplicationDefaultCredentials();
-            $client->setApplicationName('php bookshelf');
-            $client->setScopes(\Google_Service_Storage::DEVSTORAGE_READ_WRITE);
-        }
-        $this->service = new \Google_Service_Storage($client);
-        $this->bucketName = $bucketName;
+        $storage = new StorageClient([
+            'projectId' => $projectId,
+        ]);
+        $this->bucket = $storage->bucket($bucketName);
     }
 
     /**
@@ -52,19 +51,10 @@ class CloudStorage
      */
     public function storeFile($localFilePath, $contentType)
     {
-        $obj = new \Google_Service_Storage_StorageObject();
-        // Generate a unique file name so we don't try to write to files to
-        // the same name.
-        $name = uniqid('', true);
-        $obj->setName($name);
-        $obj = $this->service->objects->insert($this->bucketName, $obj, array(
-            'data' => file_get_contents($localFilePath),
-            'uploadType' => 'media',
-            'name' => $name,
-            'predefinedAcl' => 'publicread',
-        ));
+        $f = fopen($localFilePath, 'r');
 
-        return $obj->getMediaLink();
+        $object = $this->bucket->upload($f);
+        return $object->info()['mediaLink'];
     }
 
     /**
@@ -76,6 +66,7 @@ class CloudStorage
     {
         $path_components = explode('/', parse_url($url, PHP_URL_PATH));
         $name = $path_components[count($path_components) - 1];
-        $this->service->objects->delete($this->bucketName, $name);
+        $object = $this->bucket->object($name);
+        $object->delete();
     }
 }
