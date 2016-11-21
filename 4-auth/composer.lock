@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c7389b2068d18ea13c916a1ebb6a6cf3",
-    "content-hash": "5fb4a4dfccb5a33b17f2475e76abd7b1",
+    "hash": "dc10c7a5dac76ea62d9ff3947ed9e14f",
+    "content-hash": "d14886a080cb23f2aa4ce67f8a118d23",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -193,21 +193,21 @@
         },
         {
             "name": "google/cloud",
-            "version": "v0.11.0",
+            "version": "v0.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "2fa7a6b45ae4a784347ef38741713d58b6b2afb1"
+                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/2fa7a6b45ae4a784347ef38741713d58b6b2afb1",
-                "reference": "2fa7a6b45ae4a784347ef38741713d58b6b2afb1",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/397f0f648b6ff3895753ac8fcea154302eda5c7f",
+                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "0.10",
-                "guzzlehttp/guzzle": "~5.2|~6.0",
+                "guzzlehttp/guzzle": "^5.3|^6.0",
                 "guzzlehttp/psr7": "^1.2",
                 "monolog/monolog": "~1",
                 "php": ">=5.5",
@@ -216,6 +216,8 @@
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
+                "google/gax": "^0.3",
+                "google/proto-client-php": "^0.5",
                 "james-heinrich/getid3": "^1.9",
                 "league/json-guard": "^0.3",
                 "phpdocumentor/reflection": "^3.0",
@@ -273,7 +275,7 @@
                 "translate",
                 "vision"
             ],
-            "time": "2016-10-13 18:46:15"
+            "time": "2016-11-14 22:06:59"
         },
         {
             "name": "guzzlehttp/guzzle",

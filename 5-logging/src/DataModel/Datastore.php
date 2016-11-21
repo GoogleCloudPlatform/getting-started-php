@@ -61,7 +61,7 @@ class Datastore implements DataModelInterface
         $nextPageCursor = null;
         foreach ($results as $entity) {
             $book = $entity->get();
-            $book['id'] = $entity->key()->pathEnd()['id'];
+            $book['id'] = $entity->key()->pathEndIdentifier();
             $books[] = $book;
             $nextPageCursor = $entity->cursor();
         }
@@ -82,7 +82,7 @@ class Datastore implements DataModelInterface
         $this->datastore->insert($entity);
 
         // return the ID of the created datastore entity
-        return $entity->key()->pathEnd()['id'];
+        return $entity->key()->pathEndIdentifier();
     }
 
     public function read($id)
