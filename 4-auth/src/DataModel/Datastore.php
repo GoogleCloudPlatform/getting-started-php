@@ -127,9 +127,6 @@ class Datastore implements DataModelInterface
 
     private function verifyBook($book)
     {
-        if ($book instanceof Entity) {
-            $book = $book->get();
-        }
         if ($invalid = array_diff_key($book, $this->columns)) {
             throw new \InvalidArgumentException(sprintf(
                 'unsupported book properties: "%s"',
