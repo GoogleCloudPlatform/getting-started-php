@@ -2386,10 +2386,10 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..6c4c682
+index 0000000..a87954a
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
-@@ -0,0 +1,140 @@
+@@ -0,0 +1,137 @@
 +<?php
 +
 +/*
@@ -2519,9 +2519,6 @@ index 0000000..6c4c682
 +
 +    private function verifyBook($book)
 +    {
-+        if ($book instanceof Entity) {
-+            $book = $book->get();
-+        }
 +        if ($invalid = array_diff_key($book, $this->columns)) {
 +            throw new \InvalidArgumentException(sprintf(
 +                'unsupported book properties: "%s"',

@@ -14,20 +14,6 @@ index c23b619..4df4bde 100644
 -[step-2]: https://cloud.google.com/php/getting-started/using-structured-data
 +[step-3]: https://cloud.google.com/php/getting-started/using-cloud-storage
  
-diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
-index 6c4c682..a87954a 100644
---- a/src/DataModel/Datastore.php
-+++ b/src/DataModel/Datastore.php
-@@ -127,9 +127,6 @@ class Datastore implements DataModelInterface
- 
-     private function verifyBook($book)
-     {
--        if ($book instanceof Entity) {
--            $book = $book->get();
--        }
-         if ($invalid = array_diff_key($book, $this->columns)) {
-             throw new \InvalidArgumentException(sprintf(
-                 'unsupported book properties: "%s"',
 diff --git a/src/FileSystem/CloudStorage.php b/src/FileSystem/CloudStorage.php
 new file mode 100644
 index 0000000..0e26e83
