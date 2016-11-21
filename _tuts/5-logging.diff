@@ -15,13 +15,13 @@ index ea0038e..ead2f61 100644
 +[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
  
 diff --git a/composer.json b/composer.json
-index 951295a..3396607 100644
+index 571d255..e418037 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -6,7 +6,8 @@
-   },
+@@ -7,7 +7,8 @@
    "require": {
      "php": "~5.5.0|~5.6.0|~7.0.0",
+     "google/apiclient": "^2.0",
 -    "google/cloud": "0.11",
 +    "google/cloud": "0.13",
 +    "monolog/monolog": "^1.17",
@@ -29,21 +29,21 @@ index 951295a..3396607 100644
      "symfony/yaml": "^3.0",
      "twig/twig": "^1.22"
 diff --git a/composer.lock b/composer.lock
-index 9f4fdad..9eb20cc 100644
+index 9fab880..174484d 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "2421fc42943a026339e9066b16fe2fe1",
--    "content-hash": "dae354248c79c33b2e5fe23ff2470906",
-+    "hash": "dedf0b4937b72ad30a4a81a5a5a4f352",
-+    "content-hash": "eb62bb286cfffe08942e3e3036072de4",
+-    "hash": "c7389b2068d18ea13c916a1ebb6a6cf3",
+-    "content-hash": "5fb4a4dfccb5a33b17f2475e76abd7b1",
++    "hash": "45ed72eb7a4e5f7053d3042ed19d1353",
++    "content-hash": "9ee7efad32ca1afda08e7b1ceff03bb9",
      "packages": [
          {
              "name": "firebase/php-jwt",
-@@ -100,21 +100,21 @@
+@@ -193,21 +193,21 @@
          },
          {
              "name": "google/cloud",
@@ -70,7 +70,7 @@ index 9f4fdad..9eb20cc 100644
                  "guzzlehttp/psr7": "^1.2",
                  "monolog/monolog": "~1",
                  "php": ">=5.5",
-@@ -123,6 +123,8 @@
+@@ -216,6 +216,8 @@
              },
              "require-dev": {
                  "erusev/parsedown": "^1.6",
@@ -79,7 +79,7 @@ index 9f4fdad..9eb20cc 100644
                  "james-heinrich/getid3": "^1.9",
                  "league/json-guard": "^0.3",
                  "phpdocumentor/reflection": "^3.0",
-@@ -180,7 +182,7 @@
+@@ -273,7 +275,7 @@
                  "translate",
                  "vision"
              ],
@@ -88,36 +88,6 @@ index 9f4fdad..9eb20cc 100644
          },
          {
              "name": "guzzlehttp/guzzle",
-@@ -246,16 +248,16 @@
-         },
-         {
-             "name": "guzzlehttp/promises",
--            "version": "1.2.0",
-+            "version": "1.3.0",
-             "source": {
-                 "type": "git",
-                 "url": "https://github.com/guzzle/promises.git",
--                "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579"
-+                "reference": "2693c101803ca78b27972d84081d027fca790a1e"
-             },
-             "dist": {
-                 "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/promises/zipball/c10d860e2a9595f8883527fa0021c7da9e65f579",
--                "reference": "c10d860e2a9595f8883527fa0021c7da9e65f579",
-+                "url": "https://api.github.com/repos/guzzle/promises/zipball/2693c101803ca78b27972d84081d027fca790a1e",
-+                "reference": "2693c101803ca78b27972d84081d027fca790a1e",
-                 "shasum": ""
-             },
-             "require": {
-@@ -293,7 +295,7 @@
-             "keywords": [
-                 "promise"
-             ],
--            "time": "2016-05-18 16:56:05"
-+            "time": "2016-11-18 17:47:58"
-         },
-         {
-             "name": "guzzlehttp/psr7",
 diff --git a/src/app.php b/src/app.php
 index c81fcf1..82000ee 100644
 --- a/src/app.php
