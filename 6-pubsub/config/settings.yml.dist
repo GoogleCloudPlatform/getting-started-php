@@ -10,6 +10,7 @@ bookshelf_backend: cloudsql
 mysql_dsn: "mysql:host=IP_ADDRESS;port=3306;dbname=YOUR_DB_NAME"
 mysql_user: YOUR_MYSQL_USER
 mysql_password: YOUR_MYSQL_PASSWORD
+cloudsql_connection_name: "INSTANCE_CONNECTION_NAME"
 
 # configure Mongo backend
 mongo_url: YOUR_MONGODB_URL

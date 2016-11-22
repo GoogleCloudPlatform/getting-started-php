@@ -14,11 +14,267 @@ index 4df4bde..ea0038e 100644
 -[step-3]: https://cloud.google.com/php/getting-started/using-cloud-storage
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
+diff --git a/composer.json b/composer.json
+index 0b1267b..601196f 100644
+--- a/composer.json
++++ b/composer.json
+@@ -6,6 +6,7 @@
+   },
+   "require": {
+     "php": "~5.5.0|~5.6.0|~7.0.0",
++    "google/apiclient": "^2.0",
+     "google/cloud": "0.13",
+     "silex/silex": "^1.3",
+     "symfony/yaml": "^3.0",
+diff --git a/composer.lock b/composer.lock
+index c719180..c17eaaf 100644
+--- a/composer.lock
++++ b/composer.lock
+@@ -4,8 +4,8 @@
+         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+         "This file is @generated automatically"
+     ],
+-    "hash": "4ab63de8d006b0cf0a9c4053efb67c08",
+-    "content-hash": "f359d48a3f13b417d1a4f7f873a55dbb",
++    "hash": "dc10c7a5dac76ea62d9ff3947ed9e14f",
++    "content-hash": "d14886a080cb23f2aa4ce67f8a118d23",
+     "packages": [
+         {
+             "name": "firebase/php-jwt",
+@@ -51,6 +51,99 @@
+             "time": "2015-07-22 18:31:08"
+         },
+         {
++            "name": "google/apiclient",
++            "version": "v2.0.3",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/google/google-api-php-client.git",
++                "reference": "37adb8a6f4d4b27b9900d62d67bf1d54995a755c"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/google/google-api-php-client/zipball/37adb8a6f4d4b27b9900d62d67bf1d54995a755c",
++                "reference": "37adb8a6f4d4b27b9900d62d67bf1d54995a755c",
++                "shasum": ""
++            },
++            "require": {
++                "firebase/php-jwt": "~2.0|~3.0",
++                "google/apiclient-services": "^0.7",
++                "google/auth": "0.10",
++                "guzzlehttp/guzzle": "~5.2|~6.0",
++                "guzzlehttp/psr7": "^1.2",
++                "monolog/monolog": "^1.17",
++                "php": ">=5.4",
++                "phpseclib/phpseclib": "~2.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4",
++                "squizlabs/php_codesniffer": "~2.3",
++                "symfony/css-selector": "~2.1",
++                "symfony/dom-crawler": "~2.1",
++                "tedivm/stash": "^0.14.1"
++            },
++            "suggest": {
++                "tedivm/stash": "For caching certs and tokens (using Google_Client::setCache)"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "2.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-0": {
++                    "Google_": "src/"
++                },
++                "classmap": [
++                    "src/Google/Service/"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "Apache-2.0"
++            ],
++            "description": "Client library for Google APIs",
++            "homepage": "http://developers.google.com/api-client-library/php",
++            "keywords": [
++                "google"
++            ],
++            "time": "2016-09-14 19:33:35"
++        },
++        {
++            "name": "google/apiclient-services",
++            "version": "v0.7",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/google/google-api-php-client-services.git",
++                "reference": "c07a8a9d424024f1a9fc5d62da8ed5467ed25909"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/c07a8a9d424024f1a9fc5d62da8ed5467ed25909",
++                "reference": "c07a8a9d424024f1a9fc5d62da8ed5467ed25909",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.4"
++            },
++            "type": "library",
++            "autoload": {
++                "psr-0": {
++                    "Google_Service_": "src"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "Apache-2.0"
++            ],
++            "description": "Client library for Google APIs",
++            "homepage": "http://developers.google.com/api-client-library/php",
++            "keywords": [
++                "google"
++            ],
++            "time": "2016-09-14 19:12:27"
++        },
++        {
+             "name": "google/auth",
+             "version": "v0.10",
+             "source": {
+@@ -434,6 +527,98 @@
+             "time": "2016-07-29 03:23:52"
+         },
+         {
++            "name": "phpseclib/phpseclib",
++            "version": "2.0.4",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/phpseclib/phpseclib.git",
++                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
++                "reference": "ab8028c93c03cc8d9c824efa75dc94f1db2369bf",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.3.3"
++            },
++            "require-dev": {
++                "phing/phing": "~2.7",
++                "phpunit/phpunit": "~4.0",
++                "sami/sami": "~2.0",
++                "squizlabs/php_codesniffer": "~2.0"
++            },
++            "suggest": {
++                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
++                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
++                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
++                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
++            },
++            "type": "library",
++            "autoload": {
++                "files": [
++                    "phpseclib/bootstrap.php"
++                ],
++                "psr-4": {
++                    "phpseclib\\": "phpseclib/"
++                }
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Jim Wigginton",
++                    "email": "terrafrost@php.net",
++                    "role": "Lead Developer"
++                },
++                {
++                    "name": "Patrick Monnerat",
++                    "email": "pm@datasphere.ch",
++                    "role": "Developer"
++                },
++                {
++                    "name": "Andreas Fischer",
++                    "email": "bantu@phpbb.com",
++                    "role": "Developer"
++                },
++                {
++                    "name": "Hans-Jürgen Petrich",
++                    "email": "petrich@tronic-media.com",
++                    "role": "Developer"
++                },
++                {
++                    "name": "Graham Campbell",
++                    "email": "graham@alt-three.com",
++                    "role": "Developer"
++                }
++            ],
++            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
++            "homepage": "http://phpseclib.sourceforge.net",
++            "keywords": [
++                "BigInteger",
++                "aes",
++                "asn.1",
++                "asn1",
++                "blowfish",
++                "crypto",
++                "cryptography",
++                "encryption",
++                "rsa",
++                "security",
++                "sftp",
++                "signature",
++                "signing",
++                "ssh",
++                "twofish",
++                "x.509",
++                "x509"
++            ],
++            "time": "2016-10-04 00:57:04"
++        },
++        {
+             "name": "pimple/pimple",
+             "version": "v1.1.1",
+             "source": {
+@@ -2379,16 +2564,16 @@
+         },
+         {
+             "name": "sebastian/recursion-context",
+-            "version": "1.0.4",
++            "version": "1.0.2",
+             "source": {
+                 "type": "git",
+                 "url": "https://github.com/sebastianbergmann/recursion-context.git",
+-                "reference": "938df7a6478e72795e5f8266cff24d06e3136f2e"
++                "reference": "913401df809e99e4f47b27cdd781f4a258d58791"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/938df7a6478e72795e5f8266cff24d06e3136f2e",
+-                "reference": "938df7a6478e72795e5f8266cff24d06e3136f2e",
++                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/913401df809e99e4f47b27cdd781f4a258d58791",
++                "reference": "913401df809e99e4f47b27cdd781f4a258d58791",
+                 "shasum": ""
+             },
+             "require": {
+@@ -2428,7 +2613,7 @@
+             ],
+             "description": "Provides functionality to recursively process PHP variables",
+             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
+-            "time": "2016-11-15 06:55:36"
++            "time": "2015-11-11 19:50:13"
+         },
+         {
+             "name": "sebastian/version",
 diff --git a/src/app.php b/src/app.php
-index babfd5e..b014e6f 100644
+index 6b0bed7..523bab7 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -25,7 +25,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
+@@ -26,7 +26,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
  use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
  use Silex\Application;
@@ -28,7 +284,7 @@ index babfd5e..b014e6f 100644
  use Symfony\Component\Yaml\Yaml;
  
  $app = new Application();
-@@ -38,12 +40,42 @@ $app->register(new TwigServiceProvider(), array(
+@@ -39,12 +41,42 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  

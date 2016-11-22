@@ -16,10 +16,10 @@ index c23b619..4df4bde 100644
  
 diff --git a/src/FileSystem/CloudStorage.php b/src/FileSystem/CloudStorage.php
 new file mode 100644
-index 0000000..451f8bc
+index 0000000..4349e9f
 --- /dev/null
 +++ b/src/FileSystem/CloudStorage.php
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,74 @@
 +<?php
 +
 +/*
@@ -40,28 +40,27 @@ index 0000000..451f8bc
 +
 +namespace Google\Cloud\Samples\Bookshelf\FileSystem;
 +
++use Google\Cloud\Storage\StorageClient;
++
 +/**
 + * class CloudStorage stores images in Google Cloud Storage.
 + */
 +class CloudStorage
 +{
++    private $bucket;
++
 +    /**
 +     * CloudStorage constructor.
 +     *
++     * @param string         $projectId The Google Cloud project id
 +     * @param string         $bucketName The cloud storage bucket name
-+     * @param \Google_Client $client     When null, a new Google_client is created
-+     *                                   that uses default application credentials.
 +     */
-+    public function __construct($bucketName, \Google_Client $client = null)
++    public function __construct($projectId, $bucketName)
 +    {
-+        if (!$client) {
-+            $client = new \Google_Client();
-+            $client->useApplicationDefaultCredentials();
-+            $client->setApplicationName('php bookshelf');
-+            $client->setScopes(\Google_Service_Storage::DEVSTORAGE_READ_WRITE);
-+        }
-+        $this->service = new \Google_Service_Storage($client);
-+        $this->bucketName = $bucketName;
++        $storage = new StorageClient([
++            'projectId' => $projectId,
++        ]);
++        $this->bucket = $storage->bucket($bucketName);
 +    }
 +
 +    /**
@@ -74,19 +73,12 @@ index 0000000..451f8bc
 +     */
 +    public function storeFile($localFilePath, $contentType)
 +    {
-+        $obj = new \Google_Service_Storage_StorageObject();
-+        // Generate a unique file name so we don't try to write to files to
-+        // the same name.
-+        $name = uniqid('', true);
-+        $obj->setName($name);
-+        $obj = $this->service->objects->insert($this->bucketName, $obj, array(
-+            'data' => file_get_contents($localFilePath),
-+            'uploadType' => 'media',
-+            'name' => $name,
-+            'predefinedAcl' => 'publicread',
-+        ));
-+
-+        return $obj->getMediaLink();
++        $f = fopen($localFilePath, 'r');
++        $object = $this->bucket->upload($f, [
++            'metadata' => ['contentType' => $contentType],
++            'predefinedAcl' => 'publicRead',
++        ]);
++        return $object->info()['mediaLink'];
 +    }
 +
 +    /**
@@ -98,14 +90,15 @@ index 0000000..451f8bc
 +    {
 +        $path_components = explode('/', parse_url($url, PHP_URL_PATH));
 +        $name = $path_components[count($path_components) - 1];
-+        $this->service->objects->delete($this->bucketName, $name);
++        $object = $this->bucket->object($name);
++        $object->delete();
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 43e478d..babfd5e 100644
+index 2d8f620..6b0bed7 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -23,6 +23,7 @@
+@@ -24,6 +24,7 @@ use Google\Auth\Credentials\GCECredentials;
  use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
@@ -113,7 +106,7 @@ index 43e478d..babfd5e 100644
  use Silex\Application;
  use Silex\Provider\TwigServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-@@ -43,6 +44,13 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
+@@ -44,6 +45,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
  
  $app['config'] = Yaml::parse(file_get_contents($config));
  
@@ -121,7 +114,9 @@ index 43e478d..babfd5e 100644
 +$app['bookshelf.storage'] = function ($app) {
 +    /** @var array $config */
 +    $config = $app['config'];
-+    return new CloudStorage($config['google_project_id']);
++    $projectId = $config['google_project_id'];
++    $bucketName = $projectId . '.appspot.com';
++    return new CloudStorage($projectId, $bucketName);
 +};
 +
  // determine the datamodel backend using the app configuration
@@ -320,10 +315,10 @@ index cb30e94..73fb38e 100644
          // Make sure the page contents match what we just submitted.
 diff --git a/test/unit/FileSystem/CloudStorageTest.php b/test/unit/FileSystem/CloudStorageTest.php
 new file mode 100644
-index 0000000..e53061d
+index 0000000..0318779
 --- /dev/null
 +++ b/test/unit/FileSystem/CloudStorageTest.php
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,43 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -353,12 +348,13 @@ index 0000000..e53061d
 +    public function testOne()
 +    {
 +        $config = $this->getConfig();
-+        $bucket = $config['google_project_id'];
-+        $storage = new CloudStorage($bucket);
++        $projectId = $config['google_project_id'];
++        $bucketName = $projectId . '.appspot.com';
++        $storage = new CloudStorage($projectId, $bucketName);
 +        $url = $storage->storeFile(__DIR__ . '/../../lib/CatHat.jpg', 'image/jpg');
 +        try {
 +            $this->assertStringStartsWith(
-+                "https://www.googleapis.com/download/storage/v1/b/$bucket/o/",
++                "https://www.googleapis.com/download/storage/v1/b/$bucketName/o/",
 +                $url
 +            );
 +        } finally {  // clean up
@@ -366,15 +362,3 @@ index 0000000..e53061d
 +        }
 +    }
 +}
-diff --git a/web/index.php b/web/index.php
-index 89c5750..b2976ec 100644
---- a/web/index.php
-+++ b/web/index.php
-@@ -21,7 +21,4 @@ require_once __DIR__ . '/../vendor/autoload.php';
- $app = require __DIR__ . '/../src/app.php';
- require __DIR__ . '/../src/controllers.php';
- 
--/** @var array $config */
--$config = $app['config'];
--
- $app->run();

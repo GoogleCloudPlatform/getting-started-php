@@ -95,7 +95,7 @@ trait DataModelTestTrait
         $this->assertEquals('Breakfast of Champions', $breakfastBook['title']);
         $this->assertEquals('Kurt Vonnegut', $breakfastBook['author']);
         $this->assertEquals($breakfastId, $breakfastBook['id']);
-        $this->assertNull($breakfastBook['description']);
+        $this->assertFalse(isset($breakfastBook['description']));
         $dateString = date(
             'F jS, Y', strtotime($breakfastBook['publishedDate']));
         $this->assertEquals('April 20th, 2016', $dateString);
@@ -107,6 +107,7 @@ trait DataModelTestTrait
             new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
         $model->update($breakfastBook);
         $breakfastBookCopy = $model->read($breakfastId);
+
         // And confirm it was correctly updated.
         $this->assertEquals(
             'A really fun read.',
@@ -117,13 +118,13 @@ trait DataModelTestTrait
         $this->assertEquals('April 21st, 2016', $dateString);
 
         // Update it again and delete the description.
-        unset($breakfastBook['description']);
-        $breakfastBook['author'] = null;
+        $breakfastBook['description'] = '';
+        $breakfastBook['author'] = '';
         $model->update($breakfastBook);
         $breakfastBookCopy = $model->read($breakfastId);
         // And confirm it was correctly updated.
-        $this->assertNull($breakfastBookCopy['description']);
-        $this->assertNull($breakfastBookCopy['author']);
+        $this->assertEquals('', $breakfastBookCopy['description']);
+        $this->assertEquals('', $breakfastBookCopy['author']);
 
         // Try updating the book with a bad property name.
         try {

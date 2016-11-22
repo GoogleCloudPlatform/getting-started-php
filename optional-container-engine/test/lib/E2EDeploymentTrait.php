@@ -50,7 +50,7 @@ trait E2EDeploymentTrait
      *
      * @return bool
      */
-    protected static function deployApp($step, $config = [])
+    protected static function deployApp($step, $config = [], $appYamlPath = null)
     {
         // TODO: allow changing the data backend.
         if (!self::hasCredentials()) {
@@ -58,7 +58,11 @@ trait E2EDeploymentTrait
             return false;
         }
         self::dumpConfig($config);
-        $version = self::$gcloud->deployApp($step);
+        if (is_null($appYamlPath)) {
+            $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
+            copy(sprintf('%s/../app-e2e.yaml', __DIR__), $appYamlPath);
+        }
+        $version = self::$gcloud->deployApp($step, $appYamlPath);
         if ($version === false) {
             return false;
         }

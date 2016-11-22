@@ -18,13 +18,16 @@
 
 namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
-use Google_Service_Datastore;
+use Google\Cloud\Datastore\DatastoreClient;
+use Google\Cloud\Datastore\Entity;
 
 /**
  * Class Datastore implements the DataModel with a Google Data Store.
  */
 class Datastore implements DataModelInterface
 {
+    private $datasetId;
+    private $datastore;
     protected $columns = [
         'id'            => 'integer',
         'title'         => 'string',
@@ -36,110 +39,60 @@ class Datastore implements DataModelInterface
         'createdById'   => 'string',
     ];
 
-    public function __construct($datastoreDatasetId)
+    public function __construct($projectId)
     {
-        $this->datasetId = $datastoreDatasetId;
-        // Datastore API has intermittent failures, so we set the
-        // Google Client to retry in the event of a 503 Backend Error
-        $retryConfig = [ 'retries' => 2 ];
-        $client = new \Google_Client([ 'retry' => $retryConfig ]);
-        $client->setScopes([
-            Google_Service_Datastore::CLOUD_PLATFORM,
-            Google_Service_Datastore::DATASTORE,
+        $this->datasetId = $projectId;
+        $this->datastore = new DatastoreClient([
+            'projectId' => $projectId,
         ]);
-        $client->useApplicationDefaultCredentials();
-        $this->datastore = new \Google_Service_Datastore($client);
     }
 
     public function listBooks($limit = 10, $cursor = null)
     {
-        $query = new \Google_Service_Datastore_Query([
-            'kind' => [
-                [
-                    'name' => 'Book',
-                ],
-            ],
-            'order' => [
-                'property' => [
-                    'name' => 'title',
-                ],
-            ],
-            'limit' => $limit,
-            'startCursor' => $cursor,
-        ]);
+        $query = $this->datastore->query()
+            ->kind('Book')
+            ->order('title')
+            ->limit($limit)
+            ->start($cursor);
 
-        $request = new \Google_Service_Datastore_RunQueryRequest();
-        $request->setQuery($query);
-        $response = $this->datastore->projects->
-            runQuery($this->datasetId, $request);
-
-        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
-        $batch = $response->getBatch();
-        $endCursor = $batch->getEndCursor();
+        $results = $this->datastore->runQuery($query);
 
         $books = [];
-        foreach ($batch->getEntityResults() as $entityResult) {
-            $entity = $entityResult->getEntity();
-            $book = $this->propertiesToBook($entity->getProperties());
-            $book['id'] = $entity->getKey()->getPath()[0]->getId();
+        $nextPageCursor = null;
+        foreach ($results as $entity) {
+            $book = $entity->get();
+            $book['id'] = $entity->key()->pathEndIdentifier();
             $books[] = $book;
+            $nextPageCursor = $entity->cursor();
         }
 
-        return array(
+        return [
             'books' => $books,
-            'cursor' => $endCursor === $cursor ? null : $endCursor,
-        );
+            'cursor' => $nextPageCursor,
+        ];
     }
 
     public function create($book, $key = null)
     {
         $this->verifyBook($book);
 
-        if (is_null($key)) {
-            $key = $this->createKey();
-        }
+        $key = $this->datastore->key('Book');
+        $entity = $this->datastore->entity($key, $book);
 
-        $properties = $this->bookToProperties($book);
+        $this->datastore->insert($entity);
 
-        $entity = new \Google_Service_Datastore_Entity([
-            'key' => $key,
-            'properties' => $properties
-        ]);
-
-        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
-        $request = new \Google_Service_Datastore_CommitRequest([
-            'mode' => 'NON_TRANSACTIONAL',
-            'mutations' => [
-                [
-                    'upsert' => $entity,
-                ]
-            ]
-        ]);
-
-        $response = $this->datastore->projects->commit($this->datasetId, $request);
-
-        $key = $response->getMutationResults()[0]->getKey();
-
-
-        // return the ID of the created datastore item
-        return $key->getPath()[0]->getId();
+        // return the ID of the created datastore entity
+        return $entity->key()->pathEndIdentifier();
     }
 
     public function read($id)
     {
-        $key = $this->createKey($id);
-        $request = new \Google_Service_Datastore_LookupRequest([
-            'keys' => [$key]
-        ]);
+        $key = $this->datastore->key('Book', $id);
+        $entity = $this->datastore->lookup($key);
 
-        $response = $this->datastore->projects->
-            lookup($this->datasetId, $request);
-
-        /** @var \Google_Service_Datastore_QueryResultBatch $batch */
-        if ($found = $response->getFound()) {
-            $book = $this->propertiesToBook($found[0]['entity']['properties']);
+        if ($entity) {
+            $book = $entity->get();
             $book['id'] = $id;
-
             return $book;
         }
 
@@ -151,28 +104,16 @@ class Datastore implements DataModelInterface
         $this->verifyBook($book);
 
         if (!isset($book['id'])) {
-            throw new InvalidArgumentException('Book must have an "id" attribute');
+            throw new \InvalidArgumentException('Book must have an "id" attribute');
         }
 
-        $key = $this->createKey($book['id']);
-        $properties = $this->bookToProperties($book);
-
-        $entity = new \Google_Service_Datastore_Entity([
-            'key' => $key,
-            'properties' => $properties
-        ]);
-
-        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
-        $request = new \Google_Service_Datastore_CommitRequest([
-            'mode' => 'NON_TRANSACTIONAL',
-            'mutations' => [
-                [
-                    'update' => $entity
-                ]
-            ]
-        ]);
-
-        $response = $this->datastore->projects->commit($this->datasetId, $request);
+        $transaction = $this->datastore->transaction();
+        $key = $this->datastore->key('Book', $book['id']);
+        $task = $transaction->lookup($key);
+        unset($book['id']);
+        $entity = $this->datastore->entity($key, $book);
+        $transaction->upsert($entity);
+        $transaction->commit();
 
         // return the number of updated rows
         return 1;
@@ -180,39 +121,8 @@ class Datastore implements DataModelInterface
 
     public function delete($id)
     {
-        $key = $this->createKey($id);
-
-        // Use "NON_TRANSACTIONAL" for simplicity (as we're only making one call)
-        $request = new \Google_Service_Datastore_CommitRequest([
-            'mode' => 'NON_TRANSACTIONAL',
-            'mutations' => [
-                [
-                    'delete' => $key
-                ]
-            ]
-        ]);
-
-        $response = $this->datastore->projects->commit($this->datasetId, $request);
-
-        return true;
-    }
-
-    protected function createKey($id = null)
-    {
-        $key = new \Google_Service_Datastore_Key([
-            'path' => [
-                [
-                    'kind' => 'Book'
-                ],
-            ]
-        ]);
-
-        // If we have an ID, set it in the path
-        if ($id) {
-            $key->getPath()[0]->setId($id);
-        }
-
-        return $key;
+        $key = $this->datastore->key('Book', $id);
+        return $this->datastore->delete($key);
     }
 
     private function verifyBook($book)
@@ -223,34 +133,5 @@ class Datastore implements DataModelInterface
                 implode(', ', $invalid)
             ));
         }
-    }
-
-    private function bookToProperties(array $book)
-    {
-        $properties = [];
-        foreach ($book as $colName => $colValue) {
-            $propName = $this->columns[$colName] . 'Value';
-            if (!empty($colValue)) {
-                $properties[$colName] = [
-                    $propName => $colValue
-                ];
-            }
-        }
-
-        return $properties;
-    }
-
-    private function propertiesToBook(array $properties)
-    {
-        $book = [];
-        foreach ($this->columns as $colName => $colType) {
-            $book[$colName] = null;
-            if (isset($properties[$colName])) {
-                $propName = $colType . 'Value';
-                $book[$colName] = $properties[$colName][$propName];
-            }
-        }
-
-        return $book;
     }
 }

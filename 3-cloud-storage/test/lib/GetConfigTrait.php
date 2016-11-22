@@ -38,6 +38,7 @@ trait GetConfigTrait
             'mysql_dsn' => getenv('MYSQL_DSN'),
             'mysql_user' => getenv('MYSQL_USER'),
             'mysql_password' => getenv('MYSQL_PASSWORD'),
+            'cloudsql_connection_name' => getenv('CLOUDSQL_CONNECTION_NAME'),
             'mongo_url' => getenv('MONGO_URL'),
             'mongo_database' => getenv('MONGO_DATABASE'),
             'mongo_collection' => getenv('MONGO_COLLECTION'),

@@ -15,206 +15,45 @@ index ea0038e..ead2f61 100644
 +[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
  
 diff --git a/composer.json b/composer.json
-index bf24a5a..0e58bda 100644
+index 601196f..e418037 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -7,6 +7,8 @@
-   "require": {
+@@ -8,6 +8,7 @@
      "php": "~5.5.0|~5.6.0|~7.0.0",
      "google/apiclient": "^2.0",
-+    "google/cloud": "0.4",
+     "google/cloud": "0.13",
 +    "monolog/monolog": "^1.17",
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
      "twig/twig": "^1.22"
 diff --git a/composer.lock b/composer.lock
-index c175343..9dd0353 100644
+index c17eaaf..174484d 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "5db126d8e60a8d407fc3cca46406d04e",
--    "content-hash": "e74cbc2accb3cc3998ce0564b557c855",
-+    "hash": "58c8c6b5a6989a10ba085144823bc755",
-+    "content-hash": "5c691d1f44745b864608c4414d440a7e",
+-    "hash": "dc10c7a5dac76ea62d9ff3947ed9e14f",
+-    "content-hash": "d14886a080cb23f2aa4ce67f8a118d23",
++    "hash": "45ed72eb7a4e5f7053d3042ed19d1353",
++    "content-hash": "9ee7efad32ca1afda08e7b1ceff03bb9",
      "packages": [
          {
              "name": "firebase/php-jwt",
-@@ -193,6 +193,69 @@
-             "time": "2016-06-01 22:07:52"
-         },
-         {
-+            "name": "google/cloud",
-+            "version": "v0.4.0",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/GoogleCloudPlatform/gcloud-php.git",
-+                "reference": "8fd286ca6427206d2474fad60da6c926f7ade686"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/gcloud-php/zipball/8fd286ca6427206d2474fad60da6c926f7ade686",
-+                "reference": "8fd286ca6427206d2474fad60da6c926f7ade686",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "google/auth": "0.9",
-+                "guzzlehttp/guzzle": "~5.2|~6.0",
-+                "guzzlehttp/psr7": "1.2.*",
-+                "monolog/monolog": "~1",
-+                "php": ">=5.5",
-+                "psr/http-message": "1.0.*",
-+                "rize/uri-template": "~0.3"
-+            },
-+            "require-dev": {
-+                "phpdocumentor/phpdocumentor": "2.8.*",
-+                "phpunit/phpunit": "4.8.*",
-+                "satooshi/php-coveralls": "~1.0",
-+                "squizlabs/php_codesniffer": "2.*"
-+            },
-+            "type": "library",
-+            "autoload": {
-+                "psr-4": {
-+                    "Google\\Cloud\\": "src"
-+                }
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "Apache-2.0"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "John Pedrie",
-+                    "email": "john@pedrie.com"
-+                },
-+                {
-+                    "name": "Dave Supplee",
-+                    "email": "dwsupplee@gmail.com"
-+                }
-+            ],
-+            "description": "Google Cloud Client Library",
-+            "homepage": "http://github.com/GoogleCloudPlatform/gcloud-php",
-+            "keywords": [
-+                "cloud",
-+                "google",
-+                "google api",
-+                "google api client",
-+                "google apis",
-+                "google apis client",
-+                "google cloud",
-+                "google cloud platform"
-+            ],
-+            "time": "2016-07-06 15:41:47"
-+        },
-+        {
-             "name": "guzzlehttp/guzzle",
-             "version": "6.2.0",
-             "source": {
-@@ -307,16 +370,16 @@
-         },
-         {
-             "name": "guzzlehttp/psr7",
--            "version": "1.3.1",
-+            "version": "1.2.3",
-             "source": {
-                 "type": "git",
-                 "url": "https://github.com/guzzle/psr7.git",
--                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b"
-+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b"
-             },
-             "dist": {
-                 "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
--                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
-+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/2e89629ff057ebb49492ba08e6995d3a6a80021b",
-+                "reference": "2e89629ff057ebb49492ba08e6995d3a6a80021b",
-                 "shasum": ""
-             },
-             "require": {
-@@ -332,7 +395,7 @@
-             "type": "library",
-             "extra": {
-                 "branch-alias": {
--                    "dev-master": "1.4-dev"
-+                    "dev-master": "1.0-dev"
-                 }
-             },
-             "autoload": {
-@@ -361,7 +424,7 @@
-                 "stream",
-                 "uri"
-             ],
--            "time": "2016-06-24 23:00:38"
-+            "time": "2016-02-18 21:54:00"
-         },
-         {
-             "name": "monolog/monolog",
-@@ -713,6 +776,50 @@
-             "time": "2012-12-21 11:40:51"
-         },
-         {
-+            "name": "rize/uri-template",
-+            "version": "0.3.0",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/rize/UriTemplate.git",
-+                "reference": "2496aa674438f1c48fce122ffc44291ad7014717"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/2496aa674438f1c48fce122ffc44291ad7014717",
-+                "reference": "2496aa674438f1c48fce122ffc44291ad7014717",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "php": ">=5.3.0"
-+            },
-+            "require-dev": {
-+                "phpunit/phpunit": "~4.0.0"
-+            },
-+            "type": "library",
-+            "autoload": {
-+                "psr-0": {
-+                    "Rize\\UriTemplate": "src/"
-+                }
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "MIT"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "Marut K",
-+                    "homepage": "http://twitter.com/rezigned"
-+                }
-+            ],
-+            "description": "PHP URI Template (RFC 6570) supports both expansion & extraction",
-+            "keywords": [
-+                "RFC 6570",
-+                "template",
-+                "uri"
-+            ],
-+            "time": "2015-04-17 16:12:22"
-+        },
-+        {
-             "name": "silex/silex",
-             "version": "v1.3.5",
-             "source": {
 diff --git a/src/app.php b/src/app.php
-index b014e6f..d34b5ed 100644
+index 523bab7..b05adc4 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -20,6 +20,7 @@
-  * Create a new Silex Application with Twig.  Configure it for debugging.
+@@ -21,6 +21,7 @@
   * Follows Silex Skeleton pattern.
   */
+ use Google\Auth\Credentials\GCECredentials;
 +use Google\Cloud\Logger\AppEngineFlexHandler;
  use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
-@@ -62,17 +63,29 @@ $app['user'] = function ($app) {
+@@ -63,17 +64,29 @@ $app['user'] = function ($app) {
  };
  // [END session]
  

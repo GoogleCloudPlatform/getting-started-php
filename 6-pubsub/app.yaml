@@ -9,3 +9,7 @@ env_variables:
   NGINX_CONF_INCLUDE: config/nginx-app.conf
   PHP_INI_OVERRIDE: config/php-app.ini
 # [END overrides]
+
+## Uncomment for Cloud SQL
+# beta_settings:
+#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
