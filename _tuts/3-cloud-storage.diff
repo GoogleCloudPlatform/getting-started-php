@@ -16,10 +16,10 @@ index c23b619..4df4bde 100644
  
 diff --git a/src/FileSystem/CloudStorage.php b/src/FileSystem/CloudStorage.php
 new file mode 100644
-index 0000000..0e26e83
+index 0000000..4349e9f
 --- /dev/null
 +++ b/src/FileSystem/CloudStorage.php
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,74 @@
 +<?php
 +
 +/*
@@ -74,8 +74,10 @@ index 0000000..0e26e83
 +    public function storeFile($localFilePath, $contentType)
 +    {
 +        $f = fopen($localFilePath, 'r');
-+
-+        $object = $this->bucket->upload($f);
++        $object = $this->bucket->upload($f, [
++            'metadata' => ['contentType' => $contentType],
++            'predefinedAcl' => 'publicRead',
++        ]);
 +        return $object->info()['mediaLink'];
 +    }
 +
@@ -93,7 +95,7 @@ index 0000000..0e26e83
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 2d8f620..e9143c1 100644
+index 2d8f620..6b0bed7 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -24,6 +24,7 @@ use Google\Auth\Credentials\GCECredentials;
@@ -104,7 +106,7 @@ index 2d8f620..e9143c1 100644
  use Silex\Application;
  use Silex\Provider\TwigServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-@@ -44,6 +45,14 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
+@@ -44,6 +45,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
  
  $app['config'] = Yaml::parse(file_get_contents($config));
  
@@ -112,7 +114,8 @@ index 2d8f620..e9143c1 100644
 +$app['bookshelf.storage'] = function ($app) {
 +    /** @var array $config */
 +    $config = $app['config'];
-+    $projectId = $bucketName = $config['google_project_id'];
++    $projectId = $config['google_project_id'];
++    $bucketName = $projectId . '.appspot.com';
 +    return new CloudStorage($projectId, $bucketName);
 +};
 +
@@ -312,10 +315,10 @@ index cb30e94..73fb38e 100644
          // Make sure the page contents match what we just submitted.
 diff --git a/test/unit/FileSystem/CloudStorageTest.php b/test/unit/FileSystem/CloudStorageTest.php
 new file mode 100644
-index 0000000..1eddab9
+index 0000000..0318779
 --- /dev/null
 +++ b/test/unit/FileSystem/CloudStorageTest.php
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,43 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -345,7 +348,8 @@ index 0000000..1eddab9
 +    public function testOne()
 +    {
 +        $config = $this->getConfig();
-+        $bucketName = $projectId = $config['google_project_id'];
++        $projectId = $config['google_project_id'];
++        $bucketName = $projectId . '.appspot.com';
 +        $storage = new CloudStorage($projectId, $bucketName);
 +        $url = $storage->storeFile(__DIR__ . '/../../lib/CatHat.jpg', 'image/jpg');
 +        try {

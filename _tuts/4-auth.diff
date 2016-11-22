@@ -271,7 +271,7 @@ index c719180..c17eaaf 100644
          {
              "name": "sebastian/version",
 diff --git a/src/app.php b/src/app.php
-index e9143c1..c81fcf1 100644
+index 6b0bed7..523bab7 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -26,7 +26,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;

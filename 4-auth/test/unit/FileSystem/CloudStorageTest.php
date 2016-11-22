@@ -27,7 +27,8 @@ class CloudStorageTest extends \PHPUnit_Framework_TestCase
     public function testOne()
     {
         $config = $this->getConfig();
-        $bucketName = $projectId = $config['google_project_id'];
+        $projectId = $config['google_project_id'];
+        $bucketName = $projectId . '.appspot.com';
         $storage = new CloudStorage($projectId, $bucketName);
         $url = $storage->storeFile(__DIR__ . '/../../lib/CatHat.jpg', 'image/jpg');
         try {

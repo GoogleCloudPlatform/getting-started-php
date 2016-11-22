@@ -165,7 +165,8 @@ $app['pubsub.server'] = function ($app) {
 $app['bookshelf.storage'] = function ($app) {
     /** @var array $config */
     $config = $app['config'];
-    $projectId = $bucketName = $config['google_project_id'];
+    $projectId = $config['google_project_id'];
+    $bucketName = $projectId . '.appspot.com';
     return new CloudStorage($projectId, $bucketName);
 };
 

@@ -52,8 +52,10 @@ class CloudStorage
     public function storeFile($localFilePath, $contentType)
     {
         $f = fopen($localFilePath, 'r');
-
-        $object = $this->bucket->upload($f);
+        $object = $this->bucket->upload($f, [
+            'metadata' => ['contentType' => $contentType],
+            'predefinedAcl' => 'publicRead',
+        ]);
         return $object->info()['mediaLink'];
     }
 
