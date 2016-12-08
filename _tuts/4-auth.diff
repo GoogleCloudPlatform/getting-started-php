@@ -27,7 +27,7 @@ index 0c109ba..377fb27 100644
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
 diff --git a/composer.lock b/composer.lock
-index f1cd7e0..24fccb5 100644
+index 36e01bd..24fccb5 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
@@ -240,36 +240,6 @@ index f1cd7e0..24fccb5 100644
              "name": "pimple/pimple",
              "version": "v1.1.1",
              "source": {
-@@ -1521,16 +1706,16 @@
-         },
-         {
-             "name": "google/cloud-tools",
--            "version": "v0.6.0",
-+            "version": "v0.6.1",
-             "source": {
-                 "type": "git",
-                 "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
--                "reference": "26f63e7d9434e6e27ef5e018281b44e6b6d64e01"
-+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac"
-             },
-             "dist": {
-                 "type": "zip",
--                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/26f63e7d9434e6e27ef5e018281b44e6b6d64e01",
--                "reference": "26f63e7d9434e6e27ef5e018281b44e6b6d64e01",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
-+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
-                 "shasum": ""
-             },
-             "require": {
-@@ -1567,7 +1752,7 @@
-                 "gcp",
-                 "test"
-             ],
--            "time": "2016-11-29 22:26:00"
-+            "time": "2016-12-08 21:36:15"
-         },
-         {
-             "name": "phpdocumentor/reflection-common",
 diff --git a/src/app.php b/src/app.php
 index 6b0bed7..523bab7 100644
 --- a/src/app.php
