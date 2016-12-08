@@ -636,45 +636,66 @@ index 63ded67..0823861 100644
      "mongodb/mongodb": "^1.0.0",
      "silex/silex": "^1.3",
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
-index bd5d22a..0ed978e 100644
+index aeb2a60..0ed978e 100644
 --- a/test/lib/E2eTest.php
 +++ b/test/lib/E2eTest.php
-@@ -17,9 +17,6 @@
+@@ -17,51 +17,26 @@
  
  namespace Google\Cloud\Samples\Bookshelf;
  
--use Behat\Mink\Driver\GoutteDriver;
--use Behat\Mink\Session;
+-use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+-use Symfony\Component\Yaml\Dumper;
 -
  /**
   * Class E2eTest
   */
-@@ -30,25 +27,16 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
+ abstract class E2eTest extends \PHPUnit_Framework_TestCase
+ {
+-    use AppEngineDeploymentTrait,
+-        GetConfigTrait;
+-
+-    private static function beforeDeploy()
+-    {
+-        static::copySettingsYaml();
+-        static::copyAppYaml();
+-    }
+-
+-    private static function doDeploy()
+-    {
+-        // deploy using "app-e2e.yaml"
+-        return self::$gcloudWrapper->deploy('app-e2e.yaml');
+-    }
++    protected static $step;
++    use E2EDeploymentTrait;
  
-     public static function setUpBeforeClass()
+-    protected static function copySettingsYaml()
++    public static function setUpBeforeClass()
      {
--        if (self::$step = getenv('STEP_NAME')) {
--            self::deployApp(self::$step, static::getCustomConfig());
--        }
+-        // set "settings-e2e.yml" for application config
+-        $config = static::getCustomConfig();
+-        $dumper = new Dumper();
+-        $yaml = $dumper->dump($config + self::getConfig());
+-        file_put_contents(__DIR__ . '/../../config/settings-e2e.yml', $yaml);
 +        // TODO: deploy to GCE
      }
  
-     public static function tearDownAfterClass()
+-    protected static function copyAppYaml()
++    public static function tearDownAfterClass()
      {
--        if (self::$step) {
--            self::deleteApp(self::$step);
--        }
+-        // set "app-e2e.yaml" for app engine config
+-        $appYamlPath = __DIR__ . '/../../app-e2e.yaml';
+-        copy(__DIR__ . '/../app-e2e.yaml', $appYamlPath);
 +        // TODO: cleanup the resources
      }
  
-     public function setUp()
+-    public function testIndex()
++    public function setUp()
      {
--        if (!self::$step) {
--            $this->markTestSkipped('must set STEP_NAME for e2e testing');
--        }
--        $this->url = self::getUrl(self::$step);
--        $driver = new GoutteDriver();
--        $this->session = new Session($driver);
+-        $resp = $this->client->get('/');
+-        $this->assertEquals('200', $resp->getStatusCode(),
+-            'index status code');
+-        $this->assertContains('Book', (string) $resp->getBody(),
+-            'index content');
 +        $this->markTestSkipped('Skipping for now.');
      }
  }

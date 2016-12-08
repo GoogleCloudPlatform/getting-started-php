@@ -22,35 +22,22 @@ namespace Google\Cloud\Samples\Bookshelf;
  */
 class CloudSqlTest extends E2eTest
 {
+    protected static function copyAppYaml()
+    {
+        // set "app-e2e.yaml" for app engine config
+        // set cloudsql connection name
+        $config = self::getConfig();
+        $appYamlPath = __DIR__ . '/../../app-e2e.yaml';
+        $appYaml = file_get_contents(__DIR__ . '/../app-e2e.yaml');
+        file_put_contents($appYamlPath, str_replace(
+            ['# ', 'CLOUDSQL_CONNECTION_NAME'],
+            ['', $config['cloudsql_connection_name']],
+            $appYaml
+        ));
+    }
+
     protected static function getCustomConfig()
     {
         return ['bookshelf_backend' => 'cloudsql'];
-    }
-
-    public static function setUpBeforeClass()
-    {
-        if (self::$step = getenv('STEP_NAME')) {
-            // modify app.yaml for cloudsql
-            $config = self::getConfig();
-            $appYamlPath = sprintf('%s/../../app-e2e.yaml', __DIR__);
-            $appYaml = file_get_contents(sprintf('%s/../app-e2e.yaml', __DIR__));
-            $appYaml = str_replace(
-                ['# ', 'CLOUDSQL_CONNECTION_NAME'],
-                ['', $config['cloudsql_connection_name']],
-                $appYaml
-            );
-            file_put_contents($appYamlPath, $appYaml);
-            self::deployApp(self::$step, static::getCustomConfig(), $appYamlPath);
-        }
-    }
-
-    public function testIndex()
-    {
-        $this->assertNotNull(self::$versions[self::$step]);
-        $this->session->visit($this->url . '/');
-        $this->assertEquals('200', $this->session->getStatusCode(),
-                            'Root URL status code.');
-        // TODO: content check
-        $page = $this->session->getPage();
     }
 }

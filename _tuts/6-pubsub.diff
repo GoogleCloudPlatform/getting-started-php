@@ -63,7 +63,7 @@ index 0000000..0b9efb7
 +$server = $app['pubsub.server'];
 +$server->run();
 diff --git a/composer.json b/composer.json
-index e418037..7c16ad2 100644
+index 6c886b9..081bdde 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -11,7 +11,8 @@
@@ -77,17 +77,17 @@ index e418037..7c16ad2 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index 174484d..72e8fb0 100644
+index e40bc0b..b19c623 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,10 +4,104 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "45ed72eb7a4e5f7053d3042ed19d1353",
--    "content-hash": "9ee7efad32ca1afda08e7b1ceff03bb9",
-+    "hash": "c55835a8471a4cc33a162df6185f7e83",
-+    "content-hash": "98c0df19fca6d49faab76e93affe684d",
+-    "hash": "e34893153ec87ef9d9aea927e129b7bd",
+-    "content-hash": "e1229afaacc5e20001311281ba3fa5a6",
++    "hash": "213b703d4a50ac93168931c6076ebd78",
++    "content-hash": "daf1d46f8b243e59ec4190ba214d0f0f",
      "packages": [
          {
 +            "name": "cboden/ratchet",

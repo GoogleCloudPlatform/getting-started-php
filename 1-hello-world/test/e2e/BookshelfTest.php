@@ -17,48 +17,21 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Session;
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 
 /**
  * Class BookshelfTest
  */
 class BookshelfTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $step;
-    use E2EDeploymentTrait;
-
-    public static function setUpBeforeClass()
-    {
-        if (self::$step = getenv('STEP_NAME')) {
-            self::deployApp(self::$step);
-        }
-    }
-
-    public static function tearDownAfterClass()
-    {
-        if (self::$step) {
-            self::deleteApp(self::$step);
-        }
-    }
-
-    public function setUp()
-    {
-        if (!self::$step) {
-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
-        }
-        $this->url = self::getUrl(self::$step);
-        $driver = new GoutteDriver();
-        $this->session = new Session($driver);
-    }
+    use AppEngineDeploymentTrait;
 
     public function testIndex()
     {
-        $this->assertNotNull(self::$versions[self::$step]);
-        $this->session->visit($this->url . '/');
-        $this->assertEquals('200', $this->session->getStatusCode(),
-                            'Book index status code');
-        // TODO: content check
-        $page = $this->session->getPage();
+        $resp = $this->client->get('/');
+        $this->assertEquals('200', $resp->getStatusCode(),
+            'index status code');
+        $this->assertContains('Hello World', (string) $resp->getBody(),
+            'index content');
     }
 }

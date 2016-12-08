@@ -17,38 +17,51 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Session;
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Symfony\Component\Yaml\Dumper;
 
 /**
  * Class E2eTest
  */
 abstract class E2eTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $step;
-    use E2EDeploymentTrait;
+    use AppEngineDeploymentTrait,
+        GetConfigTrait;
 
-    public static function setUpBeforeClass()
+    private static function beforeDeploy()
     {
-        if (self::$step = getenv('STEP_NAME')) {
-            self::deployApp(self::$step, static::getCustomConfig());
-        }
+        static::copySettingsYaml();
+        static::copyAppYaml();
     }
 
-    public static function tearDownAfterClass()
+    private static function doDeploy()
     {
-        if (self::$step) {
-            self::deleteApp(self::$step);
-        }
+        // deploy using "app-e2e.yaml"
+        return self::$gcloudWrapper->deploy('app-e2e.yaml');
     }
 
-    public function setUp()
+    protected static function copySettingsYaml()
     {
-        if (!self::$step) {
-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
-        }
-        $this->url = self::getUrl(self::$step);
-        $driver = new GoutteDriver();
-        $this->session = new Session($driver);
+        // set "settings-e2e.yml" for application config
+        $config = static::getCustomConfig();
+        $dumper = new Dumper();
+        $yaml = $dumper->dump($config + self::getConfig());
+        file_put_contents(__DIR__ . '/../../config/settings-e2e.yml', $yaml);
+    }
+
+    protected static function copyAppYaml()
+    {
+        // set "app-e2e.yaml" for app engine config
+        $appYamlPath = __DIR__ . '/../../app-e2e.yaml';
+        copy(__DIR__ . '/../app-e2e.yaml', $appYamlPath);
+    }
+
+    public function testIndex()
+    {
+        $resp = $this->client->get('/');
+        $this->assertEquals('200', $resp->getStatusCode(),
+            'index status code');
+        $this->assertContains('Book', (string) $resp->getBody(),
+            'index content');
     }
 }
