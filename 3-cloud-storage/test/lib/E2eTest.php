@@ -25,7 +25,8 @@ use Symfony\Component\Yaml\Dumper;
  */
 abstract class E2eTest extends \PHPUnit_Framework_TestCase
 {
-    use AppEngineDeploymentTrait,
+    use SkipTestsIfMissingCredentialsTrait,
+        AppEngineDeploymentTrait,
         GetConfigTrait;
 
     private static function beforeDeploy()
