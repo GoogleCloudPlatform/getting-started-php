@@ -2464,7 +2464,7 @@ index cefdec3..574ebd5 100644
 +#  cloud_sql_instances: "CLOUDSQL_CONNECTION_NAME"
 diff --git a/test/composer-mongodb.json b/test/composer-mongodb.json
 new file mode 100644
-index 0000000..d2f9240
+index 0000000..f6656d8
 --- /dev/null
 +++ b/test/composer-mongodb.json
 @@ -0,0 +1,22 @@
@@ -2477,7 +2477,7 @@ index 0000000..d2f9240
 +  "require": {
 +    "php": "~5.5.0|~5.6.0|~7.0.0",
 +    "google/apiclient": "~2.0@RC",
-+    "mongodb/mongodb": "^1.0.0",
++    "mongodb/mongodb": "1.0.4",
 +    "silex/silex": "^1.3",
 +    "symfony/yaml": "^3.0",
 +    "twig/twig": "^1.22"
