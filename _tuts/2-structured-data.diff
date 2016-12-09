@@ -2574,7 +2574,7 @@ index 1b93f71..396c961 100644
  }
 diff --git a/test/e2e/MongoDbTest.php b/test/e2e/MongoDbTest.php
 new file mode 100644
-index 0000000..357f725
+index 0000000..dd90be0
 --- /dev/null
 +++ b/test/e2e/MongoDbTest.php
 @@ -0,0 +1,64 @@
@@ -2615,7 +2615,7 @@ index 0000000..357f725
 +    {
 +        copy(
 +            sprintf('%s/../../composer.json', __DIR__),
-+            sprintf('%s/../../composer.json.org', __DIR__)
++            sprintf('%s/../../composer.json.orig', __DIR__)
 +        );
 +        copy(
 +            sprintf('%s/../composer-mongodb.json', __DIR__),
@@ -2623,7 +2623,7 @@ index 0000000..357f725
 +        );
 +        rename(
 +            sprintf('%s/../../composer.lock', __DIR__),
-+            sprintf('%s/../../composer.lock.org', __DIR__)
++            sprintf('%s/../../composer.lock.orig', __DIR__)
 +        );
 +    }
 +
@@ -2633,11 +2633,11 @@ index 0000000..357f725
 +    public static function restoreComposerJson()
 +    {
 +        rename(
-+            sprintf('%s/../../composer.json.org', __DIR__),
++            sprintf('%s/../../composer.json.orig', __DIR__),
 +            sprintf('%s/../../composer.json', __DIR__)
 +        );
 +        rename(
-+            sprintf('%s/../../composer.lock.org', __DIR__),
++            sprintf('%s/../../composer.lock.orig', __DIR__),
 +            sprintf('%s/../../composer.lock', __DIR__)
 +        );
 +    }

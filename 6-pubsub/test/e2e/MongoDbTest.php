@@ -35,7 +35,7 @@ class MongoDbTest extends E2eTest
     {
         copy(
             sprintf('%s/../../composer.json', __DIR__),
-            sprintf('%s/../../composer.json.org', __DIR__)
+            sprintf('%s/../../composer.json.orig', __DIR__)
         );
         copy(
             sprintf('%s/../composer-mongodb.json', __DIR__),
@@ -43,7 +43,7 @@ class MongoDbTest extends E2eTest
         );
         rename(
             sprintf('%s/../../composer.lock', __DIR__),
-            sprintf('%s/../../composer.lock.org', __DIR__)
+            sprintf('%s/../../composer.lock.orig', __DIR__)
         );
     }
 
@@ -53,11 +53,11 @@ class MongoDbTest extends E2eTest
     public static function restoreComposerJson()
     {
         rename(
-            sprintf('%s/../../composer.json.org', __DIR__),
+            sprintf('%s/../../composer.json.orig', __DIR__),
             sprintf('%s/../../composer.json', __DIR__)
         );
         rename(
-            sprintf('%s/../../composer.lock.org', __DIR__),
+            sprintf('%s/../../composer.lock.orig', __DIR__),
             sprintf('%s/../../composer.lock', __DIR__)
         );
     }
