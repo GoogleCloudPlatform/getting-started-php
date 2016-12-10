@@ -47,7 +47,7 @@ for STEP in "${STEPS[@]}"; do
         cp config/settings.yml.dist config/settings.yml
 
         # require mongo library, as this isn't included by default
-        composer require "mongodb/mongodb:^1.0.0" --ignore-platform-reqs
+        composer require "mongodb/mongodb:1.0.4" --ignore-platform-reqs
     fi;
     popd
 done
