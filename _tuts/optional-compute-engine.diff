@@ -636,65 +636,15 @@ index fd2d873..bf8e118 100644
      "mongodb/mongodb": "1.0.4",
      "silex/silex": "^1.3",
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
-index 1f0e8c9..a997771 100644
+index 8201f8b..a997771 100644
 --- a/test/lib/E2eTest.php
 +++ b/test/lib/E2eTest.php
-@@ -17,52 +17,23 @@
- 
- namespace Google\Cloud\Samples\Bookshelf;
- 
--use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
--use Symfony\Component\Yaml\Dumper;
--
- /**
-  * Class E2eTest
-  */
- abstract class E2eTest extends \PHPUnit_Framework_TestCase
+@@ -24,7 +24,7 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
  {
--    use SkipTestsIfMissingCredentialsTrait,
--        AppEngineDeploymentTrait,
--        GetConfigTrait;
--
--    private static function beforeDeploy()
--    {
--        static::copySettingsYaml();
--        static::copyAppYaml();
--    }
--
--    private static function doDeploy()
--    {
--        // deploy using "app-e2e.yaml"
--        return self::$gcloudWrapper->deploy('app-e2e.yaml');
--    }
--
--    protected static function copySettingsYaml()
-+    public static function setUpBeforeClass()
+     public static function setUpBeforeClass()
      {
--        // set "settings-e2e.yml" for application config
--        $config = static::getCustomConfig();
--        $dumper = new Dumper();
--        $yaml = $dumper->dump($config + self::getConfig());
--        file_put_contents(__DIR__ . '/../../config/settings-e2e.yml', $yaml);
+-        // TODO: deploy to GKE
 +        // TODO: deploy to GCE
      }
  
--    protected static function copyAppYaml()
-+    public static function tearDownAfterClass()
-     {
--        // set "app-e2e.yaml" for app engine config
--        $appYamlPath = __DIR__ . '/../../app-e2e.yaml';
--        copy(__DIR__ . '/../app-e2e.yaml', $appYamlPath);
-+        // TODO: cleanup the resources
-     }
- 
--    public function testIndex()
-+    public function setUp()
-     {
--        $resp = $this->client->get('/');
--        $this->assertEquals('200', $resp->getStatusCode(),
--            'index status code');
--        $this->assertContains('Book', (string) $resp->getBody(),
--            'index content');
-+        $this->markTestSkipped('Skipping for now.');
-     }
- }
+     public static function tearDownAfterClass()
