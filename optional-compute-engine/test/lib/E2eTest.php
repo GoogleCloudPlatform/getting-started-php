@@ -34,6 +34,10 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+    }
+
+    public function testIndex()
+    {
         $this->markTestSkipped('Skipping for now.');
     }
 }

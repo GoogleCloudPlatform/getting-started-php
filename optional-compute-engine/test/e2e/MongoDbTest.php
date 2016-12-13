@@ -52,13 +52,13 @@ class MongoDbTest extends E2eTest
      */
     public static function restoreComposerJson()
     {
-        rename(
-            sprintf('%s/../../composer.json.orig', __DIR__),
-            sprintf('%s/../../composer.json', __DIR__)
-        );
-        rename(
-            sprintf('%s/../../composer.lock.orig', __DIR__),
-            sprintf('%s/../../composer.lock', __DIR__)
-        );
+        // rename(
+        //     sprintf('%s/../../composer.json.orig', __DIR__),
+        //     sprintf('%s/../../composer.json', __DIR__)
+        // );
+        // rename(
+        //     sprintf('%s/../../composer.lock.orig', __DIR__),
+        //     sprintf('%s/../../composer.lock', __DIR__)
+        // );
     }
 }
