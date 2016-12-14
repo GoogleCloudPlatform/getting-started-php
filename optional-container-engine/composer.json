@@ -19,6 +19,7 @@
     "behat/mink-goutte-driver": "^1.2",
     "phpunit/phpunit": "~4",
     "symfony/browser-kit": "^3.0",
-    "symfony/http-kernel": "^3.0"
+    "symfony/http-kernel": "^3.0",
+    "google/cloud-tools": "^0.6"
   }
 }

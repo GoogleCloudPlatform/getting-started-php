@@ -20,16 +20,12 @@ MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${MYDIR}/variables.sh
 
 # Coding style check.
-php-cs-fixer fix --dry-run --diff --level=psr2 --fixers=concat_with_spaces,unused_use,trailing_spaces,indentation .
+php-cs-fixer fix --diff
 
 # Run tests for each directories.
 for STEP in "${STEPS[@]}"; do
     cp ${MYDIR}/app-e2e.yaml ${STEP}/app-e2e.yaml
     pushd ${STEP}
-    if [ ! -z ${RUN_E2E_TEST} ]; then
-        # STEP_NAME is required for the e2e tests.
-        export STEP_NAME=${STEP}
-    fi;
     mkdir -p build/logs
     php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
     popd

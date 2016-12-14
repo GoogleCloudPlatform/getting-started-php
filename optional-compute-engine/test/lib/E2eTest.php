@@ -22,9 +22,6 @@ namespace Google\Cloud\Samples\Bookshelf;
  */
 abstract class E2eTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $step;
-    use E2EDeploymentTrait;
-
     public static function setUpBeforeClass()
     {
         // TODO: deploy to GCE
@@ -36,6 +33,10 @@ abstract class E2eTest extends \PHPUnit_Framework_TestCase
     }
 
     public function setUp()
+    {
+    }
+
+    public function testIndex()
     {
         $this->markTestSkipped('Skipping for now.');
     }

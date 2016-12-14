@@ -26,14 +26,4 @@ class DatastoreTest extends E2eTest
     {
         return ['bookshelf_backend' => 'datastore'];
     }
-
-    public function testIndex()
-    {
-        $this->assertNotNull(self::$versions[self::$step]);
-        $this->session->visit($this->url . '/');
-        $this->assertEquals('200', $this->session->getStatusCode(),
-                            'Root URL status code.');
-        // TODO: content check
-        $page = $this->session->getPage();
-    }
 }

@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace Google\Cloud\Samples\Bookshelf;
 
 /**
@@ -41,12 +40,14 @@ trait SkipTestsIfMissingCredentialsTrait
     }
 
     /**
-     * @before
+     * Set up the client.
+     *
+     * @beforeClass
      */
-    public function checkCredentials()
+    public static function checkCredentials()
     {
         if (!self::hasCredentials()) {
-            $this->markTestSkipped('No application credentials were found.');
+            self::markTestSkipped('No application credentials were found.');
         }
     }
 }

@@ -17,38 +17,27 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Session;
-
 /**
  * Class E2eTest
  */
 abstract class E2eTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $step;
-    use E2EDeploymentTrait;
-
     public static function setUpBeforeClass()
     {
-        if (self::$step = getenv('STEP_NAME')) {
-            self::deployApp(self::$step, static::getCustomConfig());
-        }
+        // TODO: deploy to GKE
     }
 
     public static function tearDownAfterClass()
     {
-        if (self::$step) {
-            self::deleteApp(self::$step);
-        }
+        // TODO: cleanup the resources
     }
 
     public function setUp()
     {
-        if (!self::$step) {
-            $this->markTestSkipped('must set STEP_NAME for e2e testing');
-        }
-        $this->url = self::getUrl(self::$step);
-        $driver = new GoutteDriver();
-        $this->session = new Session($driver);
+    }
+
+    public function testIndex()
+    {
+        $this->markTestSkipped('Skipping for now.');
     }
 }
