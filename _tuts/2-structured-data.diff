@@ -35,15 +35,15 @@ index 5ccf142..700b465 100644
 +# beta_settings:
 +#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/composer.json b/composer.json
-index 29eef33..0c109ba 100644
+index 6f731c3..ee374f2 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -6,7 +6,10 @@
    },
    "require": {
-     "php": "~5.5.0|~5.6.0|~7.0.0",
+     "php": "5.6.*|7.0.*|7.1.*",
 -    "silex/silex": "^1.3"
-+    "google/cloud": "0.13",
++    "google/cloud": "^0.21",
 +    "silex/silex": "^1.3",
 +    "symfony/yaml": "^3.0",
 +    "twig/twig": "^1.22"
@@ -51,30 +51,30 @@ index 29eef33..0c109ba 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index d3b9e3b..36e01bd 100644
+index 92db3b2..23be1d7 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,10 +4,436 @@
+@@ -4,10 +4,444 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "f2b2fe79100c959fbc5d5c529ba40cf5",
--    "content-hash": "bef6e75add8e493d40030cbdb929827a",
-+    "hash": "496d216ee5301f3f8aeedefb77a2c7f3",
-+    "content-hash": "98c0ddf1b7f1d6f068f64c11dfd9445a",
+-    "hash": "cac1e130cb190b984e72f7dbcb12194a",
+-    "content-hash": "1c1639772c561e0747b7d601df6c5b2d",
++    "hash": "3a6407bf0a78a6757301bd36e525a575",
++    "content-hash": "2ed03aef435a286fbf9ff49ce423fec4",
      "packages": [
          {
 +            "name": "firebase/php-jwt",
-+            "version": "v3.0.0",
++            "version": "v4.0.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/firebase/php-jwt.git",
-+                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1"
++                "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
-+                "reference": "fa8a06e96526eb7c0eeaa47e4f39be59d21f16e1",
++                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
++                "reference": "dccf163dc8ed7ed6a00afc06c51ee5186a428d35",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -104,24 +104,24 @@ index d3b9e3b..36e01bd 100644
 +            ],
 +            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
 +            "homepage": "https://github.com/firebase/php-jwt",
-+            "time": "2015-07-22 18:31:08"
++            "time": "2016-07-18 04:51:16"
 +        },
 +        {
 +            "name": "google/auth",
-+            "version": "v0.10",
++            "version": "v0.11.1",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/google/google-auth-library-php.git",
-+                "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8"
++                "reference": "a240674b08a09949fd5597f7590b3ed83663a12d"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/760e3fbe4064c0525c22e27e5374eada3c103da8",
-+                "reference": "760e3fbe4064c0525c22e27e5374eada3c103da8",
++                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/a240674b08a09949fd5597f7590b3ed83663a12d",
++                "reference": "a240674b08a09949fd5597f7590b3ed83663a12d",
 +                "shasum": ""
 +            },
 +            "require": {
-+                "firebase/php-jwt": "~2.0|~3.0",
++                "firebase/php-jwt": "~2.0|~3.0|~4.0",
 +                "guzzlehttp/guzzle": "~5.3|~6.0",
 +                "guzzlehttp/psr7": "~1.2",
 +                "php": ">=5.4",
@@ -152,24 +152,24 @@ index d3b9e3b..36e01bd 100644
 +                "google",
 +                "oauth2"
 +            ],
-+            "time": "2016-08-02 22:00:48"
++            "time": "2016-11-02 14:59:14"
 +        },
 +        {
 +            "name": "google/cloud",
-+            "version": "v0.13.0",
++            "version": "v0.21.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-+                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f"
++                "reference": "a7bac23c526a5920134d909af80fcba4976276e1"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/397f0f648b6ff3895753ac8fcea154302eda5c7f",
-+                "reference": "397f0f648b6ff3895753ac8fcea154302eda5c7f",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/a7bac23c526a5920134d909af80fcba4976276e1",
++                "reference": "a7bac23c526a5920134d909af80fcba4976276e1",
 +                "shasum": ""
 +            },
 +            "require": {
-+                "google/auth": "0.10",
++                "google/auth": "^0.11",
 +                "guzzlehttp/guzzle": "^5.3|^6.0",
 +                "guzzlehttp/psr7": "^1.2",
 +                "monolog/monolog": "~1",
@@ -179,8 +179,8 @@ index d3b9e3b..36e01bd 100644
 +            },
 +            "require-dev": {
 +                "erusev/parsedown": "^1.6",
-+                "google/gax": "^0.3",
-+                "google/proto-client-php": "^0.5",
++                "google/gax": "^0.6",
++                "google/proto-client-php": "^0.7",
 +                "james-heinrich/getid3": "^1.9",
 +                "league/json-guard": "^0.3",
 +                "phpdocumentor/reflection": "^3.0",
@@ -236,9 +236,10 @@ index d3b9e3b..36e01bd 100644
 +                "stackdriver logging",
 +                "storage",
 +                "translate",
++                "translation",
 +                "vision"
 +            ],
-+            "time": "2016-11-14 22:06:59"
++            "time": "2017-02-22 20:25:16"
 +        },
 +        {
 +            "name": "guzzlehttp/guzzle",
@@ -304,28 +305,28 @@ index d3b9e3b..36e01bd 100644
 +        },
 +        {
 +            "name": "guzzlehttp/promises",
-+            "version": "1.3.0",
++            "version": "v1.3.1",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/guzzle/promises.git",
-+                "reference": "2693c101803ca78b27972d84081d027fca790a1e"
++                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/guzzle/promises/zipball/2693c101803ca78b27972d84081d027fca790a1e",
-+                "reference": "2693c101803ca78b27972d84081d027fca790a1e",
++                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
++                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
 +                "shasum": ""
 +            },
 +            "require": {
 +                "php": ">=5.5.0"
 +            },
 +            "require-dev": {
-+                "phpunit/phpunit": "~4.0"
++                "phpunit/phpunit": "^4.0"
 +            },
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.0-dev"
++                    "dev-master": "1.4-dev"
 +                }
 +            },
 +            "autoload": {
@@ -351,20 +352,20 @@ index d3b9e3b..36e01bd 100644
 +            "keywords": [
 +                "promise"
 +            ],
-+            "time": "2016-11-18 17:47:58"
++            "time": "2016-12-20 10:07:11"
 +        },
 +        {
 +            "name": "guzzlehttp/psr7",
-+            "version": "1.3.1",
++            "version": "1.4.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/guzzle/psr7.git",
-+                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b"
++                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
-+                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
++                "url": "https://api.github.com/repos/guzzle/psr7/zipball/04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
++                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -400,16 +401,23 @@ index d3b9e3b..36e01bd 100644
 +                    "name": "Michael Dowling",
 +                    "email": "mtdowling@gmail.com",
 +                    "homepage": "https://github.com/mtdowling"
++                },
++                {
++                    "name": "Tobias Schultze",
++                    "homepage": "https://github.com/Tobion"
 +                }
 +            ],
-+            "description": "PSR-7 message implementation",
++            "description": "PSR-7 message implementation that also provides common utility methods",
 +            "keywords": [
 +                "http",
 +                "message",
++                "request",
++                "response",
 +                "stream",
-+                "uri"
++                "uri",
++                "url"
 +            ],
-+            "time": "2016-06-24 23:00:38"
++            "time": "2017-02-21 01:20:32"
 +        },
 +        {
 +            "name": "monolog/monolog",
@@ -493,7 +501,7 @@ index d3b9e3b..36e01bd 100644
              "name": "pimple/pimple",
              "version": "v1.1.1",
              "source": {
-@@ -54,6 +480,102 @@
+@@ -54,6 +488,102 @@
              "time": "2013-11-22 08:30:29"
          },
          {
@@ -596,7 +604,7 @@ index d3b9e3b..36e01bd 100644
              "name": "psr/log",
              "version": "1.0.2",
              "source": {
-@@ -87,18 +609,62 @@
+@@ -87,18 +617,62 @@
              ],
              "authors": [
                  {
@@ -617,16 +625,16 @@ index d3b9e3b..36e01bd 100644
 +        },
 +        {
 +            "name": "rize/uri-template",
-+            "version": "0.3.0",
++            "version": "0.3.1",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/rize/UriTemplate.git",
-+                "reference": "2496aa674438f1c48fce122ffc44291ad7014717"
++                "reference": "35cee84ae1c4fe0a6599392d7ca13977ff664bee"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/2496aa674438f1c48fce122ffc44291ad7014717",
-+                "reference": "2496aa674438f1c48fce122ffc44291ad7014717",
++                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/35cee84ae1c4fe0a6599392d7ca13977ff664bee",
++                "reference": "35cee84ae1c4fe0a6599392d7ca13977ff664bee",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -663,27 +671,27 @@ index d3b9e3b..36e01bd 100644
 +                "uri"
              ],
 -            "time": "2016-10-10 12:19:37"
-+            "time": "2015-04-17 16:12:22"
++            "time": "2017-02-21 15:25:22"
          },
          {
              "name": "silex/silex",
-@@ -562,6 +1128,122 @@
+@@ -562,6 +1136,122 @@
                  "url"
              ],
              "time": "2016-06-29 05:40:00"
 +        },
 +        {
 +            "name": "symfony/yaml",
-+            "version": "v3.2.0",
++            "version": "v3.2.4",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/symfony/yaml.git",
-+                "reference": "f2300ba8fbb002c028710b92e1906e7457410693"
++                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/symfony/yaml/zipball/f2300ba8fbb002c028710b92e1906e7457410693",
-+                "reference": "f2300ba8fbb002c028710b92e1906e7457410693",
++                "url": "https://api.github.com/repos/symfony/yaml/zipball/9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
++                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -725,20 +733,20 @@ index d3b9e3b..36e01bd 100644
 +            ],
 +            "description": "Symfony Yaml Component",
 +            "homepage": "https://symfony.com",
-+            "time": "2016-11-18 21:17:59"
++            "time": "2017-02-16 22:46:52"
 +        },
 +        {
 +            "name": "twig/twig",
-+            "version": "v1.28.2",
++            "version": "v1.31.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/twigphp/Twig.git",
-+                "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c"
++                "reference": "ddc9e3e20ee9c0b6908f401ac8353635b750eca7"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b22ce0eb070e41f7cba65d78fe216de29726459c",
-+                "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c",
++                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ddc9e3e20ee9c0b6908f401ac8353635b750eca7",
++                "reference": "ddc9e3e20ee9c0b6908f401ac8353635b750eca7",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -746,12 +754,12 @@ index d3b9e3b..36e01bd 100644
 +            },
 +            "require-dev": {
 +                "symfony/debug": "~2.7",
-+                "symfony/phpunit-bridge": "~3.2@dev"
++                "symfony/phpunit-bridge": "~3.2"
 +            },
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.28-dev"
++                    "dev-master": "1.31-dev"
 +                }
 +            },
 +            "autoload": {
@@ -786,21 +794,14 @@ index d3b9e3b..36e01bd 100644
 +            "keywords": [
 +                "templating"
 +            ],
-+            "time": "2016-11-23 18:41:40"
++            "time": "2017-01-11 19:36:15"
          }
      ],
      "packages-dev": [
-@@ -732,197 +1414,41 @@
-                 "headless",
-                 "testing"
-             ],
--            "time": "2016-03-05 09:04:22"
--        },
--        {
--            "name": "doctrine/instantiator",
--            "version": "1.0.5",
--            "source": {
--                "type": "git",
+@@ -739,190 +1429,34 @@
+             "version": "1.0.5",
+             "source": {
+                 "type": "git",
 -                "url": "https://github.com/doctrine/instantiator.git",
 -                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
 -            },
@@ -852,16 +853,16 @@ index d3b9e3b..36e01bd 100644
 -        },
 -        {
 -            "name": "fabpot/goutte",
--            "version": "v3.2.0",
+-            "version": "v3.2.1",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/FriendsOfPHP/Goutte.git",
--                "reference": "8cc89de5e71daf84051859616891d3320d88a9e8"
+-                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/8cc89de5e71daf84051859616891d3320d88a9e8",
--                "reference": "8cc89de5e71daf84051859616891d3320d88a9e8",
+-                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/db5c28f4a010b4161d507d5304e28a7ebf211638",
+-                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638",
 -                "shasum": ""
 -            },
 -            "require": {
@@ -897,7 +898,7 @@ index d3b9e3b..36e01bd 100644
 -            "keywords": [
 -                "scraper"
 -            ],
--            "time": "2016-11-15 16:27:29"
+-            "time": "2017-01-03 13:21:43"
 -        },
 -        {
 -            "name": "google/cloud-tools",
@@ -948,15 +949,12 @@ index d3b9e3b..36e01bd 100644
 -                "test"
 -            ],
 -            "time": "2016-12-08 21:36:15"
-+            "time": "2016-03-05 09:04:22"
-         },
-         {
+-        },
+-        {
 -            "name": "guzzlehttp/guzzle",
 -            "version": "6.2.2",
-+            "name": "doctrine/instantiator",
-+            "version": "1.0.5",
-             "source": {
-                 "type": "git",
+-            "source": {
+-                "type": "git",
 -                "url": "https://github.com/guzzle/guzzle.git",
 -                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60"
 +                "url": "https://github.com/doctrine/instantiator.git",
@@ -1003,7 +1001,7 @@ index d3b9e3b..36e01bd 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -931,57 +1457,50 @@
+@@ -931,57 +1465,50 @@
              ],
              "authors": [
                  {
@@ -1035,29 +1033,29 @@ index d3b9e3b..36e01bd 100644
          },
          {
 -            "name": "guzzlehttp/promises",
--            "version": "1.3.0",
+-            "version": "v1.3.1",
 +            "name": "fabpot/goutte",
-+            "version": "v3.2.0",
++            "version": "v3.2.1",
              "source": {
                  "type": "git",
 -                "url": "https://github.com/guzzle/promises.git",
--                "reference": "2693c101803ca78b27972d84081d027fca790a1e"
+-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
 +                "url": "https://github.com/FriendsOfPHP/Goutte.git",
-+                "reference": "8cc89de5e71daf84051859616891d3320d88a9e8"
++                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638"
              },
              "dist": {
                  "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/promises/zipball/2693c101803ca78b27972d84081d027fca790a1e",
--                "reference": "2693c101803ca78b27972d84081d027fca790a1e",
-+                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/8cc89de5e71daf84051859616891d3320d88a9e8",
-+                "reference": "8cc89de5e71daf84051859616891d3320d88a9e8",
+-                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+-                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
++                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/db5c28f4a010b4161d507d5304e28a7ebf211638",
++                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638",
                  "shasum": ""
              },
              "require": {
 -                "php": ">=5.5.0"
 -            },
 -            "require-dev": {
--                "phpunit/phpunit": "~4.0"
+-                "phpunit/phpunit": "^4.0"
 +                "guzzlehttp/guzzle": "^6.0",
 +                "php": ">=5.5.0",
 +                "symfony/browser-kit": "~2.1|~3.0",
@@ -1068,7 +1066,7 @@ index d3b9e3b..36e01bd 100644
 +            "type": "application",
              "extra": {
                  "branch-alias": {
--                    "dev-master": "1.0-dev"
+-                    "dev-master": "1.4-dev"
 +                    "dev-master": "3.2-dev"
                  }
              },
@@ -1084,7 +1082,7 @@ index d3b9e3b..36e01bd 100644
              },
              "notification-url": "https://packagist.org/downloads/",
              "license": [
-@@ -989,74 +1508,66 @@
+@@ -989,81 +1516,66 @@
              ],
              "authors": [
                  {
@@ -1102,25 +1100,25 @@ index d3b9e3b..36e01bd 100644
 -                "promise"
 +                "scraper"
              ],
--            "time": "2016-11-18 17:47:58"
-+            "time": "2016-11-15 16:27:29"
+-            "time": "2016-12-20 10:07:11"
++            "time": "2017-01-03 13:21:43"
          },
          {
 -            "name": "guzzlehttp/psr7",
--            "version": "1.3.1",
+-            "version": "1.4.0",
 +            "name": "google/cloud-tools",
 +            "version": "v0.6.1",
              "source": {
                  "type": "git",
 -                "url": "https://github.com/guzzle/psr7.git",
--                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b"
+-                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569"
 +                "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
 +                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac"
              },
              "dist": {
                  "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/psr7/zipball/5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
--                "reference": "5c6447c9df362e8f8093bda8f5d8873fe5c7f65b",
+-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
+-                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
 +                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
 +                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
                  "shasum": ""
@@ -1166,29 +1164,36 @@ index d3b9e3b..36e01bd 100644
 -                    "name": "Michael Dowling",
 -                    "email": "mtdowling@gmail.com",
 -                    "homepage": "https://github.com/mtdowling"
+-                },
+-                {
+-                    "name": "Tobias Schultze",
+-                    "homepage": "https://github.com/Tobion"
 +                    "name": "Takashi Matsuo",
 +                    "email": "tmatsuo@google.com",
 +                    "homepage": "https://wp.gaeflex.ninja/"
                  }
              ],
--            "description": "PSR-7 message implementation",
+-            "description": "PSR-7 message implementation that also provides common utility methods",
 +            "description": "PHP tools for Google Cloud Platform",
 +            "homepage": "https://github.com/GoogleCloudPlatform/php-tools",
              "keywords": [
 -                "http",
 -                "message",
+-                "request",
+-                "response",
 -                "stream",
--                "uri"
+-                "uri",
+-                "url"
 +                "appengine",
 +                "gcp",
 +                "test"
              ],
--            "time": "2016-06-24 23:00:38"
+-            "time": "2017-02-21 01:20:32"
 +            "time": "2016-12-08 21:36:15"
          },
          {
              "name": "phpdocumentor/reflection-common",
-@@ -1639,56 +2150,6 @@
+@@ -1646,56 +2158,6 @@
              "time": "2015-10-02 06:51:40"
          },
          {
@@ -1243,23 +1248,23 @@ index d3b9e3b..36e01bd 100644
 -        },
 -        {
              "name": "sebastian/comparator",
-             "version": "1.2.2",
+             "version": "1.2.4",
              "source": {
-@@ -2276,61 +2737,6 @@
-             "time": "2016-11-24 10:40:28"
+@@ -2283,61 +2745,6 @@
+             "time": "2017-02-16 14:07:22"
          },
          {
 -            "name": "symfony/yaml",
--            "version": "v3.2.0",
+-            "version": "v3.2.4",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/symfony/yaml.git",
--                "reference": "f2300ba8fbb002c028710b92e1906e7457410693"
+-                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/symfony/yaml/zipball/f2300ba8fbb002c028710b92e1906e7457410693",
--                "reference": "f2300ba8fbb002c028710b92e1906e7457410693",
+-                "url": "https://api.github.com/repos/symfony/yaml/zipball/9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
+-                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
 -                "shasum": ""
 -            },
 -            "require": {
@@ -1301,7 +1306,7 @@ index d3b9e3b..36e01bd 100644
 -            ],
 -            "description": "Symfony Yaml Component",
 -            "homepage": "https://symfony.com",
--            "time": "2016-11-18 21:17:59"
+-            "time": "2017-02-16 22:46:52"
 -        },
 -        {
              "name": "webmozart/assert",

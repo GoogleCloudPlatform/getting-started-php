@@ -63,7 +63,7 @@ index 0000000..0b9efb7
 +$server = $app['pubsub.server'];
 +$server->run();
 diff --git a/composer.json b/composer.json
-index 6c886b9..081bdde 100644
+index 4dcaf60..35f26f1 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -11,7 +11,8 @@
@@ -77,30 +77,30 @@ index 6c886b9..081bdde 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index e40bc0b..b19c623 100644
+index 6e9f6d6..38eb725 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,10 +4,104 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "e34893153ec87ef9d9aea927e129b7bd",
--    "content-hash": "e1229afaacc5e20001311281ba3fa5a6",
-+    "hash": "213b703d4a50ac93168931c6076ebd78",
-+    "content-hash": "daf1d46f8b243e59ec4190ba214d0f0f",
+-    "hash": "8ee89e01e478d01f6f831f3f7467b6c8",
+-    "content-hash": "a1c6ded1cda37463fb5abc1d91ecfcdf",
++    "hash": "5c7401ae584048bb7104249bbafe9eda",
++    "content-hash": "4e5fe67a15dc445e473d7c1fc84f294f",
      "packages": [
          {
 +            "name": "cboden/ratchet",
-+            "version": "v0.3.5",
++            "version": "v0.3.6",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/ratchetphp/Ratchet.git",
-+                "reference": "b5ccecad9390db85d2c8df7cbeb047292fbbf4b8"
++                "reference": "84df35d2a6576985b9e81b564d3c25809f8d647e"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/b5ccecad9390db85d2c8df7cbeb047292fbbf4b8",
-+                "reference": "b5ccecad9390db85d2c8df7cbeb047292fbbf4b8",
++                "url": "https://api.github.com/repos/ratchetphp/Ratchet/zipball/84df35d2a6576985b9e81b564d3c25809f8d647e",
++                "reference": "84df35d2a6576985b9e81b564d3c25809f8d647e",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -135,7 +135,7 @@ index e40bc0b..b19c623 100644
 +                "server",
 +                "sockets"
 +            ],
-+            "time": "2016-05-25 12:55:03"
++            "time": "2017-01-06 14:36:36"
 +        },
 +        {
 +            "name": "evenement/evenement",
@@ -185,10 +185,10 @@ index e40bc0b..b19c623 100644
 +        },
 +        {
              "name": "firebase/php-jwt",
-             "version": "v3.0.0",
+             "version": "v4.0.0",
              "source": {
-@@ -278,6 +372,208 @@
-             "time": "2016-11-14 22:06:59"
+@@ -279,6 +373,208 @@
+             "time": "2017-02-22 20:25:16"
          },
          {
 +            "name": "guzzle/common",
@@ -396,7 +396,7 @@ index e40bc0b..b19c623 100644
              "name": "guzzlehttp/guzzle",
              "version": "6.2.2",
              "source": {
-@@ -808,6 +1104,135 @@
+@@ -816,6 +1112,179 @@
              "time": "2016-10-10 12:19:37"
          },
          {
@@ -444,31 +444,75 @@ index e40bc0b..b19c623 100644
 +            "time": "2016-03-08 02:09:32"
 +        },
 +        {
-+            "name": "react/socket",
-+            "version": "v0.4.3",
++            "name": "react/promise",
++            "version": "v2.5.0",
 +            "source": {
 +                "type": "git",
-+                "url": "https://github.com/reactphp/socket.git",
-+                "reference": "ce015ec5879b96f5d30905f035f223aa85013fcc"
++                "url": "https://github.com/reactphp/promise.git",
++                "reference": "2760f3898b7e931aa71153852dcd48a75c9b95db"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/reactphp/socket/zipball/ce015ec5879b96f5d30905f035f223aa85013fcc",
-+                "reference": "ce015ec5879b96f5d30905f035f223aa85013fcc",
++                "url": "https://api.github.com/repos/reactphp/promise/zipball/2760f3898b7e931aa71153852dcd48a75c9b95db",
++                "reference": "2760f3898b7e931aa71153852dcd48a75c9b95db",
++                "shasum": ""
++            },
++            "require": {
++                "php": ">=5.4.0"
++            },
++            "type": "library",
++            "autoload": {
++                "psr-4": {
++                    "React\\Promise\\": "src/"
++                },
++                "files": [
++                    "src/functions_include.php"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Jan Sorgalla",
++                    "email": "jsorgalla@gmail.com"
++                }
++            ],
++            "description": "A lightweight implementation of CommonJS Promises/A for PHP",
++            "keywords": [
++                "promise",
++                "promises"
++            ],
++            "time": "2016-12-22 14:09:01"
++        },
++        {
++            "name": "react/socket",
++            "version": "v0.4.6",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/reactphp/socket.git",
++                "reference": "cf074e53c974df52388ebd09710a9018894745d2"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/reactphp/socket/zipball/cf074e53c974df52388ebd09710a9018894745d2",
++                "reference": "cf074e53c974df52388ebd09710a9018894745d2",
 +                "shasum": ""
 +            },
 +            "require": {
 +                "evenement/evenement": "~2.0|~1.0",
 +                "php": ">=5.3.0",
 +                "react/event-loop": "0.4.*|0.3.*",
-+                "react/stream": "0.4.*|0.3.*"
++                "react/promise": "^2.0 || ^1.1",
++                "react/stream": "^0.4.5"
++            },
++            "require-dev": {
++                "clue/block-react": "^1.1",
++                "phpunit/phpunit": "~4.8",
++                "react/socket-client": "^0.5.1"
 +            },
 +            "type": "library",
-+            "extra": {
-+                "branch-alias": {
-+                    "dev-master": "0.4-dev"
-+                }
-+            },
 +            "autoload": {
 +                "psr-4": {
 +                    "React\\Socket\\": "src"
@@ -478,24 +522,24 @@ index e40bc0b..b19c623 100644
 +            "license": [
 +                "MIT"
 +            ],
-+            "description": "Library for building an evented socket server.",
++            "description": "Async, streaming plaintext TCP/IP and secure TLS socket server for React PHP",
 +            "keywords": [
 +                "Socket"
 +            ],
-+            "time": "2016-03-01 20:10:35"
++            "time": "2017-01-26 09:23:38"
 +        },
 +        {
 +            "name": "react/stream",
-+            "version": "v0.4.5",
++            "version": "v0.4.6",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/reactphp/stream.git",
-+                "reference": "23389503012e1ab721ad498a5a1f4b39f7a43c00"
++                "reference": "44dc7f51ea48624110136b535b9ba44fd7d0c1ee"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/reactphp/stream/zipball/23389503012e1ab721ad498a5a1f4b39f7a43c00",
-+                "reference": "23389503012e1ab721ad498a5a1f4b39f7a43c00",
++                "url": "https://api.github.com/repos/reactphp/stream/zipball/44dc7f51ea48624110136b535b9ba44fd7d0c1ee",
++                "reference": "44dc7f51ea48624110136b535b9ba44fd7d0c1ee",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -526,11 +570,11 @@ index e40bc0b..b19c623 100644
 +                "pipe",
 +                "stream"
 +            ],
-+            "time": "2016-11-13 17:06:02"
++            "time": "2017-01-25 14:44:14"
 +        },
 +        {
              "name": "rize/uri-template",
-             "version": "0.3.0",
+             "version": "0.3.1",
              "source": {
 diff --git a/nginx-app.conf b/config/nginx-app.conf
 similarity index 100%
