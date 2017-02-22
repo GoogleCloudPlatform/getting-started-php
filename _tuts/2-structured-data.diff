@@ -35,7 +35,7 @@ index 5ccf142..700b465 100644
 +# beta_settings:
 +#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/composer.json b/composer.json
-index 29eef33..567e6d0 100644
+index 29eef33..ee374f2 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -5,8 +5,11 @@
@@ -45,7 +45,7 @@ index 29eef33..567e6d0 100644
 -    "php": "~5.5.0|~5.6.0|~7.0.0",
 -    "silex/silex": "^1.3"
 +    "php": "5.6.*|7.0.*|7.1.*",
-+    "google/cloud": "^0.20",
++    "google/cloud": "^0.21",
 +    "silex/silex": "^1.3",
 +    "symfony/yaml": "^3.0",
 +    "twig/twig": "^1.22"
@@ -53,7 +53,7 @@ index 29eef33..567e6d0 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index d3b9e3b..dce0420 100644
+index d3b9e3b..23be1d7 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,10 +4,444 @@
@@ -62,8 +62,8 @@ index d3b9e3b..dce0420 100644
      ],
 -    "hash": "f2b2fe79100c959fbc5d5c529ba40cf5",
 -    "content-hash": "bef6e75add8e493d40030cbdb929827a",
-+    "hash": "3b962cb20658ee0ec53035cdaa6edddd",
-+    "content-hash": "098f32629d86f13dfc024ac303e9f0b3",
++    "hash": "3a6407bf0a78a6757301bd36e525a575",
++    "content-hash": "2ed03aef435a286fbf9ff49ce423fec4",
      "packages": [
          {
 +            "name": "firebase/php-jwt",
@@ -158,16 +158,16 @@ index d3b9e3b..dce0420 100644
 +        },
 +        {
 +            "name": "google/cloud",
-+            "version": "v0.20.2",
++            "version": "v0.21.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-+                "reference": "7175deb3c4b07d790a52214ba209986404857d51"
++                "reference": "a7bac23c526a5920134d909af80fcba4976276e1"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/7175deb3c4b07d790a52214ba209986404857d51",
-+                "reference": "7175deb3c4b07d790a52214ba209986404857d51",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/a7bac23c526a5920134d909af80fcba4976276e1",
++                "reference": "a7bac23c526a5920134d909af80fcba4976276e1",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -241,7 +241,7 @@ index d3b9e3b..dce0420 100644
 +                "translation",
 +                "vision"
 +            ],
-+            "time": "2017-02-10 15:09:33"
++            "time": "2017-02-22 20:25:16"
 +        },
 +        {
 +            "name": "guzzlehttp/guzzle",

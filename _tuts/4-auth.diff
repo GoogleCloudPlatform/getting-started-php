@@ -15,7 +15,7 @@ index 4df4bde..ea0038e 100644
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
 diff --git a/composer.json b/composer.json
-index 567e6d0..014ebb4 100644
+index ee374f2..db732fa 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -6,6 +6,7 @@
@@ -23,21 +23,21 @@ index 567e6d0..014ebb4 100644
    "require": {
      "php": "5.6.*|7.0.*|7.1.*",
 +    "google/apiclient": "^2.0",
-     "google/cloud": "^0.20",
+     "google/cloud": "^0.21",
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
 diff --git a/composer.lock b/composer.lock
-index dce0420..b68bf6d 100644
+index 23be1d7..b3e9f5c 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "3b962cb20658ee0ec53035cdaa6edddd",
--    "content-hash": "098f32629d86f13dfc024ac303e9f0b3",
-+    "hash": "d0a9d6c46f30beb0a9fd4c0c48cb5a04",
-+    "content-hash": "80177f341d16974fc7d1172f8992b489",
+-    "hash": "3a6407bf0a78a6757301bd36e525a575",
+-    "content-hash": "2ed03aef435a286fbf9ff49ce423fec4",
++    "hash": "c1f5215a807df9528325cc009cb81527",
++    "content-hash": "747a138f1e78e6571c19d5d7f2db97be",
      "packages": [
          {
              "name": "firebase/php-jwt",

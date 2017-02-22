@@ -15,29 +15,29 @@ index ea0038e..ead2f61 100644
 +[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
  
 diff --git a/composer.json b/composer.json
-index 014ebb4..e41e0c8 100644
+index db732fa..4dcaf60 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -8,6 +8,7 @@
      "php": "5.6.*|7.0.*|7.1.*",
      "google/apiclient": "^2.0",
-     "google/cloud": "^0.20",
+     "google/cloud": "^0.21",
 +    "monolog/monolog": "^1.17",
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
      "twig/twig": "^1.22"
 diff --git a/composer.lock b/composer.lock
-index b68bf6d..eb24f91 100644
+index b3e9f5c..6e9f6d6 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,8 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "d0a9d6c46f30beb0a9fd4c0c48cb5a04",
--    "content-hash": "80177f341d16974fc7d1172f8992b489",
-+    "hash": "3576a2a8ffc888707956a967d1c0ecac",
-+    "content-hash": "0c6216f02da7dd1bd680670ca57aae23",
+-    "hash": "c1f5215a807df9528325cc009cb81527",
+-    "content-hash": "747a138f1e78e6571c19d5d7f2db97be",
++    "hash": "8ee89e01e478d01f6f831f3f7467b6c8",
++    "content-hash": "a1c6ded1cda37463fb5abc1d91ecfcdf",
      "packages": [
          {
              "name": "firebase/php-jwt",
