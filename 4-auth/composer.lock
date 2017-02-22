@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d0a9d6c46f30beb0a9fd4c0c48cb5a04",
-    "content-hash": "80177f341d16974fc7d1172f8992b489",
+    "hash": "c1f5215a807df9528325cc009cb81527",
+    "content-hash": "747a138f1e78e6571c19d5d7f2db97be",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -193,16 +193,16 @@
         },
         {
             "name": "google/cloud",
-            "version": "v0.20.2",
+            "version": "v0.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-                "reference": "7175deb3c4b07d790a52214ba209986404857d51"
+                "reference": "a7bac23c526a5920134d909af80fcba4976276e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/7175deb3c4b07d790a52214ba209986404857d51",
-                "reference": "7175deb3c4b07d790a52214ba209986404857d51",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/a7bac23c526a5920134d909af80fcba4976276e1",
+                "reference": "a7bac23c526a5920134d909af80fcba4976276e1",
                 "shasum": ""
             },
             "require": {
@@ -276,7 +276,7 @@
                 "translation",
                 "vision"
             ],
-            "time": "2017-02-10 15:09:33"
+            "time": "2017-02-22 20:25:16"
         },
         {
             "name": "guzzlehttp/guzzle",
