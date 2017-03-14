@@ -66,7 +66,7 @@ gcloud compute instance-groups managed \
 # [START create_named_port]
 gcloud compute instance-groups managed set-named-ports \
     $GROUP \
-    --named-port http:8080 \
+    --named-ports http:8080 \
     --zone $ZONE
 # [END create_named_port]
 
@@ -100,7 +100,7 @@ gcloud compute http-health-checks create ah-health-check \
 
 # [START create_backend_service]
 gcloud compute backend-services create $SERVICE \
-  --http-health-check ah-health-check
+  --http-health-checks ah-health-check
 # [END create_backend-service]
 
 # [START add_backend_service]
