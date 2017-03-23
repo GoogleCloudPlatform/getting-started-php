@@ -35,7 +35,7 @@ Tutorial | Folder
 [travis-badge]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php.svg?branch=master
 [travis-link]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php
 [jenkins-badge]: https://storage.googleapis.com/getting-started-php-jenkins/jenkins-e2e-status.svg
-[getting-started]: http://cloud.google.com/php/getting-started
+[getting-started]: http://cloud.google.com/php/getting-started/tutorial-app
 [step-1]: https://cloud.google.com/php/getting-started/hello-world
 [step-1-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/1-hello-world
 [step-2]: https://cloud.google.com/php/getting-started/using-structured-data
