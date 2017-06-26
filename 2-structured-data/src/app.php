@@ -64,19 +64,45 @@ $app['bookshelf.model'] = function ($app) {
             return new Datastore(
                 $config['google_project_id']
             );
-        case 'cloudsql':
+        case 'cloudsql-mysql':
             // Add Unix Socket for CloudSQL 2nd Gen when applicable
             $socket = GCECredentials::onGce()
                 ? ';unix_socket=/cloudsql/' . $config['cloudsql_connection_name']
                 : '';
-            return new CloudSql(
-                $config['mysql_dsn'] . $socket,
-                $config['mysql_user'],
-                $config['mysql_password']
-            );
+            if (getenv('GAE_INSTANCE')) {
+                return new CloudSql(
+                    $config['mysql_dsn_deployed'] . $socket,
+                    $config['mysql_user'],
+                    $config['mysql_password']
+                );
+            } else {
+                return new CloudSql(
+                    $config['mysql_dsn_local'] . $socket,
+                    $config['mysql_user'],
+                    $config['mysql_password']
+                );
+            }       
+        case 'cloudsql-postgres':
+            // Add Unix Socket for Postgres when applicable
+            $socket = GCECredentials::onGce()
+                ? ';host=/cloudsql/' . $config['cloudsql_connection_name']
+                : '';
+            if (getenv('GAE_INSTANCE')) {
+                return new CloudSql(
+                    $config['postgres_dsn_deployed'] . $socket,
+                    $config['postgres_user'],
+                    $config['postgres_password']
+                );
+            } else {
+                return new CloudSql(
+                    $config['postgres_dsn_local'] . $socket,
+                    $config['postgres_user'],
+                    $config['postgres_password']
+                );
+            }       
         default:
             throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
-                . "Possible values are cloudsql, mongodb, or datastore.");
+                . "Possible values are cloudsql-mysql, cloudsql-postgres, mongodb, or datastore.");
     }
 };
 

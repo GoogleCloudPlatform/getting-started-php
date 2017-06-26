@@ -20,7 +20,7 @@ namespace Google\Cloud\Samples\Bookshelf\DataModel;
 use PDO;
 
 /**
- * Class CloudSql implements the DataModelInterface with a mysql database.
+ * Class CloudSql implements the DataModelInterface with a mysql or postgres database.
  *
  */
 class CloudSql implements DataModelInterface
@@ -39,7 +39,7 @@ class CloudSql implements DataModelInterface
         $this->password = $password;
 
         $columns = array(
-            'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ',
+            'id serial PRIMARY KEY ',
             'title VARCHAR(255)',
             'author VARCHAR(255)',
             'publishedDate DATE',
