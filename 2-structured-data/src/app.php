@@ -21,7 +21,7 @@
  * Follows Silex Skeleton pattern.
  */
 use Google\Auth\Credentials\GCECredentials;
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 use Silex\Application;
@@ -64,45 +64,49 @@ $app['bookshelf.model'] = function ($app) {
             return new Datastore(
                 $config['google_project_id']
             );
-        case 'cloudsql-mysql':
+        case 'mysql':
             // Add Unix Socket for CloudSQL 2nd Gen when applicable
             $socket = GCECredentials::onGce()
                 ? ';unix_socket=/cloudsql/' . $config['cloudsql_connection_name']
                 : '';
             if (getenv('GAE_INSTANCE')) {
-                return new CloudSql(
-                    $config['mysql_dsn_deployed'] . $socket,
-                    $config['mysql_user'],
-                    $config['mysql_password']
+                $mysql_dsn_deployed = 'mysql:unix_socket=/mysql/' . $config['cloudsql_connection_name'] . ';dbname=' . $config['cloudsql_database_name'];
+                return new Sql(
+                    $mysql_dsn_deployed . $socket,
+                    $config['cloudsql_user'],
+                    $config['cloudsql_password']
                 );
             } else {
-                return new CloudSql(
-                    $config['mysql_dsn_local'] . $socket,
-                    $config['mysql_user'],
-                    $config['mysql_password']
+                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3306;dbname=' . $config['cloudsql_database_name'];
+                return new Sql(
+                    $mysql_dsn_local . $socket,
+                    $config['cloudsql_user'],
+                    $config['cloudsql_password']
                 );
             }       
-        case 'cloudsql-postgres':
+        case 'postgres':
             // Add Unix Socket for Postgres when applicable
             $socket = GCECredentials::onGce()
                 ? ';host=/cloudsql/' . $config['cloudsql_connection_name']
                 : '';
             if (getenv('GAE_INSTANCE')) {
-                return new CloudSql(
-                    $config['postgres_dsn_deployed'] . $socket,
-                    $config['postgres_user'],
-                    $config['postgres_password']
+                $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['cloudsql_connection_name'] . ';dbname=' . $config['cloudsql_database_name'];
+                return new Sql(
+                    $postgres_dsn_deployed . $socket,
+                    $config['cloudsql_user'],
+                    $config['cloudsql_password']
                 );
             } else {
-                return new CloudSql(
-                    $config['postgres_dsn_local'] . $socket,
-                    $config['postgres_user'],
-                    $config['postgres_password']
+                $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=5432;dbname=' . $config['cloudsql_database_name'];
+                return new Sql(
+                    $postgres_dsn_local . $socket,
+                    $config['cloudsql_user'],
+                    $config['cloudsql_password']
                 );
             }       
         default:
             throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
-                . "Possible values are cloudsql-mysql, cloudsql-postgres, mongodb, or datastore.");
+                . "Possible values are mysql, postgres, mongodb, or datastore.");
     }
 };
 

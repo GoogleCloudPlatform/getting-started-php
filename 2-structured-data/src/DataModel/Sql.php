@@ -20,10 +20,10 @@ namespace Google\Cloud\Samples\Bookshelf\DataModel;
 use PDO;
 
 /**
- * Class CloudSql implements the DataModelInterface with a mysql or postgres database.
+ * Class Sql implements the DataModelInterface with a mysql or postgres database.
  *
  */
-class CloudSql implements DataModelInterface
+class Sql implements DataModelInterface
 {
     private $dsn;
     private $user;
