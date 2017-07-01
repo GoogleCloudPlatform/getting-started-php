@@ -42,7 +42,7 @@ class Sql implements DataModelInterface
             'id serial PRIMARY KEY ',
             'title VARCHAR(255)',
             'author VARCHAR(255)',
-            'publishedDate DATE',
+            'publishedDate VARCHAR(255)',
             'imageUrl VARCHAR(255)',
             'description VARCHAR(255)',
             'createdBy VARCHAR(255)',
