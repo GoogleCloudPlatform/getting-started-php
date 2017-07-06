@@ -38,6 +38,6 @@ class CloudSqlTest extends E2eTest
 
     protected static function getCustomConfig()
     {
-        return ['bookshelf_backend' => 'cloudsql'];
+        return ['bookshelf_backend' => 'mysql'];
     }
 }
