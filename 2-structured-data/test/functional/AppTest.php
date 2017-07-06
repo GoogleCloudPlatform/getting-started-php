@@ -44,12 +44,12 @@ class AppTest extends WebTestCase
     {
         $config = $this->app['config'];
 
-        // Test CloudSql
-        $config['bookshelf_backend'] = 'cloudsql';
+        // Test MySQL
+        $config['bookshelf_backend'] = 'mysql';
         $this->app['config'] = $config;
 
         $this->assertInstanceOf(
-            'Google\Cloud\Samples\Bookshelf\DataModel\CloudSql',
+            'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
             $this->app['bookshelf.model']
         );
 
@@ -89,7 +89,7 @@ class AppTest extends WebTestCase
 
     /**
      * @expectedException DomainException
-     * @expectedExceptionMessage Invalid "bookshelf_backend" given: foo. Possible values are cloudsql, mongodb, or datastore.
+     * @expectedExceptionMessage Invalid "bookshelf_backend" given: foo. Possible values are mysql, postgres, mongodb, or datastore.
      */
     public function testBookshelfModelException()
     {
