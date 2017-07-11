@@ -39,6 +39,9 @@ env:
     - TEST_BUILD_DIR=${TRAVIS_BUILD_DIR}
     - FIREWALL_NAME=travis-job-${TRAVIS_JOB_ID}
 
+services:
+- mysql
+
 install:
 - pecl install mongodb || phpenv config-add testing/mongodb.ini;
 - travis_retry testing/install_test_dependencies.sh
