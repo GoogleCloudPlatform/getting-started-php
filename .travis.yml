@@ -44,6 +44,7 @@ install:
 - travis_retry testing/install_test_dependencies.sh
 
 before_script:
+- fuser -k 3306/tcp
 - ./cloud_sql_proxy -instances=$CLOUDSQL_CONNECTION_NAME=tcp:3306 &
 
 script:
