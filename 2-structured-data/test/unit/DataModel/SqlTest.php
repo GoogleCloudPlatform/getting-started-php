@@ -31,7 +31,7 @@ class SqlTest extends \PHPUnit_Framework_TestCase
 
         $config = $this->getConfig();
 
-        $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3306;dbname=' . $config['cloudsql_database_name'];
+        $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3307;dbname=' . $config['cloudsql_database_name'];
 
         $this->model = new Sql(
             $mysql_dsn_local,
