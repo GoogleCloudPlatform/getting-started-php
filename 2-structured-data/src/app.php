@@ -77,7 +77,7 @@ $app['bookshelf.model'] = function ($app) {
                     $config['cloudsql_password']
                 );
             } else {
-                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3306;dbname=' . $config['cloudsql_database_name'];
+                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3307;dbname=' . $config['cloudsql_database_name'];
                 return new Sql(
                     $mysql_dsn_local . $socket,
                     $config['cloudsql_user'],
