@@ -34,7 +34,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=5433;dbname=' . $config['postgres_database_name'];
 
         $this->model = new Sql(
-            $mysql_dsn_local,
+            $postgres_dsn_local,
             $config['postgres_user'],
             $config['postgres_password']
         );
