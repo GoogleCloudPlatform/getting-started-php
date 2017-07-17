@@ -44,7 +44,6 @@ install:
 - travis_retry testing/install_test_dependencies.sh
 
 before_script:
-- ./bin/mongod --filePermissions 0777 --ipv6
 - ./cloud_sql_proxy -instances=$CLOUDSQL_CONNECTION_NAME=tcp:3307 &
 
 script:
