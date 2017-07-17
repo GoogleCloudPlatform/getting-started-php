@@ -40,12 +40,10 @@ trait DataModelTestTrait
         } while ($fetch['cursor']);
 
         // Insert two books.
-        $d = new \DateTime('April 20th, 2016');
         $breakfastId = $model->create(array(
             'title' => 'Breakfast of Champions',
             'author' => 'Kurt Vonnegut',
-            'publishedDate' => $d->setTimezone(
-                new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z")
+            'publishedDate' => 'April 20th, 2016'
 
         ));
 
@@ -96,15 +94,11 @@ trait DataModelTestTrait
         $this->assertEquals('Kurt Vonnegut', $breakfastBook['author']);
         $this->assertEquals($breakfastId, $breakfastBook['id']);
         $this->assertFalse(isset($breakfastBook['description']));
-        $dateString = date(
-            'F jS, Y', strtotime($breakfastBook['publishedDate']));
-        $this->assertEquals('April 20th, 2016', $dateString);
+        $this->assertEquals('April 20th, 2016', $breakfastBook['publishedDate']);
 
         // Try updating a book.
         $breakfastBook['description'] = 'A really fun read.';
-        $d = new \DateTime('April 21st, 2016');
-        $breakfastBook['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
+        $breakfastBook['publishedDate'] = 'April 21st, 2016';
         $model->update($breakfastBook);
         $breakfastBookCopy = $model->read($breakfastId);
 
@@ -113,9 +107,7 @@ trait DataModelTestTrait
             'A really fun read.',
             $breakfastBookCopy['description']
         );
-        $dateString = date(
-            'F jS, Y', strtotime($breakfastBookCopy['publishedDate']));
-        $this->assertEquals('April 21st, 2016', $dateString);
+        $this->assertEquals('April 21st, 2016', $breakfastBookCopy['publishedDate']);
 
         // Update it again and delete the description.
         $breakfastBook['description'] = '';
