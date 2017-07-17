@@ -19,7 +19,7 @@ namespace Google\Cloud\Samples\Bookshelf\DataModel;
 use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
 use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
 
-class SqlTest extends \PHPUnit_Framework_TestCase
+class MySqlTest extends \PHPUnit_Framework_TestCase
 {
     use DataModelTestTrait;
     use GetConfigTrait;
@@ -31,12 +31,12 @@ class SqlTest extends \PHPUnit_Framework_TestCase
 
         $config = $this->getConfig();
 
-        $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3307;dbname=' . $config['cloudsql_database_name'];
+        $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3307;dbname=' . $config['mysql_database_name'];
 
         $this->model = new Sql(
             $mysql_dsn_local,
-            $config['cloudsql_user'],
-            $config['cloudsql_password']
+            $config['mysql_user'],
+            $config['mysql_password']
         );
     }
 }

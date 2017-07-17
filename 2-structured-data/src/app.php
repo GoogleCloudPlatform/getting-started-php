@@ -67,41 +67,41 @@ $app['bookshelf.model'] = function ($app) {
         case 'mysql':
             // Add Unix Socket for CloudSQL 2nd Gen when applicable
             $socket = GCECredentials::onGce()
-                ? ';unix_socket=/cloudsql/' . $config['cloudsql_connection_name']
+                ? ';unix_socket=/cloudsql/' . $config['mysql_connection_name']
                 : '';
             if (getenv('GAE_INSTANCE')) {
-                $mysql_dsn_deployed = 'mysql:unix_socket=/mysql/' . $config['cloudsql_connection_name'] . ';dbname=' . $config['cloudsql_database_name'];
+                $mysql_dsn_deployed = 'mysql:unix_socket=/mysql/' . $config['mysql_connection_name'] . ';dbname=' . $config['mysql_database_name'];
                 return new Sql(
                     $mysql_dsn_deployed . $socket,
-                    $config['cloudsql_user'],
-                    $config['cloudsql_password']
+                    $config['mysql_user'],
+                    $config['mysql_password']
                 );
             } else {
-                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3307;dbname=' . $config['cloudsql_database_name'];
+                $mysql_dsn_local = 'mysql:host=127.0.0.1;port='. $config['mysql_port'] . ';dbname=' . $config['mysql_database_name'];
                 return new Sql(
                     $mysql_dsn_local . $socket,
-                    $config['cloudsql_user'],
-                    $config['cloudsql_password']
+                    $config['mysql_user'],
+                    $config['mysql_password']
                 );
             }       
         case 'postgres':
             // Add Unix Socket for Postgres when applicable
             $socket = GCECredentials::onGce()
-                ? ';host=/cloudsql/' . $config['cloudsql_connection_name']
+                ? ';host=/cloudsql/' . $config['postgres_connection_name']
                 : '';
             if (getenv('GAE_INSTANCE')) {
-                $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['cloudsql_connection_name'] . ';dbname=' . $config['cloudsql_database_name'];
+                $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['postgres_connection_name'] . ';dbname=' . $config['postgres_database_name'];
                 return new Sql(
                     $postgres_dsn_deployed . $socket,
-                    $config['cloudsql_user'],
-                    $config['cloudsql_password']
+                    $config['postgres_user'],
+                    $config['postgres_password']
                 );
             } else {
-                $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=5432;dbname=' . $config['cloudsql_database_name'];
+                $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=' . $config['postgres_port'] . ';dbname=' . $config['postgres_database_name'];
                 return new Sql(
                     $postgres_dsn_local . $socket,
-                    $config['cloudsql_user'],
-                    $config['cloudsql_password']
+                    $config['postgres_user'],
+                    $config['postgres_password']
                 );
             }       
         default:

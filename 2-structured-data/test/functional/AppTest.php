@@ -53,6 +53,15 @@ class AppTest extends WebTestCase
             $this->app['bookshelf.model']
         );
 
+        // Test PostgreSQL
+        $config['bookshelf_backend'] = 'postgres';
+        $this->app['config'] = $config;
+
+        $this->assertInstanceOf(
+            'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
+            $this->app['bookshelf.model']
+        );
+
         // Test Datastore
         $config['bookshelf_backend'] = 'datastore';
         $this->app['config'] = $config;

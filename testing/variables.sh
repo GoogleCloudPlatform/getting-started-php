@@ -19,10 +19,14 @@ VARS=(
     CLOUDSDK_ACTIVE_CONFIG_NAME
     GOOGLE_PROJECT_ID
     GOOGLE_STORAGE_BUCKET
-    CLOUDSQL_CONNECTION_NAME
-    CLOUDSQL_DATABASE_NAME
-    CLOUDSQL_USER
-    CLOUDSQL_PASSWORD
+    MYSQL_CONNECTION_NAME
+    MYSQL_DATABASE_NAME
+    MYSQL_USER
+    MYSQL_PASSWORD
+    POSTGRES_CONNECTION_NAME
+    POSTGRES_DATABASE_NAME
+    POSTGRES_USER
+    POSTGRES_PASSWORD
     GOOGLE_CREDENTIALS_BASE64
     TEST_BUILD_DIR
     FIREWALL_NAME
@@ -31,10 +35,10 @@ VARS=(
 STEPS=(
     1-hello-world
     2-structured-data
-    3-cloud-storage
+    '''3-cloud-storage
     4-auth
     5-logging
     6-pubsub
     optional-container-engine
-    optional-compute-engine
+    optional-compute-engine'''
 )

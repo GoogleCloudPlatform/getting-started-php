@@ -18,9 +18,9 @@
 namespace Google\Cloud\Samples\Bookshelf;
 
 /**
- * Class MySqlTest
+ * Class PostgresTest
  */
-class MySqlTest extends E2eTest
+class PostgresTest extends E2eTest
 {
     protected static function copyAppYaml()
     {
@@ -31,13 +31,13 @@ class MySqlTest extends E2eTest
         $appYaml = file_get_contents(__DIR__ . '/../app-e2e.yaml');
         file_put_contents($appYamlPath, str_replace(
             ['# ', 'CLOUDSQL_CONNECTION_NAME'],
-            ['', $config['mysql_connection_name']],
+            ['', $config['postgres_connection_name']],
             $appYaml
         ));
     }
 
     protected static function getCustomConfig()
     {
-        return ['bookshelf_backend' => 'mysql'];
+        return ['bookshelf_backend' => 'postgres'];
     }
 }
