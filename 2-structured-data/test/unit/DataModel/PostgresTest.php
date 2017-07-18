@@ -21,7 +21,6 @@ use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
 
 class PostgresTest extends \PHPUnit_Framework_TestCase
 {
-    '''
     use DataModelTestTrait;
     use GetConfigTrait;
     use SkipTestsIfMissingCredentialsTrait;
@@ -40,5 +39,4 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
             $config['postgres_password']
         );
     }
-    '''
 }
