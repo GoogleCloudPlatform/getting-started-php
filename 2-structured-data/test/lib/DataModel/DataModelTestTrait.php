@@ -44,8 +44,9 @@ trait DataModelTestTrait
         $breakfastId = $model->create(array(
             'title' => 'Breakfast of Champions',
             'author' => 'Kurt Vonnegut',
-            'publishedDate' => $d->setTimezone(
-                  new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z")
+            #'publishedDate' => $d->setTimezone(
+                  #new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z")
+            'publishedDate' => 'April 20th, 2016'
 
         ));
 
@@ -103,8 +104,9 @@ trait DataModelTestTrait
         // Try updating a book.
         $breakfastBook['description'] = 'A really fun read.';
         $d = new \DateTime('April 21st, 2016');
-        $breakfastBook['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
+        #$breakfastBook['publishedDate'] = $d->setTimezone(
+            #new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
+        $breakfastBook['publishedDate'] = 'April 21st, 2016';
         $model->update($breakfastBook);
         $breakfastBookCopy = $model->read($breakfastId);
 
