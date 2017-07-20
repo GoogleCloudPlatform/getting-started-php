@@ -37,7 +37,7 @@
   <div class="media-body">
     <h4 class="book-title">
       {{book.title}}
-      <small>{{book.publishedDate|date("F jS, Y")}}</small>
+      <small>{{book.publisheddate}}</small>
     </h4>
     <h5 class="book-author">By {{book.author|default('Unknown', True)}}</h5>
     <p class="book-description">{{book.description}}</p>
