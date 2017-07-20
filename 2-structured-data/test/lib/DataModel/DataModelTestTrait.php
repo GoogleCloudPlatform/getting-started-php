@@ -43,7 +43,7 @@ trait DataModelTestTrait
         $breakfastId = $model->create(array(
             'title' => 'Breakfast of Champions',
             'author' => 'Kurt Vonnegut',
-            'publisheddate' => 'April 20th, 2016'
+            'publishedDate' => 'April 20th, 2016'
 
         ));
 
@@ -94,11 +94,11 @@ trait DataModelTestTrait
         $this->assertEquals('Kurt Vonnegut', $breakfastBook['author']);
         $this->assertEquals($breakfastId, $breakfastBook['id']);
         $this->assertFalse(isset($breakfastBook['description']));
-        $this->assertEquals('April 20th, 2016', $breakfastBook['publisheddate']);
+        $this->assertEquals('April 20th, 2016', $breakfastBook['publishedDate']);
 
         // Try updating a book.
         $breakfastBook['description'] = 'A really fun read.';
-        $breakfastBook['publisheddate'] = 'April 21st, 2016';
+        $breakfastBook['publishedDate'] = 'April 21st, 2016';
         $model->update($breakfastBook);
         $breakfastBookCopy = $model->read($breakfastId);
 
@@ -107,7 +107,7 @@ trait DataModelTestTrait
             'A really fun read.',
             $breakfastBookCopy['description']
         );
-        $this->assertEquals('April 21st, 2016', $breakfastBookCopy['publisheddate']);
+        $this->assertEquals('April 21st, 2016', $breakfastBookCopy['publishedDate']);
 
         // Update it again and delete the description.
         $breakfastBook['description'] = '';
