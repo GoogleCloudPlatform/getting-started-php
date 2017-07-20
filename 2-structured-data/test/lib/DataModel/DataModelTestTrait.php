@@ -99,7 +99,7 @@ trait DataModelTestTrait
         $this->assertFalse(isset($breakfastBook['description']));
         #$dateString = date(
             #'F jS, Y', strtotime($breakfastBook['publishedDate']));
-        #$this->assertEquals('April 20th, 2016', $dateString);
+        $this->assertEquals('April 20th, 2016', $breakfastBook['publishedDate']);
 
         // Try updating a book.
         $breakfastBook['description'] = 'A really fun read.';
@@ -117,7 +117,7 @@ trait DataModelTestTrait
         );
         #$dateString = date(
             #'F jS, Y', strtotime($breakfastBookCopy['publishedDate']));
-        #$this->assertEquals('April 21st, 2016', $dateString);
+        $this->assertEquals('April 21st, 2016', $breakfastBookCopy['publishedDate']);
 
         // Update it again and delete the description.
         $breakfastBook['description'] = '';
