@@ -65,41 +65,33 @@ $app['bookshelf.model'] = function ($app) {
                 $config['google_project_id']
             );
         case 'mysql':
-            // Add Unix Socket for CloudSQL 2nd Gen when applicable
-            $socket = GCECredentials::onGce()
-                ? ';unix_socket=/cloudsql/' . $config['mysql_connection_name']
-                : '';
             if (getenv('GAE_INSTANCE')) {
                 $mysql_dsn_deployed = 'mysql:unix_socket=/mysql/' . $config['mysql_connection_name'] . ';dbname=' . $config['mysql_database_name'];
                 return new Sql(
-                    $mysql_dsn_deployed . $socket,
+                    $mysql_dsn_deployed,
                     $config['mysql_user'],
                     $config['mysql_password']
                 );
             } else {
                 $mysql_dsn_local = 'mysql:host=127.0.0.1;port='. $config['mysql_port'] . ';dbname=' . $config['mysql_database_name'];
                 return new Sql(
-                    $mysql_dsn_local . $socket,
+                    $mysql_dsn_local,
                     $config['mysql_user'],
                     $config['mysql_password']
                 );
             }       
         case 'postgres':
-            // Add Unix Socket for Postgres when applicable
-            $socket = GCECredentials::onGce()
-                ? ';host=/cloudsql/' . $config['postgres_connection_name']
-                : '';
             if (getenv('GAE_INSTANCE')) {
                 $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['postgres_connection_name'] . ';dbname=' . $config['postgres_database_name'];
                 return new Sql(
-                    $postgres_dsn_deployed . $socket,
+                    $postgres_dsn_deployed,
                     $config['postgres_user'],
                     $config['postgres_password']
                 );
             } else {
                 $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=' . $config['postgres_port'] . ';dbname=' . $config['postgres_database_name'];
                 return new Sql(
-                    $postgres_dsn_local . $socket,
+                    $postgres_dsn_local,
                     $config['postgres_user'],
                     $config['postgres_password']
                 );
