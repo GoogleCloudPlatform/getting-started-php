@@ -80,6 +80,7 @@ class Sql implements DataModelInterface
     private function verifyBook($book)
     {
         if ($invalid = array_diff_key($book, array_flip($this->columnNames))) {
+            print 'verifyBook failed. book: ' . $book;
             throw new \Exception(sprintf(
                 'unsupported book properties: "%s"',
                 implode(', ', $invalid)
