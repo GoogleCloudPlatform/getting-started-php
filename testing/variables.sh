@@ -35,10 +35,10 @@ VARS=(
 STEPS=(
     1-hello-world
     2-structured-data
-    '''3-cloud-storage
-    4-auth
-    5-logging
-    6-pubsub
-    optional-container-engine
-    optional-compute-engine'''
+    #3-cloud-storage
+    #4-auth
+    #5-logging
+    #6-pubsub
+    #optional-container-engine
+    #optional-compute-engine
 )
