@@ -20,7 +20,6 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
-use Google\Auth\Credentials\GCECredentials;
 use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
@@ -73,13 +72,13 @@ $app['bookshelf.model'] = function ($app) {
                     $config['mysql_password']
                 );
             } else {
-                $mysql_dsn_local = 'mysql:host=127.0.0.1;port='. $config['mysql_port'] . ';dbname=' . $config['mysql_database_name'];
+                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=' . $config['mysql_port'] . ';dbname=' . $config['mysql_database_name'];
                 return new Sql(
                     $mysql_dsn_local,
                     $config['mysql_user'],
                     $config['mysql_password']
                 );
-            }       
+            }
         case 'postgres':
             if (getenv('GAE_INSTANCE')) {
                 $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['postgres_connection_name'] . ';dbname=' . $config['postgres_database_name'];
@@ -95,7 +94,7 @@ $app['bookshelf.model'] = function ($app) {
                     $config['postgres_user'],
                     $config['postgres_password']
                 );
-            }       
+            }
         default:
             throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
                 . "Possible values are mysql, postgres, mongodb, or datastore.");
@@ -108,8 +107,10 @@ if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
 ) {
     $app['debug'] = true;
 } else {
-    $app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'),
-                               FILTER_VALIDATE_BOOLEAN);
+    $app['debug'] = filter_var(
+        getenv('BOOKSHELF_DEBUG'),
+                               FILTER_VALIDATE_BOOLEAN
+    );
 }
 
 // add service parameters
