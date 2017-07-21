@@ -43,10 +43,10 @@ class Sql implements DataModelInterface
             'title VARCHAR(255)',
             'author VARCHAR(255)',
             'published_date VARCHAR(255)',
-            'imageUrl VARCHAR(255)',
+            'image_url VARCHAR(255)',
             'description VARCHAR(255)',
-            'createdBy VARCHAR(255)',
-            'createdById VARCHAR(255)',
+            'created_by VARCHAR(255)',
+            'created_by_id VARCHAR(255)',
         );
 
         $this->columnNames = array_map(function ($columnDefinition) {
