@@ -20,7 +20,7 @@ MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source ${MYDIR}/variables.sh
 
 # Coding style check.
-#php-cs-fixer fix --diff
+php-cs-fixer fix --diff
 
 # Run tests for each directories.
 for STEP in "${STEPS[@]}"; do
