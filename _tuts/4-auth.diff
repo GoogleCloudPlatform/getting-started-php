@@ -27,7 +27,7 @@ index ee374f2..db732fa 100644
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
 diff --git a/composer.lock b/composer.lock
-index be3622b..a8a91c2 100644
+index 2783799..38e435f 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@

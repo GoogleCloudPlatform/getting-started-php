@@ -77,7 +77,7 @@ index 4dcaf60..35f26f1 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index 85e0960..4a79c1c 100644
+index c25bf35..39f7f44 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,9 +4,105 @@

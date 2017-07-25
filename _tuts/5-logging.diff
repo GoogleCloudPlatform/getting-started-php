@@ -27,7 +27,7 @@ index db732fa..4dcaf60 100644
      "symfony/yaml": "^3.0",
      "twig/twig": "^1.22"
 diff --git a/composer.lock b/composer.lock
-index a8a91c2..85e0960 100644
+index 38e435f..c25bf35 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
