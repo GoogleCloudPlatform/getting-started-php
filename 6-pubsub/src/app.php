@@ -191,37 +191,27 @@ $app['bookshelf.model'] = function ($app) {
                 $config['google_project_id']
             );
         case 'mysql':
-            if (getenv('GAE_INSTANCE')) {
-                $mysql_dsn_deployed = 'mysql:unix_socket=/mysql/' . $config['mysql_connection_name'] . ';dbname=' . $config['mysql_database_name'];
-                return new Sql(
-                    $mysql_dsn_deployed,
-                    $config['mysql_user'],
-                    $config['mysql_password']
-                );
-            } else {
-                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=' . $config['mysql_port'] . ';dbname=' . $config['mysql_database_name'];
-                return new Sql(
-                    $mysql_dsn_local,
-                    $config['mysql_user'],
-                    $config['mysql_password']
-                );
-            }
+            $mysql_dsn = Sql::getMysqlDsn(
+                $config['mysql_database_name'],
+                $config['mysql_port'],
+                getenv('GAE_INSTANCE') ? $config['mysql_connection_name'] : null
+            );
+            return new Sql(
+                $mysql_dsn,
+                $config['mysql_user'],
+                $config['mysql_password']
+            );
         case 'postgres':
-            if (getenv('GAE_INSTANCE')) {
-                $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['postgres_connection_name'] . ';dbname=' . $config['postgres_database_name'];
-                return new Sql(
-                    $postgres_dsn_deployed,
-                    $config['postgres_user'],
-                    $config['postgres_password']
-                );
-            } else {
-                $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=' . $config['postgres_port'] . ';dbname=' . $config['postgres_database_name'];
-                return new Sql(
-                    $postgres_dsn_local,
-                    $config['postgres_user'],
-                    $config['postgres_password']
-                );
-            }
+            $postgres_dsn = Sql::getPostgresDsn(
+                $config['postgres_database_name'],
+                $config['postgres_port'],
+                getenv('GAE_INSTANCE') ? $config['postgres_connection_name'] : null
+            );
+            return new Sql(
+                $postgres_dsn,
+                $config['postgres_user'],
+                $config['postgres_password']
+            );
         default:
             throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
                 . "Possible values are mysql, postgres, mongodb, or datastore.");

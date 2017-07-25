@@ -180,4 +180,26 @@ class Sql implements DataModelInterface
 
         return $statement->rowCount();
     }
+
+    public static function getMysqlDsn($dbName, $port, $connectionName = null)
+    {
+        if ($connectionName) {
+            return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
+                $connectionName,
+                $dbName);
+        }
+
+        return sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
+    }
+
+    public static function getPostgresDsn($dbName, $port, $connectionName = null)
+    {
+        if ($connectionName) {
+            return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
+                $connectionName,
+                $dbName);
+        }
+
+        return sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
+    }
 }

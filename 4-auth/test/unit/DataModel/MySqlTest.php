@@ -31,7 +31,9 @@ class MySqlTest extends \PHPUnit_Framework_TestCase
 
         $config = $this->getConfig();
 
-        $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3307;dbname=' . $config['mysql_database_name'];
+        $mysql_dsn_local = sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s',
+            $config['mysql_port'],
+            $config['mysql_database_name']);
 
         $this->model = new Sql(
             $mysql_dsn_local,
