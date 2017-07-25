@@ -19,7 +19,7 @@ namespace Google\Cloud\Samples\Bookshelf\DataModel;
 use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
 use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
 
-class CloudSqlTest extends \PHPUnit_Framework_TestCase
+class PostgresTest extends \PHPUnit_Framework_TestCase
 {
     use DataModelTestTrait;
     use GetConfigTrait;
@@ -31,10 +31,13 @@ class CloudSqlTest extends \PHPUnit_Framework_TestCase
 
         $config = $this->getConfig();
 
-        $this->model = new CloudSql(
-            $config['mysql_dsn'],
-            $config['mysql_user'],
-            $config['mysql_password']
+        $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=5433;dbname=' . $config['postgres_database_name'];
+
+        $this->model = new Sql(
+            $postgres_dsn_local,
+            $config['postgres_user'],
+            $config['postgres_password']
         );
     }
+
 }

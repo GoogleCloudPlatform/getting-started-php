@@ -60,11 +60,6 @@ $app->post('/books/add', function (Request $request) use ($app) {
     /** @var DataModelInterface $model */
     $model = $app['bookshelf.model'];
     $book = $request->request->all();
-    if (!empty($book['publishedDate'])) {
-        $d = new \DateTime($book['publishedDate']);
-        $book['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
-    }
     $id = $model->create($book);
 
     return $app->redirect("/books/$id");
@@ -110,11 +105,6 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     $model = $app['bookshelf.model'];
     if (!$model->read($id)) {
         return new Response('', Response::HTTP_NOT_FOUND);
-    }
-    if (!empty($book['publishedDate'])) {
-        $d = new \DateTime($book['publishedDate']);
-        $book['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
     }
     if ($model->update($book)) {
         return $app->redirect("/books/$id");

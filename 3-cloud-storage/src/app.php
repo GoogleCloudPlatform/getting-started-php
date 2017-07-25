@@ -20,8 +20,7 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
-use Google\Auth\Credentials\GCECredentials;
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
@@ -74,19 +73,41 @@ $app['bookshelf.model'] = function ($app) {
             return new Datastore(
                 $config['google_project_id']
             );
-        case 'cloudsql':
-            // Add Unix Socket for CloudSQL 2nd Gen when applicable
-            $socket = GCECredentials::onGce()
-                ? ';unix_socket=/cloudsql/' . $config['cloudsql_connection_name']
-                : '';
-            return new CloudSql(
-                $config['mysql_dsn'] . $socket,
-                $config['mysql_user'],
-                $config['mysql_password']
-            );
+        case 'mysql':
+            if (getenv('GAE_INSTANCE')) {
+                $mysql_dsn_deployed = 'mysql:unix_socket=/mysql/' . $config['mysql_connection_name'] . ';dbname=' . $config['mysql_database_name'];
+                return new Sql(
+                    $mysql_dsn_deployed,
+                    $config['mysql_user'],
+                    $config['mysql_password']
+                );
+            } else {
+                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=' . $config['mysql_port'] . ';dbname=' . $config['mysql_database_name'];
+                return new Sql(
+                    $mysql_dsn_local,
+                    $config['mysql_user'],
+                    $config['mysql_password']
+                );
+            }
+        case 'postgres':
+            if (getenv('GAE_INSTANCE')) {
+                $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['postgres_connection_name'] . ';dbname=' . $config['postgres_database_name'];
+                return new Sql(
+                    $postgres_dsn_deployed,
+                    $config['postgres_user'],
+                    $config['postgres_password']
+                );
+            } else {
+                $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=' . $config['postgres_port'] . ';dbname=' . $config['postgres_database_name'];
+                return new Sql(
+                    $postgres_dsn_local,
+                    $config['postgres_user'],
+                    $config['postgres_password']
+                );
+            }
         default:
             throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
-                . "Possible values are cloudsql, mongodb, or datastore.");
+                . "Possible values are mysql, postgres, mongodb, or datastore.");
     }
 };
 
@@ -96,8 +117,10 @@ if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
 ) {
     $app['debug'] = true;
 } else {
-    $app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'),
-                               FILTER_VALIDATE_BOOLEAN);
+    $app['debug'] = filter_var(
+        getenv('BOOKSHELF_DEBUG'),
+                               FILTER_VALIDATE_BOOLEAN
+    );
 }
 
 // add service parameters

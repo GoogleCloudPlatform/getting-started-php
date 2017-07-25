@@ -95,18 +95,18 @@ index 0000000..4349e9f
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 2d8f620..6b0bed7 100644
+index 4d15e81..e07ad9a 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -24,6 +24,7 @@ use Google\Auth\Credentials\GCECredentials;
- use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+@@ -23,6 +23,7 @@
+ use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 +use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
  use Silex\Application;
  use Silex\Provider\TwigServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-@@ -44,6 +45,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
+@@ -43,6 +44,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
  
  $app['config'] = Yaml::parse(file_get_contents($config));
  
@@ -123,7 +123,7 @@ index 2d8f620..6b0bed7 100644
  $app['bookshelf.model'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index cf1a6bb..f4c531c 100644
+index fc15adc..f4c531c 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -24,6 +24,7 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -134,7 +134,7 @@ index cf1a6bb..f4c531c 100644
  
  $app->get('/', function (Request $request) use ($app) {
      return $app->redirect('/books/');
-@@ -59,7 +60,17 @@ $app->get('/books/add', function () use ($app) {
+@@ -59,7 +60,22 @@ $app->get('/books/add', function () use ($app) {
  $app->post('/books/add', function (Request $request) use ($app) {
      /** @var DataModelInterface $model */
      $model = $app['bookshelf.model'];
@@ -149,10 +149,15 @@ index cf1a6bb..f4c531c 100644
 +            $image->getMimeType()
 +        );
 +    }
-     if (!empty($book['publishedDate'])) {
-         $d = new \DateTime($book['publishedDate']);
-         $book['publishedDate'] = $d->setTimezone(
-@@ -106,11 +117,23 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
++    if (!empty($book['publishedDate'])) {
++        $d = new \DateTime($book['publishedDate']);
++        $book['publishedDate'] = $d->setTimezone(
++            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
++    }
+     $id = $model->create($book);
+ 
+     return $app->redirect("/books/$id");
+@@ -101,11 +117,28 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
  $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      $book = $request->request->all();
      $book['id'] = $id;
@@ -173,10 +178,15 @@ index cf1a6bb..f4c531c 100644
 +        );
 +    }
 +    // [END add_image]
-     if (!empty($book['publishedDate'])) {
-         $d = new \DateTime($book['publishedDate']);
-         $book['publishedDate'] = $d->setTimezone(
-@@ -131,7 +154,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
++    if (!empty($book['publishedDate'])) {
++        $d = new \DateTime($book['publishedDate']);
++        $book['publishedDate'] = $d->setTimezone(
++            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
++    }
+     if ($model->update($book)) {
+         return $app->redirect("/books/$id");
+     }
+@@ -121,7 +154,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      $book = $model->read($id);
      if ($book) {
          $model->delete($id);
@@ -192,7 +202,7 @@ index cf1a6bb..f4c531c 100644
      }
  
 diff --git a/templates/form.html.twig b/templates/form.html.twig
-index 9679ef6..9188524 100644
+index eec21d6..bd4a724 100644
 --- a/templates/form.html.twig
 +++ b/templates/form.html.twig
 @@ -42,6 +42,18 @@
@@ -236,7 +246,7 @@ index af00157..d1eff14 100644
        <h4>{{book.title}}</h4>
        <p>{{book.author}}</p>
 diff --git a/templates/view.html.twig b/templates/view.html.twig
-index d5c839e..db27f94 100644
+index 459ce61..cdbadbe 100644
 --- a/templates/view.html.twig
 +++ b/templates/view.html.twig
 @@ -34,6 +34,12 @@
@@ -253,7 +263,7 @@ index d5c839e..db27f94 100644
      <h4 class="book-title">
        {{book.title}}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index cb30e94..73fb38e 100644
+index 4efd086..3b15077 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -277,7 +287,7 @@ index cb30e94..73fb38e 100644
          $crawler = $client->submit($form, array(
              'title' => 'The Cat in the Hat',
              'author' => 'Dr. Suess',
-             'publishedDate' => '1957-01-01',
+             'published_date' => '1957-01-01',
 +            'image' => $photo,
          ));
 +        $this->assertEquals(
@@ -300,7 +310,7 @@ index cb30e94..73fb38e 100644
          $crawler = $client->submit($form, array(
              'title' => 'Where the Red Fern Grows',
              'author' => 'Will Rawls',
-             'publishedDate' => '1961',
+             'published_date' => '1961',
 +            'image' => $photo,
          ));
  
@@ -308,7 +318,7 @@ index cb30e94..73fb38e 100644
 @@ -157,6 +176,7 @@ class ControllersTest extends WebTestCase
              'title' => 'Where the Red Fern Grows',
              'author' => 'Wilson Rawls',
-             'publishedDate' => '1961',
+             'published_date' => '1961',
 +            'image' => $photo,
          ));
  

@@ -85,7 +85,7 @@ class ControllersTest extends WebTestCase
         $crawler = $client->submit($form, array(
             'title' => 'The Cat in the Hat',
             'author' => 'Dr. Suess',
-            'publishedDate' => '1957-01-01',
+            'published_date' => '1957-01-01',
             'image' => $photo,
         ));
         $this->assertEquals(
@@ -99,7 +99,7 @@ class ControllersTest extends WebTestCase
         $crawler = $client->submit($form, array(
             'title' => 'Treasure Island',
             'author' => 'Robert Louis Stevenson',
-            'publishedDate' => '1883-01-01',
+            'published_date' => '1883-01-01',
         ));
         $deleteTreasureIsland = $crawler->selectButton('submit');
 
@@ -155,7 +155,7 @@ class ControllersTest extends WebTestCase
         $crawler = $client->submit($form, array(
             'title' => 'Where the Red Fern Grows',
             'author' => 'Will Rawls',
-            'publishedDate' => '1961',
+            'published_date' => '1961',
             'image' => $photo,
         ));
 
@@ -176,7 +176,7 @@ class ControllersTest extends WebTestCase
         $crawler = $client->submit($form, array(
             'title' => 'Where the Red Fern Grows',
             'author' => 'Wilson Rawls',
-            'publishedDate' => '1961',
+            'published_date' => '1961',
             'image' => $photo,
         ));
 
