@@ -1794,10 +1794,10 @@ index 0000000..d471e38
 +}
 diff --git a/src/DataModel/Sql.php b/src/DataModel/Sql.php
 new file mode 100644
-index 0000000..9a34f7e
+index 0000000..e5590c2
 --- /dev/null
 +++ b/src/DataModel/Sql.php
-@@ -0,0 +1,183 @@
+@@ -0,0 +1,205 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -1980,13 +1980,35 @@ index 0000000..9a34f7e
 +
 +        return $statement->rowCount();
 +    }
++
++    public static function getMysqlDsn($dbName, $port, $connectionName = null)
++    {
++        if ($connectionName) {
++            return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
++                $connectionName,
++                $dbName);
++        }
++
++        return sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
++    }
++
++    public static function getPostgresDsn($dbName, $port, $connectionName = null)
++    {
++        if ($connectionName) {
++            return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
++                $connectionName,
++                $dbName);
++        }
++
++        return sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
++    }
 +}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..4d15e81
+index 0000000..58dabd0
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,109 @@
 +<?php
 +
 +/*
@@ -2053,37 +2075,27 @@ index 0000000..4d15e81
 +                $config['google_project_id']
 +            );
 +        case 'mysql':
-+            if (getenv('GAE_INSTANCE')) {
-+                $mysql_dsn_deployed = 'mysql:unix_socket=/mysql/' . $config['mysql_connection_name'] . ';dbname=' . $config['mysql_database_name'];
-+                return new Sql(
-+                    $mysql_dsn_deployed,
-+                    $config['mysql_user'],
-+                    $config['mysql_password']
-+                );
-+            } else {
-+                $mysql_dsn_local = 'mysql:host=127.0.0.1;port=' . $config['mysql_port'] . ';dbname=' . $config['mysql_database_name'];
-+                return new Sql(
-+                    $mysql_dsn_local,
-+                    $config['mysql_user'],
-+                    $config['mysql_password']
-+                );
-+            }
++            $mysql_dsn = Sql::getMysqlDsn(
++                $config['mysql_database_name'],
++                $config['mysql_port'],
++                getenv('GAE_INSTANCE') ? $config['mysql_connection_name'] : null
++            );
++            return new Sql(
++                $mysql_dsn,
++                $config['mysql_user'],
++                $config['mysql_password']
++            );
 +        case 'postgres':
-+            if (getenv('GAE_INSTANCE')) {
-+                $postgres_dsn_deployed = 'pgsql:host=/cloudsql/' . $config['postgres_connection_name'] . ';dbname=' . $config['postgres_database_name'];
-+                return new Sql(
-+                    $postgres_dsn_deployed,
-+                    $config['postgres_user'],
-+                    $config['postgres_password']
-+                );
-+            } else {
-+                $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=' . $config['postgres_port'] . ';dbname=' . $config['postgres_database_name'];
-+                return new Sql(
-+                    $postgres_dsn_local,
-+                    $config['postgres_user'],
-+                    $config['postgres_password']
-+                );
-+            }
++            $postgres_dsn = Sql::getPostgresDsn(
++                $config['postgres_database_name'],
++                $config['postgres_port'],
++                getenv('GAE_INSTANCE') ? $config['postgres_connection_name'] : null
++            );
++            return new Sql(
++                $postgres_dsn,
++                $config['postgres_user'],
++                $config['postgres_password']
++            );
 +        default:
 +            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
 +                . "Possible values are mysql, postgres, mongodb, or datastore.");
@@ -4830,10 +4842,10 @@ index 0000000..4f746a9
 +}
 diff --git a/test/unit/DataModel/MySqlTest.php b/test/unit/DataModel/MySqlTest.php
 new file mode 100644
-index 0000000..5b45d72
+index 0000000..9697996
 --- /dev/null
 +++ b/test/unit/DataModel/MySqlTest.php
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,44 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4867,7 +4879,9 @@ index 0000000..5b45d72
 +
 +        $config = $this->getConfig();
 +
-+        $mysql_dsn_local = 'mysql:host=127.0.0.1;port=3307;dbname=' . $config['mysql_database_name'];
++        $mysql_dsn_local = sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s',
++            $config['mysql_port'],
++            $config['mysql_database_name']);
 +
 +        $this->model = new Sql(
 +            $mysql_dsn_local,
@@ -4878,10 +4892,10 @@ index 0000000..5b45d72
 +}
 diff --git a/test/unit/DataModel/PostgresTest.php b/test/unit/DataModel/PostgresTest.php
 new file mode 100644
-index 0000000..0c8780b
+index 0000000..8e1cc55
 --- /dev/null
 +++ b/test/unit/DataModel/PostgresTest.php
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,45 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4915,7 +4929,9 @@ index 0000000..0c8780b
 +
 +        $config = $this->getConfig();
 +
-+        $postgres_dsn_local = 'pgsql:host=127.0.0.1;port=5433;dbname=' . $config['postgres_database_name'];
++        $postgres_dsn_local = sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s',
++            $config['postgres_port'],
++            $config['postgres_database_name']);
 +
 +        $this->model = new Sql(
 +            $postgres_dsn_local,

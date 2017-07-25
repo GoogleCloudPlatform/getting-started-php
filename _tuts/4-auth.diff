@@ -242,7 +242,7 @@ index 2783799..38e435f 100644
              "version": "v1.1.1",
              "source": {
 diff --git a/src/app.php b/src/app.php
-index e07ad9a..ffc243f 100644
+index 620557d..1596252 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -25,7 +25,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;

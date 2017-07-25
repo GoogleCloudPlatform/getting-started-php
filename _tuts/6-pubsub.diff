@@ -873,7 +873,7 @@ index 0000000..27eb351
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index e58dd74..5f85066 100644
+index 188047f..6bf692b 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -22,10 +22,22 @@

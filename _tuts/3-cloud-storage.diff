@@ -95,7 +95,7 @@ index 0000000..4349e9f
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 4d15e81..e07ad9a 100644
+index 58dabd0..620557d 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -23,6 +23,7 @@
@@ -192,7 +192,7 @@ index fc15adc..c120f5b 100644
      }
  
 diff --git a/templates/form.html.twig b/templates/form.html.twig
-index eec21d6..bd4a724 100644
+index eec21d6..dc4e3c7 100644
 --- a/templates/form.html.twig
 +++ b/templates/form.html.twig
 @@ -42,6 +42,18 @@
@@ -206,8 +206,8 @@ index eec21d6..bd4a724 100644
 +  </div>
 +
 +  <div class="form-group hidden">
-+    <label for="imageUrl">Cover Image URL</label>
-+    <input type="text" name="imageUrl" id="imageUrl" value="{{book.imageUrl}}" class="form-control"/>
++    <label for="image_url">Cover Image URL</label>
++    <input type="text" name="image_url" id="image_url" value="{{book.image_url}}" class="form-control"/>
 +  </div>
 +  {# [END book_form_image] #}
 +
@@ -215,7 +215,7 @@ index eec21d6..bd4a724 100644
  </form>
  
 diff --git a/templates/list.html.twig b/templates/list.html.twig
-index af00157..d1eff14 100644
+index af00157..4f7f0e9 100644
 --- a/templates/list.html.twig
 +++ b/templates/list.html.twig
 @@ -28,9 +28,15 @@
@@ -225,8 +225,8 @@ index af00157..d1eff14 100644
 +    {# [START book_image] #}
      <div class="media-left">
 -      <img src="http://placekitten.com/g/128/192">
-+      {% if book.imageUrl %}
-+        <img src="{{book.imageUrl}}">
++      {% if book.image_url %}
++        <img src="{{book.image_url}}">
 +      {% else %}
 +        <img src="http://placekitten.com/g/128/192">
 +      {% endif %}
@@ -236,7 +236,7 @@ index af00157..d1eff14 100644
        <h4>{{book.title}}</h4>
        <p>{{book.author}}</p>
 diff --git a/templates/view.html.twig b/templates/view.html.twig
-index 459ce61..cdbadbe 100644
+index 459ce61..9693bca 100644
 --- a/templates/view.html.twig
 +++ b/templates/view.html.twig
 @@ -34,6 +34,12 @@
@@ -246,7 +246,7 @@ index 459ce61..cdbadbe 100644
 +  {# [START book_image] #}
 +  <div class="media-left">
 +    <img class="book-image"
-+         src="{{ book.imageUrl ?: 'http://placekitten.com/g/128/192' }}">
++         src="{{ book.image_url ?: 'http://placekitten.com/g/128/192' }}">
 +  </div>
 +  {# [END book_image] #}
    <div class="media-body">
