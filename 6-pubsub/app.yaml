@@ -11,5 +11,5 @@ env_variables:
 # [END overrides]
 
 ## Uncomment for Cloud SQL
-beta_settings:
-#   cloud_sql_instances: CLOUDSQL_CONNECTION_NAME
+# beta_settings:
+#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"

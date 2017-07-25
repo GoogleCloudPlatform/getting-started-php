@@ -37,10 +37,10 @@ class MongoDb implements DataModelInterface
         'title',
         'author',
         'published_date',
-        'imageUrl',
+        'image_url',
         'description',
-        'createdBy',
-        'createdById',
+        'created_by',
+        'created_by_id',
     );
 
     /**

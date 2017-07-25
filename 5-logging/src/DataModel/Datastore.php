@@ -33,10 +33,10 @@ class Datastore implements DataModelInterface
         'title'         => 'string',
         'author'        => 'string',
         'published_date' => 'string',
-        'imageUrl'      => 'string',
+        'image_url'     => 'string',
         'description'   => 'string',
-        'createdBy'     => 'string',
-        'createdById'   => 'string',
+        'created_by'    => 'string',
+        'created_by_id' => 'string',
     ];
 
     public function __construct($projectId)

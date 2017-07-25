@@ -123,7 +123,7 @@ index 4d15e81..e07ad9a 100644
  $app['bookshelf.model'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index fc15adc..f4c531c 100644
+index fc15adc..c120f5b 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -24,6 +24,7 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -134,7 +134,7 @@ index fc15adc..f4c531c 100644
  
  $app->get('/', function (Request $request) use ($app) {
      return $app->redirect('/books/');
-@@ -59,7 +60,22 @@ $app->get('/books/add', function () use ($app) {
+@@ -59,7 +60,17 @@ $app->get('/books/add', function () use ($app) {
  $app->post('/books/add', function (Request $request) use ($app) {
      /** @var DataModelInterface $model */
      $model = $app['bookshelf.model'];
@@ -144,20 +144,15 @@ index fc15adc..f4c531c 100644
      $book = $request->request->all();
 +    $image = $files->get('image');
 +    if ($image && $image->isValid()) {
-+        $book['imageUrl'] = $storage->storeFile(
++        $book['image_url'] = $storage->storeFile(
 +            $image->getRealPath(),
 +            $image->getMimeType()
 +        );
 +    }
-+    if (!empty($book['publishedDate'])) {
-+        $d = new \DateTime($book['publishedDate']);
-+        $book['publishedDate'] = $d->setTimezone(
-+            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
-+    }
      $id = $model->create($book);
  
      return $app->redirect("/books/$id");
-@@ -101,11 +117,28 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
+@@ -101,11 +112,23 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
  $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      $book = $request->request->all();
      $book['id'] = $id;
@@ -172,30 +167,25 @@ index fc15adc..f4c531c 100644
 +    $files = $request->files;
 +    $image = $files->get('image');
 +    if ($image && $image->isValid()) {
-+        $book['imageUrl'] = $storage->storeFile(
++        $book['image_url'] = $storage->storeFile(
 +            $image->getRealPath(),
 +            $image->getMimeType()
 +        );
 +    }
 +    // [END add_image]
-+    if (!empty($book['publishedDate'])) {
-+        $d = new \DateTime($book['publishedDate']);
-+        $book['publishedDate'] = $d->setTimezone(
-+            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
-+    }
      if ($model->update($book)) {
          return $app->redirect("/books/$id");
      }
-@@ -121,7 +154,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+@@ -121,7 +144,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      $book = $model->read($id);
      if ($book) {
          $model->delete($id);
 -
 +        // [START delete_image]
-+        if ($book['imageUrl']) {
++        if ($book['image_url']) {
 +            /** @var CloudStorage $storage */
 +            $storage = $app['bookshelf.storage'];
-+            $storage->deleteFile($book['imageUrl']);
++            $storage->deleteFile($book['image_url']);
 +        }
 +        // [END delete_image]
          return $app->redirect('/books/', Response::HTTP_SEE_OTHER);

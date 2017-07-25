@@ -234,7 +234,7 @@ class ControllersTest extends WebTestCase
         $crawler = $client->submit($form, array(
             'title' => 'Gödel, Escher, Bach',
             'author' => 'Douglas Hofstadter',
-            'publishedDate' => '1979',
+            'published_date' => '1979',
         ));
 
         // get the created book ID and read it
@@ -242,10 +242,10 @@ class ControllersTest extends WebTestCase
         $id = str_replace('/books/', '', $url);
         $book = $this->app['bookshelf.model']->read($id);
         $this->assertNotEquals(false, $book);
-        $this->assertArrayHasKey('createdBy', $book);
-        $this->assertEquals($userInfo['name'], $book['createdBy']);
-        $this->assertArrayHasKey('createdById', $book);
-        $this->assertEquals($userInfo['id'], $book['createdById']);
+        $this->assertArrayHasKey('created_by', $book);
+        $this->assertEquals($userInfo['name'], $book['created_by']);
+        $this->assertArrayHasKey('created_by_id', $book);
+        $this->assertEquals($userInfo['id'], $book['created_by_id']);
         // clean up
         $this->app['bookshelf.model']->delete($id);
         $book = $this->app['bookshelf.model']->read($id);

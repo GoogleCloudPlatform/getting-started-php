@@ -66,19 +66,14 @@ $app->post('/books/add', function (Request $request) use ($app) {
     $book = $request->request->all();
     $image = $files->get('image');
     if ($image && $image->isValid()) {
-        $book['imageUrl'] = $storage->storeFile(
+        $book['image_url'] = $storage->storeFile(
             $image->getRealPath(),
             $image->getMimeType()
         );
     }
-    if (!empty($book['publishedDate'])) {
-        $d = new \DateTime($book['publishedDate']);
-        $book['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
-    }
     if ($app['user']) {
-        $book['createdBy'] = $app['user']['name'];
-        $book['createdById'] = $app['user']['id'];
+        $book['created_by'] = $app['user']['name'];
+        $book['created_by_id'] = $app['user']['id'];
     }
 
     # [START publish_topic]
@@ -144,17 +139,12 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     $files = $request->files;
     $image = $files->get('image');
     if ($image && $image->isValid()) {
-        $book['imageUrl'] = $storage->storeFile(
+        $book['image_url'] = $storage->storeFile(
             $image->getRealPath(),
             $image->getMimeType()
         );
     }
     // [END add_image]
-    if (!empty($book['publishedDate'])) {
-        $d = new \DateTime($book['publishedDate']);
-        $book['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
-    }
     if ($model->update($book)) {
         /** @var Google\Cloud\PubSub\Topic $topic */
         $topic = $app['pubsub.topic'];
@@ -180,10 +170,10 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
     if ($book) {
         $model->delete($id);
         // [START delete_image]
-        if ($book['imageUrl']) {
+        if ($book['image_url']) {
             /** @var CloudStorage $storage */
             $storage = $app['bookshelf.storage'];
-            $storage->deleteFile($book['imageUrl']);
+            $storage->deleteFile($book['image_url']);
         }
         // [END delete_image]
 

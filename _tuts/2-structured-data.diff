@@ -23,7 +23,7 @@ index 5a6b401..c23b619 100644
 +[step-2]: https://cloud.google.com/php/getting-started/using-structured-data
  
 diff --git a/app.yaml b/app.yaml
-index 5ccf142..41d19c9 100644
+index 5ccf142..700b465 100644
 --- a/app.yaml
 +++ b/app.yaml
 @@ -3,3 +3,7 @@ env: flex
@@ -32,8 +32,8 @@ index 5ccf142..41d19c9 100644
    document_root: web
 +
 +## Uncomment for Cloud SQL
-+beta_settings:
-+#   cloud_sql_instances: CLOUDSQL_CONNECTION_NAME
++# beta_settings:
++#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/composer.json b/composer.json
 index 6f731c3..ee374f2 100644
 --- a/composer.json
@@ -1442,7 +1442,7 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..f60d277
+index 0000000..6789ff6
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
 @@ -0,0 +1,137 @@
@@ -1481,10 +1481,10 @@ index 0000000..f60d277
 +        'title'         => 'string',
 +        'author'        => 'string',
 +        'published_date' => 'string',
-+        'imageUrl'      => 'string',
++        'image_url'     => 'string',
 +        'description'   => 'string',
-+        'createdBy'     => 'string',
-+        'createdById'   => 'string',
++        'created_by'    => 'string',
++        'created_by_id' => 'string',
 +    ];
 +
 +    public function __construct($projectId)
@@ -1585,7 +1585,7 @@ index 0000000..f60d277
 +}
 diff --git a/src/DataModel/MongoDb.php b/src/DataModel/MongoDb.php
 new file mode 100644
-index 0000000..a6e0e20
+index 0000000..d471e38
 --- /dev/null
 +++ b/src/DataModel/MongoDb.php
 @@ -0,0 +1,203 @@
@@ -1628,10 +1628,10 @@ index 0000000..a6e0e20
 +        'title',
 +        'author',
 +        'published_date',
-+        'imageUrl',
++        'image_url',
 +        'description',
-+        'createdBy',
-+        'createdById',
++        'created_by',
++        'created_by_id',
 +    );
 +
 +    /**

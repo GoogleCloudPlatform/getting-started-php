@@ -15,7 +15,7 @@ index ead2f61..1bd64f0 100644
 +[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
  
 diff --git a/app.yaml b/app.yaml
-index 41d19c9..55d15e1 100644
+index 700b465..bef3f23 100644
 --- a/app.yaml
 +++ b/app.yaml
 @@ -4,6 +4,12 @@ env: flex
@@ -29,8 +29,8 @@ index 41d19c9..55d15e1 100644
 +# [END overrides]
 +
  ## Uncomment for Cloud SQL
- beta_settings:
- #   cloud_sql_instances: CLOUDSQL_CONNECTION_NAME
+ # beta_settings:
+ #   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/bin/pubsub/entrypoint.php b/bin/pubsub/entrypoint.php
 new file mode 100644
 index 0000000..0b9efb7
@@ -743,7 +743,7 @@ index 0000000..81f1d96
 +}
 diff --git a/src/PubSub/LookupBookDetailsJob.php b/src/PubSub/LookupBookDetailsJob.php
 new file mode 100644
-index 0000000..8497f4b
+index 0000000..4df12b9
 --- /dev/null
 +++ b/src/PubSub/LookupBookDetailsJob.php
 @@ -0,0 +1,49 @@
@@ -783,7 +783,7 @@ index 0000000..8497f4b
 +                $volumeInfo = $result->getVolumeInfo();
 +                $imageInfo = $volumeInfo->getImageLinks();
 +                if ($thumbnail = $imageInfo->getThumbnail()) {
-+                    $book['imageUrl'] = $thumbnail;
++                    $book['image_url'] = $thumbnail;
 +                    $this->client->getLogger()->info(sprintf(
 +                        'Updating book "%s" with thumbnail "%s"',
 +                        $id, basename($thumbnail)));
@@ -983,12 +983,12 @@ index e58dd74..5f85066 100644
  $app['bookshelf.storage'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index c2e1dbb..104bb5d 100644
+index 3963fb8..21333bd 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
-@@ -80,7 +80,19 @@ $app->post('/books/add', function (Request $request) use ($app) {
-         $book['createdBy'] = $app['user']['name'];
-         $book['createdById'] = $app['user']['id'];
+@@ -75,7 +75,19 @@ $app->post('/books/add', function (Request $request) use ($app) {
+         $book['created_by'] = $app['user']['name'];
+         $book['created_by_id'] = $app['user']['id'];
      }
 -    $id = $model->create($book);
 +
@@ -1007,9 +1007,9 @@ index c2e1dbb..104bb5d 100644
  
      return $app->redirect("/books/$id");
  });
-@@ -144,6 +156,15 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
-             new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
+@@ -134,6 +146,15 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      }
+     // [END add_image]
      if ($model->update($book)) {
 +        /** @var Google\Cloud\PubSub\Topic $topic */
 +        $topic = $app['pubsub.topic'];
@@ -1204,7 +1204,7 @@ index 0000000..eccb58a
 +}
 diff --git a/test/unit/PubSub/LookupBookDetailsJobTest.php b/test/unit/PubSub/LookupBookDetailsJobTest.php
 new file mode 100644
-index 0000000..ce2f9c9
+index 0000000..dd41555
 --- /dev/null
 +++ b/test/unit/PubSub/LookupBookDetailsJobTest.php
 @@ -0,0 +1,140 @@
@@ -1252,7 +1252,7 @@ index 0000000..ce2f9c9
 +            ]));
 +        $model->expects($this->once())
 +            ->method('update')
-+            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
++            ->with(['title' => 'My Book Title', 'image_url' => 'testImage.jpg'])
 +            ->will($this->returnValue(true));
 +
 +        $job = new LookupBookDetailsJob($model, $client, $logger);
@@ -1340,7 +1340,7 @@ index 0000000..ce2f9c9
 +            ]));
 +        $model->expects($this->once())
 +            ->method('update')
-+            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
++            ->with(['title' => 'My Book Title', 'image_url' => 'testImage.jpg'])
 +            ->will($this->returnValue(true));
 +
 +        $job = new LookupBookDetailsJob($model, $client);

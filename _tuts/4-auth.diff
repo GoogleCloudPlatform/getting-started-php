@@ -299,21 +299,21 @@ index e07ad9a..ffc243f 100644
  $app['bookshelf.storage'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index f4c531c..7447edc 100644
+index c120f5b..d47e119 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
-@@ -76,6 +76,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
-         $book['publishedDate'] = $d->setTimezone(
-             new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
+@@ -71,6 +71,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
+             $image->getMimeType()
+         );
      }
 +    if ($app['user']) {
-+        $book['createdBy'] = $app['user']['name'];
-+        $book['createdById'] = $app['user']['id'];
++        $book['created_by'] = $app['user']['name'];
++        $book['created_by_id'] = $app['user']['id'];
 +    }
      $id = $model->create($book);
  
      return $app->redirect("/books/$id");
-@@ -167,3 +171,57 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+@@ -157,3 +161,57 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      return new Response('', Response::HTTP_NOT_FOUND);
  });
  // [END delete]
@@ -399,7 +399,7 @@ index db1be8f..e73f8bb 100644
      </div>
      <div class="container">
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 3b15077..c1f5cb5 100644
+index 3b15077..9e8ff1f 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -47,6 +47,7 @@ class ControllersTest extends WebTestCase
@@ -443,7 +443,7 @@ index 3b15077..c1f5cb5 100644
 +        $crawler = $client->submit($form, array(
 +            'title' => 'Gödel, Escher, Bach',
 +            'author' => 'Douglas Hofstadter',
-+            'publishedDate' => '1979',
++            'published_date' => '1979',
 +        ));
 +
 +        // get the created book ID and read it
@@ -451,10 +451,10 @@ index 3b15077..c1f5cb5 100644
 +        $id = str_replace('/books/', '', $url);
 +        $book = $this->app['bookshelf.model']->read($id);
 +        $this->assertNotEquals(false, $book);
-+        $this->assertArrayHasKey('createdBy', $book);
-+        $this->assertEquals($userInfo['name'], $book['createdBy']);
-+        $this->assertArrayHasKey('createdById', $book);
-+        $this->assertEquals($userInfo['id'], $book['createdById']);
++        $this->assertArrayHasKey('created_by', $book);
++        $this->assertEquals($userInfo['name'], $book['created_by']);
++        $this->assertArrayHasKey('created_by_id', $book);
++        $this->assertEquals($userInfo['id'], $book['created_by_id']);
 +        // clean up
 +        $this->app['bookshelf.model']->delete($id);
 +        $book = $this->app['bookshelf.model']->read($id);
