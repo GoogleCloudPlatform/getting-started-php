@@ -110,3 +110,7 @@ gcloud compute firewall-rules create mongodb-e2e \
     --source-tags bookshelf-e2e \
     --target-tags mongodb \
     --description "Allow mongodb access for e2e tests" || /bin/true
+
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
+mv cloud_sql_proxy.linux.amd64 cloud_sql_proxy
+chmod +x cloud_sql_proxy
