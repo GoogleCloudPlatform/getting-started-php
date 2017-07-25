@@ -41,5 +41,4 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
             $config['postgres_password']
         );
     }
-
 }

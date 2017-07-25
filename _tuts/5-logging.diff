@@ -40,19 +40,18 @@ index 38e435f..c25bf35 100644
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index 1596252..188047f 100644
+index 1596252..586ad90 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -20,6 +20,8 @@
+@@ -20,6 +20,7 @@
   * Create a new Silex Application with Twig.  Configure it for debugging.
   * Follows Silex Skeleton pattern.
   */
-+use Google\Auth\Credentials\GCECredentials;
 +use Google\Cloud\Logger\AppEngineFlexHandler;
  use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
-@@ -62,17 +64,29 @@ $app['user'] = function ($app) {
+@@ -62,17 +63,29 @@ $app['user'] = function ($app) {
  };
  // [END session]
  

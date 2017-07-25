@@ -873,12 +873,12 @@ index 0000000..27eb351
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 188047f..6bf692b 100644
+index 586ad90..5719fb6 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -22,10 +22,22 @@
+@@ -21,10 +21,22 @@
+  * Follows Silex Skeleton pattern.
   */
- use Google\Auth\Credentials\GCECredentials;
  use Google\Cloud\Logger\AppEngineFlexHandler;
 +// [START pubsub_client]
 +use Google\Cloud\PubSub\PubSubClient;
@@ -899,7 +899,7 @@ index 188047f..6bf692b 100644
  use Silex\Application;
  use Silex\Provider\SessionServiceProvider;
  use Silex\Provider\TwigServiceProvider;
-@@ -77,19 +89,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
+@@ -76,19 +88,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
  // create the google authorization client
  // [START google_client]
  $app['google_client'] = function ($app) {

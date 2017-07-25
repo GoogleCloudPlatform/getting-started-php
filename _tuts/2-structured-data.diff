@@ -4892,10 +4892,10 @@ index 0000000..9697996
 +}
 diff --git a/test/unit/DataModel/PostgresTest.php b/test/unit/DataModel/PostgresTest.php
 new file mode 100644
-index 0000000..8e1cc55
+index 0000000..7b72f20
 --- /dev/null
 +++ b/test/unit/DataModel/PostgresTest.php
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,44 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4939,9 +4939,7 @@ index 0000000..8e1cc55
 +            $config['postgres_password']
 +        );
 +    }
-+
 +}
-\ No newline at end of file
 diff --git a/web/index.php b/web/index.php
 index e6c22e0..b2976ec 100644
 --- a/web/index.php

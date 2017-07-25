@@ -20,7 +20,6 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
-use Google\Auth\Credentials\GCECredentials;
 use Google\Cloud\Logger\AppEngineFlexHandler;
 use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
