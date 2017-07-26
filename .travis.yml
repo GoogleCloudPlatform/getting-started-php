@@ -43,6 +43,10 @@ install:
 - pecl install mongodb || phpenv config-add testing/mongodb.ini;
 - travis_retry testing/install_test_dependencies.sh
 
+before_script:
+- ./cloud_sql_proxy -instances=$MYSQL_CONNECTION_NAME=tcp:3307 &
+- ./cloud_sql_proxy -instances=$POSTGRES_CONNECTION_NAME=tcp:5433 &
+
 script:
 - testing/run_test_suite.sh
 

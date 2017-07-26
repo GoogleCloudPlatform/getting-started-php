@@ -77,16 +77,14 @@ index 4dcaf60..35f26f1 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index 6e9f6d6..38eb725 100644
+index c25bf35..39f7f44 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,10 +4,104 @@
+@@ -4,9 +4,105 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "8ee89e01e478d01f6f831f3f7467b6c8",
 -    "content-hash": "a1c6ded1cda37463fb5abc1d91ecfcdf",
-+    "hash": "5c7401ae584048bb7104249bbafe9eda",
 +    "content-hash": "4e5fe67a15dc445e473d7c1fc84f294f",
      "packages": [
          {
@@ -135,24 +133,27 @@ index 6e9f6d6..38eb725 100644
 +                "server",
 +                "sockets"
 +            ],
-+            "time": "2017-01-06 14:36:36"
++            "time": "2017-01-06T14:36:36+00:00"
 +        },
 +        {
 +            "name": "evenement/evenement",
-+            "version": "v2.0.0",
++            "version": "v2.1.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/igorw/evenement.git",
-+                "reference": "f6e843799fd4f4184d54d8fc7b5b3551c9fa803e"
++                "reference": "6ba9a777870ab49f417e703229d53931ed40fd7a"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/igorw/evenement/zipball/f6e843799fd4f4184d54d8fc7b5b3551c9fa803e",
-+                "reference": "f6e843799fd4f4184d54d8fc7b5b3551c9fa803e",
++                "url": "https://api.github.com/repos/igorw/evenement/zipball/6ba9a777870ab49f417e703229d53931ed40fd7a",
++                "reference": "6ba9a777870ab49f417e703229d53931ed40fd7a",
 +                "shasum": ""
 +            },
 +            "require": {
 +                "php": ">=5.4.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "^6.0||^5.7||^4.8.35"
 +            },
 +            "type": "library",
 +            "extra": {
@@ -172,8 +173,7 @@ index 6e9f6d6..38eb725 100644
 +            "authors": [
 +                {
 +                    "name": "Igor Wiedler",
-+                    "email": "igor@wiedler.ch",
-+                    "homepage": "http://wiedler.ch/igor/"
++                    "email": "igor@wiedler.ch"
 +                }
 +            ],
 +            "description": "Événement is a very simple event dispatching library for PHP",
@@ -181,14 +181,14 @@ index 6e9f6d6..38eb725 100644
 +                "event-dispatcher",
 +                "event-emitter"
 +            ],
-+            "time": "2012-11-02 14:49:47"
++            "time": "2017-07-17T17:39:19+00:00"
 +        },
 +        {
              "name": "firebase/php-jwt",
              "version": "v4.0.0",
              "source": {
-@@ -279,6 +373,208 @@
-             "time": "2017-02-22 20:25:16"
+@@ -281,6 +377,208 @@
+             "time": "2017-02-23T20:14:16+00:00"
          },
          {
 +            "name": "guzzle/common",
@@ -233,7 +233,7 @@ index 6e9f6d6..38eb725 100644
 +                "exception"
 +            ],
 +            "abandoned": "guzzle/guzzle",
-+            "time": "2014-08-11 04:32:36"
++            "time": "2014-08-11T04:32:36+00:00"
 +        },
 +        {
 +            "name": "guzzle/http",
@@ -291,7 +291,7 @@ index 6e9f6d6..38eb725 100644
 +                "http client"
 +            ],
 +            "abandoned": "guzzle/guzzle",
-+            "time": "2014-08-11 04:32:36"
++            "time": "2014-08-11T04:32:36+00:00"
 +        },
 +        {
 +            "name": "guzzle/parser",
@@ -336,7 +336,7 @@ index 6e9f6d6..38eb725 100644
 +                "url"
 +            ],
 +            "abandoned": "guzzle/guzzle",
-+            "time": "2014-02-05 18:29:46"
++            "time": "2014-02-05T18:29:46+00:00"
 +        },
 +        {
 +            "name": "guzzle/stream",
@@ -390,31 +390,34 @@ index 6e9f6d6..38eb725 100644
 +                "stream"
 +            ],
 +            "abandoned": "guzzle/guzzle",
-+            "time": "2014-05-01 21:36:02"
++            "time": "2014-05-01T21:36:02+00:00"
 +        },
 +        {
              "name": "guzzlehttp/guzzle",
-             "version": "6.2.2",
+             "version": "6.3.0",
              "source": {
-@@ -816,6 +1112,179 @@
-             "time": "2016-10-10 12:19:37"
+@@ -821,6 +1119,180 @@
+             "time": "2016-10-10T12:19:37+00:00"
          },
          {
 +            "name": "react/event-loop",
-+            "version": "v0.4.2",
++            "version": "v0.4.3",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/reactphp/event-loop.git",
-+                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd"
++                "reference": "8bde03488ee897dc6bb3d91e4e17c353f9c5252f"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/164799f73175e1c80bba92a220ea35df6ca371dd",
-+                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd",
++                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/8bde03488ee897dc6bb3d91e4e17c353f9c5252f",
++                "reference": "8bde03488ee897dc6bb3d91e4e17c353f9c5252f",
 +                "shasum": ""
 +            },
 +            "require": {
 +                "php": ">=5.4.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4.8"
 +            },
 +            "suggest": {
 +                "ext-event": "~1.0",
@@ -422,11 +425,6 @@ index 6e9f6d6..38eb725 100644
 +                "ext-libevent": ">=0.1.0"
 +            },
 +            "type": "library",
-+            "extra": {
-+                "branch-alias": {
-+                    "dev-master": "0.5-dev"
-+                }
-+            },
 +            "autoload": {
 +                "psr-4": {
 +                    "React\\EventLoop\\": "src"
@@ -441,24 +439,27 @@ index 6e9f6d6..38eb725 100644
 +                "asynchronous",
 +                "event-loop"
 +            ],
-+            "time": "2016-03-08 02:09:32"
++            "time": "2017-04-27T10:56:23+00:00"
 +        },
 +        {
 +            "name": "react/promise",
-+            "version": "v2.5.0",
++            "version": "v2.5.1",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/reactphp/promise.git",
-+                "reference": "2760f3898b7e931aa71153852dcd48a75c9b95db"
++                "reference": "62785ae604c8d69725d693eb370e1d67e94c4053"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/reactphp/promise/zipball/2760f3898b7e931aa71153852dcd48a75c9b95db",
-+                "reference": "2760f3898b7e931aa71153852dcd48a75c9b95db",
++                "url": "https://api.github.com/repos/reactphp/promise/zipball/62785ae604c8d69725d693eb370e1d67e94c4053",
++                "reference": "62785ae604c8d69725d693eb370e1d67e94c4053",
 +                "shasum": ""
 +            },
 +            "require": {
 +                "php": ">=5.4.0"
++            },
++            "require-dev": {
++                "phpunit/phpunit": "~4.8"
 +            },
 +            "type": "library",
 +            "autoload": {
@@ -484,7 +485,7 @@ index 6e9f6d6..38eb725 100644
 +                "promise",
 +                "promises"
 +            ],
-+            "time": "2016-12-22 14:09:01"
++            "time": "2017-03-25T12:08:31+00:00"
 +        },
 +        {
 +            "name": "react/socket",
@@ -526,7 +527,7 @@ index 6e9f6d6..38eb725 100644
 +            "keywords": [
 +                "Socket"
 +            ],
-+            "time": "2017-01-26 09:23:38"
++            "time": "2017-01-26T09:23:38+00:00"
 +        },
 +        {
 +            "name": "react/stream",
@@ -570,11 +571,11 @@ index 6e9f6d6..38eb725 100644
 +                "pipe",
 +                "stream"
 +            ],
-+            "time": "2017-01-25 14:44:14"
++            "time": "2017-01-25T14:44:14+00:00"
 +        },
 +        {
              "name": "rize/uri-template",
-             "version": "0.3.1",
+             "version": "0.3.2",
              "source": {
 diff --git a/nginx-app.conf b/config/nginx-app.conf
 similarity index 100%
@@ -595,10 +596,10 @@ index 0000000..1f0dd17
 +suhosin.executor.func.blacklist=
 \ No newline at end of file
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
-index a18fbdd..fbe5ebb 100644
+index 4526a43..4d7c037 100644
 --- a/config/settings.yml.dist
 +++ b/config/settings.yml.dist
-@@ -16,3 +16,6 @@ cloudsql_connection_name: "INSTANCE_CONNECTION_NAME"
+@@ -17,3 +17,6 @@ cloudsql_port: 3306
  mongo_url: YOUR_MONGODB_URL
  mongo_database: YOUR_MONGO_DATABASE
  mongo_collection: YOUR_MONGO_COLLECTION
@@ -742,7 +743,7 @@ index 0000000..81f1d96
 +}
 diff --git a/src/PubSub/LookupBookDetailsJob.php b/src/PubSub/LookupBookDetailsJob.php
 new file mode 100644
-index 0000000..8497f4b
+index 0000000..4df12b9
 --- /dev/null
 +++ b/src/PubSub/LookupBookDetailsJob.php
 @@ -0,0 +1,49 @@
@@ -782,7 +783,7 @@ index 0000000..8497f4b
 +                $volumeInfo = $result->getVolumeInfo();
 +                $imageInfo = $volumeInfo->getImageLinks();
 +                if ($thumbnail = $imageInfo->getThumbnail()) {
-+                    $book['imageUrl'] = $thumbnail;
++                    $book['image_url'] = $thumbnail;
 +                    $this->client->getLogger()->info(sprintf(
 +                        'Updating book "%s" with thumbnail "%s"',
 +                        $id, basename($thumbnail)));
@@ -872,17 +873,17 @@ index 0000000..27eb351
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index b05adc4..5cfa6ee 100644
+index 8e49c0c..5a505b3 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -22,10 +22,22 @@
+@@ -21,10 +21,22 @@
+  * Follows Silex Skeleton pattern.
   */
- use Google\Auth\Credentials\GCECredentials;
  use Google\Cloud\Logger\AppEngineFlexHandler;
 +// [START pubsub_client]
 +use Google\Cloud\PubSub\PubSubClient;
 +// [END pubsub_client]
- use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+ use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
  use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
@@ -898,7 +899,7 @@ index b05adc4..5cfa6ee 100644
  use Silex\Application;
  use Silex\Provider\SessionServiceProvider;
  use Silex\Provider\TwigServiceProvider;
-@@ -77,19 +89,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
+@@ -76,19 +88,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
  // create the google authorization client
  // [START google_client]
  $app['google_client'] = function ($app) {
@@ -982,12 +983,12 @@ index b05adc4..5cfa6ee 100644
  $app['bookshelf.storage'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index c2e1dbb..104bb5d 100644
+index 79a3b78..ecbb13d 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
-@@ -80,7 +80,19 @@ $app->post('/books/add', function (Request $request) use ($app) {
-         $book['createdBy'] = $app['user']['name'];
-         $book['createdById'] = $app['user']['id'];
+@@ -75,7 +75,19 @@ $app->post('/books/add', function (Request $request) use ($app) {
+         $book['created_by'] = $app['user']['name'];
+         $book['created_by_id'] = $app['user']['id'];
      }
 -    $id = $model->create($book);
 +
@@ -1006,9 +1007,9 @@ index c2e1dbb..104bb5d 100644
  
      return $app->redirect("/books/$id");
  });
-@@ -144,6 +156,15 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
-             new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
+@@ -134,6 +146,15 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      }
+     // [END add_image]
      if ($model->update($book)) {
 +        /** @var Google\Cloud\PubSub\Topic $topic */
 +        $topic = $app['pubsub.topic'];
@@ -1036,10 +1037,10 @@ index 574ebd5..8dffa4d 100644
  manual_scaling:
    instances: 1
 diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
-index dd8d5d8..d7fc4df 100644
+index 56d7200..6d7b373 100644
 --- a/test/functional/AppTest.php
 +++ b/test/functional/AppTest.php
-@@ -101,4 +101,11 @@ class AppTest extends WebTestCase
+@@ -139,4 +139,11 @@ class AppTest extends WebTestCase
  
          $model = $this->app['bookshelf.model'];
      }
@@ -1052,10 +1053,10 @@ index dd8d5d8..d7fc4df 100644
 +    }
  }
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index 0ada004..a37ebf6 100644
+index 1aa3b66..2889ce6 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
-@@ -42,6 +42,8 @@ trait GetConfigTrait
+@@ -38,6 +38,8 @@ trait GetConfigTrait
              'mongo_url' => getenv('MONGO_URL'),
              'mongo_database' => getenv('MONGO_DATABASE'),
              'mongo_collection' => getenv('MONGO_COLLECTION'),
@@ -1203,7 +1204,7 @@ index 0000000..eccb58a
 +}
 diff --git a/test/unit/PubSub/LookupBookDetailsJobTest.php b/test/unit/PubSub/LookupBookDetailsJobTest.php
 new file mode 100644
-index 0000000..ce2f9c9
+index 0000000..dd41555
 --- /dev/null
 +++ b/test/unit/PubSub/LookupBookDetailsJobTest.php
 @@ -0,0 +1,140 @@
@@ -1251,7 +1252,7 @@ index 0000000..ce2f9c9
 +            ]));
 +        $model->expects($this->once())
 +            ->method('update')
-+            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
++            ->with(['title' => 'My Book Title', 'image_url' => 'testImage.jpg'])
 +            ->will($this->returnValue(true));
 +
 +        $job = new LookupBookDetailsJob($model, $client, $logger);
@@ -1339,7 +1340,7 @@ index 0000000..ce2f9c9
 +            ]));
 +        $model->expects($this->once())
 +            ->method('update')
-+            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
++            ->with(['title' => 'My Book Title', 'image_url' => 'testImage.jpg'])
 +            ->will($this->returnValue(true));
 +
 +        $job = new LookupBookDetailsJob($model, $client);

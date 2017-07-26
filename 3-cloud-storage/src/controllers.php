@@ -66,15 +66,10 @@ $app->post('/books/add', function (Request $request) use ($app) {
     $book = $request->request->all();
     $image = $files->get('image');
     if ($image && $image->isValid()) {
-        $book['imageUrl'] = $storage->storeFile(
+        $book['image_url'] = $storage->storeFile(
             $image->getRealPath(),
             $image->getMimeType()
         );
-    }
-    if (!empty($book['publishedDate'])) {
-        $d = new \DateTime($book['publishedDate']);
-        $book['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
     }
     $id = $model->create($book);
 
@@ -128,17 +123,12 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     $files = $request->files;
     $image = $files->get('image');
     if ($image && $image->isValid()) {
-        $book['imageUrl'] = $storage->storeFile(
+        $book['image_url'] = $storage->storeFile(
             $image->getRealPath(),
             $image->getMimeType()
         );
     }
     // [END add_image]
-    if (!empty($book['publishedDate'])) {
-        $d = new \DateTime($book['publishedDate']);
-        $book['publishedDate'] = $d->setTimezone(
-            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
-    }
     if ($model->update($book)) {
         return $app->redirect("/books/$id");
     }
@@ -155,10 +145,10 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
     if ($book) {
         $model->delete($id);
         // [START delete_image]
-        if ($book['imageUrl']) {
+        if (!empty($book['image_url'])) {
             /** @var CloudStorage $storage */
             $storage = $app['bookshelf.storage'];
-            $storage->deleteFile($book['imageUrl']);
+            $storage->deleteFile($book['image_url']);
         }
         // [END delete_image]
         return $app->redirect('/books/', Response::HTTP_SEE_OTHER);

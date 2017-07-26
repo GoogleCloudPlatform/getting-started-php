@@ -50,7 +50,7 @@ class LoggerTest extends WebTestCase
         $model
             ->expects($this->once())
             ->method('read')
-            ->will($this->returnValue(array('id' => '123', 'imageUrl' => null)));
+            ->will($this->returnValue(array('id' => '123', 'image_url' => null)));
         $model
             ->expects($this->once())
             ->method('delete');

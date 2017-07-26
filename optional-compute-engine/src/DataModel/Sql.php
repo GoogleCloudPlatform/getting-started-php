@@ -20,10 +20,10 @@ namespace Google\Cloud\Samples\Bookshelf\DataModel;
 use PDO;
 
 /**
- * Class CloudSql implements the DataModelInterface with a mysql database.
+ * Class Sql implements the DataModelInterface with a mysql or postgres database.
  *
  */
-class CloudSql implements DataModelInterface
+class Sql implements DataModelInterface
 {
     private $dsn;
     private $user;
@@ -39,14 +39,14 @@ class CloudSql implements DataModelInterface
         $this->password = $password;
 
         $columns = array(
-            'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ',
+            'id serial PRIMARY KEY ',
             'title VARCHAR(255)',
             'author VARCHAR(255)',
-            'publishedDate DATE',
-            'imageUrl VARCHAR(255)',
+            'published_date VARCHAR(255)',
+            'image_url VARCHAR(255)',
             'description VARCHAR(255)',
-            'createdBy VARCHAR(255)',
-            'createdById VARCHAR(255)',
+            'created_by VARCHAR(255)',
+            'created_by_id VARCHAR(255)',
         );
 
         $this->columnNames = array_map(function ($columnDefinition) {
@@ -179,5 +179,27 @@ class CloudSql implements DataModelInterface
         $statement->execute();
 
         return $statement->rowCount();
+    }
+
+    public static function getMysqlDsn($dbName, $port, $connectionName = null)
+    {
+        if ($connectionName) {
+            return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
+                $connectionName,
+                $dbName);
+        }
+
+        return sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
+    }
+
+    public static function getPostgresDsn($dbName, $port, $connectionName = null)
+    {
+        if ($connectionName) {
+            return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
+                $connectionName,
+                $dbName);
+        }
+
+        return sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
     }
 }

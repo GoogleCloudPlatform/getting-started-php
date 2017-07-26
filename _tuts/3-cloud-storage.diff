@@ -95,18 +95,18 @@ index 0000000..4349e9f
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 2d8f620..6b0bed7 100644
+index 11f75c0..594c4af 100644
 --- a/src/app.php
 +++ b/src/app.php
-@@ -24,6 +24,7 @@ use Google\Auth\Credentials\GCECredentials;
- use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+@@ -23,6 +23,7 @@
+ use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 +use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
  use Silex\Application;
  use Silex\Provider\TwigServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-@@ -44,6 +45,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
+@@ -43,6 +44,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
  
  $app['config'] = Yaml::parse(file_get_contents($config));
  
@@ -123,7 +123,7 @@ index 2d8f620..6b0bed7 100644
  $app['bookshelf.model'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index cf1a6bb..f4c531c 100644
+index fc15adc..2a04c16 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -24,6 +24,7 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -144,15 +144,15 @@ index cf1a6bb..f4c531c 100644
      $book = $request->request->all();
 +    $image = $files->get('image');
 +    if ($image && $image->isValid()) {
-+        $book['imageUrl'] = $storage->storeFile(
++        $book['image_url'] = $storage->storeFile(
 +            $image->getRealPath(),
 +            $image->getMimeType()
 +        );
 +    }
-     if (!empty($book['publishedDate'])) {
-         $d = new \DateTime($book['publishedDate']);
-         $book['publishedDate'] = $d->setTimezone(
-@@ -106,11 +117,23 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
+     $id = $model->create($book);
+ 
+     return $app->redirect("/books/$id");
+@@ -101,11 +112,23 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
  $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
      $book = $request->request->all();
      $book['id'] = $id;
@@ -167,32 +167,32 @@ index cf1a6bb..f4c531c 100644
 +    $files = $request->files;
 +    $image = $files->get('image');
 +    if ($image && $image->isValid()) {
-+        $book['imageUrl'] = $storage->storeFile(
++        $book['image_url'] = $storage->storeFile(
 +            $image->getRealPath(),
 +            $image->getMimeType()
 +        );
 +    }
 +    // [END add_image]
-     if (!empty($book['publishedDate'])) {
-         $d = new \DateTime($book['publishedDate']);
-         $book['publishedDate'] = $d->setTimezone(
-@@ -131,7 +154,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
+     if ($model->update($book)) {
+         return $app->redirect("/books/$id");
+     }
+@@ -121,7 +144,13 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
      $book = $model->read($id);
      if ($book) {
          $model->delete($id);
 -
 +        // [START delete_image]
-+        if ($book['imageUrl']) {
++        if (!empty($book['image_url'])) {
 +            /** @var CloudStorage $storage */
 +            $storage = $app['bookshelf.storage'];
-+            $storage->deleteFile($book['imageUrl']);
++            $storage->deleteFile($book['image_url']);
 +        }
 +        // [END delete_image]
          return $app->redirect('/books/', Response::HTTP_SEE_OTHER);
      }
  
 diff --git a/templates/form.html.twig b/templates/form.html.twig
-index 9679ef6..9188524 100644
+index eec21d6..dc4e3c7 100644
 --- a/templates/form.html.twig
 +++ b/templates/form.html.twig
 @@ -42,6 +42,18 @@
@@ -206,8 +206,8 @@ index 9679ef6..9188524 100644
 +  </div>
 +
 +  <div class="form-group hidden">
-+    <label for="imageUrl">Cover Image URL</label>
-+    <input type="text" name="imageUrl" id="imageUrl" value="{{book.imageUrl}}" class="form-control"/>
++    <label for="image_url">Cover Image URL</label>
++    <input type="text" name="image_url" id="image_url" value="{{book.image_url}}" class="form-control"/>
 +  </div>
 +  {# [END book_form_image] #}
 +
@@ -215,7 +215,7 @@ index 9679ef6..9188524 100644
  </form>
  
 diff --git a/templates/list.html.twig b/templates/list.html.twig
-index af00157..d1eff14 100644
+index af00157..4f7f0e9 100644
 --- a/templates/list.html.twig
 +++ b/templates/list.html.twig
 @@ -28,9 +28,15 @@
@@ -225,8 +225,8 @@ index af00157..d1eff14 100644
 +    {# [START book_image] #}
      <div class="media-left">
 -      <img src="http://placekitten.com/g/128/192">
-+      {% if book.imageUrl %}
-+        <img src="{{book.imageUrl}}">
++      {% if book.image_url %}
++        <img src="{{book.image_url}}">
 +      {% else %}
 +        <img src="http://placekitten.com/g/128/192">
 +      {% endif %}
@@ -236,7 +236,7 @@ index af00157..d1eff14 100644
        <h4>{{book.title}}</h4>
        <p>{{book.author}}</p>
 diff --git a/templates/view.html.twig b/templates/view.html.twig
-index d5c839e..db27f94 100644
+index 459ce61..9693bca 100644
 --- a/templates/view.html.twig
 +++ b/templates/view.html.twig
 @@ -34,6 +34,12 @@
@@ -246,14 +246,14 @@ index d5c839e..db27f94 100644
 +  {# [START book_image] #}
 +  <div class="media-left">
 +    <img class="book-image"
-+         src="{{ book.imageUrl ?: 'http://placekitten.com/g/128/192' }}">
++         src="{{ book.image_url ?: 'http://placekitten.com/g/128/192' }}">
 +  </div>
 +  {# [END book_image] #}
    <div class="media-body">
      <h4 class="book-title">
        {{book.title}}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index cb30e94..73fb38e 100644
+index 4efd086..3b15077 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -277,7 +277,7 @@ index cb30e94..73fb38e 100644
          $crawler = $client->submit($form, array(
              'title' => 'The Cat in the Hat',
              'author' => 'Dr. Suess',
-             'publishedDate' => '1957-01-01',
+             'published_date' => '1957-01-01',
 +            'image' => $photo,
          ));
 +        $this->assertEquals(
@@ -300,7 +300,7 @@ index cb30e94..73fb38e 100644
          $crawler = $client->submit($form, array(
              'title' => 'Where the Red Fern Grows',
              'author' => 'Will Rawls',
-             'publishedDate' => '1961',
+             'published_date' => '1961',
 +            'image' => $photo,
          ));
  
@@ -308,7 +308,7 @@ index cb30e94..73fb38e 100644
 @@ -157,6 +176,7 @@ class ControllersTest extends WebTestCase
              'title' => 'Where the Red Fern Grows',
              'author' => 'Wilson Rawls',
-             'publishedDate' => '1961',
+             'published_date' => '1961',
 +            'image' => $photo,
          ));
  

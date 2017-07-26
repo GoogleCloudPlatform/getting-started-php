@@ -34,11 +34,7 @@ trait GetConfigTrait
             'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
             'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
             'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
-            'bookshelf_backend' => getenv('BOOKSHELF_BACKEND') ?: 'cloudsql',
-            'mysql_dsn' => getenv('MYSQL_DSN'),
-            'mysql_user' => getenv('MYSQL_USER'),
-            'mysql_password' => getenv('MYSQL_PASSWORD'),
-            'cloudsql_connection_name' => getenv('CLOUDSQL_CONNECTION_NAME'),
+            'bookshelf_backend' => getenv('BOOKSHELF_BACKEND') ?: 'datastore',
             'mongo_url' => getenv('MONGO_URL'),
             'mongo_database' => getenv('MONGO_DATABASE'),
             'mongo_collection' => getenv('MONGO_COLLECTION'),
@@ -49,6 +45,17 @@ trait GetConfigTrait
             $settings = Yaml::parse(file_get_contents($f));
             $config = array_merge($settings, array_filter($config));
         }
+
+        $config['mysql_connection_name'] = getenv('MYSQL_CONNECTION_NAME');
+        $config['mysql_database_name'] = getenv('MYSQL_DATABASE_NAME');
+        $config['mysql_user'] = getenv('MYSQL_USER');
+        $config['mysql_password'] = getenv('MYSQL_PASSWORD');
+        $config['mysql_port'] = getenv('MYSQL_PORT') ?: 3306;
+        $config['postgres_connection_name'] = getenv('POSTGRES_CONNECTION_NAME');
+        $config['postgres_database_name'] = getenv('POSTGRES_DATABASE_NAME');
+        $config['postgres_user'] = getenv('POSTGRES_USER');
+        $config['postgres_password'] = getenv('POSTGRES_PASSWORD');
+        $config['postgres_port'] = getenv('POSTGRES_PORT') ?: 5432;
 
         return $config;
     }

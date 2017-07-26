@@ -1,10 +1,11 @@
 diff --git a/.gitignore b/.gitignore
-index 0b08f40..fee45bd 100644
+index 0b08f40..59541b5 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -1,2 +1,3 @@
+@@ -1,2 +1,4 @@
  **/vendor
  **/settings.yml
++build/*
 +config/settings-e2e.yml
 diff --git a/README.md b/README.md
 index 5a6b401..c23b619 100644
@@ -51,16 +52,14 @@ index 6f731c3..ee374f2 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index 92db3b2..23be1d7 100644
+index 7545722..2783799 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,10 +4,444 @@
+@@ -4,9 +4,446 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "hash": "cac1e130cb190b984e72f7dbcb12194a",
 -    "content-hash": "1c1639772c561e0747b7d601df6c5b2d",
-+    "hash": "3a6407bf0a78a6757301bd36e525a575",
 +    "content-hash": "2ed03aef435a286fbf9ff49ce423fec4",
      "packages": [
          {
@@ -104,7 +103,7 @@ index 92db3b2..23be1d7 100644
 +            ],
 +            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
 +            "homepage": "https://github.com/firebase/php-jwt",
-+            "time": "2016-07-18 04:51:16"
++            "time": "2016-07-18T04:51:16+00:00"
 +        },
 +        {
 +            "name": "google/auth",
@@ -152,20 +151,20 @@ index 92db3b2..23be1d7 100644
 +                "google",
 +                "oauth2"
 +            ],
-+            "time": "2016-11-02 14:59:14"
++            "time": "2016-11-02T14:59:14+00:00"
 +        },
 +        {
 +            "name": "google/cloud",
-+            "version": "v0.21.0",
++            "version": "v0.21.1",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php.git",
-+                "reference": "a7bac23c526a5920134d909af80fcba4976276e1"
++                "reference": "68bbbc030c256bc30f9adfab1830eb6e462a0958"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/a7bac23c526a5920134d909af80fcba4976276e1",
-+                "reference": "a7bac23c526a5920134d909af80fcba4976276e1",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php/zipball/68bbbc030c256bc30f9adfab1830eb6e462a0958",
++                "reference": "68bbbc030c256bc30f9adfab1830eb6e462a0958",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -239,31 +238,34 @@ index 92db3b2..23be1d7 100644
 +                "translation",
 +                "vision"
 +            ],
-+            "time": "2017-02-22 20:25:16"
++            "time": "2017-02-23T20:14:16+00:00"
 +        },
 +        {
 +            "name": "guzzlehttp/guzzle",
-+            "version": "6.2.2",
++            "version": "6.3.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/guzzle/guzzle.git",
-+                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60"
++                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
-+                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
++                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
++                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
 +                "shasum": ""
 +            },
 +            "require": {
 +                "guzzlehttp/promises": "^1.0",
-+                "guzzlehttp/psr7": "^1.3.1",
++                "guzzlehttp/psr7": "^1.4",
 +                "php": ">=5.5"
 +            },
 +            "require-dev": {
 +                "ext-curl": "*",
-+                "phpunit/phpunit": "^4.0",
++                "phpunit/phpunit": "^4.0 || ^5.0",
 +                "psr/log": "^1.0"
++            },
++            "suggest": {
++                "psr/log": "Required for using the Log middleware"
 +            },
 +            "type": "library",
 +            "extra": {
@@ -301,7 +303,7 @@ index 92db3b2..23be1d7 100644
 +                "rest",
 +                "web service"
 +            ],
-+            "time": "2016-10-08 15:01:37"
++            "time": "2017-06-22T18:50:49+00:00"
 +        },
 +        {
 +            "name": "guzzlehttp/promises",
@@ -352,20 +354,20 @@ index 92db3b2..23be1d7 100644
 +            "keywords": [
 +                "promise"
 +            ],
-+            "time": "2016-12-20 10:07:11"
++            "time": "2016-12-20T10:07:11+00:00"
 +        },
 +        {
 +            "name": "guzzlehttp/psr7",
-+            "version": "1.4.0",
++            "version": "1.4.2",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/guzzle/psr7.git",
-+                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569"
++                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
-+                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
++                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
++                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -417,20 +419,20 @@ index 92db3b2..23be1d7 100644
 +                "uri",
 +                "url"
 +            ],
-+            "time": "2017-02-21 01:20:32"
++            "time": "2017-03-20T17:10:46+00:00"
 +        },
 +        {
 +            "name": "monolog/monolog",
-+            "version": "1.22.0",
++            "version": "1.23.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/Seldaek/monolog.git",
-+                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558"
++                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bad29cb8d18ab0315e6c477751418a82c850d558",
-+                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558",
++                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
++                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -451,7 +453,7 @@ index 92db3b2..23be1d7 100644
 +                "phpunit/phpunit-mock-objects": "2.3.0",
 +                "ruflin/elastica": ">=0.90 <3.0",
 +                "sentry/sentry": "^0.13",
-+                "swiftmailer/swiftmailer": "~5.3"
++                "swiftmailer/swiftmailer": "^5.3|^6.0"
 +            },
 +            "suggest": {
 +                "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -495,14 +497,14 @@ index 92db3b2..23be1d7 100644
 +                "logging",
 +                "psr-3"
 +            ],
-+            "time": "2016-11-26 00:15:39"
++            "time": "2017-06-19T01:22:40+00:00"
 +        },
 +        {
              "name": "pimple/pimple",
              "version": "v1.1.1",
              "source": {
-@@ -54,6 +488,102 @@
-             "time": "2013-11-22 08:30:29"
+@@ -53,6 +490,102 @@
+             "time": "2013-11-22T08:30:29+00:00"
          },
          {
 +            "name": "psr/cache",
@@ -548,7 +550,7 @@ index 92db3b2..23be1d7 100644
 +                "psr",
 +                "psr-6"
 +            ],
-+            "time": "2016-08-06 20:24:11"
++            "time": "2016-08-06T20:24:11+00:00"
 +        },
 +        {
 +            "name": "psr/http-message",
@@ -598,43 +600,37 @@ index 92db3b2..23be1d7 100644
 +                "request",
 +                "response"
 +            ],
-+            "time": "2016-08-06 14:39:51"
++            "time": "2016-08-06T14:39:51+00:00"
 +        },
 +        {
              "name": "psr/log",
              "version": "1.0.2",
              "source": {
-@@ -87,18 +617,62 @@
-             ],
-             "authors": [
-                 {
--                    "name": "PHP-FIG",
--                    "homepage": "http://www.php-fig.org/"
-+                    "name": "PHP-FIG",
-+                    "homepage": "http://www.php-fig.org/"
-+                }
-+            ],
-+            "description": "Common interface for logging libraries",
-+            "homepage": "https://github.com/php-fig/log",
-+            "keywords": [
+@@ -93,11 +626,55 @@
+             "description": "Common interface for logging libraries",
+             "homepage": "https://github.com/php-fig/log",
+             "keywords": [
+-                "log",
+-                "psr",
+-                "psr-3"
 +                "log",
 +                "psr",
 +                "psr-3"
 +            ],
-+            "time": "2016-10-10 12:19:37"
++            "time": "2016-10-10T12:19:37+00:00"
 +        },
 +        {
 +            "name": "rize/uri-template",
-+            "version": "0.3.1",
++            "version": "0.3.2",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/rize/UriTemplate.git",
-+                "reference": "35cee84ae1c4fe0a6599392d7ca13977ff664bee"
++                "reference": "9e5fdd5c47147aa5adf7f760002ee591ed37b9ca"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/35cee84ae1c4fe0a6599392d7ca13977ff664bee",
-+                "reference": "35cee84ae1c4fe0a6599392d7ca13977ff664bee",
++                "url": "https://api.github.com/repos/rize/UriTemplate/zipball/9e5fdd5c47147aa5adf7f760002ee591ed37b9ca",
++                "reference": "9e5fdd5c47147aa5adf7f760002ee591ed37b9ca",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -657,41 +653,36 @@ index 92db3b2..23be1d7 100644
 +                {
 +                    "name": "Marut K",
 +                    "homepage": "http://twitter.com/rezigned"
-                 }
-             ],
--            "description": "Common interface for logging libraries",
--            "homepage": "https://github.com/php-fig/log",
++                }
++            ],
 +            "description": "PHP URI Template (RFC 6570) supports both expansion & extraction",
-             "keywords": [
--                "log",
--                "psr",
--                "psr-3"
++            "keywords": [
 +                "RFC 6570",
 +                "template",
 +                "uri"
              ],
--            "time": "2016-10-10 12:19:37"
-+            "time": "2017-02-21 15:25:22"
+-            "time": "2016-10-10T12:19:37+00:00"
++            "time": "2017-06-14T03:57:53+00:00"
          },
          {
              "name": "silex/silex",
-@@ -562,6 +1136,122 @@
+@@ -560,6 +1137,126 @@
                  "url"
              ],
-             "time": "2016-06-29 05:40:00"
+             "time": "2016-06-29T05:40:00+00:00"
 +        },
 +        {
 +            "name": "symfony/yaml",
-+            "version": "v3.2.4",
++            "version": "v3.3.5",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/symfony/yaml.git",
-+                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8"
++                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/symfony/yaml/zipball/9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
-+                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
++                "url": "https://api.github.com/repos/symfony/yaml/zipball/1f93a8d19b8241617f5074a123e282575b821df8",
++                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -706,7 +697,7 @@ index 92db3b2..23be1d7 100644
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "3.2-dev"
++                    "dev-master": "3.3-dev"
 +                }
 +            },
 +            "autoload": {
@@ -733,38 +724,42 @@ index 92db3b2..23be1d7 100644
 +            ],
 +            "description": "Symfony Yaml Component",
 +            "homepage": "https://symfony.com",
-+            "time": "2017-02-16 22:46:52"
++            "time": "2017-06-15T12:58:50+00:00"
 +        },
 +        {
 +            "name": "twig/twig",
-+            "version": "v1.31.0",
++            "version": "v1.34.4",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/twigphp/Twig.git",
-+                "reference": "ddc9e3e20ee9c0b6908f401ac8353635b750eca7"
++                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ddc9e3e20ee9c0b6908f401ac8353635b750eca7",
-+                "reference": "ddc9e3e20ee9c0b6908f401ac8353635b750eca7",
++                "url": "https://api.github.com/repos/twigphp/Twig/zipball/f878bab48edb66ad9c6ed626bf817f60c6c096ee",
++                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee",
 +                "shasum": ""
 +            },
 +            "require": {
-+                "php": ">=5.2.7"
++                "php": ">=5.3.3"
 +            },
 +            "require-dev": {
++                "psr/container": "^1.0",
 +                "symfony/debug": "~2.7",
-+                "symfony/phpunit-bridge": "~3.2"
++                "symfony/phpunit-bridge": "~3.3@dev"
 +            },
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.31-dev"
++                    "dev-master": "1.34-dev"
 +                }
 +            },
 +            "autoload": {
 +                "psr-0": {
 +                    "Twig_": "lib/"
++                },
++                "psr-4": {
++                    "Twig\\": "src/"
 +                }
 +            },
 +            "notification-url": "https://packagist.org/downloads/",
@@ -794,18 +789,14 @@ index 92db3b2..23be1d7 100644
 +            "keywords": [
 +                "templating"
 +            ],
-+            "time": "2017-01-11 19:36:15"
++            "time": "2017-07-04T13:19:31+00:00"
          }
      ],
      "packages-dev": [
-@@ -739,190 +1429,34 @@
-             "version": "1.0.5",
-             "source": {
-                 "type": "git",
--                "url": "https://github.com/doctrine/instantiator.git",
--                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
--            },
--            "dist": {
+@@ -741,189 +1438,30 @@
+                 "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
+             },
+             "dist": {
 -                "type": "zip",
 -                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
 -                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
@@ -849,7 +840,7 @@ index 92db3b2..23be1d7 100644
 -                "constructor",
 -                "instantiate"
 -            ],
--            "time": "2015-06-14 21:17:01"
+-            "time": "2015-06-14T21:17:01+00:00"
 -        },
 -        {
 -            "name": "fabpot/goutte",
@@ -898,20 +889,20 @@ index 92db3b2..23be1d7 100644
 -            "keywords": [
 -                "scraper"
 -            ],
--            "time": "2017-01-03 13:21:43"
+-            "time": "2017-01-03T13:21:43+00:00"
 -        },
 -        {
 -            "name": "google/cloud-tools",
--            "version": "v0.6.1",
+-            "version": "v0.6.3",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
--                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac"
+-                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
--                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
+-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/90ecc5e371673078cf0fc71d442fd21415c277c3",
+-                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3",
 -                "shasum": ""
 -            },
 -            "require": {
@@ -948,36 +939,38 @@ index 92db3b2..23be1d7 100644
 -                "gcp",
 -                "test"
 -            ],
--            "time": "2016-12-08 21:36:15"
+-            "time": "2017-02-23T22:19:51+00:00"
 -        },
 -        {
 -            "name": "guzzlehttp/guzzle",
--            "version": "6.2.2",
+-            "version": "6.3.0",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/guzzle/guzzle.git",
--                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60"
-+                "url": "https://github.com/doctrine/instantiator.git",
-+                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
-             },
-             "dist": {
-                 "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
--                "reference": "ebf29dee597f02f09f4d5bbecc68230ea9b08f60",
+-                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
+-            },
+-            "dist": {
+-                "type": "zip",
+-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+-                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
++                "type": "zip",
 +                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
 +                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
                  "shasum": ""
              },
              "require": {
 -                "guzzlehttp/promises": "^1.0",
--                "guzzlehttp/psr7": "^1.3.1",
+-                "guzzlehttp/psr7": "^1.4",
 -                "php": ">=5.5"
 +                "php": ">=5.3,<8.0-DEV"
              },
              "require-dev": {
 -                "ext-curl": "*",
--                "phpunit/phpunit": "^4.0",
+-                "phpunit/phpunit": "^4.0 || ^5.0",
 -                "psr/log": "^1.0"
+-            },
+-            "suggest": {
+-                "psr/log": "Required for using the Log middleware"
 +                "athletic/athletic": "~0.1.8",
 +                "ext-pdo": "*",
 +                "ext-phar": "*",
@@ -1001,7 +994,7 @@ index 92db3b2..23be1d7 100644
                  }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -931,57 +1465,50 @@
+@@ -932,57 +1470,50 @@
              ],
              "authors": [
                  {
@@ -1028,8 +1021,8 @@ index 92db3b2..23be1d7 100644
 +                "constructor",
 +                "instantiate"
              ],
--            "time": "2016-10-08 15:01:37"
-+            "time": "2015-06-14 21:17:01"
+-            "time": "2017-06-22T18:50:49+00:00"
++            "time": "2015-06-14T21:17:01+00:00"
          },
          {
 -            "name": "guzzlehttp/promises",
@@ -1082,7 +1075,7 @@ index 92db3b2..23be1d7 100644
              },
              "notification-url": "https://packagist.org/downloads/",
              "license": [
-@@ -989,81 +1516,66 @@
+@@ -990,81 +1521,66 @@
              ],
              "authors": [
                  {
@@ -1100,27 +1093,27 @@ index 92db3b2..23be1d7 100644
 -                "promise"
 +                "scraper"
              ],
--            "time": "2016-12-20 10:07:11"
-+            "time": "2017-01-03 13:21:43"
+-            "time": "2016-12-20T10:07:11+00:00"
++            "time": "2017-01-03T13:21:43+00:00"
          },
          {
 -            "name": "guzzlehttp/psr7",
--            "version": "1.4.0",
+-            "version": "1.4.2",
 +            "name": "google/cloud-tools",
-+            "version": "v0.6.1",
++            "version": "v0.6.3",
              "source": {
                  "type": "git",
 -                "url": "https://github.com/guzzle/psr7.git",
--                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569"
+-                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
 +                "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac"
++                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3"
              },
              "dist": {
                  "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/psr7/zipball/04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
--                "reference": "04a6d1a00ea5da0727ee94309a9f0d3dbaecb569",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
-+                "reference": "6546fab38b9ac7d9563e1ada6ed1e945eb7d10ac",
+-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+-                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/90ecc5e371673078cf0fc71d442fd21415c277c3",
++                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3",
                  "shasum": ""
              },
              "require": {
@@ -1188,13 +1181,13 @@ index 92db3b2..23be1d7 100644
 +                "gcp",
 +                "test"
              ],
--            "time": "2017-02-21 01:20:32"
-+            "time": "2016-12-08 21:36:15"
+-            "time": "2017-03-20T17:10:46+00:00"
++            "time": "2017-02-23T22:19:51+00:00"
          },
          {
              "name": "phpdocumentor/reflection-common",
-@@ -1646,56 +2158,6 @@
-             "time": "2015-10-02 06:51:40"
+@@ -1652,56 +2168,6 @@
+             "time": "2015-10-02T06:51:40+00:00"
          },
          {
 -            "name": "psr/http-message",
@@ -1244,27 +1237,27 @@ index 92db3b2..23be1d7 100644
 -                "request",
 -                "response"
 -            ],
--            "time": "2016-08-06 14:39:51"
+-            "time": "2016-08-06T14:39:51+00:00"
 -        },
 -        {
              "name": "sebastian/comparator",
              "version": "1.2.4",
              "source": {
-@@ -2283,61 +2745,6 @@
-             "time": "2017-02-16 14:07:22"
+@@ -2289,61 +2755,6 @@
+             "time": "2017-07-13T13:05:09+00:00"
          },
          {
 -            "name": "symfony/yaml",
--            "version": "v3.2.4",
+-            "version": "v3.3.5",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/symfony/yaml.git",
--                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8"
+-                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/symfony/yaml/zipball/9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
--                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
+-                "url": "https://api.github.com/repos/symfony/yaml/zipball/1f93a8d19b8241617f5074a123e282575b821df8",
+-                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
 -                "shasum": ""
 -            },
 -            "require": {
@@ -1279,7 +1272,7 @@ index 92db3b2..23be1d7 100644
 -            "type": "library",
 -            "extra": {
 -                "branch-alias": {
--                    "dev-master": "3.2-dev"
+-                    "dev-master": "3.3-dev"
 -                }
 -            },
 -            "autoload": {
@@ -1306,7 +1299,7 @@ index 92db3b2..23be1d7 100644
 -            ],
 -            "description": "Symfony Yaml Component",
 -            "homepage": "https://symfony.com",
--            "time": "2017-02-16 22:46:52"
+-            "time": "2017-06-15T12:58:50+00:00"
 -        },
 -        {
              "name": "webmozart/assert",
@@ -1314,23 +1307,24 @@ index 92db3b2..23be1d7 100644
              "source": {
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
 new file mode 100644
-index 0000000..a18fbdd
+index 0000000..4526a43
 --- /dev/null
 +++ b/config/settings.yml.dist
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,19 @@
 +# Google credentials and configuration
 +google_client_id:      YOUR_CLIENT_ID
 +google_client_secret:  YOUR_CLIENT_SECRET
 +google_project_id:     YOUR_PROJECT_ID
 +
-+# options are "cloudsql", "mongodb", or "datastore"
-+bookshelf_backend: cloudsql
++# options are "mysql", "postgres", "mongodb", or "datastore"
++bookshelf_backend: mysql
 +
-+# configure CloudSQL backend
-+mysql_dsn: "mysql:host=IP_ADDRESS;port=3306;dbname=YOUR_DB_NAME"
-+mysql_user: YOUR_MYSQL_USER
-+mysql_password: YOUR_MYSQL_PASSWORD
-+cloudsql_connection_name: "INSTANCE_CONNECTION_NAME"
++# configure CloudSQL for MySQL or PostgreSQL backend
++cloudsql_connection_name: INSTANCE_CONNECTION_NAME
++cloudsql_database_name: YOUR_DATABASE_NAME
++cloudsql_user: YOUR_CLOUDSQL_USER
++cloudsql_password: YOUR_CLOUDSQL_PASSWORD
++cloudsql_port: 3306
 +
 +# configure Mongo backend
 +mongo_url: YOUR_MONGODB_URL
@@ -1356,195 +1350,6 @@ index 5526a43..8745f1f 100644
          </whitelist>
      </filter>
  </phpunit>
-diff --git a/src/DataModel/CloudSql.php b/src/DataModel/CloudSql.php
-new file mode 100644
-index 0000000..11606d5
---- /dev/null
-+++ b/src/DataModel/CloudSql.php
-@@ -0,0 +1,183 @@
-+<?php
-+/*
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+namespace Google\Cloud\Samples\Bookshelf\DataModel;
-+
-+use PDO;
-+
-+/**
-+ * Class CloudSql implements the DataModelInterface with a mysql database.
-+ *
-+ */
-+class CloudSql implements DataModelInterface
-+{
-+    private $dsn;
-+    private $user;
-+    private $password;
-+
-+    /**
-+     * Creates the SQL books table if it doesn't already exist.
-+     */
-+    public function __construct($dsn, $user, $password)
-+    {
-+        $this->dsn = $dsn;
-+        $this->user = $user;
-+        $this->password = $password;
-+
-+        $columns = array(
-+            'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ',
-+            'title VARCHAR(255)',
-+            'author VARCHAR(255)',
-+            'publishedDate DATE',
-+            'imageUrl VARCHAR(255)',
-+            'description VARCHAR(255)',
-+            'createdBy VARCHAR(255)',
-+            'createdById VARCHAR(255)',
-+        );
-+
-+        $this->columnNames = array_map(function ($columnDefinition) {
-+            return explode(' ', $columnDefinition)[0];
-+        }, $columns);
-+        $columnText = implode(', ', $columns);
-+        $pdo = $this->newConnection();
-+        $pdo->query("CREATE TABLE IF NOT EXISTS books ($columnText)");
-+    }
-+
-+    /**
-+     * Creates a new PDO instance and sets error mode to exception.
-+     *
-+     * @return PDO
-+     */
-+    private function newConnection()
-+    {
-+        $pdo = new PDO($this->dsn, $this->user, $this->password);
-+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-+
-+        return $pdo;
-+    }
-+
-+    /**
-+     * Throws an exception if $book contains an invalid key.
-+     *
-+     * @param $book array
-+     *
-+     * @throws \Exception
-+     */
-+    private function verifyBook($book)
-+    {
-+        if ($invalid = array_diff_key($book, array_flip($this->columnNames))) {
-+            throw new \Exception(sprintf(
-+                'unsupported book properties: "%s"',
-+                implode(', ', $invalid)
-+            ));
-+        }
-+    }
-+
-+    public function listBooks($limit = 10, $cursor = null)
-+    {
-+        $pdo = $this->newConnection();
-+        if ($cursor) {
-+            $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id' .
-+                ' LIMIT :limit';
-+            $statement = $pdo->prepare($query);
-+            $statement->bindValue(':cursor', $cursor, PDO::PARAM_INT);
-+        } else {
-+            $query = 'SELECT * FROM books ORDER BY id LIMIT :limit';
-+            $statement = $pdo->prepare($query);
-+        }
-+        $statement->bindValue(':limit', $limit + 1, PDO::PARAM_INT);
-+        $statement->execute();
-+        $rows = array();
-+        $last_row = null;
-+        $new_cursor = null;
-+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-+            if (count($rows) == $limit) {
-+                $new_cursor = $last_row['id'];
-+                break;
-+            }
-+            array_push($rows, $row);
-+            $last_row = $row;
-+        }
-+
-+        return array(
-+            'books' => $rows,
-+            'cursor' => $new_cursor,
-+        );
-+    }
-+
-+    public function create($book, $id = null)
-+    {
-+        $this->verifyBook($book);
-+        if ($id) {
-+            $book['id'] = $id;
-+        }
-+        $pdo = $this->newConnection();
-+        $names = array_keys($book);
-+        $placeHolders = array_map(function ($key) {
-+            return ":$key";
-+        }, $names);
-+        $sql = sprintf(
-+            'INSERT INTO books (%s) VALUES (%s)',
-+            implode(', ', $names),
-+            implode(', ', $placeHolders)
-+        );
-+        $statement = $pdo->prepare($sql);
-+        $statement->execute($book);
-+
-+        return $pdo->lastInsertId();
-+    }
-+
-+    public function read($id)
-+    {
-+        $pdo = $this->newConnection();
-+        $statement = $pdo->prepare('SELECT * FROM books WHERE id = :id');
-+        $statement->bindValue('id', $id, PDO::PARAM_INT);
-+        $statement->execute();
-+
-+        return $statement->fetch(PDO::FETCH_ASSOC);
-+    }
-+
-+    public function update($book)
-+    {
-+        $this->verifyBook($book);
-+        $pdo = $this->newConnection();
-+        $assignments = array_map(
-+            function ($column) {
-+                return "$column=:$column";
-+            },
-+            $this->columnNames
-+        );
-+        $assignmentString = implode(',', $assignments);
-+        $sql = "UPDATE books SET $assignmentString WHERE id = :id";
-+        $statement = $pdo->prepare($sql);
-+        $values = array_merge(
-+            array_fill_keys($this->columnNames, null),
-+            $book
-+        );
-+        return $statement->execute($values);
-+    }
-+
-+    public function delete($id)
-+    {
-+        $pdo = $this->newConnection();
-+        $statement = $pdo->prepare('DELETE FROM books WHERE id = :id');
-+        $statement->bindValue('id', $id, PDO::PARAM_INT);
-+        $statement->execute();
-+
-+        return $statement->rowCount();
-+    }
-+}
 diff --git a/src/DataModel/DataModelInterface.php b/src/DataModel/DataModelInterface.php
 new file mode 100644
 index 0000000..2942024
@@ -1631,7 +1436,7 @@ index 0000000..2942024
 +}
 diff --git a/src/DataModel/Datastore.php b/src/DataModel/Datastore.php
 new file mode 100644
-index 0000000..930e38f
+index 0000000..6789ff6
 --- /dev/null
 +++ b/src/DataModel/Datastore.php
 @@ -0,0 +1,137 @@
@@ -1669,11 +1474,11 @@ index 0000000..930e38f
 +        'id'            => 'integer',
 +        'title'         => 'string',
 +        'author'        => 'string',
-+        'publishedDate' => 'timestamp',
-+        'imageUrl'      => 'string',
++        'published_date' => 'string',
++        'image_url'     => 'string',
 +        'description'   => 'string',
-+        'createdBy'     => 'string',
-+        'createdById'   => 'string',
++        'created_by'    => 'string',
++        'created_by_id' => 'string',
 +    ];
 +
 +    public function __construct($projectId)
@@ -1774,7 +1579,7 @@ index 0000000..930e38f
 +}
 diff --git a/src/DataModel/MongoDb.php b/src/DataModel/MongoDb.php
 new file mode 100644
-index 0000000..a30f12c
+index 0000000..d471e38
 --- /dev/null
 +++ b/src/DataModel/MongoDb.php
 @@ -0,0 +1,203 @@
@@ -1816,11 +1621,11 @@ index 0000000..a30f12c
 +        'id',
 +        'title',
 +        'author',
-+        'publishedDate',
-+        'imageUrl',
++        'published_date',
++        'image_url',
 +        'description',
-+        'createdBy',
-+        'createdById',
++        'created_by',
++        'created_by_id',
 +    );
 +
 +    /**
@@ -1981,12 +1786,223 @@ index 0000000..a30f12c
 +        return $ret;
 +    }
 +}
+diff --git a/src/DataModel/Sql.php b/src/DataModel/Sql.php
+new file mode 100644
+index 0000000..e5590c2
+--- /dev/null
++++ b/src/DataModel/Sql.php
+@@ -0,0 +1,205 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use PDO;
++
++/**
++ * Class Sql implements the DataModelInterface with a mysql or postgres database.
++ *
++ */
++class Sql implements DataModelInterface
++{
++    private $dsn;
++    private $user;
++    private $password;
++
++    /**
++     * Creates the SQL books table if it doesn't already exist.
++     */
++    public function __construct($dsn, $user, $password)
++    {
++        $this->dsn = $dsn;
++        $this->user = $user;
++        $this->password = $password;
++
++        $columns = array(
++            'id serial PRIMARY KEY ',
++            'title VARCHAR(255)',
++            'author VARCHAR(255)',
++            'published_date VARCHAR(255)',
++            'image_url VARCHAR(255)',
++            'description VARCHAR(255)',
++            'created_by VARCHAR(255)',
++            'created_by_id VARCHAR(255)',
++        );
++
++        $this->columnNames = array_map(function ($columnDefinition) {
++            return explode(' ', $columnDefinition)[0];
++        }, $columns);
++        $columnText = implode(', ', $columns);
++        $pdo = $this->newConnection();
++        $pdo->query("CREATE TABLE IF NOT EXISTS books ($columnText)");
++    }
++
++    /**
++     * Creates a new PDO instance and sets error mode to exception.
++     *
++     * @return PDO
++     */
++    private function newConnection()
++    {
++        $pdo = new PDO($this->dsn, $this->user, $this->password);
++        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
++
++        return $pdo;
++    }
++
++    /**
++     * Throws an exception if $book contains an invalid key.
++     *
++     * @param $book array
++     *
++     * @throws \Exception
++     */
++    private function verifyBook($book)
++    {
++        if ($invalid = array_diff_key($book, array_flip($this->columnNames))) {
++            throw new \Exception(sprintf(
++                'unsupported book properties: "%s"',
++                implode(', ', $invalid)
++            ));
++        }
++    }
++
++    public function listBooks($limit = 10, $cursor = null)
++    {
++        $pdo = $this->newConnection();
++        if ($cursor) {
++            $query = 'SELECT * FROM books WHERE id > :cursor ORDER BY id' .
++                ' LIMIT :limit';
++            $statement = $pdo->prepare($query);
++            $statement->bindValue(':cursor', $cursor, PDO::PARAM_INT);
++        } else {
++            $query = 'SELECT * FROM books ORDER BY id LIMIT :limit';
++            $statement = $pdo->prepare($query);
++        }
++        $statement->bindValue(':limit', $limit + 1, PDO::PARAM_INT);
++        $statement->execute();
++        $rows = array();
++        $last_row = null;
++        $new_cursor = null;
++        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
++            if (count($rows) == $limit) {
++                $new_cursor = $last_row['id'];
++                break;
++            }
++            array_push($rows, $row);
++            $last_row = $row;
++        }
++
++        return array(
++            'books' => $rows,
++            'cursor' => $new_cursor,
++        );
++    }
++
++    public function create($book, $id = null)
++    {
++        $this->verifyBook($book);
++        if ($id) {
++            $book['id'] = $id;
++        }
++        $pdo = $this->newConnection();
++        $names = array_keys($book);
++        $placeHolders = array_map(function ($key) {
++            return ":$key";
++        }, $names);
++        $sql = sprintf(
++            'INSERT INTO books (%s) VALUES (%s)',
++            implode(', ', $names),
++            implode(', ', $placeHolders)
++        );
++        $statement = $pdo->prepare($sql);
++        $statement->execute($book);
++
++        return $pdo->lastInsertId();
++    }
++
++    public function read($id)
++    {
++        $pdo = $this->newConnection();
++        $statement = $pdo->prepare('SELECT * FROM books WHERE id = :id');
++        $statement->bindValue('id', $id, PDO::PARAM_INT);
++        $statement->execute();
++
++        return $statement->fetch(PDO::FETCH_ASSOC);
++    }
++
++    public function update($book)
++    {
++        $this->verifyBook($book);
++        $pdo = $this->newConnection();
++        $assignments = array_map(
++            function ($column) {
++                return "$column=:$column";
++            },
++            $this->columnNames
++        );
++        $assignmentString = implode(',', $assignments);
++        $sql = "UPDATE books SET $assignmentString WHERE id = :id";
++        $statement = $pdo->prepare($sql);
++        $values = array_merge(
++            array_fill_keys($this->columnNames, null),
++            $book
++        );
++        return $statement->execute($values);
++    }
++
++    public function delete($id)
++    {
++        $pdo = $this->newConnection();
++        $statement = $pdo->prepare('DELETE FROM books WHERE id = :id');
++        $statement->bindValue('id', $id, PDO::PARAM_INT);
++        $statement->execute();
++
++        return $statement->rowCount();
++    }
++
++    public static function getMysqlDsn($dbName, $port, $connectionName = null)
++    {
++        if ($connectionName) {
++            return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
++                $connectionName,
++                $dbName);
++        }
++
++        return sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
++    }
++
++    public static function getPostgresDsn($dbName, $port, $connectionName = null)
++    {
++        if ($connectionName) {
++            return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
++                $connectionName,
++                $dbName);
++        }
++
++        return sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
++    }
++}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..2d8f620
+index 0000000..11f75c0
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,96 @@
+@@ -0,0 +1,109 @@
 +<?php
 +
 +/*
@@ -2009,8 +2025,7 @@ index 0000000..2d8f620
 + * Create a new Silex Application with Twig.  Configure it for debugging.
 + * Follows Silex Skeleton pattern.
 + */
-+use Google\Auth\Credentials\GCECredentials;
-+use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
++use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
 +use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 +use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 +use Silex\Application;
@@ -2053,19 +2068,31 @@ index 0000000..2d8f620
 +            return new Datastore(
 +                $config['google_project_id']
 +            );
-+        case 'cloudsql':
-+            // Add Unix Socket for CloudSQL 2nd Gen when applicable
-+            $socket = GCECredentials::onGce()
-+                ? ';unix_socket=/cloudsql/' . $config['cloudsql_connection_name']
-+                : '';
-+            return new CloudSql(
-+                $config['mysql_dsn'] . $socket,
-+                $config['mysql_user'],
-+                $config['mysql_password']
++        case 'mysql':
++            $mysql_dsn = Sql::getMysqlDsn(
++                $config['cloudsql_database_name'],
++                $config['cloudsql_port'],
++                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
++            );
++            return new Sql(
++                $mysql_dsn,
++                $config['cloudsql_user'],
++                $config['cloudsql_password']
++            );
++        case 'postgres':
++            $postgres_dsn = Sql::getPostgresDsn(
++                $config['cloudsql_database_name'],
++                $config['cloudsql_port'],
++                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
++            );
++            return new Sql(
++                $postgres_dsn,
++                $config['cloudsql_user'],
++                $config['cloudsql_password']
 +            );
 +        default:
 +            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
-+                . "Possible values are cloudsql, mongodb, or datastore.");
++                . "Possible values are mysql, postgres, mongodb, or datastore.");
 +    }
 +};
 +
@@ -2075,8 +2102,10 @@ index 0000000..2d8f620
 +) {
 +    $app['debug'] = true;
 +} else {
-+    $app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'),
-+                               FILTER_VALIDATE_BOOLEAN);
++    $app['debug'] = filter_var(
++        getenv('BOOKSHELF_DEBUG'),
++                               FILTER_VALIDATE_BOOLEAN
++    );
 +}
 +
 +// add service parameters
@@ -2085,10 +2114,10 @@ index 0000000..2d8f620
 +return $app;
 diff --git a/src/controllers.php b/src/controllers.php
 new file mode 100644
-index 0000000..cf1a6bb
+index 0000000..fc15adc
 --- /dev/null
 +++ b/src/controllers.php
-@@ -0,0 +1,140 @@
+@@ -0,0 +1,130 @@
 +<?php
 +
 +/*
@@ -2151,11 +2180,6 @@ index 0000000..cf1a6bb
 +    /** @var DataModelInterface $model */
 +    $model = $app['bookshelf.model'];
 +    $book = $request->request->all();
-+    if (!empty($book['publishedDate'])) {
-+        $d = new \DateTime($book['publishedDate']);
-+        $book['publishedDate'] = $d->setTimezone(
-+            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
-+    }
 +    $id = $model->create($book);
 +
 +    return $app->redirect("/books/$id");
@@ -2201,11 +2225,6 @@ index 0000000..cf1a6bb
 +    $model = $app['bookshelf.model'];
 +    if (!$model->read($id)) {
 +        return new Response('', Response::HTTP_NOT_FOUND);
-+    }
-+    if (!empty($book['publishedDate'])) {
-+        $d = new \DateTime($book['publishedDate']);
-+        $book['publishedDate'] = $d->setTimezone(
-+            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
 +    }
 +    if ($model->update($book)) {
 +        return $app->redirect("/books/$id");
@@ -2277,7 +2296,7 @@ index 0000000..db1be8f
 +</html>
 diff --git a/templates/form.html.twig b/templates/form.html.twig
 new file mode 100644
-index 0000000..9679ef6
+index 0000000..eec21d6
 --- /dev/null
 +++ b/templates/form.html.twig
 @@ -0,0 +1,49 @@
@@ -2316,8 +2335,8 @@ index 0000000..9679ef6
 +  </div>
 +
 +  <div class="form-group">
-+    <label for="publishedDate">Date Published</label>
-+    <input type="text" name="publishedDate" id="publishedDate" value="{{book.publishedDate|date("F jS, Y")}}" class="form-control"/>
++    <label for="published_date">Date Published</label>
++    <input type="text" name="published_date" id="published_date" value="{{book.published_date}}" class="form-control"/>
 +  </div>
 +
 +  <div class="form-group">
@@ -2391,7 +2410,7 @@ index 0000000..af00157
 +{% endblock %}
 diff --git a/templates/view.html.twig b/templates/view.html.twig
 new file mode 100644
-index 0000000..d5c839e
+index 0000000..459ce61
 --- /dev/null
 +++ b/templates/view.html.twig
 @@ -0,0 +1,48 @@
@@ -2434,7 +2453,7 @@ index 0000000..d5c839e
 +  <div class="media-body">
 +    <h4 class="book-title">
 +      {{book.title}}
-+      <small>{{book.publishedDate|date("F jS, Y")}}</small>
++      <small>{{book.published_date}}</small>
 +    </h4>
 +    <h5 class="book-author">By {{book.author|default('Unknown', True)}}</h5>
 +    <p class="book-description">{{book.description}}</p>
@@ -2494,55 +2513,6 @@ index 0000000..f6656d8
 +    "symfony/browser-kit": "^3.0",
 +    "symfony/http-kernel": "^3.0"
 +  }
-+}
-diff --git a/test/e2e/CloudSqlTest.php b/test/e2e/CloudSqlTest.php
-new file mode 100644
-index 0000000..3177ba3
---- /dev/null
-+++ b/test/e2e/CloudSqlTest.php
-@@ -0,0 +1,43 @@
-+<?php
-+/*
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+namespace Google\Cloud\Samples\Bookshelf;
-+
-+/**
-+ * Class CloudSqlTest
-+ */
-+class CloudSqlTest extends E2eTest
-+{
-+    protected static function copyAppYaml()
-+    {
-+        // set "app-e2e.yaml" for app engine config
-+        // set cloudsql connection name
-+        $config = self::getConfig();
-+        $appYamlPath = __DIR__ . '/../../app-e2e.yaml';
-+        $appYaml = file_get_contents(__DIR__ . '/../app-e2e.yaml');
-+        file_put_contents($appYamlPath, str_replace(
-+            ['# ', 'CLOUDSQL_CONNECTION_NAME'],
-+            ['', $config['cloudsql_connection_name']],
-+            $appYaml
-+        ));
-+    }
-+
-+    protected static function getCustomConfig()
-+    {
-+        return ['bookshelf_backend' => 'cloudsql'];
-+    }
 +}
 diff --git a/test/e2e/BookshelfTest.php b/test/e2e/DatastoreTest.php
 similarity index 61%
@@ -2647,12 +2617,110 @@ index 0000000..dd90be0
 +        );
 +    }
 +}
+diff --git a/test/e2e/MySqlTest.php b/test/e2e/MySqlTest.php
+new file mode 100644
+index 0000000..44c4bd4
+--- /dev/null
++++ b/test/e2e/MySqlTest.php
+@@ -0,0 +1,43 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++/**
++ * Class MySqlTest
++ */
++class MySqlTest extends E2eTest
++{
++    protected static function copyAppYaml()
++    {
++        // set "app-e2e.yaml" for app engine config
++        // set cloudsql connection name
++        $config = self::getConfig();
++        $appYamlPath = __DIR__ . '/../../app-e2e.yaml';
++        $appYaml = file_get_contents(__DIR__ . '/../app-e2e.yaml');
++        file_put_contents($appYamlPath, str_replace(
++            ['# ', 'CLOUDSQL_CONNECTION_NAME'],
++            ['', $config['mysql_connection_name']],
++            $appYaml
++        ));
++    }
++
++    protected static function getCustomConfig()
++    {
++        return ['bookshelf_backend' => 'mysql'];
++    }
++}
+diff --git a/test/e2e/PostgresTest.php b/test/e2e/PostgresTest.php
+new file mode 100644
+index 0000000..92f383b
+--- /dev/null
++++ b/test/e2e/PostgresTest.php
+@@ -0,0 +1,43 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++namespace Google\Cloud\Samples\Bookshelf;
++
++/**
++ * Class PostgresTest
++ */
++class PostgresTest extends E2eTest
++{
++    protected static function copyAppYaml()
++    {
++        // set "app-e2e.yaml" for app engine config
++        // set cloudsql connection name
++        $config = self::getConfig();
++        $appYamlPath = __DIR__ . '/../../app-e2e.yaml';
++        $appYaml = file_get_contents(__DIR__ . '/../app-e2e.yaml');
++        file_put_contents($appYamlPath, str_replace(
++            ['# ', 'CLOUDSQL_CONNECTION_NAME'],
++            ['', $config['postgres_connection_name']],
++            $appYaml
++        ));
++    }
++
++    protected static function getCustomConfig()
++    {
++        return ['bookshelf_backend' => 'postgres'];
++    }
++}
 diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
 new file mode 100644
-index 0000000..dd8d5d8
+index 0000000..56d7200
 --- /dev/null
 +++ b/test/functional/AppTest.php
-@@ -0,0 +1,104 @@
+@@ -0,0 +1,142 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -2681,6 +2749,14 @@ index 0000000..dd8d5d8
 +{
 +    use GetConfigTrait;
 +
++    private $cloudSqlConfigs = [
++        'connection_name',
++        'database_name',
++        'user',
++        'password',
++        'port'
++    ];
++
 +    /**
 +     * Creates the application.
 +     *
@@ -2695,30 +2771,60 @@ index 0000000..dd8d5d8
 +        return $app;
 +    }
 +
-+    public function testBookshelfModel()
++    public function testBookshelfModelMysql()
 +    {
 +        $config = $this->app['config'];
++        $config['bookshelf_backend'] = 'mysql';
 +
-+        // Test CloudSql
-+        $config['bookshelf_backend'] = 'cloudsql';
++        // use MySQL config
++        foreach ($this->cloudSqlConfigs as $name) {
++            $config['cloudsql_' . $name] = $config['mysql_' . $name];
++        }
++
 +        $this->app['config'] = $config;
 +
 +        $this->assertInstanceOf(
-+            'Google\Cloud\Samples\Bookshelf\DataModel\CloudSql',
++            'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
 +            $this->app['bookshelf.model']
 +        );
++    }
 +
-+        // Test Datastore
++    public function testBookshelfModelPostgres()
++    {
++        $config = $this->app['config'];
++        $config['bookshelf_backend'] = 'postgres';
++
++        // use MySQL config
++        foreach ($this->cloudSqlConfigs as $name) {
++            $config['cloudsql_' . $name] = $config['postgres_' . $name];
++        }
++
++        $this->app['config'] = $config;
++
++        $this->assertInstanceOf(
++            'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
++            $this->app['bookshelf.model']
++        );
++    }
++
++    public function testBookshelfModelDatastore()
++    {
++        $config = $this->app['config'];
 +        $config['bookshelf_backend'] = 'datastore';
++
 +        $this->app['config'] = $config;
 +
 +        $this->assertInstanceOf(
 +            'Google\Cloud\Samples\Bookshelf\DataModel\Datastore',
 +            $this->app['bookshelf.model']
 +        );
++    }
 +
-+        // Test MongoDB
++    public function testBookshelfModelMongoDb()
++    {
++        $config = $this->app['config'];
 +        $config['bookshelf_backend'] = 'mongodb';
++
 +        $this->app['config'] = $config;
 +
 +        $this->assertInstanceOf(
@@ -2744,7 +2850,7 @@ index 0000000..dd8d5d8
 +
 +    /**
 +     * @expectedException DomainException
-+     * @expectedExceptionMessage Invalid "bookshelf_backend" given: foo. Possible values are cloudsql, mongodb, or datastore.
++     * @expectedExceptionMessage Invalid "bookshelf_backend" given: foo. Possible values are mysql, postgres, mongodb, or datastore.
 +     */
 +    public function testBookshelfModelException()
 +    {
@@ -2758,7 +2864,7 @@ index 0000000..dd8d5d8
 +    }
 +}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index ab11aa8..cb30e94 100644
+index ab11aa8..4efd086 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -1,5 +1,4 @@
@@ -2839,7 +2945,7 @@ index ab11aa8..cb30e94 100644
 +        $crawler = $client->submit($form, array(
 +            'title' => 'The Cat in the Hat',
 +            'author' => 'Dr. Suess',
-+            'publishedDate' => '1957-01-01',
++            'published_date' => '1957-01-01',
 +        ));
 +
 +        // Capture the delete button.
@@ -2848,7 +2954,7 @@ index ab11aa8..cb30e94 100644
 +        $crawler = $client->submit($form, array(
 +            'title' => 'Treasure Island',
 +            'author' => 'Robert Louis Stevenson',
-+            'publishedDate' => '1883-01-01',
++            'published_date' => '1883-01-01',
 +        ));
 +        $deleteTreasureIsland = $crawler->selectButton('submit');
 +
@@ -2903,7 +3009,7 @@ index ab11aa8..cb30e94 100644
 +        $crawler = $client->submit($form, array(
 +            'title' => 'Where the Red Fern Grows',
 +            'author' => 'Will Rawls',
-+            'publishedDate' => '1961',
++            'published_date' => '1961',
 +        ));
 +
 +        // Make sure the page contents match what we just submitted.
@@ -2923,7 +3029,7 @@ index ab11aa8..cb30e94 100644
 +        $crawler = $client->submit($form, array(
 +            'title' => 'Where the Red Fern Grows',
 +            'author' => 'Wilson Rawls',
-+            'publishedDate' => '1961',
++            'published_date' => '1961',
 +        ));
 +
 +        // Make sure the page contents match what we just submitted.
@@ -4277,10 +4383,10 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..9e91c1a
+index 0000000..438c2b9
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
-@@ -0,0 +1,147 @@
+@@ -0,0 +1,139 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4323,12 +4429,10 @@ index 0000000..9e91c1a
 +        } while ($fetch['cursor']);
 +
 +        // Insert two books.
-+        $d = new \DateTime('April 20th, 2016');
 +        $breakfastId = $model->create(array(
 +            'title' => 'Breakfast of Champions',
 +            'author' => 'Kurt Vonnegut',
-+            'publishedDate' => $d->setTimezone(
-+                new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z")
++            'published_date' => 'April 20th, 2016'
 +
 +        ));
 +
@@ -4379,15 +4483,11 @@ index 0000000..9e91c1a
 +        $this->assertEquals('Kurt Vonnegut', $breakfastBook['author']);
 +        $this->assertEquals($breakfastId, $breakfastBook['id']);
 +        $this->assertFalse(isset($breakfastBook['description']));
-+        $dateString = date(
-+            'F jS, Y', strtotime($breakfastBook['publishedDate']));
-+        $this->assertEquals('April 20th, 2016', $dateString);
++        $this->assertEquals('April 20th, 2016', $breakfastBook['published_date']);
 +
 +        // Try updating a book.
 +        $breakfastBook['description'] = 'A really fun read.';
-+        $d = new \DateTime('April 21st, 2016');
-+        $breakfastBook['publishedDate'] = $d->setTimezone(
-+            new \DateTimeZone('UTC'))->format("Y-m-d\TH:i:s\Z");
++        $breakfastBook['published_date'] = 'April 21st, 2016';
 +        $model->update($breakfastBook);
 +        $breakfastBookCopy = $model->read($breakfastId);
 +
@@ -4396,9 +4496,7 @@ index 0000000..9e91c1a
 +            'A really fun read.',
 +            $breakfastBookCopy['description']
 +        );
-+        $dateString = date(
-+            'F jS, Y', strtotime($breakfastBookCopy['publishedDate']));
-+        $this->assertEquals('April 21st, 2016', $dateString);
++        $this->assertEquals('April 21st, 2016', $breakfastBookCopy['published_date']);
 +
 +        // Update it again and delete the description.
 +        $breakfastBook['description'] = '';
@@ -4553,10 +4651,10 @@ index 0000000..7882a18
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
 new file mode 100644
-index 0000000..0ada004
+index 0000000..1aa3b66
 --- /dev/null
 +++ b/test/lib/GetConfigTrait.php
-@@ -0,0 +1,55 @@
+@@ -0,0 +1,62 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4593,11 +4691,7 @@ index 0000000..0ada004
 +            'google_client_id' => getenv('GOOGLE_CLIENT_ID'),
 +            'google_client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
 +            'google_project_id' => getenv('GOOGLE_PROJECT_ID'),
-+            'bookshelf_backend' => getenv('BOOKSHELF_BACKEND') ?: 'cloudsql',
-+            'mysql_dsn' => getenv('MYSQL_DSN'),
-+            'mysql_user' => getenv('MYSQL_USER'),
-+            'mysql_password' => getenv('MYSQL_PASSWORD'),
-+            'cloudsql_connection_name' => getenv('CLOUDSQL_CONNECTION_NAME'),
++            'bookshelf_backend' => getenv('BOOKSHELF_BACKEND') ?: 'datastore',
 +            'mongo_url' => getenv('MONGO_URL'),
 +            'mongo_database' => getenv('MONGO_DATABASE'),
 +            'mongo_collection' => getenv('MONGO_COLLECTION'),
@@ -4608,6 +4702,17 @@ index 0000000..0ada004
 +            $settings = Yaml::parse(file_get_contents($f));
 +            $config = array_merge($settings, array_filter($config));
 +        }
++
++        $config['mysql_connection_name'] = getenv('MYSQL_CONNECTION_NAME');
++        $config['mysql_database_name'] = getenv('MYSQL_DATABASE_NAME');
++        $config['mysql_user'] = getenv('MYSQL_USER');
++        $config['mysql_password'] = getenv('MYSQL_PASSWORD');
++        $config['mysql_port'] = getenv('MYSQL_PORT') ?: 3306;
++        $config['postgres_connection_name'] = getenv('POSTGRES_CONNECTION_NAME');
++        $config['postgres_database_name'] = getenv('POSTGRES_DATABASE_NAME');
++        $config['postgres_user'] = getenv('POSTGRES_USER');
++        $config['postgres_password'] = getenv('POSTGRES_PASSWORD');
++        $config['postgres_port'] = getenv('POSTGRES_PORT') ?: 5432;
 +
 +        return $config;
 +    }
@@ -4669,52 +4774,6 @@ index 0000000..cfbc381
 +        if (!self::hasCredentials()) {
 +            self::markTestSkipped('No application credentials were found.');
 +        }
-+    }
-+}
-diff --git a/test/unit/DataModel/CloudSqlTest.php b/test/unit/DataModel/CloudSqlTest.php
-new file mode 100644
-index 0000000..984f065
---- /dev/null
-+++ b/test/unit/DataModel/CloudSqlTest.php
-@@ -0,0 +1,40 @@
-+<?php
-+/*
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+namespace Google\Cloud\Samples\Bookshelf\DataModel;
-+
-+use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
-+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
-+
-+class CloudSqlTest extends \PHPUnit_Framework_TestCase
-+{
-+    use DataModelTestTrait;
-+    use GetConfigTrait;
-+    use SkipTestsIfMissingCredentialsTrait;
-+
-+    public function setUp()
-+    {
-+        parent::setUp();
-+
-+        $config = $this->getConfig();
-+
-+        $this->model = new CloudSql(
-+            $config['mysql_dsn'],
-+            $config['mysql_user'],
-+            $config['mysql_password']
-+        );
 +    }
 +}
 diff --git a/test/unit/DataModel/DatastoreTest.php b/test/unit/DataModel/DatastoreTest.php
@@ -4802,6 +4861,106 @@ index 0000000..4f746a9
 +            $config['mongo_url'],
 +            $config['mongo_database'],
 +            $config['mongo_collection']
++        );
++    }
++}
+diff --git a/test/unit/DataModel/MySqlTest.php b/test/unit/DataModel/MySqlTest.php
+new file mode 100644
+index 0000000..9697996
+--- /dev/null
++++ b/test/unit/DataModel/MySqlTest.php
+@@ -0,0 +1,44 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
++use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++
++class MySqlTest extends \PHPUnit_Framework_TestCase
++{
++    use DataModelTestTrait;
++    use GetConfigTrait;
++    use SkipTestsIfMissingCredentialsTrait;
++
++    public function setUp()
++    {
++        parent::setUp();
++
++        $config = $this->getConfig();
++
++        $mysql_dsn_local = sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s',
++            $config['mysql_port'],
++            $config['mysql_database_name']);
++
++        $this->model = new Sql(
++            $mysql_dsn_local,
++            $config['mysql_user'],
++            $config['mysql_password']
++        );
++    }
++}
+diff --git a/test/unit/DataModel/PostgresTest.php b/test/unit/DataModel/PostgresTest.php
+new file mode 100644
+index 0000000..7b72f20
+--- /dev/null
++++ b/test/unit/DataModel/PostgresTest.php
+@@ -0,0 +1,44 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\DataModel;
++
++use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
++use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++
++class PostgresTest extends \PHPUnit_Framework_TestCase
++{
++    use DataModelTestTrait;
++    use GetConfigTrait;
++    use SkipTestsIfMissingCredentialsTrait;
++
++    public function setUp()
++    {
++        parent::setUp();
++
++        $config = $this->getConfig();
++
++        $postgres_dsn_local = sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s',
++            $config['postgres_port'],
++            $config['postgres_database_name']);
++
++        $this->model = new Sql(
++            $postgres_dsn_local,
++            $config['postgres_user'],
++            $config['postgres_password']
 +        );
 +    }
 +}
