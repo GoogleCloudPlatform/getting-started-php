@@ -26,6 +26,14 @@ class AppTest extends WebTestCase
 {
     use GetConfigTrait;
 
+    private $cloudSqlConfigs = [
+        'connection_name',
+        'database_name',
+        'user',
+        'password',
+        'port'
+    ];
+
     /**
      * Creates the application.
      *
@@ -40,39 +48,60 @@ class AppTest extends WebTestCase
         return $app;
     }
 
-    public function testBookshelfModel()
+    public function testBookshelfModelMysql()
     {
         $config = $this->app['config'];
-
-        // Test MySQL
         $config['bookshelf_backend'] = 'mysql';
+
+        // use MySQL config
+        foreach ($this->cloudSqlConfigs as $name) {
+            $config['cloudsql_' . $name] = $config['mysql_' . $name];
+        }
+
         $this->app['config'] = $config;
 
         $this->assertInstanceOf(
             'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
             $this->app['bookshelf.model']
         );
+    }
 
-        // Test PostgreSQL
+    public function testBookshelfModelPostgres()
+    {
+        $config = $this->app['config'];
         $config['bookshelf_backend'] = 'postgres';
+
+        // use MySQL config
+        foreach ($this->cloudSqlConfigs as $name) {
+            $config['cloudsql_' . $name] = $config['postgres_' . $name];
+        }
+
         $this->app['config'] = $config;
 
         $this->assertInstanceOf(
             'Google\Cloud\Samples\Bookshelf\DataModel\Sql',
             $this->app['bookshelf.model']
         );
+    }
 
-        // Test Datastore
+    public function testBookshelfModelDatastore()
+    {
+        $config = $this->app['config'];
         $config['bookshelf_backend'] = 'datastore';
+
         $this->app['config'] = $config;
 
         $this->assertInstanceOf(
             'Google\Cloud\Samples\Bookshelf\DataModel\Datastore',
             $this->app['bookshelf.model']
         );
+    }
 
-        // Test MongoDB
+    public function testBookshelfModelMongoDb()
+    {
+        $config = $this->app['config'];
         $config['bookshelf_backend'] = 'mongodb';
+
         $this->app['config'] = $config;
 
         $this->assertInstanceOf(

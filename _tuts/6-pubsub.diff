@@ -596,10 +596,10 @@ index 0000000..1f0dd17
 +suhosin.executor.func.blacklist=
 \ No newline at end of file
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
-index 8edaf1f..2f901c0 100644
+index 4526a43..4d7c037 100644
 --- a/config/settings.yml.dist
 +++ b/config/settings.yml.dist
-@@ -24,3 +24,6 @@ postgres_port: 5432
+@@ -17,3 +17,6 @@ cloudsql_port: 3306
  mongo_url: YOUR_MONGODB_URL
  mongo_database: YOUR_MONGO_DATABASE
  mongo_collection: YOUR_MONGO_COLLECTION
@@ -873,7 +873,7 @@ index 0000000..27eb351
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 586ad90..5719fb6 100644
+index 8e49c0c..5a505b3 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -21,10 +21,22 @@
@@ -1037,10 +1037,10 @@ index 574ebd5..8dffa4d 100644
  manual_scaling:
    instances: 1
 diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
-index f40d686..b073d9e 100644
+index 56d7200..6d7b373 100644
 --- a/test/functional/AppTest.php
 +++ b/test/functional/AppTest.php
-@@ -110,4 +110,11 @@ class AppTest extends WebTestCase
+@@ -139,4 +139,11 @@ class AppTest extends WebTestCase
  
          $model = $this->app['bookshelf.model'];
      }
@@ -1053,10 +1053,10 @@ index f40d686..b073d9e 100644
 +    }
  }
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
-index 6ba8632..9546435 100644
+index 1aa3b66..2889ce6 100644
 --- a/test/lib/GetConfigTrait.php
 +++ b/test/lib/GetConfigTrait.php
-@@ -48,6 +48,8 @@ trait GetConfigTrait
+@@ -38,6 +38,8 @@ trait GetConfigTrait
              'mongo_url' => getenv('MONGO_URL'),
              'mongo_database' => getenv('MONGO_DATABASE'),
              'mongo_collection' => getenv('MONGO_COLLECTION'),

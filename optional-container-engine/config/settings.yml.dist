@@ -6,19 +6,12 @@ google_project_id:     YOUR_PROJECT_ID
 # options are "mysql", "postgres", "mongodb", or "datastore"
 bookshelf_backend: mysql
 
-# configure CloudSQL for MySQL backend
-mysql_connection_name: INSTANCE_CONNECTION_NAME
-mysql_database_name: YOUR_DATABASE_NAME
-mysql_user: YOUR_MYSQL_USER
-mysql_password: YOUR_MYSQL_PASSWORD
-mysql_port: 3306
-
-# configure CloudSQL for Postgres backend
-postgres_connection_name: INSTANCE_CONNECTION_NAME
-postgres_database_name: YOUR_DATABASE_NAME
-postgres_user: YOUR_POSTGRES_USER
-postgres_password: YOUR_POSTGRES_PASSWORD
-postgres_port: 5432
+# configure CloudSQL for MySQL or PostgreSQL backend
+cloudsql_connection_name: INSTANCE_CONNECTION_NAME
+cloudsql_database_name: YOUR_DATABASE_NAME
+cloudsql_user: YOUR_CLOUDSQL_USER
+cloudsql_password: YOUR_CLOUDSQL_PASSWORD
+cloudsql_port: 3306
 
 # configure Mongo backend
 mongo_url: YOUR_MONGODB_URL

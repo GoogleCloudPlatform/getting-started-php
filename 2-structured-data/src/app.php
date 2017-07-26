@@ -65,25 +65,25 @@ $app['bookshelf.model'] = function ($app) {
             );
         case 'mysql':
             $mysql_dsn = Sql::getMysqlDsn(
-                $config['mysql_database_name'],
-                $config['mysql_port'],
-                getenv('GAE_INSTANCE') ? $config['mysql_connection_name'] : null
+                $config['cloudsql_database_name'],
+                $config['cloudsql_port'],
+                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
             );
             return new Sql(
                 $mysql_dsn,
-                $config['mysql_user'],
-                $config['mysql_password']
+                $config['cloudsql_user'],
+                $config['cloudsql_password']
             );
         case 'postgres':
             $postgres_dsn = Sql::getPostgresDsn(
-                $config['postgres_database_name'],
-                $config['postgres_port'],
-                getenv('GAE_INSTANCE') ? $config['postgres_connection_name'] : null
+                $config['cloudsql_database_name'],
+                $config['cloudsql_port'],
+                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
             );
             return new Sql(
                 $postgres_dsn,
-                $config['postgres_user'],
-                $config['postgres_password']
+                $config['cloudsql_user'],
+                $config['cloudsql_password']
             );
         default:
             throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
