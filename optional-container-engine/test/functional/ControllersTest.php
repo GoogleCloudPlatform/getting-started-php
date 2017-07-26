@@ -189,7 +189,6 @@ class ControllersTest extends WebTestCase
         // Click the delete button.
         $deleteButton = $crawler->selectButton('submit');
         $client->submit($deleteButton->form());
-        echo (string) $client->getResponse();
         $this->assertTrue($client->getResponse()->isOk());
 
         // Confirm that we don't find the book anymore.

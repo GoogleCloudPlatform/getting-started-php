@@ -123,7 +123,7 @@ index 58dabd0..620557d 100644
  $app['bookshelf.model'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index fc15adc..c120f5b 100644
+index fc15adc..2a04c16 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -24,6 +24,7 @@ namespace Google\Cloud\Samples\Bookshelf;
@@ -182,7 +182,7 @@ index fc15adc..c120f5b 100644
          $model->delete($id);
 -
 +        // [START delete_image]
-+        if ($book['image_url']) {
++        if (!empty($book['image_url'])) {
 +            /** @var CloudStorage $storage */
 +            $storage = $app['bookshelf.storage'];
 +            $storage->deleteFile($book['image_url']);

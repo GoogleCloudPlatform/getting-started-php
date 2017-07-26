@@ -145,7 +145,7 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
     if ($book) {
         $model->delete($id);
         // [START delete_image]
-        if ($book['image_url']) {
+        if (!empty($book['image_url'])) {
             /** @var CloudStorage $storage */
             $storage = $app['bookshelf.storage'];
             $storage->deleteFile($book['image_url']);

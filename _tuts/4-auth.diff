@@ -299,7 +299,7 @@ index 620557d..1596252 100644
  $app['bookshelf.storage'] = function ($app) {
      /** @var array $config */
 diff --git a/src/controllers.php b/src/controllers.php
-index c120f5b..d47e119 100644
+index 2a04c16..a379eb2 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -71,6 +71,10 @@ $app->post('/books/add', function (Request $request) use ($app) {

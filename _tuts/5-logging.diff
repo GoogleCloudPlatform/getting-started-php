@@ -83,7 +83,7 @@ index 1596252..586ad90 100644
  // [END google_client]
  
 diff --git a/src/controllers.php b/src/controllers.php
-index d47e119..3963fb8 100644
+index a379eb2..79a3b78 100644
 --- a/src/controllers.php
 +++ b/src/controllers.php
 @@ -155,6 +155,11 @@ $app->post('/books/{id}/delete', function ($id) use ($app) {
