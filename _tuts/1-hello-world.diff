@@ -8,12 +8,13 @@ index 0000000..305612c
 +coverage/*
 diff --git a/.gitignore b/.gitignore
 new file mode 100644
-index 0000000..0b08f40
+index 0000000..78e19ce
 --- /dev/null
 +++ b/.gitignore
-@@ -0,0 +1,2 @@
+@@ -0,0 +1,3 @@
 +**/vendor
 +**/settings.yml
++build/*
 diff --git a/README.md b/README.md
 new file mode 100644
 index 0000000..5a6b401
@@ -2488,7 +2489,7 @@ index 0000000..c13edbf
 +}
 diff --git a/phpunit.xml b/phpunit.xml
 new file mode 100644
-index 0000000..5526a43
+index 0000000..037bf38
 --- /dev/null
 +++ b/phpunit.xml
 @@ -0,0 +1,31 @@
@@ -2508,7 +2509,7 @@ index 0000000..5526a43
 +  See the License for the specific language governing permissions and
 +  limitations under the License.
 +-->
-+<phpunit bootstrap="test/bootstrap.php">
++<phpunit bootstrap="vendor/autoload.php">
 +    <testsuites>
 +        <testsuite name="PHP Getting Started Test Suite">
 +            <directory>test</directory>
@@ -2537,31 +2538,6 @@ index 0000000..cefdec3
 +
 +manual_scaling:
 +  instances: 1
-diff --git a/test/bootstrap.php b/test/bootstrap.php
-new file mode 100644
-index 0000000..54fe66c
---- /dev/null
-+++ b/test/bootstrap.php
-@@ -0,0 +1,19 @@
-+<?php
-+
-+/*
-+ * Copyright 2015 Google Inc.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *     http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+
-+require_once __DIR__ . '/../vendor/autoload.php';
 diff --git a/test/e2e/BookshelfTest.php b/test/e2e/BookshelfTest.php
 new file mode 100644
 index 0000000..1b93f71
