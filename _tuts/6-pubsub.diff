@@ -798,15 +798,16 @@ index 0000000..4df12b9
 +}
 diff --git a/src/PubSub/Worker.php b/src/PubSub/Worker.php
 new file mode 100644
-index 0000000..27eb351
+index 0000000..82fbf6e
 --- /dev/null
 +++ b/src/PubSub/Worker.php
-@@ -0,0 +1,70 @@
+@@ -0,0 +1,72 @@
 +<?php
 +
 +namespace Google\Cloud\Samples\Bookshelf\PubSub;
 +
 +use Google\Cloud\PubSub\Subscription;
++use Google\Cloud\PubSub\Message;
 +use Psr\Log\LoggerInterface;
 +
 +/**
@@ -823,20 +824,21 @@ index 0000000..27eb351
 +    {
 +        // [START callback]
 +        $callback = function ($response) use ($job, $subscription, $logger) {
-+            $ackIds = [];
++            $ackMessages = [];
 +            $messages = json_decode($response->getBody(), true);
 +            if (isset($messages['receivedMessages'])) {
 +                foreach ($messages['receivedMessages'] as $message) {
-+                    $attributes = $message['message']['attributes'];
++                    $pubSubMessage = new Message($message['message'], array('ackId' => $message['ackId']));
++                    $attributes = $pubSubMessage->attributes();
 +                    $logger->info(sprintf('Message received for book ID "%s" ', $attributes['id']));
 +                    // Do the actual work in the LookupBookDetailsJob class
 +                    $job->work($attributes['id']);
-+                    $ackIds[] = $message['ackId'];
++                    $ackMessages[] = $pubSubMessage;
 +                }
 +            }
 +            // Acknowledge the messsages have been handled
-+            if (!empty($ackIds)) {
-+                $subscription->acknowledgeBatch($ackIds);
++            if (!empty($ackMessages)) {
++                $subscription->acknowledgeBatch($ackMessages);
 +            }
 +        };
 +        // [END callback]
@@ -1350,10 +1352,10 @@ index 0000000..dd41555
 +}
 diff --git a/test/unit/PubSub/WorkerTest.php b/test/unit/PubSub/WorkerTest.php
 new file mode 100644
-index 0000000..eead18e
+index 0000000..b8bd45d
 --- /dev/null
 +++ b/test/unit/PubSub/WorkerTest.php
-@@ -0,0 +1,199 @@
+@@ -0,0 +1,202 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -1371,6 +1373,8 @@ index 0000000..eead18e
 + * limitations under the License.
 + */
 +namespace Google\Cloud\Samples\Bookshelf\PubSub;
++
++use Google\Cloud\PubSub\Message;
 +
 +class WorkerTest extends \PHPUnit_Framework_TestCase
 +{
@@ -1395,9 +1399,10 @@ index 0000000..eead18e
 +        $subscription = $this->getMockBuilder('Google\Cloud\PubSub\Subscription')
 +            ->disableOriginalConstructor()
 +            ->getMock();
++        $pubSubMessage = new Message(['attributes' => ['id' => $bookId]], array('ackId' => $ackId));
 +        $subscription->expects($this->once())
 +            ->method('acknowledgeBatch')
-+            ->with([$ackId]);
++            ->with([$pubSubMessage]);
 +        $promise = $this->getMockBuilder('GuzzleHttp\Promise\PromiseInterface')
 +            ->disableOriginalConstructor()
 +            ->getMock();

@@ -16,6 +16,8 @@
  */
 namespace Google\Cloud\Samples\Bookshelf\PubSub;
 
+use Google\Cloud\PubSub\Message;
+
 class WorkerTest extends \PHPUnit_Framework_TestCase
 {
     public function testInvoke()
@@ -39,9 +41,10 @@ class WorkerTest extends \PHPUnit_Framework_TestCase
         $subscription = $this->getMockBuilder('Google\Cloud\PubSub\Subscription')
             ->disableOriginalConstructor()
             ->getMock();
+        $pubSubMessage = new Message(['attributes' => ['id' => $bookId]], array('ackId' => $ackId));
         $subscription->expects($this->once())
             ->method('acknowledgeBatch')
-            ->with([$ackId]);
+            ->with([$pubSubMessage]);
         $promise = $this->getMockBuilder('GuzzleHttp\Promise\PromiseInterface')
             ->disableOriginalConstructor()
             ->getMock();
