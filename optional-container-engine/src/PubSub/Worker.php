@@ -3,6 +3,7 @@
 namespace Google\Cloud\Samples\Bookshelf\PubSub;
 
 use Google\Cloud\PubSub\Subscription;
+use Google\Cloud\PubSub\Message;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -19,20 +20,21 @@ class Worker
     {
         // [START callback]
         $callback = function ($response) use ($job, $subscription, $logger) {
-            $ackIds = [];
+            $ackMessages = [];
             $messages = json_decode($response->getBody(), true);
             if (isset($messages['receivedMessages'])) {
                 foreach ($messages['receivedMessages'] as $message) {
-                    $attributes = $message['message']['attributes'];
+                    $pubSubMessage = new Message($message['message'], array('ackId' => $message['ackId']));
+                    $attributes = $pubSubMessage->attributes();
                     $logger->info(sprintf('Message received for book ID "%s" ', $attributes['id']));
                     // Do the actual work in the LookupBookDetailsJob class
                     $job->work($attributes['id']);
-                    $ackIds[] = $message['ackId'];
+                    $ackMessages[] = $pubSubMessage;
                 }
             }
             // Acknowledge the messsages have been handled
-            if (!empty($ackIds)) {
-                $subscription->acknowledgeBatch($ackIds);
+            if (!empty($ackMessages)) {
+                $subscription->acknowledgeBatch($ackMessages);
             }
         };
         // [END callback]
