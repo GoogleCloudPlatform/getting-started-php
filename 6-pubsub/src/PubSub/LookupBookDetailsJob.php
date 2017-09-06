@@ -34,7 +34,7 @@ class LookupBookDetailsJob
                 $volumeInfo = $result->getVolumeInfo();
                 $imageInfo = $volumeInfo->getImageLinks();
                 if ($thumbnail = $imageInfo->getThumbnail()) {
-                    $book['imageUrl'] = $thumbnail;
+                    $book['image_url'] = $thumbnail;
                     $this->client->getLogger()->info(sprintf(
                         'Updating book "%s" with thumbnail "%s"',
                         $id, basename($thumbnail)));

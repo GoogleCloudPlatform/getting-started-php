@@ -42,7 +42,7 @@ class LookupBookDetailsJobTest extends \PHPUnit_Framework_TestCase
             ]));
         $model->expects($this->once())
             ->method('update')
-            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
+            ->with(['title' => 'My Book Title', 'image_url' => 'testImage.jpg'])
             ->will($this->returnValue(true));
 
         $job = new LookupBookDetailsJob($model, $client, $logger);
@@ -130,7 +130,7 @@ class LookupBookDetailsJobTest extends \PHPUnit_Framework_TestCase
             ]));
         $model->expects($this->once())
             ->method('update')
-            ->with(['title' => 'My Book Title', 'imageUrl' => 'testImage.jpg'])
+            ->with(['title' => 'My Book Title', 'image_url' => 'testImage.jpg'])
             ->will($this->returnValue(true));
 
         $job = new LookupBookDetailsJob($model, $client);

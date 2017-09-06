@@ -20,8 +20,7 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
-use Google\Auth\Credentials\GCECredentials;
-use Google\Cloud\Samples\Bookshelf\DataModel\CloudSql;
+use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
 use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
 use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
 use Google\Cloud\Samples\Bookshelf\FileSystem\CloudStorage;
@@ -106,19 +105,31 @@ $app['bookshelf.model'] = function ($app) {
             return new Datastore(
                 $config['google_project_id']
             );
-        case 'cloudsql':
-            // Add Unix Socket for CloudSQL 2nd Gen when applicable
-            $socket = GCECredentials::onGce()
-                ? ';unix_socket=/cloudsql/' . $config['cloudsql_connection_name']
-                : '';
-            return new CloudSql(
-                $config['mysql_dsn'] . $socket,
-                $config['mysql_user'],
-                $config['mysql_password']
+        case 'mysql':
+            $mysql_dsn = Sql::getMysqlDsn(
+                $config['cloudsql_database_name'],
+                $config['cloudsql_port'],
+                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
+            );
+            return new Sql(
+                $mysql_dsn,
+                $config['cloudsql_user'],
+                $config['cloudsql_password']
+            );
+        case 'postgres':
+            $postgres_dsn = Sql::getPostgresDsn(
+                $config['cloudsql_database_name'],
+                $config['cloudsql_port'],
+                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
+            );
+            return new Sql(
+                $postgres_dsn,
+                $config['cloudsql_user'],
+                $config['cloudsql_password']
             );
         default:
             throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
-                . "Possible values are cloudsql, mongodb, or datastore.");
+                . "Possible values are mysql, postgres, mongodb, or datastore.");
     }
 };
 
@@ -128,8 +139,10 @@ if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
 ) {
     $app['debug'] = true;
 } else {
-    $app['debug'] = filter_var(getenv('BOOKSHELF_DEBUG'),
-                               FILTER_VALIDATE_BOOLEAN);
+    $app['debug'] = filter_var(
+        getenv('BOOKSHELF_DEBUG'),
+                               FILTER_VALIDATE_BOOLEAN
+    );
 }
 
 // add service parameters
