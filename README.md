@@ -19,7 +19,7 @@ Tutorial | Folder
 [Authenticating users][step-4] | [4-auth][step-4-code]
 [Logging app events][step-5] | [5-logging][step-5-code]
 [Using Pub/Sub][step-6] | [6-pubsub][step-6-code]
-[Deploying to Google Container Engine (GKE)][optional-gke] | [optional-container-engine][optional-gke-code]
+[Deploying to Google Kubernetes Engine (GKE)][optional-gke] | [optional-kubernetes-engine][optional-gke-code]
 [Deploying to Google Compute Engine (GCE)][optional-gce] | [optional-compute-engine][optional-gce-code]
 
 ## Contributing changes
@@ -49,7 +49,7 @@ Tutorial | Folder
 [step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
 [step-6-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/6-pubsub
 [optional-gke]: https://cloud.google.com/php/tutorials/bookshelf-on-container-engine
-[optional-gke-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/optional-container-engine
+[optional-gke-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/optional-kubernetes-engine
 [optional-gce]: https://cloud.google.com/php/tutorials/bookshelf-on-compute-engine
 [optional-gce-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/optional-compute-engine
 
