@@ -39,10 +39,11 @@ index 2783799..38e435f 100644
      "packages": [
          {
              "name": "firebase/php-jwt",
-@@ -50,6 +50,102 @@
+@@ -49,6 +49,102 @@
+             "homepage": "https://github.com/firebase/php-jwt",
              "time": "2016-07-18T04:51:16+00:00"
          },
-         {
++        {
 +            "name": "google/apiclient",
 +            "version": "v2.1.3",
 +            "source": {
@@ -138,14 +139,14 @@ index 2783799..38e435f 100644
 +            ],
 +            "time": "2017-03-13T17:40:44+00:00"
 +        },
-+        {
+         {
              "name": "google/auth",
              "version": "v0.11.1",
-             "source": {
-@@ -444,6 +540,98 @@
+@@ -443,6 +539,98 @@
+             ],
              "time": "2017-06-19T01:22:40+00:00"
          },
-         {
++        {
 +            "name": "phpseclib/phpseclib",
 +            "version": "2.0.6",
 +            "source": {
@@ -237,10 +238,9 @@ index 2783799..38e435f 100644
 +            ],
 +            "time": "2017-06-05T06:31:10+00:00"
 +        },
-+        {
+         {
              "name": "pimple/pimple",
              "version": "v1.1.1",
-             "source": {
 diff --git a/src/app.php b/src/app.php
 index 594c4af..40f94fb 100644
 --- a/src/app.php
