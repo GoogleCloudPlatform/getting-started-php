@@ -44,14 +44,14 @@ index 906848a..0000000
 -# override the default CMD for the pubsub worker
 -CMD php bin/pubsub/entrypoint.php
 diff --git a/README.md b/README.md
-index bfb95a5..9d89dda 100644
+index 760f1b3..9d89dda 100644
 --- a/README.md
 +++ b/README.md
 @@ -1,8 +1,8 @@
--# 8 - Deploying to Google Container Engine
+-# Deploying to Google Kubernetes Engine
 +# Deploying to Google Compute Engine
  
--This folder contains the sample code for the [Deploying to Google Container Engine][tutorial-gke]
+-This folder contains the sample code for the [Deploying to Google Kubernetes Engine][tutorial-gke]
 +This folder contains the sample code for the [Deploying to Google Compute Engine][tutorial-gce]
  tutorial. Please refer to the tutorial for instructions on configuring, running,
  and deploying this sample.

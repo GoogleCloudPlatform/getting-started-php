@@ -1,6 +1,6 @@
-# 8 - Deploying to Google Container Engine
+# Deploying to Google Kubernetes Engine
 
-This folder contains the sample code for the [Deploying to Google Container Engine][tutorial-gke]
+This folder contains the sample code for the [Deploying to Google Kubernetes Engine][tutorial-gke]
 tutorial. Please refer to the tutorial for instructions on configuring, running,
 and deploying this sample.
 

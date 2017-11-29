@@ -15,18 +15,10 @@
 
 set -ev
 
-# A script to run all the test locally.
-MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source ${MYDIR}/variables.sh
+if [ ! -z $TEST_BUILD_DIR ]; then
+  cd ${TEST_BUILD_DIR}
 
-# Coding style check.
-php-cs-fixer fix --diff
+  mkdir -p ${TEST_BUILD_DIR}/build/logs
 
-# Run tests for each directories.
-for STEP in "${STEPS[@]}"; do
-    cp ${MYDIR}/app-e2e.yaml ${STEP}/app-e2e.yaml
-    pushd ${STEP}
-    mkdir -p build/logs
-    php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-    popd
-done
+  ${HOME}/bin/coveralls --exclude-no-stmt -v
+fi;
