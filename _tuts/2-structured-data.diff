@@ -36,13 +36,13 @@ index 5ccf142..700b465 100644
 +# beta_settings:
 +#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/composer.json b/composer.json
-index 6f731c3..ee374f2 100644
+index f364099..d446a6c 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -6,7 +6,10 @@
    },
    "require": {
-     "php": "5.6.*|7.0.*|7.1.*",
+     "php": "5.6.*|7.0.*|7.1.*|7.2.*",
 -    "silex/silex": "^1.3"
 +    "google/cloud": "^0.21",
 +    "silex/silex": "^1.3",
@@ -52,17 +52,17 @@ index 6f731c3..ee374f2 100644
    "require-dev": {
      "behat/mink": "^1.7",
 diff --git a/composer.lock b/composer.lock
-index 7545722..2783799 100644
+index 4f26c1c..65fafa4 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,9 +4,446 @@
+@@ -4,8 +4,445 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "content-hash": "1c1639772c561e0747b7d601df6c5b2d",
-+    "content-hash": "2ed03aef435a286fbf9ff49ce423fec4",
+-    "content-hash": "60aaee57e483829af31a9f042d17b0d0",
++    "content-hash": "ddeb8732b91dd8034b5debf67192545e",
      "packages": [
-         {
++        {
 +            "name": "firebase/php-jwt",
 +            "version": "v4.0.0",
 +            "source": {
@@ -499,14 +499,14 @@ index 7545722..2783799 100644
 +            ],
 +            "time": "2017-06-19T01:22:40+00:00"
 +        },
-+        {
+         {
              "name": "pimple/pimple",
              "version": "v1.1.1",
-             "source": {
-@@ -53,6 +490,102 @@
+@@ -52,6 +489,102 @@
+             ],
              "time": "2013-11-22T08:30:29+00:00"
          },
-         {
++        {
 +            "name": "psr/cache",
 +            "version": "1.0.1",
 +            "source": {
@@ -602,23 +602,13 @@ index 7545722..2783799 100644
 +            ],
 +            "time": "2016-08-06T14:39:51+00:00"
 +        },
-+        {
+         {
              "name": "psr/log",
              "version": "1.0.2",
-             "source": {
-@@ -93,11 +626,55 @@
-             "description": "Common interface for logging libraries",
-             "homepage": "https://github.com/php-fig/log",
-             "keywords": [
--                "log",
--                "psr",
--                "psr-3"
-+                "log",
-+                "psr",
-+                "psr-3"
-+            ],
-+            "time": "2016-10-10T12:19:37+00:00"
-+        },
+@@ -99,6 +632,50 @@
+             ],
+             "time": "2016-10-10T12:19:37+00:00"
+         },
 +        {
 +            "name": "rize/uri-template",
 +            "version": "0.3.2",
@@ -660,49 +650,83 @@ index 7545722..2783799 100644
 +                "RFC 6570",
 +                "template",
 +                "uri"
-             ],
--            "time": "2016-10-10T12:19:37+00:00"
++            ],
 +            "time": "2017-06-14T03:57:53+00:00"
-         },
++        },
          {
              "name": "silex/silex",
-@@ -560,6 +1137,126 @@
-                 "url"
+             "version": "v1.3.6",
+@@ -467,99 +1044,222 @@
              ],
-             "time": "2016-06-29T05:40:00+00:00"
+             "authors": [
+                 {
+-                    "name": "Nicolas Grekas",
+-                    "email": "p@tchwork.com"
++                    "name": "Nicolas Grekas",
++                    "email": "p@tchwork.com"
++                },
++                {
++                    "name": "Symfony Community",
++                    "homepage": "https://symfony.com/contributors"
++                }
++            ],
++            "description": "Symfony polyfill for the Mbstring extension",
++            "homepage": "https://symfony.com",
++            "keywords": [
++                "compatibility",
++                "mbstring",
++                "polyfill",
++                "portable",
++                "shim"
++            ],
++            "time": "2017-10-11T12:05:26+00:00"
 +        },
 +        {
-+            "name": "symfony/yaml",
-+            "version": "v3.3.5",
++            "name": "symfony/routing",
++            "version": "v3.0.9",
 +            "source": {
 +                "type": "git",
-+                "url": "https://github.com/symfony/yaml.git",
-+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
++                "url": "https://github.com/symfony/routing.git",
++                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/symfony/yaml/zipball/1f93a8d19b8241617f5074a123e282575b821df8",
-+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
++                "url": "https://api.github.com/repos/symfony/routing/zipball/9038984bd9c05ab07280121e9e10f61a7231457b",
++                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b",
 +                "shasum": ""
 +            },
 +            "require": {
 +                "php": ">=5.5.9"
 +            },
++            "conflict": {
++                "symfony/config": "<2.8"
++            },
 +            "require-dev": {
-+                "symfony/console": "~2.8|~3.0"
++                "doctrine/annotations": "~1.0",
++                "doctrine/common": "~2.2",
++                "psr/log": "~1.0",
++                "symfony/config": "~2.8|~3.0",
++                "symfony/expression-language": "~2.8|~3.0",
++                "symfony/http-foundation": "~2.8|~3.0",
++                "symfony/yaml": "~2.8|~3.0"
 +            },
 +            "suggest": {
-+                "symfony/console": "For validating YAML files using the lint command"
++                "doctrine/annotations": "For using the annotation loader",
++                "symfony/config": "For using the all-in-one router or any loader",
++                "symfony/dependency-injection": "For loading routes from a service",
++                "symfony/expression-language": "For using expression matching",
++                "symfony/http-foundation": "For using a Symfony Request object",
++                "symfony/yaml": "For using the YAML loader"
 +            },
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "3.3-dev"
++                    "dev-master": "3.0-dev"
 +                }
 +            },
 +            "autoload": {
 +                "psr-4": {
-+                    "Symfony\\Component\\Yaml\\": ""
++                    "Symfony\\Component\\Routing\\": ""
 +                },
 +                "exclude-from-classmap": [
 +                    "/Tests/"
@@ -722,58 +746,166 @@ index 7545722..2783799 100644
 +                    "homepage": "https://symfony.com/contributors"
 +                }
 +            ],
-+            "description": "Symfony Yaml Component",
++            "description": "Symfony Routing Component",
 +            "homepage": "https://symfony.com",
-+            "time": "2017-06-15T12:58:50+00:00"
++            "keywords": [
++                "router",
++                "routing",
++                "uri",
++                "url"
++            ],
++            "time": "2016-06-29T05:40:00+00:00"
 +        },
 +        {
-+            "name": "twig/twig",
-+            "version": "v1.34.4",
++            "name": "symfony/yaml",
++            "version": "v3.4.0",
 +            "source": {
 +                "type": "git",
-+                "url": "https://github.com/twigphp/Twig.git",
-+                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee"
++                "url": "https://github.com/symfony/yaml.git",
++                "reference": "b3d0c9c11be3831b84825967dc6b52b5a7b84e04"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/f878bab48edb66ad9c6ed626bf817f60c6c096ee",
-+                "reference": "f878bab48edb66ad9c6ed626bf817f60c6c096ee",
++                "url": "https://api.github.com/repos/symfony/yaml/zipball/b3d0c9c11be3831b84825967dc6b52b5a7b84e04",
++                "reference": "b3d0c9c11be3831b84825967dc6b52b5a7b84e04",
 +                "shasum": ""
 +            },
 +            "require": {
-+                "php": ">=5.3.3"
++                "php": "^5.5.9|>=7.0.8"
++            },
++            "conflict": {
++                "symfony/console": "<3.4"
 +            },
 +            "require-dev": {
-+                "psr/container": "^1.0",
-+                "symfony/debug": "~2.7",
-+                "symfony/phpunit-bridge": "~3.3@dev"
++                "symfony/console": "~3.4|~4.0"
++            },
++            "suggest": {
++                "symfony/console": "For validating YAML files using the lint command"
 +            },
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "1.34-dev"
++                    "dev-master": "3.4-dev"
 +                }
 +            },
 +            "autoload": {
-+                "psr-0": {
-+                    "Twig_": "lib/"
-+                },
 +                "psr-4": {
-+                    "Twig\\": "src/"
-+                }
++                    "Symfony\\Component\\Yaml\\": ""
++                },
++                "exclude-from-classmap": [
++                    "/Tests/"
++                ]
 +            },
 +            "notification-url": "https://packagist.org/downloads/",
 +            "license": [
-+                "BSD-3-Clause"
++                "MIT"
 +            ],
 +            "authors": [
 +                {
 +                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com"
+                 },
+                 {
+                     "name": "Symfony Community",
+                     "homepage": "https://symfony.com/contributors"
+                 }
+             ],
+-            "description": "Symfony polyfill for the Mbstring extension",
++            "description": "Symfony Yaml Component",
+             "homepage": "https://symfony.com",
+-            "keywords": [
+-                "compatibility",
+-                "mbstring",
+-                "polyfill",
+-                "portable",
+-                "shim"
+-            ],
+-            "time": "2017-10-11T12:05:26+00:00"
++            "time": "2017-11-29T13:28:14+00:00"
+         },
+         {
+-            "name": "symfony/routing",
+-            "version": "v3.0.9",
++            "name": "twig/twig",
++            "version": "v1.35.0",
+             "source": {
+                 "type": "git",
+-                "url": "https://github.com/symfony/routing.git",
+-                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b"
++                "url": "https://github.com/twigphp/Twig.git",
++                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/routing/zipball/9038984bd9c05ab07280121e9e10f61a7231457b",
+-                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b",
++                "url": "https://api.github.com/repos/twigphp/Twig/zipball/daa657073e55b0a78cce8fdd22682fddecc6385f",
++                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f",
+                 "shasum": ""
+             },
+             "require": {
+-                "php": ">=5.5.9"
+-            },
+-            "conflict": {
+-                "symfony/config": "<2.8"
++                "php": ">=5.3.3"
+             },
+             "require-dev": {
+-                "doctrine/annotations": "~1.0",
+-                "doctrine/common": "~2.2",
+-                "psr/log": "~1.0",
+-                "symfony/config": "~2.8|~3.0",
+-                "symfony/expression-language": "~2.8|~3.0",
+-                "symfony/http-foundation": "~2.8|~3.0",
+-                "symfony/yaml": "~2.8|~3.0"
+-            },
+-            "suggest": {
+-                "doctrine/annotations": "For using the annotation loader",
+-                "symfony/config": "For using the all-in-one router or any loader",
+-                "symfony/dependency-injection": "For loading routes from a service",
+-                "symfony/expression-language": "For using expression matching",
+-                "symfony/http-foundation": "For using a Symfony Request object",
+-                "symfony/yaml": "For using the YAML loader"
++                "psr/container": "^1.0",
++                "symfony/debug": "~2.7",
++                "symfony/phpunit-bridge": "~3.3@dev"
+             },
+             "type": "library",
+             "extra": {
+                 "branch-alias": {
+-                    "dev-master": "3.0-dev"
++                    "dev-master": "1.35-dev"
+                 }
+             },
+             "autoload": {
+-                "psr-4": {
+-                    "Symfony\\Component\\Routing\\": ""
++                "psr-0": {
++                    "Twig_": "lib/"
+                 },
+-                "exclude-from-classmap": [
+-                    "/Tests/"
+-                ]
++                "psr-4": {
++                    "Twig\\": "src/"
++                }
+             },
+             "notification-url": "https://packagist.org/downloads/",
+             "license": [
+-                "MIT"
++                "BSD-3-Clause"
+             ],
+             "authors": [
+                 {
+                     "name": "Fabien Potencier",
+-                    "email": "fabien@symfony.com"
 +                    "email": "fabien@symfony.com",
 +                    "homepage": "http://fabien.potencier.org",
 +                    "role": "Lead Developer"
-+                },
-+                {
+                 },
+                 {
+-                    "name": "Symfony Community",
+-                    "homepage": "https://symfony.com/contributors"
 +                    "name": "Armin Ronacher",
 +                    "email": "armin.ronacher@active-4.com",
 +                    "role": "Project Founder"
@@ -782,97 +914,38 @@ index 7545722..2783799 100644
 +                    "name": "Twig Team",
 +                    "homepage": "http://twig.sensiolabs.org/contributors",
 +                    "role": "Contributors"
-+                }
-+            ],
+                 }
+             ],
+-            "description": "Symfony Routing Component",
+-            "homepage": "https://symfony.com",
 +            "description": "Twig, the flexible, fast, and secure template language for PHP",
 +            "homepage": "http://twig.sensiolabs.org",
-+            "keywords": [
+             "keywords": [
+-                "router",
+-                "routing",
+-                "uri",
+-                "url"
 +                "templating"
-+            ],
-+            "time": "2017-07-04T13:19:31+00:00"
+             ],
+-            "time": "2016-06-29T05:40:00+00:00"
++            "time": "2017-09-27T18:06:46+00:00"
          }
      ],
      "packages-dev": [
-@@ -741,189 +1438,30 @@
-                 "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
-             },
-             "dist": {
--                "type": "zip",
--                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
--                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
--                "shasum": ""
--            },
--            "require": {
--                "php": ">=5.3,<8.0-DEV"
--            },
--            "require-dev": {
--                "athletic/athletic": "~0.1.8",
--                "ext-pdo": "*",
--                "ext-phar": "*",
--                "phpunit/phpunit": "~4.0",
--                "squizlabs/php_codesniffer": "~2.0"
--            },
--            "type": "library",
--            "extra": {
--                "branch-alias": {
--                    "dev-master": "1.0.x-dev"
--                }
--            },
--            "autoload": {
--                "psr-4": {
--                    "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
--                }
--            },
--            "notification-url": "https://packagist.org/downloads/",
--            "license": [
--                "MIT"
--            ],
--            "authors": [
--                {
--                    "name": "Marco Pivetta",
--                    "email": "ocramius@gmail.com",
--                    "homepage": "http://ocramius.github.com/"
--                }
--            ],
--            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
--            "homepage": "https://github.com/doctrine/instantiator",
--            "keywords": [
--                "constructor",
--                "instantiate"
--            ],
--            "time": "2015-06-14T21:17:01+00:00"
--        },
--        {
--            "name": "fabpot/goutte",
--            "version": "v3.2.1",
--            "source": {
--                "type": "git",
--                "url": "https://github.com/FriendsOfPHP/Goutte.git",
--                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638"
--            },
--            "dist": {
--                "type": "zip",
--                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/db5c28f4a010b4161d507d5304e28a7ebf211638",
--                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638",
--                "shasum": ""
--            },
--            "require": {
--                "guzzlehttp/guzzle": "^6.0",
--                "php": ">=5.5.0",
--                "symfony/browser-kit": "~2.1|~3.0",
--                "symfony/css-selector": "~2.1|~3.0",
--                "symfony/dom-crawler": "~2.1|~3.0"
--            },
--            "type": "application",
--            "extra": {
--                "branch-alias": {
+@@ -813,187 +1513,15 @@
+             "type": "application",
+             "extra": {
+                 "branch-alias": {
 -                    "dev-master": "3.2-dev"
 -                }
 -            },
 -            "autoload": {
 -                "psr-4": {
 -                    "Goutte\\": "Goutte"
--                }
+-                },
+-                "exclude-from-classmap": [
+-                    "Goutte/Tests"
+-                ]
 -            },
 -            "notification-url": "https://packagist.org/downloads/",
 -            "license": [
@@ -889,36 +962,42 @@ index 7545722..2783799 100644
 -            "keywords": [
 -                "scraper"
 -            ],
--            "time": "2017-01-03T13:21:43+00:00"
+-            "time": "2017-11-19T08:45:40+00:00"
 -        },
 -        {
 -            "name": "google/cloud-tools",
--            "version": "v0.6.3",
+-            "version": "v0.6.7",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
--                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3"
+-                "reference": "86321c2023d93f6a2d75f91c129f591198435081"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/90ecc5e371673078cf0fc71d442fd21415c277c3",
--                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3",
+-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/86321c2023d93f6a2d75f91c129f591198435081",
+-                "reference": "86321c2023d93f6a2d75f91c129f591198435081",
 -                "shasum": ""
 -            },
 -            "require": {
 -                "guzzlehttp/guzzle": "~5.3|~6.0",
 -                "php": ">=5.5",
--                "phpunit/phpunit": "~4|~5",
 -                "symfony/browser-kit": "~2|~3",
--                "symfony/process": "~2|~3"
+-                "symfony/console": "~2|~3",
+-                "symfony/filesystem": "~2|~3",
+-                "symfony/process": "~2|~3",
+-                "twig/twig": "~1.3|~2.0"
 -            },
 -            "require-dev": {
--                "phpunit/phpunit": "~4.0"
+-                "phpunit/phpunit": "~5.0"
 -            },
+-            "bin": [
+-                "src/Utils/Flex/flex_exec"
+-            ],
 -            "type": "library",
 -            "autoload": {
 -                "psr-4": {
--                    "Google\\Cloud\\TestUtils\\": "src/"
+-                    "Google\\Cloud\\TestUtils\\": "src/TestUtils/",
+-                    "Google\\Cloud\\Utils\\": "src/Utils/"
 -                }
 -            },
 -            "notification-url": "https://packagist.org/downloads/",
@@ -939,7 +1018,7 @@ index 7545722..2783799 100644
 -                "gcp",
 -                "test"
 -            ],
--            "time": "2017-02-23T22:19:51+00:00"
+-            "time": "2017-10-19T21:54:20+00:00"
 -        },
 -        {
 -            "name": "guzzlehttp/guzzle",
@@ -953,64 +1032,49 @@ index 7545722..2783799 100644
 -                "type": "zip",
 -                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
 -                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
-+                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
-                 "shasum": ""
-             },
-             "require": {
+-                "shasum": ""
+-            },
+-            "require": {
 -                "guzzlehttp/promises": "^1.0",
 -                "guzzlehttp/psr7": "^1.4",
 -                "php": ">=5.5"
-+                "php": ">=5.3,<8.0-DEV"
-             },
-             "require-dev": {
+-            },
+-            "require-dev": {
 -                "ext-curl": "*",
 -                "phpunit/phpunit": "^4.0 || ^5.0",
 -                "psr/log": "^1.0"
 -            },
 -            "suggest": {
 -                "psr/log": "Required for using the Log middleware"
-+                "athletic/athletic": "~0.1.8",
-+                "ext-pdo": "*",
-+                "ext-phar": "*",
-+                "phpunit/phpunit": "~4.0",
-+                "squizlabs/php_codesniffer": "~2.0"
-             },
-             "type": "library",
-             "extra": {
-                 "branch-alias": {
+-            },
+-            "type": "library",
+-            "extra": {
+-                "branch-alias": {
 -                    "dev-master": "6.2-dev"
-+                    "dev-master": "1.0.x-dev"
-                 }
-             },
-             "autoload": {
+-                }
+-            },
+-            "autoload": {
 -                "files": [
 -                    "src/functions_include.php"
 -                ],
-                 "psr-4": {
+-                "psr-4": {
 -                    "GuzzleHttp\\": "src/"
-+                    "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
-                 }
-             },
-             "notification-url": "https://packagist.org/downloads/",
-@@ -932,57 +1470,50 @@
-             ],
-             "authors": [
-                 {
+-                }
+-            },
+-            "notification-url": "https://packagist.org/downloads/",
+-            "license": [
+-                "MIT"
+-            ],
+-            "authors": [
+-                {
 -                    "name": "Michael Dowling",
 -                    "email": "mtdowling@gmail.com",
 -                    "homepage": "https://github.com/mtdowling"
-+                    "name": "Marco Pivetta",
-+                    "email": "ocramius@gmail.com",
-+                    "homepage": "http://ocramius.github.com/"
-                 }
-             ],
+-                }
+-            ],
 -            "description": "Guzzle is a PHP HTTP client library",
 -            "homepage": "http://guzzlephp.org/",
-+            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
-+            "homepage": "https://github.com/doctrine/instantiator",
-             "keywords": [
+-            "keywords": [
 -                "client",
 -                "curl",
 -                "framework",
@@ -1018,47 +1082,32 @@ index 7545722..2783799 100644
 -                "http client",
 -                "rest",
 -                "web service"
-+                "constructor",
-+                "instantiate"
-             ],
+-            ],
 -            "time": "2017-06-22T18:50:49+00:00"
-+            "time": "2015-06-14T21:17:01+00:00"
-         },
-         {
+-        },
+-        {
 -            "name": "guzzlehttp/promises",
 -            "version": "v1.3.1",
-+            "name": "fabpot/goutte",
-+            "version": "v3.2.1",
-             "source": {
-                 "type": "git",
+-            "source": {
+-                "type": "git",
 -                "url": "https://github.com/guzzle/promises.git",
 -                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
-+                "url": "https://github.com/FriendsOfPHP/Goutte.git",
-+                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638"
-             },
-             "dist": {
-                 "type": "zip",
+-            },
+-            "dist": {
+-                "type": "zip",
 -                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
 -                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
-+                "url": "https://api.github.com/repos/FriendsOfPHP/Goutte/zipball/db5c28f4a010b4161d507d5304e28a7ebf211638",
-+                "reference": "db5c28f4a010b4161d507d5304e28a7ebf211638",
-                 "shasum": ""
-             },
-             "require": {
+-                "shasum": ""
+-            },
+-            "require": {
 -                "php": ">=5.5.0"
 -            },
 -            "require-dev": {
 -                "phpunit/phpunit": "^4.0"
-+                "guzzlehttp/guzzle": "^6.0",
-+                "php": ">=5.5.0",
-+                "symfony/browser-kit": "~2.1|~3.0",
-+                "symfony/css-selector": "~2.1|~3.0",
-+                "symfony/dom-crawler": "~2.1|~3.0"
-             },
+-            },
 -            "type": "library",
-+            "type": "application",
-             "extra": {
-                 "branch-alias": {
+-            "extra": {
+-                "branch-alias": {
 -                    "dev-master": "1.4-dev"
 +                    "dev-master": "3.2-dev"
                  }
@@ -1066,16 +1115,16 @@ index 7545722..2783799 100644
              "autoload": {
                  "psr-4": {
 -                    "GuzzleHttp\\Promise\\": "src/"
--                },
++                    "Goutte\\": "Goutte"
+                 },
 -                "files": [
 -                    "src/functions_include.php"
--                ]
-+                    "Goutte\\": "Goutte"
-+                }
++                "exclude-from-classmap": [
++                    "Goutte/Tests"
+                 ]
              },
              "notification-url": "https://packagist.org/downloads/",
-             "license": [
-@@ -990,81 +1521,66 @@
+@@ -1002,81 +1530,72 @@
              ],
              "authors": [
                  {
@@ -1094,26 +1143,26 @@ index 7545722..2783799 100644
 +                "scraper"
              ],
 -            "time": "2016-12-20T10:07:11+00:00"
-+            "time": "2017-01-03T13:21:43+00:00"
++            "time": "2017-11-19T08:45:40+00:00"
          },
          {
 -            "name": "guzzlehttp/psr7",
 -            "version": "1.4.2",
 +            "name": "google/cloud-tools",
-+            "version": "v0.6.3",
++            "version": "v0.6.7",
              "source": {
                  "type": "git",
 -                "url": "https://github.com/guzzle/psr7.git",
 -                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
 +                "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-+                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3"
++                "reference": "86321c2023d93f6a2d75f91c129f591198435081"
              },
              "dist": {
                  "type": "zip",
 -                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
 -                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/90ecc5e371673078cf0fc71d442fd21415c277c3",
-+                "reference": "90ecc5e371673078cf0fc71d442fd21415c277c3",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/86321c2023d93f6a2d75f91c129f591198435081",
++                "reference": "86321c2023d93f6a2d75f91c129f591198435081",
                  "shasum": ""
              },
              "require": {
@@ -1124,13 +1173,19 @@ index 7545722..2783799 100644
 -                "psr/http-message-implementation": "1.0"
 +                "guzzlehttp/guzzle": "~5.3|~6.0",
 +                "php": ">=5.5",
-+                "phpunit/phpunit": "~4|~5",
 +                "symfony/browser-kit": "~2|~3",
-+                "symfony/process": "~2|~3"
++                "symfony/console": "~2|~3",
++                "symfony/filesystem": "~2|~3",
++                "symfony/process": "~2|~3",
++                "twig/twig": "~1.3|~2.0"
              },
              "require-dev": {
-                 "phpunit/phpunit": "~4.0"
+-                "phpunit/phpunit": "~4.0"
++                "phpunit/phpunit": "~5.0"
              },
++            "bin": [
++                "src/Utils/Flex/flex_exec"
++            ],
              "type": "library",
 -            "extra": {
 -                "branch-alias": {
@@ -1144,7 +1199,8 @@ index 7545722..2783799 100644
 -                "files": [
 -                    "src/functions_include.php"
 -                ]
-+                    "Google\\Cloud\\TestUtils\\": "src/"
++                    "Google\\Cloud\\TestUtils\\": "src/TestUtils/",
++                    "Google\\Cloud\\Utils\\": "src/Utils/"
 +                }
              },
              "notification-url": "https://packagist.org/downloads/",
@@ -1182,14 +1238,15 @@ index 7545722..2783799 100644
 +                "test"
              ],
 -            "time": "2017-03-20T17:10:46+00:00"
-+            "time": "2017-02-23T22:19:51+00:00"
++            "time": "2017-10-19T21:54:20+00:00"
          },
          {
              "name": "phpdocumentor/reflection-common",
-@@ -1652,56 +2168,6 @@
+@@ -1669,56 +2188,6 @@
+             ],
              "time": "2015-10-02T06:51:40+00:00"
          },
-         {
+-        {
 -            "name": "psr/http-message",
 -            "version": "1.0.1",
 -            "source": {
@@ -1239,32 +1296,35 @@ index 7545722..2783799 100644
 -            ],
 -            "time": "2016-08-06T14:39:51+00:00"
 -        },
--        {
+         {
              "name": "sebastian/comparator",
              "version": "1.2.4",
-             "source": {
-@@ -2289,61 +2755,6 @@
-             "time": "2017-07-13T13:05:09+00:00"
+@@ -2424,130 +2893,6 @@
+             "homepage": "https://symfony.com",
+             "time": "2017-11-22T12:18:49+00:00"
          },
-         {
+-        {
 -            "name": "symfony/yaml",
--            "version": "v3.3.5",
+-            "version": "v3.4.0",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/symfony/yaml.git",
--                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
+-                "reference": "b3d0c9c11be3831b84825967dc6b52b5a7b84e04"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/symfony/yaml/zipball/1f93a8d19b8241617f5074a123e282575b821df8",
--                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
+-                "url": "https://api.github.com/repos/symfony/yaml/zipball/b3d0c9c11be3831b84825967dc6b52b5a7b84e04",
+-                "reference": "b3d0c9c11be3831b84825967dc6b52b5a7b84e04",
 -                "shasum": ""
 -            },
 -            "require": {
--                "php": ">=5.5.9"
+-                "php": "^5.5.9|>=7.0.8"
+-            },
+-            "conflict": {
+-                "symfony/console": "<3.4"
 -            },
 -            "require-dev": {
--                "symfony/console": "~2.8|~3.0"
+-                "symfony/console": "~3.4|~4.0"
 -            },
 -            "suggest": {
 -                "symfony/console": "For validating YAML files using the lint command"
@@ -1272,7 +1332,7 @@ index 7545722..2783799 100644
 -            "type": "library",
 -            "extra": {
 -                "branch-alias": {
--                    "dev-master": "3.3-dev"
+-                    "dev-master": "3.4-dev"
 -                }
 -            },
 -            "autoload": {
@@ -1299,12 +1359,77 @@ index 7545722..2783799 100644
 -            ],
 -            "description": "Symfony Yaml Component",
 -            "homepage": "https://symfony.com",
--            "time": "2017-06-15T12:58:50+00:00"
+-            "time": "2017-11-29T13:28:14+00:00"
 -        },
 -        {
+-            "name": "twig/twig",
+-            "version": "v2.4.4",
+-            "source": {
+-                "type": "git",
+-                "url": "https://github.com/twigphp/Twig.git",
+-                "reference": "eddb97148ad779f27e670e1e3f19fb323aedafeb"
+-            },
+-            "dist": {
+-                "type": "zip",
+-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/eddb97148ad779f27e670e1e3f19fb323aedafeb",
+-                "reference": "eddb97148ad779f27e670e1e3f19fb323aedafeb",
+-                "shasum": ""
+-            },
+-            "require": {
+-                "php": "^7.0",
+-                "symfony/polyfill-mbstring": "~1.0"
+-            },
+-            "require-dev": {
+-                "psr/container": "^1.0",
+-                "symfony/debug": "~2.7",
+-                "symfony/phpunit-bridge": "~3.3@dev"
+-            },
+-            "type": "library",
+-            "extra": {
+-                "branch-alias": {
+-                    "dev-master": "2.4-dev"
+-                }
+-            },
+-            "autoload": {
+-                "psr-0": {
+-                    "Twig_": "lib/"
+-                },
+-                "psr-4": {
+-                    "Twig\\": "src/"
+-                }
+-            },
+-            "notification-url": "https://packagist.org/downloads/",
+-            "license": [
+-                "BSD-3-Clause"
+-            ],
+-            "authors": [
+-                {
+-                    "name": "Fabien Potencier",
+-                    "email": "fabien@symfony.com",
+-                    "homepage": "http://fabien.potencier.org",
+-                    "role": "Lead Developer"
+-                },
+-                {
+-                    "name": "Armin Ronacher",
+-                    "email": "armin.ronacher@active-4.com",
+-                    "role": "Project Founder"
+-                },
+-                {
+-                    "name": "Twig Team",
+-                    "homepage": "http://twig.sensiolabs.org/contributors",
+-                    "role": "Contributors"
+-                }
+-            ],
+-            "description": "Twig, the flexible, fast, and secure template language for PHP",
+-            "homepage": "http://twig.sensiolabs.org",
+-            "keywords": [
+-                "templating"
+-            ],
+-            "time": "2017-09-27T18:10:31+00:00"
+-        },
+         {
              "name": "webmozart/assert",
              "version": "1.2.0",
-             "source": {
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
 new file mode 100644
 index 0000000..4526a43
