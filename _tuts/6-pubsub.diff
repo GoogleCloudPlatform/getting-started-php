@@ -15,7 +15,7 @@ index ead2f61..1bd64f0 100644
 +[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
  
 diff --git a/app.yaml b/app.yaml
-index 700b465..bef3f23 100644
+index 722f4bf..b017b22 100644
 --- a/app.yaml
 +++ b/app.yaml
 @@ -4,6 +4,12 @@ env: flex
@@ -80,14 +80,14 @@ diff --git a/composer.lock b/composer.lock
 index c25bf35..39f7f44 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,9 +4,105 @@
+@@ -4,8 +4,104 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
 -    "content-hash": "a1c6ded1cda37463fb5abc1d91ecfcdf",
 +    "content-hash": "4e5fe67a15dc445e473d7c1fc84f294f",
      "packages": [
-         {
++        {
 +            "name": "cboden/ratchet",
 +            "version": "v0.3.6",
 +            "source": {
@@ -183,14 +183,14 @@ index c25bf35..39f7f44 100644
 +            ],
 +            "time": "2017-07-17T17:39:19+00:00"
 +        },
-+        {
+         {
              "name": "firebase/php-jwt",
              "version": "v4.0.0",
-             "source": {
-@@ -281,6 +377,208 @@
+@@ -280,6 +376,208 @@
+             ],
              "time": "2017-02-23T20:14:16+00:00"
          },
-         {
++        {
 +            "name": "guzzle/common",
 +            "version": "v3.9.2",
 +            "target-dir": "Guzzle/Common",
@@ -392,14 +392,14 @@ index c25bf35..39f7f44 100644
 +            "abandoned": "guzzle/guzzle",
 +            "time": "2014-05-01T21:36:02+00:00"
 +        },
-+        {
+         {
              "name": "guzzlehttp/guzzle",
              "version": "6.3.0",
-             "source": {
-@@ -821,6 +1119,180 @@
+@@ -820,6 +1118,180 @@
+             ],
              "time": "2016-10-10T12:19:37+00:00"
          },
-         {
++        {
 +            "name": "react/event-loop",
 +            "version": "v0.4.3",
 +            "source": {
@@ -573,10 +573,9 @@ index c25bf35..39f7f44 100644
 +            ],
 +            "time": "2017-01-25T14:44:14+00:00"
 +        },
-+        {
+         {
              "name": "rize/uri-template",
              "version": "0.3.2",
-             "source": {
 diff --git a/nginx-app.conf b/config/nginx-app.conf
 similarity index 100%
 rename from nginx-app.conf

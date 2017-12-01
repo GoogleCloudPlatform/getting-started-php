@@ -24,17 +24,20 @@ index 5a6b401..c23b619 100644
 +[step-2]: https://cloud.google.com/php/getting-started/using-structured-data
  
 diff --git a/app.yaml b/app.yaml
-index 5ccf142..700b465 100644
+index b226b70..722f4bf 100644
 --- a/app.yaml
 +++ b/app.yaml
-@@ -3,3 +3,7 @@ env: flex
- 
+@@ -4,6 +4,10 @@ env: flex
  runtime_config:
    document_root: web
-+
+ 
 +## Uncomment for Cloud SQL
 +# beta_settings:
 +#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
++
+ # This sample incurs costs to run on the App Engine flexible environment.
+ # The settings below are to reduce costs during testing and are not appropriate
+ # for production use. For more information, see:
 diff --git a/composer.json b/composer.json
 index 6f731c3..ee374f2 100644
 --- a/composer.json
@@ -55,14 +58,14 @@ diff --git a/composer.lock b/composer.lock
 index 7545722..2783799 100644
 --- a/composer.lock
 +++ b/composer.lock
-@@ -4,9 +4,446 @@
+@@ -4,8 +4,445 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
 -    "content-hash": "1c1639772c561e0747b7d601df6c5b2d",
 +    "content-hash": "2ed03aef435a286fbf9ff49ce423fec4",
      "packages": [
-         {
++        {
 +            "name": "firebase/php-jwt",
 +            "version": "v4.0.0",
 +            "source": {
@@ -499,14 +502,14 @@ index 7545722..2783799 100644
 +            ],
 +            "time": "2017-06-19T01:22:40+00:00"
 +        },
-+        {
+         {
              "name": "pimple/pimple",
              "version": "v1.1.1",
-             "source": {
-@@ -53,6 +490,102 @@
+@@ -52,6 +489,102 @@
+             ],
              "time": "2013-11-22T08:30:29+00:00"
          },
-         {
++        {
 +            "name": "psr/cache",
 +            "version": "1.0.1",
 +            "source": {
@@ -602,10 +605,9 @@ index 7545722..2783799 100644
 +            ],
 +            "time": "2016-08-06T14:39:51+00:00"
 +        },
-+        {
+         {
              "name": "psr/log",
              "version": "1.0.2",
-             "source": {
 @@ -93,11 +626,55 @@
              "description": "Common interface for logging libraries",
              "homepage": "https://github.com/php-fig/log",
@@ -1186,10 +1188,11 @@ index 7545722..2783799 100644
          },
          {
              "name": "phpdocumentor/reflection-common",
-@@ -1652,56 +2168,6 @@
+@@ -1651,56 +2167,6 @@
+             ],
              "time": "2015-10-02T06:51:40+00:00"
          },
-         {
+-        {
 -            "name": "psr/http-message",
 -            "version": "1.0.1",
 -            "source": {
@@ -1239,14 +1242,14 @@ index 7545722..2783799 100644
 -            ],
 -            "time": "2016-08-06T14:39:51+00:00"
 -        },
--        {
+         {
              "name": "sebastian/comparator",
              "version": "1.2.4",
-             "source": {
-@@ -2289,61 +2755,6 @@
+@@ -2288,61 +2754,6 @@
+             "homepage": "https://symfony.com",
              "time": "2017-07-13T13:05:09+00:00"
          },
-         {
+-        {
 -            "name": "symfony/yaml",
 -            "version": "v3.3.5",
 -            "source": {
@@ -1301,10 +1304,9 @@ index 7545722..2783799 100644
 -            "homepage": "https://symfony.com",
 -            "time": "2017-06-15T12:58:50+00:00"
 -        },
--        {
+         {
              "name": "webmozart/assert",
              "version": "1.2.0",
-             "source": {
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
 new file mode 100644
 index 0000000..4526a43

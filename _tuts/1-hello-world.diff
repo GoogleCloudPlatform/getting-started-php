@@ -31,15 +31,26 @@ index 0000000..5a6b401
 +
 diff --git a/app.yaml b/app.yaml
 new file mode 100644
-index 0000000..5ccf142
+index 0000000..b226b70
 --- /dev/null
 +++ b/app.yaml
-@@ -0,0 +1,5 @@
+@@ -0,0 +1,16 @@
 +runtime: php
 +env: flex
 +
 +runtime_config:
 +  document_root: web
++
++# This sample incurs costs to run on the App Engine flexible environment.
++# The settings below are to reduce costs during testing and are not appropriate
++# for production use. For more information, see:
++# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
++manual_scaling:
++  instances: 1
++resources:
++  cpu: 1
++  memory_gb: 0.5
++  disk_size_gb: 10
 diff --git a/composer.json b/composer.json
 new file mode 100644
 index 0000000..6f731c3
