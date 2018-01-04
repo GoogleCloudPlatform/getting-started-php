@@ -1,5 +1,5 @@
 runtime: php
-vm: true
+env: flex
 service: worker
 # [START entrypoint]
 entrypoint: php bin/pubsub/entrypoint.php
