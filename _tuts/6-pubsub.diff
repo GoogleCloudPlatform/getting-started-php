@@ -1559,12 +1559,12 @@ index 0000000..b8bd45d
 +}
 diff --git a/worker.yaml b/worker.yaml
 new file mode 100644
-index 0000000..d788257
+index 0000000..86daeb2
 --- /dev/null
 +++ b/worker.yaml
 @@ -0,0 +1,11 @@
 +runtime: php
-+vm: true
++env: flex
 +service: worker
 +# [START entrypoint]
 +entrypoint: php bin/pubsub/entrypoint.php

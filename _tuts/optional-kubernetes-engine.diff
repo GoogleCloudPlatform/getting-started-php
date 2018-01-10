@@ -305,12 +305,12 @@ index 1f0e8c9..b4b5925 100644
  }
 diff --git a/worker.yaml b/worker.yaml
 deleted file mode 100644
-index d788257..0000000
+index 86daeb2..0000000
 --- a/worker.yaml
 +++ /dev/null
 @@ -1,11 +0,0 @@
 -runtime: php
--vm: true
+-env: flex
 -service: worker
 -# [START entrypoint]
 -entrypoint: php bin/pubsub/entrypoint.php
