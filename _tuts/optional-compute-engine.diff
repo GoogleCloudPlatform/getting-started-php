@@ -197,16 +197,6 @@ index 45969d0..0000000
 +++ /dev/null
 @@ -1 +0,0 @@
 -extension=mongodb.so
-diff --git a/config/php-pubsub.ini b/config/php-pubsub.ini
-deleted file mode 100644
-index 1f0dd17..0000000
---- a/config/php-pubsub.ini
-+++ /dev/null
-@@ -1,3 +0,0 @@
--extension=mongo.so
--extension=curl.so
--suhosin.executor.func.blacklist=
-\ No newline at end of file
 diff --git a/gce/deploy.sh b/gce/deploy.sh
 new file mode 100644
 index 0000000..61b2846
