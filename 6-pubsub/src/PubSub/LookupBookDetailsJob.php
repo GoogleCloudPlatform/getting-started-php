@@ -32,7 +32,13 @@ class LookupBookDetailsJob
             // [START update_image]
             foreach ($results as $result) {
                 $volumeInfo = $result->getVolumeInfo();
+                if ($volumeInfo === null) {
+                    return false;
+                }
                 $imageInfo = $volumeInfo->getImageLinks();
+                if ($imageInfo === null) {
+                    return false;
+                }
                 if ($thumbnail = $imageInfo->getThumbnail()) {
                     $book['image_url'] = $thumbnail;
                     $this->client->getLogger()->info(sprintf(

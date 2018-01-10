@@ -1,11 +1,24 @@
 runtime: php
-vm: true
+env: flex
 service: worker
-# [START entrypoint]
-entrypoint: php bin/pubsub/entrypoint.php
-# [END entrypoint]
 
-# [START overrides]
-env_variables:
-  PHP_INI_OVERRIDE: config/php-pubsub.ini
-# [END overrides]
+# [START runtime_config]
+runtime_config:
+  document_root: .
+  supervisord_conf: config/worker-supervisord.conf
+# [END runtime_config]
+
+## Uncomment for Cloud SQL
+# beta_settings:
+#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
+
+# This sample incurs costs to run on the App Engine flexible environment.
+# The settings below are to reduce costs during testing and are not appropriate
+# for production use. For more information, see:
+# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
+manual_scaling:
+  instances: 1
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
