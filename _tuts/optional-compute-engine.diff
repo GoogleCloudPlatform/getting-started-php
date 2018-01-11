@@ -8,10 +8,10 @@ index 305612c..0000000
 -coverage/*
 diff --git a/Dockerfile b/Dockerfile
 deleted file mode 100644
-index a0aa4aa..0000000
+index 4af0b3c..0000000
 --- a/Dockerfile
 +++ /dev/null
-@@ -1,14 +0,0 @@
+@@ -1,12 +0,0 @@
 -# The Google App Engine php runtime is Debian Jessie with PHP installed
 -# and various os-level packages to allow installation of popular PHP
 -# libraries. The source is on github at:
@@ -19,27 +19,22 @@ index a0aa4aa..0000000
 -FROM gcr.io/google_appengine/php
 -
 -# Add our NGINX and php.ini config
--ENV DOCUMENT_ROOT=${APP_DIR}/web \
--    NGINX_CONF_INCLUDE=config/nginx-app.conf \
--    PHP_INI_OVERRIDE=config/php-app.ini
+-ENV DOCUMENT_ROOT=${APP_DIR}/web
 -
 -# Workaround for AUFS-related permission issue:
 -# See https://github.com/docker/docker/issues/783#issuecomment-56013588
 -RUN cp -R ${APP_DIR} ${APP_DIR}-copy; rm -r ${APP_DIR}; mv ${APP_DIR}-copy ${APP_DIR}; chmod -R 550 ${APP_DIR}; chown -R root.www-data ${APP_DIR}
 diff --git a/Dockerfile.worker b/Dockerfile.worker
 deleted file mode 100644
-index 906848a..0000000
+index 6e596f8..0000000
 --- a/Dockerfile.worker
 +++ /dev/null
-@@ -1,11 +0,0 @@
+@@ -1,8 +0,0 @@
 -# The Google App Engine php runtime is Debian Jessie with PHP installed
 -# and various os-level packages to allow installation of popular PHP
 -# libraries. The source is on github at:
 -#   https://github.com/GoogleCloudPlatform/php-docker
 -FROM gcr.io/google_appengine/php
--
--# Add our php.ini config
--ENV PHP_INI_OVERRIDE=config/php-pubsub.ini
 -
 -# override the default CMD for the pubsub worker
 -CMD php bin/pubsub/entrypoint.php
@@ -180,23 +175,6 @@ index a5c0af3..0000000
 -        ports:
 -        - name: ratchet-server
 -          containerPort: 8080
-diff --git a/config/nginx-app.conf b/config/nginx-app.conf
-deleted file mode 100644
-index c13edbf..0000000
---- a/config/nginx-app.conf
-+++ /dev/null
-@@ -1,4 +0,0 @@
--location / {
--  # try to serve file directly, fallback to front controller
--  try_files $uri /index.php$is_args$args;
--}
-diff --git a/config/php-app.ini b/config/php-app.ini
-deleted file mode 100644
-index 45969d0..0000000
---- a/config/php-app.ini
-+++ /dev/null
-@@ -1 +0,0 @@
--extension=mongodb.so
 diff --git a/gce/deploy.sh b/gce/deploy.sh
 new file mode 100644
 index 0000000..61b2846

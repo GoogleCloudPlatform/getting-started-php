@@ -5,9 +5,7 @@
 FROM gcr.io/google_appengine/php
 
 # Add our NGINX and php.ini config
-ENV DOCUMENT_ROOT=${APP_DIR}/web \
-    NGINX_CONF_INCLUDE=config/nginx-app.conf \
-    PHP_INI_OVERRIDE=config/php-app.ini
+ENV DOCUMENT_ROOT=${APP_DIR}/web
 
 # Workaround for AUFS-related permission issue:
 # See https://github.com/docker/docker/issues/783#issuecomment-56013588

@@ -14,23 +14,6 @@ index ead2f61..1bd64f0 100644
 -[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
 +[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
  
-diff --git a/app.yaml b/app.yaml
-index 722f4bf..b017b22 100644
---- a/app.yaml
-+++ b/app.yaml
-@@ -4,6 +4,12 @@ env: flex
- runtime_config:
-   document_root: web
- 
-+# [START overrides]
-+env_variables:
-+  NGINX_CONF_INCLUDE: config/nginx-app.conf
-+  PHP_INI_OVERRIDE: config/php-app.ini
-+# [END overrides]
-+
- ## Uncomment for Cloud SQL
- # beta_settings:
- #   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
 diff --git a/bin/pubsub/entrypoint.php b/bin/pubsub/entrypoint.php
 new file mode 100644
 index 0000000..0b9efb7
@@ -576,14 +559,6 @@ index c25bf35..39f7f44 100644
          {
              "name": "rize/uri-template",
              "version": "0.3.2",
-diff --git a/nginx-app.conf b/config/nginx-app.conf
-similarity index 100%
-rename from nginx-app.conf
-rename to config/nginx-app.conf
-diff --git a/php.ini b/config/php-app.ini
-similarity index 100%
-rename from php.ini
-rename to config/php-app.ini
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
 index 4526a43..4d7c037 100644
 --- a/config/settings.yml.dist
@@ -618,6 +593,16 @@ index 0000000..afc6a38
 +autorestart = true
 +priority = 5
 +stopwaitsecs = 20
+diff --git a/nginx-app.conf b/nginx-app.conf
+deleted file mode 100644
+index c13edbf..0000000
+--- a/nginx-app.conf
++++ /dev/null
+@@ -1,4 +0,0 @@
+-location / {
+-  # try to serve file directly, fallback to front controller
+-  try_files $uri /index.php$is_args$args;
+-}
 diff --git a/src/PubSub/AsyncConnection.php b/src/PubSub/AsyncConnection.php
 new file mode 100644
 index 0000000..ea14436
