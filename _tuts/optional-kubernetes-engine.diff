@@ -204,6 +204,29 @@ index 0000000..a5c0af3
 +        ports:
 +        - name: ratchet-server
 +          containerPort: 8080
+diff --git a/config/worker-supervisord.conf b/config/worker-supervisord.conf
+deleted file mode 100644
+index afc6a38..0000000
+--- a/config/worker-supervisord.conf
++++ /dev/null
+@@ -1,17 +0,0 @@
+-[supervisord]
+-nodaemon = true
+-logfile = /dev/null
+-logfile_maxbytes = 0
+-pidfile = /var/run/supervisord.pid
+-
+-[program:pubsub-worker]
+-command = php /app/bin/pubsub/entrypoint.php
+-stdout_logfile = /dev/stdout
+-stdout_logfile_maxbytes=0
+-stderr_logfile = /dev/stderr
+-stderr_logfile_maxbytes=0
+-user = www-data
+-autostart = true
+-autorestart = true
+-priority = 5
+-stopwaitsecs = 20
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
 index 8dffa4d..4725e7b 100644
 --- a/test/app-e2e.yaml
@@ -305,7 +328,7 @@ index 1f0e8c9..b4b5925 100644
  }
 diff --git a/worker.yaml b/worker.yaml
 deleted file mode 100644
-index 24a51ad..0000000
+index 0c4406a..0000000
 --- a/worker.yaml
 +++ /dev/null
 @@ -1,24 +0,0 @@
@@ -316,7 +339,7 @@ index 24a51ad..0000000
 -# [START runtime_config]
 -runtime_config:
 -  document_root: .
--  supervisord_conf: config/worker-supervisord.conf
+-  supervisord_conf_override: config/worker-supervisord.conf
 -# [END runtime_config]
 -
 -## Uncomment for Cloud SQL

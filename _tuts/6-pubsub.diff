@@ -597,11 +597,17 @@ index 4526a43..4d7c037 100644
 +pubsub_subscription_name: fill-book-details
 diff --git a/config/worker-supervisord.conf b/config/worker-supervisord.conf
 new file mode 100644
-index 0000000..4560c1c
+index 0000000..afc6a38
 --- /dev/null
 +++ b/config/worker-supervisord.conf
-@@ -0,0 +1,11 @@
-+[program: pubsub-worker]
+@@ -0,0 +1,17 @@
++[supervisord]
++nodaemon = true
++logfile = /dev/null
++logfile_maxbytes = 0
++pidfile = /var/run/supervisord.pid
++
++[program:pubsub-worker]
 +command = php /app/bin/pubsub/entrypoint.php
 +stdout_logfile = /dev/stdout
 +stdout_logfile_maxbytes=0
@@ -1572,7 +1578,7 @@ index 0000000..b8bd45d
 +}
 diff --git a/worker.yaml b/worker.yaml
 new file mode 100644
-index 0000000..24a51ad
+index 0000000..0c4406a
 --- /dev/null
 +++ b/worker.yaml
 @@ -0,0 +1,24 @@
@@ -1583,7 +1589,7 @@ index 0000000..24a51ad
 +# [START runtime_config]
 +runtime_config:
 +  document_root: .
-+  supervisord_conf: config/worker-supervisord.conf
++  supervisord_conf_override: config/worker-supervisord.conf
 +# [END runtime_config]
 +
 +## Uncomment for Cloud SQL
