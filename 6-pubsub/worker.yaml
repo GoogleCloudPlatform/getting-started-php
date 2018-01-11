@@ -5,7 +5,7 @@ service: worker
 # [START runtime_config]
 runtime_config:
   document_root: .
-  supervisord_conf: config/worker-supervisord.conf
+  supervisord_conf_override: config/worker-supervisord.conf
 # [END runtime_config]
 
 ## Uncomment for Cloud SQL
