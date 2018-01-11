@@ -584,16 +584,6 @@ diff --git a/php.ini b/config/php-app.ini
 similarity index 100%
 rename from php.ini
 rename to config/php-app.ini
-diff --git a/config/php-pubsub.ini b/config/php-pubsub.ini
-new file mode 100644
-index 0000000..1f0dd17
---- /dev/null
-+++ b/config/php-pubsub.ini
-@@ -0,0 +1,3 @@
-+extension=mongo.so
-+extension=curl.so
-+suhosin.executor.func.blacklist=
-\ No newline at end of file
 diff --git a/config/settings.yml.dist b/config/settings.yml.dist
 index 4526a43..4d7c037 100644
 --- a/config/settings.yml.dist
@@ -605,6 +595,29 @@ index 4526a43..4d7c037 100644
 +
 +pubsub_topic_name: book-created-or-updated
 +pubsub_subscription_name: fill-book-details
+diff --git a/config/worker-supervisord.conf b/config/worker-supervisord.conf
+new file mode 100644
+index 0000000..afc6a38
+--- /dev/null
++++ b/config/worker-supervisord.conf
+@@ -0,0 +1,17 @@
++[supervisord]
++nodaemon = true
++logfile = /dev/null
++logfile_maxbytes = 0
++pidfile = /var/run/supervisord.pid
++
++[program:pubsub-worker]
++command = php /app/bin/pubsub/entrypoint.php
++stdout_logfile = /dev/stdout
++stdout_logfile_maxbytes=0
++stderr_logfile = /dev/stderr
++stderr_logfile_maxbytes=0
++user = www-data
++autostart = true
++autorestart = true
++priority = 5
++stopwaitsecs = 20
 diff --git a/src/PubSub/AsyncConnection.php b/src/PubSub/AsyncConnection.php
 new file mode 100644
 index 0000000..ea14436
@@ -742,10 +755,10 @@ index 0000000..81f1d96
 +}
 diff --git a/src/PubSub/LookupBookDetailsJob.php b/src/PubSub/LookupBookDetailsJob.php
 new file mode 100644
-index 0000000..4df12b9
+index 0000000..590ec8f
 --- /dev/null
 +++ b/src/PubSub/LookupBookDetailsJob.php
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,55 @@
 +<?php
 +
 +namespace Google\Cloud\Samples\Bookshelf\PubSub;
@@ -780,7 +793,13 @@ index 0000000..4df12b9
 +            // [START update_image]
 +            foreach ($results as $result) {
 +                $volumeInfo = $result->getVolumeInfo();
++                if ($volumeInfo === null) {
++                    return false;
++                }
 +                $imageInfo = $volumeInfo->getImageLinks();
++                if ($imageInfo === null) {
++                    return false;
++                }
 +                if ($thumbnail = $imageInfo->getThumbnail()) {
 +                    $book['image_url'] = $thumbnail;
 +                    $this->client->getLogger()->info(sprintf(
@@ -1559,18 +1578,31 @@ index 0000000..b8bd45d
 +}
 diff --git a/worker.yaml b/worker.yaml
 new file mode 100644
-index 0000000..d788257
+index 0000000..0c4406a
 --- /dev/null
 +++ b/worker.yaml
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,24 @@
 +runtime: php
-+vm: true
++env: flex
 +service: worker
-+# [START entrypoint]
-+entrypoint: php bin/pubsub/entrypoint.php
-+# [END entrypoint]
 +
-+# [START overrides]
-+env_variables:
-+  PHP_INI_OVERRIDE: config/php-pubsub.ini
-+# [END overrides]
++# [START runtime_config]
++runtime_config:
++  document_root: .
++  supervisord_conf_override: config/worker-supervisord.conf
++# [END runtime_config]
++
++## Uncomment for Cloud SQL
++# beta_settings:
++#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
++
++# This sample incurs costs to run on the App Engine flexible environment.
++# The settings below are to reduce costs during testing and are not appropriate
++# for production use. For more information, see:
++# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
++manual_scaling:
++  instances: 1
++resources:
++  cpu: 1
++  memory_gb: 0.5
++  disk_size_gb: 10
