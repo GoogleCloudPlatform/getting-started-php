@@ -1,9 +1,9 @@
 diff --git a/Dockerfile b/Dockerfile
 new file mode 100644
-index 0000000..a0aa4aa
+index 0000000..4af0b3c
 --- /dev/null
 +++ b/Dockerfile
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,12 @@
 +# The Google App Engine php runtime is Debian Jessie with PHP installed
 +# and various os-level packages to allow installation of popular PHP
 +# libraries. The source is on github at:
@@ -11,27 +11,22 @@ index 0000000..a0aa4aa
 +FROM gcr.io/google_appengine/php
 +
 +# Add our NGINX and php.ini config
-+ENV DOCUMENT_ROOT=${APP_DIR}/web \
-+    NGINX_CONF_INCLUDE=config/nginx-app.conf \
-+    PHP_INI_OVERRIDE=config/php-app.ini
++ENV DOCUMENT_ROOT=${APP_DIR}/web
 +
 +# Workaround for AUFS-related permission issue:
 +# See https://github.com/docker/docker/issues/783#issuecomment-56013588
 +RUN cp -R ${APP_DIR} ${APP_DIR}-copy; rm -r ${APP_DIR}; mv ${APP_DIR}-copy ${APP_DIR}; chmod -R 550 ${APP_DIR}; chown -R root.www-data ${APP_DIR}
 diff --git a/Dockerfile.worker b/Dockerfile.worker
 new file mode 100644
-index 0000000..906848a
+index 0000000..6e596f8
 --- /dev/null
 +++ b/Dockerfile.worker
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,8 @@
 +# The Google App Engine php runtime is Debian Jessie with PHP installed
 +# and various os-level packages to allow installation of popular PHP
 +# libraries. The source is on github at:
 +#   https://github.com/GoogleCloudPlatform/php-docker
 +FROM gcr.io/google_appengine/php
-+
-+# Add our php.ini config
-+ENV PHP_INI_OVERRIDE=config/php-pubsub.ini
 +
 +# override the default CMD for the pubsub worker
 +CMD php bin/pubsub/entrypoint.php
