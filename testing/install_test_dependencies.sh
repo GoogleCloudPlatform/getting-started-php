@@ -96,7 +96,6 @@ else
         "${GOOGLE_APPLICATION_CREDENTIALS}"
 fi
 
-gcloud compute firewall-rules delete ${FIREWALL_NAME} || /bin/true
 # Create a firewall rule for mongodb
 IP=`curl https://ip-dot-cloud-dpes.appspot.com/`
 gcloud compute firewall-rules create ${FIREWALL_NAME} \
