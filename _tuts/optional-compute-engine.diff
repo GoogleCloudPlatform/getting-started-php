@@ -177,7 +177,7 @@ index a5c0af3..0000000
 -          containerPort: 8080
 diff --git a/gce/deploy.sh b/gce/deploy.sh
 new file mode 100644
-index 0000000..61b2846
+index 0000000..b1b8102
 --- /dev/null
 +++ b/gce/deploy.sh
 @@ -0,0 +1,151 @@
@@ -249,7 +249,7 @@ index 0000000..61b2846
 +# [START create_named_port]
 +gcloud compute instance-groups managed set-named-ports \
 +    $GROUP \
-+    --named-port http:8080 \
++    --named-ports http:8080 \
 +    --zone $ZONE
 +# [END create_named_port]
 +
@@ -283,7 +283,7 @@ index 0000000..61b2846
 +
 +# [START create_backend_service]
 +gcloud compute backend-services create $SERVICE \
-+  --http-health-check ah-health-check
++  --http-health-checks ah-health-check
 +# [END create_backend-service]
 +
 +# [START add_backend_service]
