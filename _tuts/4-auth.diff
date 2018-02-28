@@ -15,27 +15,27 @@ index 4df4bde..ea0038e 100644
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
 diff --git a/composer.json b/composer.json
-index ee374f2..db732fa 100644
+index d446a6c..a539281 100644
 --- a/composer.json
 +++ b/composer.json
 @@ -6,6 +6,7 @@
    },
    "require": {
-     "php": "5.6.*|7.0.*|7.1.*",
+     "php": "5.6.*|7.0.*|7.1.*|7.2.*",
 +    "google/apiclient": "^2.0",
      "google/cloud": "^0.21",
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
 diff --git a/composer.lock b/composer.lock
-index 2783799..38e435f 100644
+index 3132444..f1b81a1 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "content-hash": "2ed03aef435a286fbf9ff49ce423fec4",
-+    "content-hash": "747a138f1e78e6571c19d5d7f2db97be",
+-    "content-hash": "ddeb8732b91dd8034b5debf67192545e",
++    "content-hash": "98aada38718ecf493f780ae2f577c4ac",
      "packages": [
          {
              "name": "firebase/php-jwt",
@@ -148,16 +148,16 @@ index 2783799..38e435f 100644
          },
 +        {
 +            "name": "phpseclib/phpseclib",
-+            "version": "2.0.6",
++            "version": "2.0.10",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/phpseclib/phpseclib.git",
-+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa"
++                "reference": "d305b780829ea4252ed9400b3f5937c2c99b51d4"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/34a7699e6f31b1ef4035ee36444407cecf9f56aa",
-+                "reference": "34a7699e6f31b1ef4035ee36444407cecf9f56aa",
++                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d305b780829ea4252ed9400b3f5937c2c99b51d4",
++                "reference": "d305b780829ea4252ed9400b3f5937c2c99b51d4",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -165,7 +165,7 @@ index 2783799..38e435f 100644
 +            },
 +            "require-dev": {
 +                "phing/phing": "~2.7",
-+                "phpunit/phpunit": "~4.0",
++                "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
 +                "sami/sami": "~2.0",
 +                "squizlabs/php_codesniffer": "~2.0"
 +            },
@@ -236,7 +236,7 @@ index 2783799..38e435f 100644
 +                "x.509",
 +                "x509"
 +            ],
-+            "time": "2017-06-05T06:31:10+00:00"
++            "time": "2018-02-19T04:29:13+00:00"
 +        },
          {
              "name": "pimple/pimple",

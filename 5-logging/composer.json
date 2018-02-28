@@ -5,7 +5,7 @@
     }
   },
   "require": {
-    "php": "5.6.*|7.0.*|7.1.*",
+    "php": "5.6.*|7.0.*|7.1.*|7.2.*",
     "google/apiclient": "^2.0",
     "google/cloud": "^0.21",
     "monolog/monolog": "^1.17",
