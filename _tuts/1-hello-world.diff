@@ -2695,7 +2695,7 @@ index 0000000..c13edbf
 +}
 diff --git a/phpunit.xml b/phpunit.xml
 new file mode 100644
-index 0000000..037bf38
+index 0000000..500fd27
 --- /dev/null
 +++ b/phpunit.xml
 @@ -0,0 +1,31 @@
@@ -2715,7 +2715,7 @@ index 0000000..037bf38
 +  See the License for the specific language governing permissions and
 +  limitations under the License.
 +-->
-+<phpunit bootstrap="vendor/autoload.php">
++<phpunit bootstrap="vendor/autoload.php" convertWarningsToExceptions="false">
 +    <testsuites>
 +        <testsuite name="PHP Getting Started Test Suite">
 +            <directory>test</directory>
