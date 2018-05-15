@@ -43,6 +43,8 @@ env:
 install:
 - pecl install mongodb || phpenv config-add testing/mongodb.ini;
 - travis_retry testing/install_test_dependencies.sh
+- sudo apt-get install -f mongodb
+- sudo service mongodb start
 
 before_script:
 - mkdir -p build/logs
