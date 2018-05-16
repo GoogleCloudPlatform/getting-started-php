@@ -102,7 +102,7 @@ class MongoDb implements DataModelInterface
             $book['_id'] = $id;
         }
         $result = $this->db->insertOne($book);
-        return $result->getInsertedId();
+        return (string)$result->getInsertedId();
     }
 
     /**

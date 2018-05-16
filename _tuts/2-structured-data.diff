@@ -1681,7 +1681,7 @@ index 0000000..6789ff6
 +}
 diff --git a/src/DataModel/MongoDb.php b/src/DataModel/MongoDb.php
 new file mode 100644
-index 0000000..d471e38
+index 0000000..6585b99
 --- /dev/null
 +++ b/src/DataModel/MongoDb.php
 @@ -0,0 +1,203 @@
@@ -1789,7 +1789,7 @@ index 0000000..d471e38
 +            $book['_id'] = $id;
 +        }
 +        $result = $this->db->insertOne($book);
-+        return $result->getInsertedId();
++        return (string)$result->getInsertedId();
 +    }
 +
 +    /**
