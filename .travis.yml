@@ -30,6 +30,9 @@ branches:
   only:
     - master
 
+services:
+  - mongodb
+
 env:
   global:
     - GCLOUD_DIR=${HOME}/gcloud
