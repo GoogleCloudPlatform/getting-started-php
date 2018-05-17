@@ -4485,10 +4485,10 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..438c2b9
+index 0000000..46fcec3
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
-@@ -0,0 +1,139 @@
+@@ -0,0 +1,135 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4565,19 +4565,15 @@ index 0000000..438c2b9
 +        } while ($newCount < $rowCount + 2 && $retries);
 +        $this->assertEquals($rowCount + 2, $newCount);
 +
-+        // Iterate over the books again and verify there are now 2 more.
-+        $newCount = 0;
++        // Iterate over the books again
 +        do {
 +            // Only fetch one book at a time to test that code path.
 +            $fetch = $model->listBooks(1, $fetch['cursor']);
-+            $count = count($fetch['books']);
-+            $newCount += $count;
 +            // Check if id is correctly set.
-+            if ($newCount === 1) {
++            if (count($fetch['books']) > 0)) {
 +                $this->assertNotNull($fetch['books'][0]['id']);
 +            }
 +        } while ($fetch['cursor']);
-+        $this->assertEquals($rowCount + 2, $newCount);
 +
 +        // Make sure the book we read looks like the book we wrote.
 +        $breakfastBook = $model->read($breakfastId);
