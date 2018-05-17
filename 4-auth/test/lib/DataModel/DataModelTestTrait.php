@@ -63,15 +63,16 @@ trait DataModelTestTrait
         }
 
         // account for eventual consistencty
-        $retries = 10;
+        $retries = 0;
+        $maxRetries = 10;
         do {
             $result = $model->listBooks($rowCount + 2);
             $newCount = count($result['books']);
-            $retries--;
+            $retries++;
             if ($newCount < $rowCount + 2) {
-                sleep(1);
+                sleep(2 ** $retries);
             }
-        } while ($newCount < $rowCount + 2 && $retries);
+        } while ($newCount < $rowCount + 2 && $retries < $maxRetries);
         $this->assertEquals($rowCount + 2, $newCount);
 
         // Iterate over the books again
