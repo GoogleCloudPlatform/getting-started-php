@@ -74,19 +74,13 @@ trait DataModelTestTrait
         } while ($newCount < $rowCount + 2 && $retries);
         $this->assertEquals($rowCount + 2, $newCount);
 
-        // Iterate over the books again and verify there are now 2 more.
-        $newCount = 0;
+        // Iterate over the books again one by one
         do {
             // Only fetch one book at a time to test that code path.
             $fetch = $model->listBooks(1, $fetch['cursor']);
-            $count = count($fetch['books']);
-            $newCount += $count;
             // Check if id is correctly set.
-            if ($newCount === 1) {
-                $this->assertNotNull($fetch['books'][0]['id']);
-            }
+            $this->assertNotNull($fetch['books'][0]['id']);
         } while ($fetch['cursor']);
-        $this->assertEquals($rowCount + 2, $newCount);
 
         // Make sure the book we read looks like the book we wrote.
         $breakfastBook = $model->read($breakfastId);
