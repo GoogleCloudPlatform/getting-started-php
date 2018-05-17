@@ -79,7 +79,7 @@ trait DataModelTestTrait
             // Only fetch one book at a time to test that code path.
             $fetch = $model->listBooks(1, $fetch['cursor']);
             // Check if id is correctly set.
-            if (count($fetch['books']) > 0)) {
+            if (count($fetch['books']) > 0) {
                 $this->assertNotNull($fetch['books'][0]['id']);
             }
         } while ($fetch['cursor']);
