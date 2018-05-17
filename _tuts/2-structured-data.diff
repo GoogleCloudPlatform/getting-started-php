@@ -4485,10 +4485,10 @@ HcmV?d00001
 
 diff --git a/test/lib/DataModel/DataModelTestTrait.php b/test/lib/DataModel/DataModelTestTrait.php
 new file mode 100644
-index 0000000..2259545
+index 0000000..e6138d2
 --- /dev/null
 +++ b/test/lib/DataModel/DataModelTestTrait.php
-@@ -0,0 +1,135 @@
+@@ -0,0 +1,136 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4554,15 +4554,16 @@ index 0000000..2259545
 +        }
 +
 +        // account for eventual consistencty
-+        $retries = 10;
++        $retries = 0;
++        $maxRetries = 10;
 +        do {
 +            $result = $model->listBooks($rowCount + 2);
 +            $newCount = count($result['books']);
-+            $retries--;
++            $retries++;
 +            if ($newCount < $rowCount + 2) {
-+                sleep(1);
++                sleep(2 ** $retries);
 +            }
-+        } while ($newCount < $rowCount + 2 && $retries);
++        } while ($newCount < $rowCount + 2 && $retries < $maxRetries);
 +        $this->assertEquals($rowCount + 2, $newCount);
 +
 +        // Iterate over the books again
