@@ -18,6 +18,7 @@
 namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
+use Google\Cloud\TestUtils\TestTrait;
 use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -27,7 +28,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ControllersTest extends WebTestCase
 {
-    use SkipTestsIfMissingCredentialsTrait;
+    use TestTrait;
     use GetConfigTrait;
 
     /**

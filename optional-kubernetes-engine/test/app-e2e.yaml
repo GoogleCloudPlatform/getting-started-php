@@ -1,11 +1,9 @@
 runtime: custom
 env: flex
 
-runtime_config:
-  document_root: web
-
 env_variables:
   BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
+<<<<<<< HEAD
   NGINX_CONF_INCLUDE: config/nginx-app.conf
   PHP_INI_OVERRIDE: config/php-app.ini
 
@@ -18,3 +16,5 @@ network:
 ## Uncomment for Cloud SQL
 # beta_settings:
 #  cloud_sql_instances: "CLOUDSQL_CONNECTION_NAME"
+=======
+>>>>>>> _tuts/appengine-php72/5-logging

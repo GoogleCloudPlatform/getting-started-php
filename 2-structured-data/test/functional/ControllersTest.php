@@ -17,7 +17,7 @@
 
 namespace Google\Cloud\Samples\Bookshelf;
 
-use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
+use Google\Cloud\TestUtils\TestTrait;
 use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
 
@@ -26,7 +26,7 @@ use Silex\WebTestCase;
  */
 class ControllersTest extends WebTestCase
 {
-    use SkipTestsIfMissingCredentialsTrait;
+    use TestTrait;
     use GetConfigTrait;
 
     /**
@@ -44,7 +44,6 @@ class ControllersTest extends WebTestCase
 
         // Set a tiny page size so it's easy to test paging.
         $app['bookshelf.page_size'] = 1;
-        $app['bookshelf.storage'] = new FakeFileStorage();
         $app['monolog.handler'] = new TestHandler();
 
         return $app;

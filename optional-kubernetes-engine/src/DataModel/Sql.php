@@ -181,25 +181,28 @@ class Sql implements DataModelInterface
         return $statement->rowCount();
     }
 
-    public static function getMysqlDsn($dbName, $port, $connectionName = null)
+    public static function getMysqlDsnForProxy($dbName, $port = 3306)
     {
-        if ($connectionName) {
-            return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
-                $connectionName,
-                $dbName);
-        }
-
         return sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
     }
 
-    public static function getPostgresDsn($dbName, $port, $connectionName = null)
+    public static function getMysqlDsn($dbName, $connectionName)
     {
-        if ($connectionName) {
-            return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
-                $connectionName,
-                $dbName);
-        }
+        return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
+            $connectionName,
+            $dbName);
 
+    }
+
+    public static function getPosgresDsnForProxy($dbName, $port = 5432)
+    {
         return sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
+    }
+
+    public static function getPostgresDsn($dbName, $connectionName)
+    {
+        return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
+            $connectionName,
+            $dbName);
     }
 }

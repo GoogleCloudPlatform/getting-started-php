@@ -56,12 +56,6 @@ $app->register(new TwigServiceProvider(), array(
 // register the url generator
 $app->register(new UrlGeneratorServiceProvider);
 
-// parse configuration
-$config = getenv('BOOKSHELF_CONFIG') ?:
-    __DIR__ . '/../config/' . 'settings.yml';
-
-$app['config'] = Yaml::parse(file_get_contents($config));
-
 // register the session handler
 // [START session]
 $app->register(new SessionServiceProvider);
@@ -88,9 +82,12 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
 // create the google authorization client
 // [START google_client]
 $app['google_client'] = function ($app) {
-    $client = new Google_Client([
-        'client_id'     => $app['config']['google_client_id'],
-        'client_secret' => $app['config']['google_client_secret'],
+    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
+    $urlGen = $app['url_generator'];
+    // $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
+    return new Google_Client([
+        'client_id'     => getenv('GOOGLE_CLIENT_ID'),
+        'client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
     ]);
     $client->setLogger($app['monolog']);
     if ($app['routes']->get('login_callback')) {
@@ -106,7 +103,7 @@ $app['google_client'] = function ($app) {
 // [START pubsub_client]
 $app['pubsub.client'] = function ($app) {
     // create the pubsub client
-    $projectId = $app['config']['google_project_id'];
+    $projectId = getenv('GOOGLE_CLOUD_PROJECT');
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
@@ -119,7 +116,7 @@ $app['pubsub.topic'] = function ($app) {
     // create the topic if it does not exist.
     /** @var Google\Cloud\PubSub\PubSubClient **/
     $pubsub = $app['pubsub.client'];
-    $topicName = $app['config']['pubsub_topic_name'];
+    $topicName = getenv('PUBSUB_TOPIC_NAME');
     $topic = $pubsub->topic($topicName);
     if (!$topic->exists()) {
         $topic->create();
@@ -132,7 +129,7 @@ $app['pubsub.subscription'] = function ($app) {
     // create the subscription if it does not exist.
     /** @var Google\Cloud\PubSub\Topic $topic **/
     $topic = $app['pubsub.topic'];
-    $subName = $app['config']['pubsub_subscription_name'];
+    $subName = getenv('PUBSUB_SUBSCRIPTION_NAME');
     $subscription = $topic->subscription($subName);
     if (!$subscription->exists()) {
         $subscription->create();
@@ -162,57 +159,47 @@ $app['pubsub.server'] = function ($app) {
 
 // Cloud Storage
 $app['bookshelf.storage'] = function ($app) {
-    /** @var array $config */
-    $config = $app['config'];
-    $projectId = $config['google_project_id'];
+    $projectId = getenv('GOOGLE_CLOUD_PROJECT');
     $bucketName = $projectId . '.appspot.com';
     return new CloudStorage($projectId, $bucketName);
 };
 
 // determine the datamodel backend using the app configuration
 $app['bookshelf.model'] = function ($app) {
-    /** @var array $config */
-    $config = $app['config'];
-    if (empty($config['bookshelf_backend'])) {
-        throw new \DomainException('"bookshelf_backend" must be set in bookshelf config');
-    }
-
     // Data Model
-    switch ($config['bookshelf_backend']) {
-        case 'mongodb':
-            return new MongoDb(
-                $config['mongo_url'],
-                $config['mongo_database'],
-                $config['mongo_collection']
-            );
+    $backend = getenv('BOOKSHELF_BACKEND') ?: 'datastore';
+    switch ($backend) {
         case 'datastore':
             return new Datastore(
-                $config['google_project_id']
+                getenv('GOOGLE_CLOUD_PROJECT')
             );
         case 'mysql':
-            $mysql_dsn = Sql::getMysqlDsn(
-                $config['cloudsql_database_name'],
-                $config['cloudsql_port'],
-                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
-            );
-            return new Sql(
-                $mysql_dsn,
-                $config['cloudsql_user'],
-                $config['cloudsql_password']
-            );
         case 'postgres':
-            $postgres_dsn = Sql::getPostgresDsn(
-                $config['cloudsql_database_name'],
-                $config['cloudsql_port'],
-                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
-            );
+            $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
+            $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
+            if (getenv('GAE_INSTANCE')) {
+                $dsn = ($backend === 'mysql')
+                    ? Sql::getMysqlDsn($dbName, $connectionName)
+                    : Sql::getPostgresDsn($dbName, $connectionName);
+            } else {
+                $dsn = ($backend === 'mysql')
+                    ? Sql::getMysqlDsnForProxy($dbName)
+                    : Sql::getPostgresDsnForProxy($dbName);
+
+            }
             return new Sql(
-                $postgres_dsn,
-                $config['cloudsql_user'],
-                $config['cloudsql_password']
+                $dsn,
+                getenv('CLOUDSQL_USER'),
+                getenv('CLOUDSQL_PASSWORD')
+            );
+        case 'mongodb':
+            return new MongoDb(
+                getenv('MONGO_URL'),
+                getenv('MONGO_DATABASE'),
+                getenv('MONGO_COLLECTION')
             );
         default:
-            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
+            throw new \DomainException("Invalid \"BOOKSHELF_BACKEND\" given"
                 . "Possible values are mysql, postgres, mongodb, or datastore.");
     }
 };
@@ -225,7 +212,7 @@ if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
 } else {
     $app['debug'] = filter_var(
         getenv('BOOKSHELF_DEBUG'),
-                               FILTER_VALIDATE_BOOLEAN
+        FILTER_VALIDATE_BOOLEAN
     );
 }
 

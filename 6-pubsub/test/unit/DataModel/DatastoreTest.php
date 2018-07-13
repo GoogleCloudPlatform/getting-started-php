@@ -17,13 +17,13 @@
 namespace Google\Cloud\Samples\Bookshelf\DataModel;
 
 use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
-use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
+use Google\Cloud\TestUtils\TestTrait;
 
 class DatastoreTest extends \PHPUnit_Framework_TestCase
 {
     use DataModelTestTrait;
     use GetConfigTrait;
-    use SkipTestsIfMissingCredentialsTrait;
+    use TestTrait;
 
     public function setUp()
     {

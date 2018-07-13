@@ -18,6 +18,7 @@
 namespace Google\Cloud\Samples\Bookshelf;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\Yaml\Dumper;
 
 /**
@@ -25,7 +26,7 @@ use Symfony\Component\Yaml\Dumper;
  */
 abstract class E2eTest extends \PHPUnit_Framework_TestCase
 {
-    use SkipTestsIfMissingCredentialsTrait,
+    use TestTrait,
         AppEngineDeploymentTrait,
         GetConfigTrait;
 

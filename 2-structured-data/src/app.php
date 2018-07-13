@@ -37,56 +37,42 @@ $app->register(new TwigServiceProvider(), array(
     ),
 ));
 
-// parse configuration
-$config = getenv('BOOKSHELF_CONFIG') ?:
-    __DIR__ . '/../config/' . 'settings.yml';
-
-$app['config'] = Yaml::parse(file_get_contents($config));
-
 // determine the datamodel backend using the app configuration
 $app['bookshelf.model'] = function ($app) {
-    /** @var array $config */
-    $config = $app['config'];
-    if (empty($config['bookshelf_backend'])) {
-        throw new \DomainException('"bookshelf_backend" must be set in bookshelf config');
-    }
-
     // Data Model
-    switch ($config['bookshelf_backend']) {
-        case 'mongodb':
-            return new MongoDb(
-                $config['mongo_url'],
-                $config['mongo_database'],
-                $config['mongo_collection']
-            );
+    $backend = getenv('BOOKSHELF_BACKEND') ?: 'datastore';
+    switch ($backend) {
         case 'datastore':
             return new Datastore(
-                $config['google_project_id']
+                getenv('GOOGLE_CLOUD_PROJECT')
             );
         case 'mysql':
-            $mysql_dsn = Sql::getMysqlDsn(
-                $config['cloudsql_database_name'],
-                $config['cloudsql_port'],
-                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
-            );
-            return new Sql(
-                $mysql_dsn,
-                $config['cloudsql_user'],
-                $config['cloudsql_password']
-            );
         case 'postgres':
-            $postgres_dsn = Sql::getPostgresDsn(
-                $config['cloudsql_database_name'],
-                $config['cloudsql_port'],
-                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
-            );
+            $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
+            $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
+            if (getenv('GAE_INSTANCE')) {
+                $dsn = ($backend === 'mysql')
+                    ? Sql::getMysqlDsn($dbName, $connectionName)
+                    : Sql::getPostgresDsn($dbName, $connectionName);
+            } else {
+                $dsn = ($backend === 'mysql')
+                    ? Sql::getMysqlDsnForProxy($dbName)
+                    : Sql::getPostgresDsnForProxy($dbName);
+
+            }
             return new Sql(
-                $postgres_dsn,
-                $config['cloudsql_user'],
-                $config['cloudsql_password']
+                $dsn,
+                getenv('CLOUDSQL_USER'),
+                getenv('CLOUDSQL_PASSWORD')
+            );
+        case 'mongodb':
+            return new MongoDb(
+                getenv('MONGO_URL'),
+                getenv('MONGO_DATABASE'),
+                getenv('MONGO_COLLECTION')
             );
         default:
-            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
+            throw new \DomainException("Invalid \"BOOKSHELF_BACKEND\" given"
                 . "Possible values are mysql, postgres, mongodb, or datastore.");
     }
 };
@@ -99,7 +85,7 @@ if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
 } else {
     $app['debug'] = filter_var(
         getenv('BOOKSHELF_DEBUG'),
-                               FILTER_VALIDATE_BOOLEAN
+        FILTER_VALIDATE_BOOLEAN
     );
 }
 
