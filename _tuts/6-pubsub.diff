@@ -14,61 +14,71 @@ index ead2f61..1bd64f0 100644
 -[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
 +[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
  
-diff --git a/bin/pubsub/entrypoint.php b/bin/pubsub/entrypoint.php
-new file mode 100644
-index 0000000..0b9efb7
---- /dev/null
-+++ b/bin/pubsub/entrypoint.php
-@@ -0,0 +1,25 @@
-+<?php
-+/*
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
+diff --git a/app.yaml b/app.yaml
+index 52e77ef..3c9b78d 100644
+--- a/app.yaml
++++ b/app.yaml
+@@ -2,20 +2,24 @@ runtime: php72
+ 
+ env_variables:
+     # In order to enable 3-legged OAuth, you must specify Client Credentials
+-    GOOGLE_CLIENT_ID:
+-    GOOGLE_CLIENT_SECRET:
++    GOOGLE_CLIENT_ID: ""
++    GOOGLE_CLIENT_SECRET: ""
 +
-+require_once __DIR__ . '/../../vendor/autoload.php';
-+
-+/** @var Silex\Application $app */
-+$app = require __DIR__ . '/../../src/app.php';
-+
-+/** @var Ratchet\Server\IoServer $server */
-+$server = $app['pubsub.server'];
-+$server->run();
++    # Pubsub (this should be the same as in worker.yaml)
++    PUBSUB_TOPIC_NAME: book_modified
++    PUBSUB_SUBSCRIPTION_NAME: worker
+ 
+     # this can be "mysql", "postgres", "mongodb", or "datastore"
+     BOOKSHELF_BACKEND: datastore
+ 
+     # populate these to use the "mysql" or "postres" backends
+-    CLOUDSQL_DATABASE_NAME:
+-    CLOUDSQL_PORT:
+-    CLOUDSQL_CONNECTION_NAME:
+-    CLOUDSQL_USER:
+-    CLOUDSQL_PASSWORD:
++    CLOUDSQL_DATABASE_NAME: ""
++    CLOUDSQL_PORT: ""
++    CLOUDSQL_CONNECTION_NAME: ""
++    CLOUDSQL_USER: ""
++    CLOUDSQL_PASSWORD: ""
+ 
+     # populate these to use the "mongodb" backend
+-    MONGO_URL:
+-    MONGO_DATABASE:
+-    MONGO_COLLECTION:
++    MONGO_URL: ""
++    MONGO_DATABASE: ""
++    MONGO_COLLECTION: ""
 diff --git a/composer.json b/composer.json
-index 3ad0a10..3c4327a 100644
+index 9599083..f768c67 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -11,7 +11,8 @@
+@@ -1,9 +1,11 @@
+ {
+   "require": {
++    "cboden/ratchet": " 0.3.*",
+     "google/apiclient": "^2.0",
+     "google/cloud": "^0.21",
      "monolog/monolog": "^1.17",
      "silex/silex": "^1.3",
-     "symfony/yaml": "^3.0",
--    "twig/twig": "^1.22"
-+    "twig/twig": "^1.22",
-+    "cboden/ratchet": " 0.3.*"
++    "symfony/yaml": "^3.0",
+     "twig/twig": "^1.22"
    },
-   "require-dev": {
-     "behat/mink": "^1.7",
+   "autoload": {
 diff --git a/composer.lock b/composer.lock
-index abfa9d8..5fe0582 100644
+index 3a9fe24..b7f0332 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,104 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "content-hash": "abb8ae0244c2bf14e8f7ed1b5d72c0a5",
-+    "content-hash": "6979e93a0a63437ee8806494433d1b9b",
+-    "content-hash": "38d6f3040b55f11e93ba2de53081f43c",
++    "content-hash": "9a8fce1722bc3e7f86cde102c07e2ec9",
      "packages": [
 +        {
 +            "name": "cboden/ratchet",
@@ -377,7 +387,7 @@ index abfa9d8..5fe0582 100644
 +        },
          {
              "name": "guzzlehttp/guzzle",
-             "version": "6.3.0",
+             "version": "6.3.3",
 @@ -820,6 +1118,180 @@
              ],
              "time": "2016-10-10T12:19:37+00:00"
@@ -426,16 +436,16 @@ index abfa9d8..5fe0582 100644
 +        },
 +        {
 +            "name": "react/promise",
-+            "version": "v2.5.1",
++            "version": "v2.7.0",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/reactphp/promise.git",
-+                "reference": "62785ae604c8d69725d693eb370e1d67e94c4053"
++                "reference": "f4edc2581617431aea50430749db55cc3fc031b3"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/reactphp/promise/zipball/62785ae604c8d69725d693eb370e1d67e94c4053",
-+                "reference": "62785ae604c8d69725d693eb370e1d67e94c4053",
++                "url": "https://api.github.com/repos/reactphp/promise/zipball/f4edc2581617431aea50430749db55cc3fc031b3",
++                "reference": "f4edc2581617431aea50430749db55cc3fc031b3",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -468,7 +478,7 @@ index abfa9d8..5fe0582 100644
 +                "promise",
 +                "promises"
 +            ],
-+            "time": "2017-03-25T12:08:31+00:00"
++            "time": "2018-06-13T15:59:06+00:00"
 +        },
 +        {
 +            "name": "react/socket",
@@ -559,50 +569,138 @@ index abfa9d8..5fe0582 100644
          {
              "name": "rize/uri-template",
              "version": "0.3.2",
-diff --git a/config/settings.yml.dist b/config/settings.yml.dist
-index 4526a43..4d7c037 100644
---- a/config/settings.yml.dist
-+++ b/config/settings.yml.dist
-@@ -17,3 +17,6 @@ cloudsql_port: 3306
- mongo_url: YOUR_MONGODB_URL
- mongo_database: YOUR_MONGO_DATABASE
- mongo_collection: YOUR_MONGO_COLLECTION
-+
-+pubsub_topic_name: book-created-or-updated
-+pubsub_subscription_name: fill-book-details
-diff --git a/config/worker-supervisord.conf b/config/worker-supervisord.conf
-new file mode 100644
-index 0000000..afc6a38
---- /dev/null
-+++ b/config/worker-supervisord.conf
-@@ -0,0 +1,17 @@
-+[supervisord]
-+nodaemon = true
-+logfile = /dev/null
-+logfile_maxbytes = 0
-+pidfile = /var/run/supervisord.pid
-+
-+[program:pubsub-worker]
-+command = php /app/bin/pubsub/entrypoint.php
-+stdout_logfile = /dev/stdout
-+stdout_logfile_maxbytes=0
-+stderr_logfile = /dev/stderr
-+stderr_logfile_maxbytes=0
-+user = www-data
-+autostart = true
-+autorestart = true
-+priority = 5
-+stopwaitsecs = 20
-diff --git a/nginx-app.conf b/nginx-app.conf
-deleted file mode 100644
-index c13edbf..0000000
---- a/nginx-app.conf
-+++ /dev/null
-@@ -1,4 +0,0 @@
--location / {
--  # try to serve file directly, fallback to front controller
--  try_files $uri /index.php$is_args$args;
--}
+@@ -1381,6 +1853,65 @@
+             ],
+             "time": "2016-06-29T05:40:00+00:00"
+         },
++        {
++            "name": "symfony/yaml",
++            "version": "v3.4.12",
++            "source": {
++                "type": "git",
++                "url": "https://github.com/symfony/yaml.git",
++                "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0"
++            },
++            "dist": {
++                "type": "zip",
++                "url": "https://api.github.com/repos/symfony/yaml/zipball/c5010cc1692ce1fa328b1fb666961eb3d4a85bb0",
++                "reference": "c5010cc1692ce1fa328b1fb666961eb3d4a85bb0",
++                "shasum": ""
++            },
++            "require": {
++                "php": "^5.5.9|>=7.0.8",
++                "symfony/polyfill-ctype": "~1.8"
++            },
++            "conflict": {
++                "symfony/console": "<3.4"
++            },
++            "require-dev": {
++                "symfony/console": "~3.4|~4.0"
++            },
++            "suggest": {
++                "symfony/console": "For validating YAML files using the lint command"
++            },
++            "type": "library",
++            "extra": {
++                "branch-alias": {
++                    "dev-master": "3.4-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Symfony\\Component\\Yaml\\": ""
++                },
++                "exclude-from-classmap": [
++                    "/Tests/"
++                ]
++            },
++            "notification-url": "https://packagist.org/downloads/",
++            "license": [
++                "MIT"
++            ],
++            "authors": [
++                {
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com"
++                },
++                {
++                    "name": "Symfony Community",
++                    "homepage": "https://symfony.com/contributors"
++                }
++            ],
++            "description": "Symfony Yaml Component",
++            "homepage": "https://symfony.com",
++            "time": "2018-05-03T23:18:14+00:00"
++        },
+         {
+             "name": "twig/twig",
+             "version": "v1.35.4",
+@@ -3009,65 +3540,6 @@
+             "homepage": "https://symfony.com",
+             "time": "2018-05-30T04:24:30+00:00"
+         },
+-        {
+-            "name": "symfony/yaml",
+-            "version": "v4.1.1",
+-            "source": {
+-                "type": "git",
+-                "url": "https://github.com/symfony/yaml.git",
+-                "reference": "80e4bfa9685fc4a09acc4a857ec16974a9cd944e"
+-            },
+-            "dist": {
+-                "type": "zip",
+-                "url": "https://api.github.com/repos/symfony/yaml/zipball/80e4bfa9685fc4a09acc4a857ec16974a9cd944e",
+-                "reference": "80e4bfa9685fc4a09acc4a857ec16974a9cd944e",
+-                "shasum": ""
+-            },
+-            "require": {
+-                "php": "^7.1.3",
+-                "symfony/polyfill-ctype": "~1.8"
+-            },
+-            "conflict": {
+-                "symfony/console": "<3.4"
+-            },
+-            "require-dev": {
+-                "symfony/console": "~3.4|~4.0"
+-            },
+-            "suggest": {
+-                "symfony/console": "For validating YAML files using the lint command"
+-            },
+-            "type": "library",
+-            "extra": {
+-                "branch-alias": {
+-                    "dev-master": "4.1-dev"
+-                }
+-            },
+-            "autoload": {
+-                "psr-4": {
+-                    "Symfony\\Component\\Yaml\\": ""
+-                },
+-                "exclude-from-classmap": [
+-                    "/Tests/"
+-                ]
+-            },
+-            "notification-url": "https://packagist.org/downloads/",
+-            "license": [
+-                "MIT"
+-            ],
+-            "authors": [
+-                {
+-                    "name": "Fabien Potencier",
+-                    "email": "fabien@symfony.com"
+-                },
+-                {
+-                    "name": "Symfony Community",
+-                    "homepage": "https://symfony.com/contributors"
+-                }
+-            ],
+-            "description": "Symfony Yaml Component",
+-            "homepage": "https://symfony.com",
+-            "time": "2018-05-30T07:26:09+00:00"
+-        },
+         {
+             "name": "webmozart/assert",
+             "version": "1.3.0",
 diff --git a/src/PubSub/AsyncConnection.php b/src/PubSub/AsyncConnection.php
 new file mode 100644
 index 0000000..ea14436
@@ -878,7 +976,7 @@ index 0000000..82fbf6e
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 8e49c0c..5a505b3 100644
+index 31b7e9d..1f5a1fb 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -21,10 +21,22 @@
@@ -904,16 +1002,15 @@ index 8e49c0c..5a505b3 100644
  use Silex\Application;
  use Silex\Provider\SessionServiceProvider;
  use Silex\Provider\TwigServiceProvider;
-@@ -76,19 +88,78 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
- // create the google authorization client
- // [START google_client]
+@@ -72,17 +84,79 @@ if (isset($_SERVER['GAE_VM']) && $_SERVER['GAE_VM'] === 'true') {
  $app['google_client'] = function ($app) {
--    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
--    $urlGen = $app['url_generator'];
+     /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
+     $urlGen = $app['url_generator'];
 -    $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
-     $client = new Google_Client([
-         'client_id'     => $app['config']['google_client_id'],
-         'client_secret' => $app['config']['google_client_secret'],
++    // $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
+     return new Google_Client([
+         'client_id'     => getenv('GOOGLE_CLIENT_ID'),
+         'client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
 -        'redirect_uri'  => $redirectUri,
      ]);
      $client->setLogger($app['monolog']);
@@ -930,7 +1027,7 @@ index 8e49c0c..5a505b3 100644
 +// [START pubsub_client]
 +$app['pubsub.client'] = function ($app) {
 +    // create the pubsub client
-+    $projectId = $app['config']['google_project_id'];
++    $projectId = getenv('GOOGLE_CLOUD_PROJECT');
 +    $pubsub = new PubSubClient([
 +        'projectId' => $projectId,
 +    ]);
@@ -943,7 +1040,7 @@ index 8e49c0c..5a505b3 100644
 +    // create the topic if it does not exist.
 +    /** @var Google\Cloud\PubSub\PubSubClient **/
 +    $pubsub = $app['pubsub.client'];
-+    $topicName = $app['config']['pubsub_topic_name'];
++    $topicName = getenv('PUBSUB_TOPIC_NAME');
 +    $topic = $pubsub->topic($topicName);
 +    if (!$topic->exists()) {
 +        $topic->create();
@@ -956,7 +1053,7 @@ index 8e49c0c..5a505b3 100644
 +    // create the subscription if it does not exist.
 +    /** @var Google\Cloud\PubSub\Topic $topic **/
 +    $topic = $app['pubsub.topic'];
-+    $subName = $app['config']['pubsub_subscription_name'];
++    $subName = getenv('PUBSUB_SUBSCRIPTION_NAME');
 +    $subscription = $topic->subscription($subName);
 +    if (!$subscription->exists()) {
 +        $subscription->create();
@@ -986,7 +1083,7 @@ index 8e49c0c..5a505b3 100644
 +
  // Cloud Storage
  $app['bookshelf.storage'] = function ($app) {
-     /** @var array $config */
+     $projectId = getenv('GOOGLE_CLOUD_PROJECT');
 diff --git a/src/controllers.php b/src/controllers.php
 index 79a3b78..ecbb13d 100644
 --- a/src/controllers.php
@@ -1029,18 +1126,28 @@ index 79a3b78..ecbb13d 100644
      }
  
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index 574ebd5..8dffa4d 100644
+index c4831fc..d3334e0 100644
 --- a/test/app-e2e.yaml
 +++ b/test/app-e2e.yaml
-@@ -6,6 +6,8 @@ runtime_config:
+@@ -3,3 +3,18 @@ env: flex
  
  env_variables:
    BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
++<<<<<<< HEAD
 +  NGINX_CONF_INCLUDE: config/nginx-app.conf
 +  PHP_INI_OVERRIDE: config/php-app.ini
- 
- manual_scaling:
-   instances: 1
++
++manual_scaling:
++  instances: 1
++
++network:
++  instance_tag: bookshelf-e2e
++
++## Uncomment for Cloud SQL
++# beta_settings:
++#  cloud_sql_instances: "CLOUDSQL_CONNECTION_NAME"
++=======
++>>>>>>> _tuts/appengine-php72/5-logging
 diff --git a/test/functional/AppTest.php b/test/functional/AppTest.php
 index 56d7200..6d7b373 100644
 --- a/test/functional/AppTest.php
@@ -1561,33 +1668,48 @@ index 0000000..b8bd45d
 +        $this->assertEquals(2, $called);
 +    }
 +}
+diff --git a/worker.php b/worker.php
+new file mode 100644
+index 0000000..a9ad1a9
+--- /dev/null
++++ b/worker.php
+@@ -0,0 +1,25 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++require_once __DIR__ . '/vendor/autoload.php';
++
++/** @var Silex\Application $app */
++$app = require __DIR__ . '/src/app.php';
++
++/** @var Ratchet\Server\IoServer $server */
++$server = $app['pubsub.server'];
++$server->run();
 diff --git a/worker.yaml b/worker.yaml
 new file mode 100644
-index 0000000..0c4406a
+index 0000000..2139ab0
 --- /dev/null
 +++ b/worker.yaml
-@@ -0,0 +1,24 @@
-+runtime: php
-+env: flex
+@@ -0,0 +1,8 @@
++runtime: php72
 +service: worker
++entrypoint: php worker.php
 +
-+# [START runtime_config]
-+runtime_config:
-+  document_root: .
-+  supervisord_conf_override: config/worker-supervisord.conf
-+# [END runtime_config]
++env_variables:
++    PUBSUB_TOPIC_NAME: book_modified
++    PUBSUB_SUBSCRIPTION_NAME: worker
 +
-+## Uncomment for Cloud SQL
-+# beta_settings:
-+#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
-+
-+# This sample incurs costs to run on the App Engine flexible environment.
-+# The settings below are to reduce costs during testing and are not appropriate
-+# for production use. For more information, see:
-+# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
-+manual_scaling:
-+  instances: 1
-+resources:
-+  cpu: 1
-+  memory_gb: 0.5
-+  disk_size_gb: 10

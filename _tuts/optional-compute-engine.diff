@@ -1,11 +1,3 @@
-diff --git a/.dockerignore b/.dockerignore
-deleted file mode 100644
-index 305612c..0000000
---- a/.dockerignore
-+++ /dev/null
-@@ -1,2 +0,0 @@
--test/*
--coverage/*
 diff --git a/Dockerfile b/Dockerfile
 deleted file mode 100644
 index 4af0b3c..0000000
@@ -582,7 +574,7 @@ index 0000000..7452db1
 +
 +gcloud compute firewall-rules delete default-allow-http-8080
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index 4725e7b..8dffa4d 100644
+index 603665f..d3334e0 100644
 --- a/test/app-e2e.yaml
 +++ b/test/app-e2e.yaml
 @@ -1,4 +1,4 @@
@@ -590,7 +582,7 @@ index 4725e7b..8dffa4d 100644
 +runtime: php
  env: flex
  
- runtime_config:
+ env_variables:
 diff --git a/test/composer-mongodb.json b/test/composer-mongodb.json
 index fd2d873..bf8e118 100644
 --- a/test/composer-mongodb.json

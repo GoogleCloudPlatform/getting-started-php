@@ -1,10 +1,9 @@
 diff --git a/.gitignore b/.gitignore
-index 78e19ce..59541b5 100644
+index 00e40b4..4cb5ebb 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -1,3 +1,4 @@
+@@ -1,2 +1,3 @@
  **/vendor
- **/settings.yml
  build/*
 +config/settings-e2e.yml
 diff --git a/README.md b/README.md
@@ -24,46 +23,64 @@ index 5a6b401..c23b619 100644
 +[step-2]: https://cloud.google.com/php/getting-started/using-structured-data
  
 diff --git a/app.yaml b/app.yaml
-index b226b70..722f4bf 100644
+index 4ed7267..cc1e5e1 100644
 --- a/app.yaml
 +++ b/app.yaml
-@@ -4,6 +4,10 @@ env: flex
- runtime_config:
-   document_root: web
+@@ -1,2 +1,17 @@
+ runtime: php72
  
-+## Uncomment for Cloud SQL
-+# beta_settings:
-+#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
++env_variables:
++    # this can be "mysql", "postgres", "mongodb", or "datastore"
++    BOOKSHELF_BACKEND: datastore
 +
- # This sample incurs costs to run on the App Engine flexible environment.
- # The settings below are to reduce costs during testing and are not appropriate
- # for production use. For more information, see:
++    # populate these to use the "mysql" or "postres" backends
++    CLOUDSQL_DATABASE_NAME:
++    CLOUDSQL_PORT:
++    CLOUDSQL_CONNECTION_NAME:
++    CLOUDSQL_USER:
++    CLOUDSQL_PASSWORD:
++
++    # populate these to use the "mongodb" backend
++    MONGO_URL:
++    MONGO_DATABASE:
++    MONGO_COLLECTION:
 diff --git a/composer.json b/composer.json
-index f364099..d446a6c 100644
+index f8c81eb..743431c 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -6,7 +6,10 @@
-   },
+@@ -1,9 +1,21 @@
+ {
    "require": {
-     "php": "5.6.*|7.0.*|7.1.*|7.2.*",
 -    "silex/silex": "^1.3"
 +    "google/cloud": "^0.21",
 +    "silex/silex": "^1.3",
-+    "symfony/yaml": "^3.0",
 +    "twig/twig": "^1.22"
++  },
++  "autoload": {
++     "psr-4": {
++       "Google\\Cloud\\Samples\\Bookshelf\\": "src"
++     }
    },
    "require-dev": {
-     "behat/mink": "^1.7",
+     "phpunit/phpunit": "^5",
+     "google/cloud-tools": "^0.8.0"
++  },
++  "autoload-dev": {
++     "psr-4": {
++       "Google\\Cloud\\Samples\\Bookshelf\\": "test/lib"
++     }
+   }
+ }
 diff --git a/composer.lock b/composer.lock
-index 8609ebd..3132444 100644
+index 17e2902..0ad48c5 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,8 +4,445 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "content-hash": "60aaee57e483829af31a9f042d17b0d0",
-+    "content-hash": "ddeb8732b91dd8034b5debf67192545e",
+-    "content-hash": "37f6d6e3c37fc2879eadc854689eeff1",
++    "content-hash": "6892c9475d97fd0cb9580d194be4ea95",
      "packages": [
 +        {
 +            "name": "firebase/php-jwt",
@@ -245,16 +262,16 @@ index 8609ebd..3132444 100644
 +        },
 +        {
 +            "name": "guzzlehttp/guzzle",
-+            "version": "6.3.0",
++            "version": "6.3.3",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/guzzle/guzzle.git",
-+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
++                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
-+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
++                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/407b0cb880ace85c9b63c5f9551db498cb2d50ba",
++                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -264,7 +281,7 @@ index 8609ebd..3132444 100644
 +            },
 +            "require-dev": {
 +                "ext-curl": "*",
-+                "phpunit/phpunit": "^4.0 || ^5.0",
++                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
 +                "psr/log": "^1.0"
 +            },
 +            "suggest": {
@@ -273,7 +290,7 @@ index 8609ebd..3132444 100644
 +            "type": "library",
 +            "extra": {
 +                "branch-alias": {
-+                    "dev-master": "6.2-dev"
++                    "dev-master": "6.3-dev"
 +                }
 +            },
 +            "autoload": {
@@ -306,7 +323,7 @@ index 8609ebd..3132444 100644
 +                "rest",
 +                "web service"
 +            ],
-+            "time": "2017-06-22T18:50:49+00:00"
++            "time": "2018-04-22T15:46:56+00:00"
 +        },
 +        {
 +            "name": "guzzlehttp/promises",
@@ -659,58 +676,26 @@ index 8609ebd..3132444 100644
          {
              "name": "silex/silex",
              "version": "v1.3.6",
-@@ -475,91 +1052,214 @@
-                     "homepage": "https://symfony.com/contributors"
-                 }
-             ],
--            "description": "Symfony polyfill for the Mbstring extension",
-+            "description": "Symfony polyfill for the Mbstring extension",
-+            "homepage": "https://symfony.com",
-+            "keywords": [
-+                "compatibility",
-+                "mbstring",
-+                "polyfill",
-+                "portable",
-+                "shim"
-+            ],
-+            "time": "2018-01-30T19:27:44+00:00"
-+        },
-+        {
-+            "name": "symfony/routing",
-+            "version": "v3.0.9",
-+            "source": {
-+                "type": "git",
-+                "url": "https://github.com/symfony/routing.git",
-+                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b"
-+            },
-+            "dist": {
-+                "type": "zip",
-+                "url": "https://api.github.com/repos/symfony/routing/zipball/9038984bd9c05ab07280121e9e10f61a7231457b",
-+                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b",
-+                "shasum": ""
-+            },
-+            "require": {
-+                "php": ">=5.5.9"
-+            },
-+            "conflict": {
-+                "symfony/config": "<2.8"
-+            },
-+            "require-dev": {
-+                "doctrine/annotations": "~1.0",
-+                "doctrine/common": "~2.2",
-+                "psr/log": "~1.0",
-+                "symfony/config": "~2.8|~3.0",
-+                "symfony/expression-language": "~2.8|~3.0",
-+                "symfony/http-foundation": "~2.8|~3.0",
-+                "symfony/yaml": "~2.8|~3.0"
-+            },
+@@ -386,27 +963,76 @@
+                 "symfony/translation": "~2.8|~3.0",
+                 "symfony/var-dumper": "~2.8|~3.0"
+             },
+-            "suggest": {
+-                "symfony/browser-kit": "",
+-                "symfony/class-loader": "",
+-                "symfony/config": "",
+-                "symfony/console": "",
+-                "symfony/dependency-injection": "",
+-                "symfony/finder": "",
+-                "symfony/var-dumper": ""
 +            "suggest": {
-+                "doctrine/annotations": "For using the annotation loader",
-+                "symfony/config": "For using the all-in-one router or any loader",
-+                "symfony/dependency-injection": "For loading routes from a service",
-+                "symfony/expression-language": "For using expression matching",
-+                "symfony/http-foundation": "For using a Symfony Request object",
-+                "symfony/yaml": "For using the YAML loader"
++                "symfony/browser-kit": "",
++                "symfony/class-loader": "",
++                "symfony/config": "",
++                "symfony/console": "",
++                "symfony/dependency-injection": "",
++                "symfony/finder": "",
++                "symfony/var-dumper": ""
 +            },
 +            "type": "library",
 +            "extra": {
@@ -720,7 +705,7 @@ index 8609ebd..3132444 100644
 +            },
 +            "autoload": {
 +                "psr-4": {
-+                    "Symfony\\Component\\Routing\\": ""
++                    "Symfony\\Component\\HttpKernel\\": ""
 +                },
 +                "exclude-from-classmap": [
 +                    "/Tests/"
@@ -740,148 +725,135 @@ index 8609ebd..3132444 100644
 +                    "homepage": "https://symfony.com/contributors"
 +                }
 +            ],
-+            "description": "Symfony Routing Component",
++            "description": "Symfony HttpKernel Component",
 +            "homepage": "https://symfony.com",
-+            "keywords": [
-+                "router",
-+                "routing",
-+                "uri",
-+                "url"
-+            ],
-+            "time": "2016-06-29T05:40:00+00:00"
++            "time": "2016-07-30T09:10:37+00:00"
 +        },
 +        {
-+            "name": "symfony/yaml",
-+            "version": "v3.4.4",
++            "name": "symfony/polyfill-ctype",
++            "version": "v1.8.0",
 +            "source": {
 +                "type": "git",
-+                "url": "https://github.com/symfony/yaml.git",
-+                "reference": "eab73b6c21d27ae4cd037c417618dfd4befb0bfe"
++                "url": "https://github.com/symfony/polyfill-ctype.git",
++                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/symfony/yaml/zipball/eab73b6c21d27ae4cd037c417618dfd4befb0bfe",
-+                "reference": "eab73b6c21d27ae4cd037c417618dfd4befb0bfe",
++                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
++                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
 +                "shasum": ""
 +            },
 +            "require": {
-+                "php": "^5.5.9|>=7.0.8"
-+            },
-+            "conflict": {
-+                "symfony/console": "<3.4"
-+            },
-+            "require-dev": {
-+                "symfony/console": "~3.4|~4.0"
-+            },
-+            "suggest": {
-+                "symfony/console": "For validating YAML files using the lint command"
-+            },
-+            "type": "library",
-+            "extra": {
-+                "branch-alias": {
-+                    "dev-master": "3.4-dev"
-+                }
-+            },
-+            "autoload": {
-+                "psr-4": {
-+                    "Symfony\\Component\\Yaml\\": ""
-+                },
-+                "exclude-from-classmap": [
-+                    "/Tests/"
-+                ]
-+            },
-+            "notification-url": "https://packagist.org/downloads/",
-+            "license": [
-+                "MIT"
-+            ],
-+            "authors": [
-+                {
-+                    "name": "Fabien Potencier",
-+                    "email": "fabien@symfony.com"
-+                },
-+                {
-+                    "name": "Symfony Community",
-+                    "homepage": "https://symfony.com/contributors"
-+                }
-+            ],
-+            "description": "Symfony Yaml Component",
-             "homepage": "https://symfony.com",
--            "keywords": [
--                "compatibility",
--                "mbstring",
--                "polyfill",
--                "portable",
--                "shim"
--            ],
--            "time": "2018-01-30T19:27:44+00:00"
-+            "time": "2018-01-21T19:05:02+00:00"
-         },
-         {
--            "name": "symfony/routing",
--            "version": "v3.0.9",
-+            "name": "twig/twig",
-+            "version": "v1.35.0",
-             "source": {
-                 "type": "git",
--                "url": "https://github.com/symfony/routing.git",
--                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b"
-+                "url": "https://github.com/twigphp/Twig.git",
-+                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f"
-             },
-             "dist": {
-                 "type": "zip",
--                "url": "https://api.github.com/repos/symfony/routing/zipball/9038984bd9c05ab07280121e9e10f61a7231457b",
--                "reference": "9038984bd9c05ab07280121e9e10f61a7231457b",
-+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/daa657073e55b0a78cce8fdd22682fddecc6385f",
-+                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f",
-                 "shasum": ""
-             },
-             "require": {
--                "php": ">=5.5.9"
--            },
--            "conflict": {
--                "symfony/config": "<2.8"
 +                "php": ">=5.3.3"
-             },
-             "require-dev": {
--                "doctrine/annotations": "~1.0",
--                "doctrine/common": "~2.2",
--                "psr/log": "~1.0",
--                "symfony/config": "~2.8|~3.0",
--                "symfony/expression-language": "~2.8|~3.0",
--                "symfony/http-foundation": "~2.8|~3.0",
--                "symfony/yaml": "~2.8|~3.0"
--            },
--            "suggest": {
--                "doctrine/annotations": "For using the annotation loader",
--                "symfony/config": "For using the all-in-one router or any loader",
--                "symfony/dependency-injection": "For loading routes from a service",
--                "symfony/expression-language": "For using expression matching",
--                "symfony/http-foundation": "For using a Symfony Request object",
--                "symfony/yaml": "For using the YAML loader"
-+                "psr/container": "^1.0",
-+                "symfony/debug": "~2.7",
-+                "symfony/phpunit-bridge": "~3.3@dev"
              },
              "type": "library",
              "extra": {
                  "branch-alias": {
 -                    "dev-master": "3.0-dev"
++                    "dev-master": "1.8-dev"
+                 }
+             },
+             "autoload": {
+                 "psr-4": {
+-                    "Symfony\\Component\\HttpKernel\\": ""
++                    "Symfony\\Polyfill\\Ctype\\": ""
+                 },
+-                "exclude-from-classmap": [
+-                    "/Tests/"
++                "files": [
++                    "bootstrap.php"
+                 ]
+             },
+             "notification-url": "https://packagist.org/downloads/",
+@@ -414,18 +1040,24 @@
+                 "MIT"
+             ],
+             "authors": [
+-                {
+-                    "name": "Fabien Potencier",
+-                    "email": "fabien@symfony.com"
+-                },
+                 {
+                     "name": "Symfony Community",
+                     "homepage": "https://symfony.com/contributors"
++                },
++                {
++                    "name": "Gert de Pagter",
++                    "email": "BackEndTea@gmail.com"
+                 }
+             ],
+-            "description": "Symfony HttpKernel Component",
++            "description": "Symfony polyfill for ctype functions",
+             "homepage": "https://symfony.com",
+-            "time": "2016-07-30T09:10:37+00:00"
++            "keywords": [
++                "compatibility",
++                "ctype",
++                "polyfill",
++                "portable"
++            ],
++            "time": "2018-04-30T19:57:29+00:00"
+         },
+         {
+             "name": "symfony/polyfill-mbstring",
+@@ -560,219 +1192,109 @@
+                 "url"
+             ],
+             "time": "2016-06-29T05:40:00+00:00"
+-        }
+-    ],
+-    "packages-dev": [
++        },
+         {
+-            "name": "doctrine/instantiator",
+-            "version": "1.1.0",
++            "name": "twig/twig",
++            "version": "v1.35.4",
+             "source": {
+                 "type": "git",
+-                "url": "https://github.com/doctrine/instantiator.git",
+-                "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda"
++                "url": "https://github.com/twigphp/Twig.git",
++                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a"
+             },
+             "dist": {
+                 "type": "zip",
+-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
+-                "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
++                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
++                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
+                 "shasum": ""
+             },
+             "require": {
+-                "php": "^7.1"
++                "php": ">=5.3.3",
++                "symfony/polyfill-ctype": "^1.8"
+             },
+             "require-dev": {
+-                "athletic/athletic": "~0.1.8",
+-                "ext-pdo": "*",
+-                "ext-phar": "*",
+-                "phpunit/phpunit": "^6.2.3",
+-                "squizlabs/php_codesniffer": "^3.0.2"
++                "psr/container": "^1.0",
++                "symfony/debug": "^2.7",
++                "symfony/phpunit-bridge": "^3.3"
+             },
+             "type": "library",
+             "extra": {
+                 "branch-alias": {
+-                    "dev-master": "1.2.x-dev"
 +                    "dev-master": "1.35-dev"
                  }
              },
              "autoload": {
--                "psr-4": {
--                    "Symfony\\Component\\Routing\\": ""
 +                "psr-0": {
 +                    "Twig_": "lib/"
-                 },
--                "exclude-from-classmap": [
--                    "/Tests/"
--                ]
-+                "psr-4": {
++                },
+                 "psr-4": {
+-                    "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
 +                    "Twig\\": "src/"
-+                }
+                 }
              },
              "notification-url": "https://packagist.org/downloads/",
              "license": [
@@ -890,77 +862,31 @@ index 8609ebd..3132444 100644
              ],
              "authors": [
                  {
-                     "name": "Fabien Potencier",
--                    "email": "fabien@symfony.com"
-+                    "email": "fabien@symfony.com",
-+                    "homepage": "http://fabien.potencier.org",
-+                    "role": "Lead Developer"
-                 },
-                 {
--                    "name": "Symfony Community",
--                    "homepage": "https://symfony.com/contributors"
-+                    "name": "Armin Ronacher",
-+                    "email": "armin.ronacher@active-4.com",
-+                    "role": "Project Founder"
-+                },
-+                {
-+                    "name": "Twig Team",
-+                    "homepage": "http://twig.sensiolabs.org/contributors",
-+                    "role": "Contributors"
-                 }
-             ],
--            "description": "Symfony Routing Component",
--            "homepage": "https://symfony.com",
-+            "description": "Twig, the flexible, fast, and secure template language for PHP",
-+            "homepage": "http://twig.sensiolabs.org",
-             "keywords": [
--                "router",
--                "routing",
--                "uri",
--                "url"
-+                "templating"
-             ],
--            "time": "2016-06-29T05:40:00+00:00"
-+            "time": "2017-09-27T18:06:46+00:00"
-         }
-     ],
-     "packages-dev": [
-@@ -821,176 +1521,7 @@
-                     "Goutte\\": "Goutte"
-                 },
-                 "exclude-from-classmap": [
--                    "Goutte/Tests"
--                ]
--            },
--            "notification-url": "https://packagist.org/downloads/",
--            "license": [
--                "MIT"
--            ],
--            "authors": [
--                {
--                    "name": "Fabien Potencier",
--                    "email": "fabien@symfony.com"
+-                    "name": "Marco Pivetta",
+-                    "email": "ocramius@gmail.com",
+-                    "homepage": "http://ocramius.github.com/"
 -                }
 -            ],
--            "description": "A simple PHP Web Scraper",
--            "homepage": "https://github.com/FriendsOfPHP/Goutte",
+-            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
+-            "homepage": "https://github.com/doctrine/instantiator",
 -            "keywords": [
--                "scraper"
+-                "constructor",
+-                "instantiate"
 -            ],
--            "time": "2017-11-19T08:45:40+00:00"
+-            "time": "2017-07-22T11:58:36+00:00"
 -        },
 -        {
 -            "name": "google/cloud-tools",
--            "version": "v0.6.9",
+-            "version": "v0.8.0",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
--                "reference": "449025ca42977fd4911ec97df5d44b28377126b5"
+-                "reference": "c834570dd3bcc34838481ce4bba8c529b1b8c0d3"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/449025ca42977fd4911ec97df5d44b28377126b5",
--                "reference": "449025ca42977fd4911ec97df5d44b28377126b5",
+-                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/c834570dd3bcc34838481ce4bba8c529b1b8c0d3",
+-                "reference": "c834570dd3bcc34838481ce4bba8c529b1b8c0d3",
 -                "shasum": ""
 -            },
 -            "require": {
@@ -972,8 +898,13 @@ index 8609ebd..3132444 100644
 -                "symfony/process": "~2|~3",
 -                "twig/twig": "~1.3|~2.0"
 -            },
+-            "require-dev": {
+-                "google/cloud-core": "^1.20",
+-                "google/gax": "^0.35.0"
+-            },
 -            "bin": [
--                "src/Utils/Flex/flex_exec"
+-                "src/Utils/Flex/flex_exec",
+-                "scripts/install_test_deps.sh"
 -            ],
 -            "type": "library",
 -            "autoload": {
@@ -987,7 +918,12 @@ index 8609ebd..3132444 100644
 -                "Apache-2.0"
 -            ],
 -            "authors": [
--                {
++                    "name": "Fabien Potencier",
++                    "email": "fabien@symfony.com",
++                    "homepage": "http://fabien.potencier.org",
++                    "role": "Lead Developer"
++                },
+                 {
 -                    "name": "Takashi Matsuo",
 -                    "email": "tmatsuo@google.com",
 -                    "homepage": "https://wp.gaeflex.ninja/"
@@ -1000,20 +936,20 @@ index 8609ebd..3132444 100644
 -                "gcp",
 -                "test"
 -            ],
--            "time": "2018-01-24T00:40:23+00:00"
+-            "time": "2018-06-27T20:00:58+00:00"
 -        },
 -        {
 -            "name": "guzzlehttp/guzzle",
--            "version": "6.3.0",
+-            "version": "6.3.3",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/guzzle/guzzle.git",
--                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
+-                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
--                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/407b0cb880ace85c9b63c5f9551db498cb2d50ba",
+-                "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba",
 -                "shasum": ""
 -            },
 -            "require": {
@@ -1023,7 +959,7 @@ index 8609ebd..3132444 100644
 -            },
 -            "require-dev": {
 -                "ext-curl": "*",
--                "phpunit/phpunit": "^4.0 || ^5.0",
+-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
 -                "psr/log": "^1.0"
 -            },
 -            "suggest": {
@@ -1032,7 +968,7 @@ index 8609ebd..3132444 100644
 -            "type": "library",
 -            "extra": {
 -                "branch-alias": {
--                    "dev-master": "6.2-dev"
+-                    "dev-master": "6.3-dev"
 -                }
 -            },
 -            "autoload": {
@@ -1048,15 +984,24 @@ index 8609ebd..3132444 100644
 -                "MIT"
 -            ],
 -            "authors": [
--                {
++                    "name": "Armin Ronacher",
++                    "email": "armin.ronacher@active-4.com",
++                    "role": "Project Founder"
++                },
+                 {
 -                    "name": "Michael Dowling",
 -                    "email": "mtdowling@gmail.com",
 -                    "homepage": "https://github.com/mtdowling"
--                }
--            ],
++                    "name": "Twig Team",
++                    "homepage": "https://twig.symfony.com/contributors",
++                    "role": "Contributors"
+                 }
+             ],
 -            "description": "Guzzle is a PHP HTTP client library",
 -            "homepage": "http://guzzlephp.org/",
--            "keywords": [
++            "description": "Twig, the flexible, fast, and secure template language for PHP",
++            "homepage": "https://twig.symfony.com",
+             "keywords": [
 -                "client",
 -                "curl",
 -                "framework",
@@ -1064,32 +1009,49 @@ index 8609ebd..3132444 100644
 -                "http client",
 -                "rest",
 -                "web service"
--            ],
--            "time": "2017-06-22T18:50:49+00:00"
++                "templating"
+             ],
+-            "time": "2018-04-22T15:46:56+00:00"
 -        },
--        {
++            "time": "2018-07-13T07:12:17+00:00"
++        }
++    ],
++    "packages-dev": [
+         {
 -            "name": "guzzlehttp/promises",
 -            "version": "v1.3.1",
--            "source": {
--                "type": "git",
++            "name": "doctrine/instantiator",
++            "version": "1.1.0",
+             "source": {
+                 "type": "git",
 -                "url": "https://github.com/guzzle/promises.git",
 -                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
--            },
--            "dist": {
--                "type": "zip",
++                "url": "https://github.com/doctrine/instantiator.git",
++                "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda"
+             },
+             "dist": {
+                 "type": "zip",
 -                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
 -                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
--                "shasum": ""
--            },
--            "require": {
++                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
++                "reference": "185b8868aa9bf7159f5f953ed5afb2d7fcdc3bda",
+                 "shasum": ""
+             },
+             "require": {
 -                "php": ">=5.5.0"
--            },
--            "require-dev": {
++                "php": "^7.1"
+             },
+             "require-dev": {
 -                "phpunit/phpunit": "^4.0"
--            },
--            "type": "library",
--            "extra": {
--                "branch-alias": {
++                "athletic/athletic": "~0.1.8",
++                "ext-pdo": "*",
++                "ext-phar": "*",
++                "phpunit/phpunit": "^6.2.3",
++                "squizlabs/php_codesniffer": "^3.0.2"
+             },
+             "type": "library",
+             "extra": {
+                 "branch-alias": {
 -                    "dev-master": "1.4-dev"
 -                }
 -            },
@@ -1099,49 +1061,58 @@ index 8609ebd..3132444 100644
 -                },
 -                "files": [
 -                    "src/functions_include.php"
-+                    "Goutte/Tests"
-                 ]
+-                ]
++                    "dev-master": "1.2.x-dev"
++                }
++            },
++            "autoload": {
++                "psr-4": {
++                    "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
++                }
              },
              "notification-url": "https://packagist.org/downloads/",
-@@ -999,81 +1530,69 @@
+             "license": [
+@@ -780,81 +1302,76 @@
              ],
              "authors": [
                  {
 -                    "name": "Michael Dowling",
 -                    "email": "mtdowling@gmail.com",
 -                    "homepage": "https://github.com/mtdowling"
-+                    "name": "Fabien Potencier",
-+                    "email": "fabien@symfony.com"
++                    "name": "Marco Pivetta",
++                    "email": "ocramius@gmail.com",
++                    "homepage": "http://ocramius.github.com/"
                  }
              ],
 -            "description": "Guzzle promises library",
-+            "description": "A simple PHP Web Scraper",
-+            "homepage": "https://github.com/FriendsOfPHP/Goutte",
++            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
++            "homepage": "https://github.com/doctrine/instantiator",
              "keywords": [
 -                "promise"
-+                "scraper"
++                "constructor",
++                "instantiate"
              ],
 -            "time": "2016-12-20T10:07:11+00:00"
-+            "time": "2017-11-19T08:45:40+00:00"
++            "time": "2017-07-22T11:58:36+00:00"
          },
          {
 -            "name": "guzzlehttp/psr7",
 -            "version": "1.4.2",
 +            "name": "google/cloud-tools",
-+            "version": "v0.6.9",
++            "version": "v0.8.0",
              "source": {
                  "type": "git",
 -                "url": "https://github.com/guzzle/psr7.git",
 -                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
 +                "url": "https://github.com/GoogleCloudPlatform/php-tools.git",
-+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5"
++                "reference": "c834570dd3bcc34838481ce4bba8c529b1b8c0d3"
              },
              "dist": {
                  "type": "zip",
 -                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
 -                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-+                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/449025ca42977fd4911ec97df5d44b28377126b5",
-+                "reference": "449025ca42977fd4911ec97df5d44b28377126b5",
++                "url": "https://api.github.com/repos/GoogleCloudPlatform/php-tools/zipball/c834570dd3bcc34838481ce4bba8c529b1b8c0d3",
++                "reference": "c834570dd3bcc34838481ce4bba8c529b1b8c0d3",
                  "shasum": ""
              },
              "require": {
@@ -1150,9 +1121,6 @@ index 8609ebd..3132444 100644
 -            },
 -            "provide": {
 -                "psr/http-message-implementation": "1.0"
--            },
--            "require-dev": {
--                "phpunit/phpunit": "~4.0"
 +                "guzzlehttp/guzzle": "~5.3|~6.0",
 +                "php": ">=5.5",
 +                "symfony/browser-kit": "~2|~3",
@@ -1161,8 +1129,14 @@ index 8609ebd..3132444 100644
 +                "symfony/process": "~2|~3",
 +                "twig/twig": "~1.3|~2.0"
              },
+             "require-dev": {
+-                "phpunit/phpunit": "~4.0"
++                "google/cloud-core": "^1.20",
++                "google/gax": "^0.35.0"
+             },
 +            "bin": [
-+                "src/Utils/Flex/flex_exec"
++                "src/Utils/Flex/flex_exec",
++                "scripts/install_test_deps.sh"
 +            ],
              "type": "library",
 -            "extra": {
@@ -1216,13 +1190,13 @@ index 8609ebd..3132444 100644
 +                "test"
              ],
 -            "time": "2017-03-20T17:10:46+00:00"
-+            "time": "2018-01-24T00:40:23+00:00"
++            "time": "2018-06-27T20:00:58+00:00"
          },
          {
-             "name": "phpdocumentor/reflection-common",
-@@ -1660,56 +2179,6 @@
+             "name": "myclabs/deep-copy",
+@@ -1509,56 +2026,6 @@
              ],
-             "time": "2015-10-02T06:51:40+00:00"
+             "time": "2017-06-30T09:13:00+00:00"
          },
 -        {
 -            "name": "psr/http-message",
@@ -1275,50 +1249,41 @@ index 8609ebd..3132444 100644
 -            "time": "2016-08-06T14:39:51+00:00"
 -        },
          {
-             "name": "sebastian/comparator",
-             "version": "1.2.4",
-@@ -2415,129 +2884,6 @@
+             "name": "sebastian/code-unit-reverse-lookup",
+             "version": "1.0.1",
+@@ -2305,61 +2772,6 @@
              "homepage": "https://symfony.com",
-             "time": "2018-01-29T09:03:43+00:00"
+             "time": "2018-06-21T11:10:19+00:00"
          },
 -        {
--            "name": "symfony/yaml",
--            "version": "v3.4.4",
+-            "name": "symfony/polyfill-ctype",
+-            "version": "v1.8.0",
 -            "source": {
 -                "type": "git",
--                "url": "https://github.com/symfony/yaml.git",
--                "reference": "eab73b6c21d27ae4cd037c417618dfd4befb0bfe"
+-                "url": "https://github.com/symfony/polyfill-ctype.git",
+-                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/symfony/yaml/zipball/eab73b6c21d27ae4cd037c417618dfd4befb0bfe",
--                "reference": "eab73b6c21d27ae4cd037c417618dfd4befb0bfe",
+-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
+-                "reference": "7cc359f1b7b80fc25ed7796be7d96adc9b354bae",
 -                "shasum": ""
 -            },
 -            "require": {
--                "php": "^5.5.9|>=7.0.8"
--            },
--            "conflict": {
--                "symfony/console": "<3.4"
--            },
--            "require-dev": {
--                "symfony/console": "~3.4|~4.0"
--            },
--            "suggest": {
--                "symfony/console": "For validating YAML files using the lint command"
+-                "php": ">=5.3.3"
 -            },
 -            "type": "library",
 -            "extra": {
 -                "branch-alias": {
--                    "dev-master": "3.4-dev"
+-                    "dev-master": "1.8-dev"
 -                }
 -            },
 -            "autoload": {
 -                "psr-4": {
--                    "Symfony\\Component\\Yaml\\": ""
+-                    "Symfony\\Polyfill\\Ctype\\": ""
 -                },
--                "exclude-from-classmap": [
--                    "/Tests/"
+-                "files": [
+-                    "bootstrap.php"
 -                ]
 -            },
 -            "notification-url": "https://packagist.org/downloads/",
@@ -1327,44 +1292,59 @@ index 8609ebd..3132444 100644
 -            ],
 -            "authors": [
 -                {
--                    "name": "Fabien Potencier",
--                    "email": "fabien@symfony.com"
--                },
--                {
 -                    "name": "Symfony Community",
 -                    "homepage": "https://symfony.com/contributors"
+-                },
+-                {
+-                    "name": "Gert de Pagter",
+-                    "email": "BackEndTea@gmail.com"
 -                }
 -            ],
--            "description": "Symfony Yaml Component",
+-            "description": "Symfony polyfill for ctype functions",
 -            "homepage": "https://symfony.com",
--            "time": "2018-01-21T19:05:02+00:00"
+-            "keywords": [
+-                "compatibility",
+-                "ctype",
+-                "polyfill",
+-                "portable"
+-            ],
+-            "time": "2018-04-30T19:57:29+00:00"
 -        },
+         {
+             "name": "symfony/process",
+             "version": "v3.4.12",
+@@ -2468,73 +2880,6 @@
+             "homepage": "https://symfony.com",
+             "time": "2018-05-30T07:26:09+00:00"
+         },
 -        {
 -            "name": "twig/twig",
--            "version": "v1.35.0",
+-            "version": "v2.5.0",
 -            "source": {
 -                "type": "git",
 -                "url": "https://github.com/twigphp/Twig.git",
--                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f"
+-                "reference": "6a5f676b77a90823c2d4eaf76137b771adf31323"
 -            },
 -            "dist": {
 -                "type": "zip",
--                "url": "https://api.github.com/repos/twigphp/Twig/zipball/daa657073e55b0a78cce8fdd22682fddecc6385f",
--                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f",
+-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/6a5f676b77a90823c2d4eaf76137b771adf31323",
+-                "reference": "6a5f676b77a90823c2d4eaf76137b771adf31323",
 -                "shasum": ""
 -            },
 -            "require": {
--                "php": ">=5.3.3"
+-                "php": "^7.0",
+-                "symfony/polyfill-ctype": "^1.8",
+-                "symfony/polyfill-mbstring": "~1.0"
 -            },
 -            "require-dev": {
 -                "psr/container": "^1.0",
--                "symfony/debug": "~2.7",
--                "symfony/phpunit-bridge": "~3.3@dev"
+-                "symfony/debug": "^2.7",
+-                "symfony/phpunit-bridge": "^3.3"
 -            },
 -            "type": "library",
 -            "extra": {
 -                "branch-alias": {
--                    "dev-master": "1.35-dev"
+-                    "dev-master": "2.5-dev"
 -                }
 -            },
 -            "autoload": {
@@ -1393,45 +1373,66 @@ index 8609ebd..3132444 100644
 -                },
 -                {
 -                    "name": "Twig Team",
--                    "homepage": "http://twig.sensiolabs.org/contributors",
+-                    "homepage": "https://twig.symfony.com/contributors",
 -                    "role": "Contributors"
 -                }
 -            ],
 -            "description": "Twig, the flexible, fast, and secure template language for PHP",
--            "homepage": "http://twig.sensiolabs.org",
+-            "homepage": "https://twig.symfony.com",
 -            "keywords": [
 -                "templating"
 -            ],
--            "time": "2017-09-27T18:06:46+00:00"
+-            "time": "2018-07-13T07:18:09+00:00"
 -        },
          {
              "name": "webmozart/assert",
              "version": "1.3.0",
-diff --git a/config/settings.yml.dist b/config/settings.yml.dist
-new file mode 100644
-index 0000000..4526a43
---- /dev/null
-+++ b/config/settings.yml.dist
-@@ -0,0 +1,19 @@
-+# Google credentials and configuration
-+google_client_id:      YOUR_CLIENT_ID
-+google_client_secret:  YOUR_CLIENT_SECRET
-+google_project_id:     YOUR_PROJECT_ID
-+
-+# options are "mysql", "postgres", "mongodb", or "datastore"
-+bookshelf_backend: mysql
-+
-+# configure CloudSQL for MySQL or PostgreSQL backend
-+cloudsql_connection_name: INSTANCE_CONNECTION_NAME
-+cloudsql_database_name: YOUR_DATABASE_NAME
-+cloudsql_user: YOUR_CLOUDSQL_USER
-+cloudsql_password: YOUR_CLOUDSQL_PASSWORD
-+cloudsql_port: 3306
-+
-+# configure Mongo backend
-+mongo_url: YOUR_MONGODB_URL
-+mongo_database: YOUR_MONGO_DATABASE
-+mongo_collection: YOUR_MONGO_COLLECTION
+diff --git a/index.php b/index.php
+index 74a2ece..a7c1558 100644
+--- a/index.php
++++ b/index.php
+@@ -1,13 +1,12 @@
+ <?php
+-
+ /*
+- * Copyright 2015 Google Inc.
++ * Copyright 2015 Google Inc. All Rights Reserved.
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+- *     http://www.apache.org/licenses/LICENSE-2.0
++ *   http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+@@ -19,21 +18,8 @@
+ // [START index_php]
+ require_once __DIR__ . '/vendor/autoload.php';
+ 
+-$app = new Silex\Application();
+-
+-$app->get('/', function () {
+-    return 'Hello World';
+-});
+-
+-$app->get('/goodbye', function () {
+-    return 'Goodbye World';
+-});
+-
+-// @codeCoverageIgnoreStart
+-if (PHP_SAPI != 'cli') {
+-    $app->run();
+-}
+-// @codeCoverageIgnoreEnd
++/** @var Silex\Application $app */
++$app = require __DIR__ . '/src/app.php';
++require __DIR__ . '/src/controllers.php';
+ 
+-return $app;
+-// [END index_php]
++$app->run();
 diff --git a/php.ini b/php.ini
 new file mode 100644
 index 0000000..45969d0
@@ -1440,17 +1441,18 @@ index 0000000..45969d0
 @@ -0,0 +1 @@
 +extension=mongodb.so
 diff --git a/phpunit.xml b/phpunit.xml
-index 500fd27..398a423 100644
+index 99299d8..398a423 100644
 --- a/phpunit.xml
 +++ b/phpunit.xml
-@@ -25,7 +25,7 @@
+@@ -23,4 +23,9 @@
+     <logging>
+         <log type="coverage-clover" target="build/logs/clover.xml"/>
      </logging>
-     <filter>
-         <whitelist>
--             <directory suffix=".php">./web</directory>
++    <filter>
++        <whitelist>
 +             <directory suffix=".php">./src</directory>
-         </whitelist>
-     </filter>
++        </whitelist>
++    </filter>
  </phpunit>
 diff --git a/src/DataModel/DataModelInterface.php b/src/DataModel/DataModelInterface.php
 new file mode 100644
@@ -1890,10 +1892,10 @@ index 0000000..6585b99
 +}
 diff --git a/src/DataModel/Sql.php b/src/DataModel/Sql.php
 new file mode 100644
-index 0000000..e5590c2
+index 0000000..dde8775
 --- /dev/null
 +++ b/src/DataModel/Sql.php
-@@ -0,0 +1,205 @@
+@@ -0,0 +1,208 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -2077,34 +2079,37 @@ index 0000000..e5590c2
 +        return $statement->rowCount();
 +    }
 +
-+    public static function getMysqlDsn($dbName, $port, $connectionName = null)
++    public static function getMysqlDsnForProxy($dbName, $port = 3306)
 +    {
-+        if ($connectionName) {
-+            return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
-+                $connectionName,
-+                $dbName);
-+        }
-+
 +        return sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
 +    }
 +
-+    public static function getPostgresDsn($dbName, $port, $connectionName = null)
++    public static function getMysqlDsn($dbName, $connectionName)
 +    {
-+        if ($connectionName) {
-+            return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
-+                $connectionName,
-+                $dbName);
-+        }
++        return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
++            $connectionName,
++            $dbName);
 +
++    }
++
++    public static function getPosgresDsnForProxy($dbName, $port = 5432)
++    {
 +        return sprintf('pgsql:host=127.0.0.1;port=%s;dbname=%s', $port, $dbName);
++    }
++
++    public static function getPostgresDsn($dbName, $connectionName)
++    {
++        return sprintf('pgsql:host=/cloudsql/%s;dbname=%s',
++            $connectionName,
++            $dbName);
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
 new file mode 100644
-index 0000000..11f75c0
+index 0000000..87242a9
 --- /dev/null
 +++ b/src/app.php
-@@ -0,0 +1,109 @@
+@@ -0,0 +1,95 @@
 +<?php
 +
 +/*
@@ -2144,56 +2149,42 @@ index 0000000..11f75c0
 +    ),
 +));
 +
-+// parse configuration
-+$config = getenv('BOOKSHELF_CONFIG') ?:
-+    __DIR__ . '/../config/' . 'settings.yml';
-+
-+$app['config'] = Yaml::parse(file_get_contents($config));
-+
 +// determine the datamodel backend using the app configuration
 +$app['bookshelf.model'] = function ($app) {
-+    /** @var array $config */
-+    $config = $app['config'];
-+    if (empty($config['bookshelf_backend'])) {
-+        throw new \DomainException('"bookshelf_backend" must be set in bookshelf config');
-+    }
-+
 +    // Data Model
-+    switch ($config['bookshelf_backend']) {
-+        case 'mongodb':
-+            return new MongoDb(
-+                $config['mongo_url'],
-+                $config['mongo_database'],
-+                $config['mongo_collection']
-+            );
++    $backend = getenv('BOOKSHELF_BACKEND') ?: 'datastore';
++    switch ($backend) {
 +        case 'datastore':
 +            return new Datastore(
-+                $config['google_project_id']
++                getenv('GOOGLE_CLOUD_PROJECT')
 +            );
 +        case 'mysql':
-+            $mysql_dsn = Sql::getMysqlDsn(
-+                $config['cloudsql_database_name'],
-+                $config['cloudsql_port'],
-+                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
-+            );
-+            return new Sql(
-+                $mysql_dsn,
-+                $config['cloudsql_user'],
-+                $config['cloudsql_password']
-+            );
 +        case 'postgres':
-+            $postgres_dsn = Sql::getPostgresDsn(
-+                $config['cloudsql_database_name'],
-+                $config['cloudsql_port'],
-+                getenv('GAE_INSTANCE') ? $config['cloudsql_connection_name'] : null
-+            );
++            $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
++            $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
++            if (getenv('GAE_INSTANCE')) {
++                $dsn = ($backend === 'mysql')
++                    ? Sql::getMysqlDsn($dbName, $connectionName)
++                    : Sql::getPostgresDsn($dbName, $connectionName);
++            } else {
++                $dsn = ($backend === 'mysql')
++                    ? Sql::getMysqlDsnForProxy($dbName)
++                    : Sql::getPostgresDsnForProxy($dbName);
++
++            }
 +            return new Sql(
-+                $postgres_dsn,
-+                $config['cloudsql_user'],
-+                $config['cloudsql_password']
++                $dsn,
++                getenv('CLOUDSQL_USER'),
++                getenv('CLOUDSQL_PASSWORD')
++            );
++        case 'mongodb':
++            return new MongoDb(
++                getenv('MONGO_URL'),
++                getenv('MONGO_DATABASE'),
++                getenv('MONGO_COLLECTION')
 +            );
 +        default:
-+            throw new \DomainException("Invalid \"bookshelf_backend\" given: $config[bookshelf_backend]. "
++            throw new \DomainException("Invalid \"BOOKSHELF_BACKEND\" given"
 +                . "Possible values are mysql, postgres, mongodb, or datastore.");
 +    }
 +};
@@ -2206,7 +2197,7 @@ index 0000000..11f75c0
 +} else {
 +    $app['debug'] = filter_var(
 +        getenv('BOOKSHELF_DEBUG'),
-+                               FILTER_VALIDATE_BOOLEAN
++        FILTER_VALIDATE_BOOLEAN
 +    );
 +}
 +
@@ -2565,29 +2556,16 @@ index 0000000..459ce61
 +
 +{% endblock %}
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index cefdec3..574ebd5 100644
---- a/test/app-e2e.yaml
+new file mode 100644
+index 0000000..c4831fc
+--- /dev/null
 +++ b/test/app-e2e.yaml
-@@ -1,8 +1,18 @@
- runtime: php
--vm: true
+@@ -0,0 +1,5 @@
++runtime: php
 +env: flex
- 
- runtime_config:
-   document_root: web
- 
++
 +env_variables:
 +  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
-+
- manual_scaling:
-   instances: 1
-+
-+network:
-+  instance_tag: bookshelf-e2e
-+
-+## Uncomment for Cloud SQL
-+# beta_settings:
-+#  cloud_sql_instances: "CLOUDSQL_CONNECTION_NAME"
 diff --git a/test/composer-mongodb.json b/test/composer-mongodb.json
 new file mode 100644
 index 0000000..f6656d8
@@ -2966,7 +2944,7 @@ index 0000000..56d7200
 +    }
 +}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index ab11aa8..4efd086 100644
+index 5d9d66c..53314e3 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
 @@ -1,5 +1,4 @@
@@ -2979,16 +2957,16 @@ index ab11aa8..4efd086 100644
  
  namespace Google\Cloud\Samples\Bookshelf;
  
-+use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
++use Google\Cloud\TestUtils\TestTrait;
 +use Monolog\Handler\TestHandler;
  use Silex\WebTestCase;
  
  /**
-@@ -25,30 +26,162 @@ use Silex\WebTestCase;
+@@ -25,30 +26,161 @@ use Silex\WebTestCase;
   */
  class ControllersTest extends WebTestCase
  {
-+    use SkipTestsIfMissingCredentialsTrait;
++    use TestTrait;
 +    use GetConfigTrait;
 +
 +    /**
@@ -2998,7 +2976,7 @@ index ab11aa8..4efd086 100644
 +     */
      public function createApplication()
      {
--        $app = require __DIR__ . '/../../web/index.php';
+-        $app = require __DIR__ . '/../../index.php';
 -        $app['debug'] = true;
 -        unset($app['exception_handler']);
 +        $app = require __DIR__ . '/../../src/app.php';
@@ -3009,7 +2987,6 @@ index ab11aa8..4efd086 100644
 +
 +        // Set a tiny page size so it's easy to test paging.
 +        $app['bookshelf.page_size'] = 1;
-+        $app['bookshelf.storage'] = new FakeFileStorage();
 +        $app['monolog.handler'] = new TestHandler();
  
          return $app;
@@ -4627,10 +4604,10 @@ index 0000000..e6138d2
 +}
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
 new file mode 100644
-index 0000000..1f0e8c9
+index 0000000..0989a8d
 --- /dev/null
 +++ b/test/lib/E2eTest.php
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,69 @@
 +<?php
 +/*
 + * Copyright 2015 Google Inc. All Rights Reserved.
@@ -4651,6 +4628,7 @@ index 0000000..1f0e8c9
 +namespace Google\Cloud\Samples\Bookshelf;
 +
 +use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
++use Google\Cloud\TestUtils\TestTrait;
 +use Symfony\Component\Yaml\Dumper;
 +
 +/**
@@ -4658,7 +4636,7 @@ index 0000000..1f0e8c9
 + */
 +abstract class E2eTest extends \PHPUnit_Framework_TestCase
 +{
-+    use SkipTestsIfMissingCredentialsTrait,
++    use TestTrait,
 +        AppEngineDeploymentTrait,
 +        GetConfigTrait;
 +
@@ -4697,55 +4675,6 @@ index 0000000..1f0e8c9
 +            'index status code');
 +        $this->assertContains('Book', (string) $resp->getBody(),
 +            'index content');
-+    }
-+}
-diff --git a/test/lib/FileSystem/FakeFileStorage.php b/test/lib/FileSystem/FakeFileStorage.php
-new file mode 100644
-index 0000000..7882a18
---- /dev/null
-+++ b/test/lib/FileSystem/FakeFileStorage.php
-@@ -0,0 +1,43 @@
-+<?php
-+/*
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+namespace Google\Cloud\Samples\Bookshelf\FileSystem;
-+
-+/**
-+ * Class FakeFileStorage
-+ * @package Google\Cloud\Samples\Bookshelf
-+ *
-+ * A simple mock that is easy to verify in tests.
-+ */
-+class FakeFileStorage
-+{
-+    public function __construct()
-+    {
-+        $this->count = 0;
-+        $this->deletedFiles = array();
-+    }
-+
-+    public function storeFile($localFilePath, $contentType)
-+    {
-+        $this->count += 1;
-+        return 'img' . $this->count;
-+    }
-+
-+    public function deleteFile($url)
-+    {
-+        array_push($this->deletedFiles, $url);
 +    }
 +}
 diff --git a/test/lib/GetConfigTrait.php b/test/lib/GetConfigTrait.php
@@ -4816,68 +4745,9 @@ index 0000000..1aa3b66
 +        return $config;
 +    }
 +}
-diff --git a/test/lib/SkipTestsIfMissingCredentialsTrait.php b/test/lib/SkipTestsIfMissingCredentialsTrait.php
-new file mode 100644
-index 0000000..cfbc381
---- /dev/null
-+++ b/test/lib/SkipTestsIfMissingCredentialsTrait.php
-@@ -0,0 +1,53 @@
-+<?php
-+/*
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-+ *
-+ * Licensed under the Apache License, Version 2.0 (the "License");
-+ * you may not use this file except in compliance with the License.
-+ * You may obtain a copy of the License at
-+ *
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing, software
-+ * distributed under the License is distributed on an "AS IS" BASIS,
-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-+ * See the License for the specific language governing permissions and
-+ * limitations under the License.
-+ */
-+namespace Google\Cloud\Samples\Bookshelf;
-+
-+/**
-+ * Class SkipTestsIfMissingCredentials
-+ * @package Google\Cloud\Samples\Bookshelf
-+ *
-+ * Use this trait to skip all tests when credentials have not been set in
-+ * the environment.
-+ */
-+trait SkipTestsIfMissingCredentialsTrait
-+{
-+    /**
-+     * @return bool True if we found application credentials in the environment.
-+     */
-+    public static function hasCredentials()
-+    {
-+        static $hasCredentials = null;
-+        if ($hasCredentials == null) {
-+            $path = getenv('GOOGLE_APPLICATION_CREDENTIALS');
-+            $hasCredentials = $path && file_exists($path) &&
-+                filesize($path) > 0;
-+        }
-+        return $hasCredentials;
-+    }
-+
-+    /**
-+     * Set up the client.
-+     *
-+     * @beforeClass
-+     */
-+    public static function checkCredentials()
-+    {
-+        if (!self::hasCredentials()) {
-+            self::markTestSkipped('No application credentials were found.');
-+        }
-+    }
-+}
 diff --git a/test/unit/DataModel/DatastoreTest.php b/test/unit/DataModel/DatastoreTest.php
 new file mode 100644
-index 0000000..9ff003d
+index 0000000..377f835
 --- /dev/null
 +++ b/test/unit/DataModel/DatastoreTest.php
 @@ -0,0 +1,36 @@
@@ -4900,13 +4770,13 @@ index 0000000..9ff003d
 +namespace Google\Cloud\Samples\Bookshelf\DataModel;
 +
 +use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
-+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++use Google\Cloud\TestUtils\TestTrait;
 +
 +class DatastoreTest extends \PHPUnit_Framework_TestCase
 +{
 +    use DataModelTestTrait;
 +    use GetConfigTrait;
-+    use SkipTestsIfMissingCredentialsTrait;
++    use TestTrait;
 +
 +    public function setUp()
 +    {
@@ -4919,7 +4789,7 @@ index 0000000..9ff003d
 +}
 diff --git a/test/unit/DataModel/MongoDbTest.php b/test/unit/DataModel/MongoDbTest.php
 new file mode 100644
-index 0000000..4f746a9
+index 0000000..4b554f9
 --- /dev/null
 +++ b/test/unit/DataModel/MongoDbTest.php
 @@ -0,0 +1,40 @@
@@ -4942,13 +4812,13 @@ index 0000000..4f746a9
 +namespace Google\Cloud\Samples\Bookshelf\DataModel;
 +
 +use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
-+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++use Google\Cloud\TestUtils\TestTrait;
 +
 +class MongoDbTest extends \PHPUnit_Framework_TestCase
 +{
 +    use DataModelTestTrait;
 +    use GetConfigTrait;
-+    use SkipTestsIfMissingCredentialsTrait;
++    use TestTrait;
 +
 +    public function setUp()
 +    {
@@ -4965,7 +4835,7 @@ index 0000000..4f746a9
 +}
 diff --git a/test/unit/DataModel/MySqlTest.php b/test/unit/DataModel/MySqlTest.php
 new file mode 100644
-index 0000000..9697996
+index 0000000..b8825fe
 --- /dev/null
 +++ b/test/unit/DataModel/MySqlTest.php
 @@ -0,0 +1,44 @@
@@ -4988,13 +4858,13 @@ index 0000000..9697996
 +namespace Google\Cloud\Samples\Bookshelf\DataModel;
 +
 +use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
-+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++use Google\Cloud\TestUtils\TestTrait;
 +
 +class MySqlTest extends \PHPUnit_Framework_TestCase
 +{
 +    use DataModelTestTrait;
 +    use GetConfigTrait;
-+    use SkipTestsIfMissingCredentialsTrait;
++    use TestTrait;
 +
 +    public function setUp()
 +    {
@@ -5015,7 +4885,7 @@ index 0000000..9697996
 +}
 diff --git a/test/unit/DataModel/PostgresTest.php b/test/unit/DataModel/PostgresTest.php
 new file mode 100644
-index 0000000..7b72f20
+index 0000000..4a22c62
 --- /dev/null
 +++ b/test/unit/DataModel/PostgresTest.php
 @@ -0,0 +1,44 @@
@@ -5038,13 +4908,13 @@ index 0000000..7b72f20
 +namespace Google\Cloud\Samples\Bookshelf\DataModel;
 +
 +use Google\Cloud\Samples\Bookshelf\GetConfigTrait;
-+use Google\Cloud\Samples\Bookshelf\SkipTestsIfMissingCredentialsTrait;
++use Google\Cloud\TestUtils\TestTrait;
 +
 +class PostgresTest extends \PHPUnit_Framework_TestCase
 +{
 +    use DataModelTestTrait;
 +    use GetConfigTrait;
-+    use SkipTestsIfMissingCredentialsTrait;
++    use TestTrait;
 +
 +    public function setUp()
 +    {
@@ -5063,52 +4933,3 @@ index 0000000..7b72f20
 +        );
 +    }
 +}
-diff --git a/web/index.php b/web/index.php
-index e6c22e0..b2976ec 100644
---- a/web/index.php
-+++ b/web/index.php
-@@ -1,13 +1,12 @@
- <?php
--
- /*
-- * Copyright 2015 Google Inc.
-+ * Copyright 2015 Google Inc. All Rights Reserved.
-  *
-  * Licensed under the Apache License, Version 2.0 (the "License");
-  * you may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at
-  *
-- *     http://www.apache.org/licenses/LICENSE-2.0
-+ *   http://www.apache.org/licenses/LICENSE-2.0
-  *
-  * Unless required by applicable law or agreed to in writing, software
-  * distributed under the License is distributed on an "AS IS" BASIS,
-@@ -16,24 +15,10 @@
-  * limitations under the License.
-  */
- 
--// [START index_php]
- require_once __DIR__ . '/../vendor/autoload.php';
- 
--$app = new Silex\Application();
--
--$app->get('/', function () {
--    return 'Hello World';
--});
--
--$app->get('/goodbye', function () {
--    return 'Goodbye World';
--});
--
--// @codeCoverageIgnoreStart
--if (PHP_SAPI != 'cli') {
--    $app->run();
--}
--// @codeCoverageIgnoreEnd
-+/** @var Silex\Application $app */
-+$app = require __DIR__ . '/../src/app.php';
-+require __DIR__ . '/../src/controllers.php';
- 
--return $app;
--// [END index_php]
-+$app->run();

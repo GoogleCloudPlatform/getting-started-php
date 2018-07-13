@@ -15,32 +15,32 @@ index ea0038e..ead2f61 100644
 +[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
  
 diff --git a/composer.json b/composer.json
-index a539281..3ad0a10 100644
+index 3c39922..9599083 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -8,6 +8,7 @@
-     "php": "5.6.*|7.0.*|7.1.*|7.2.*",
+@@ -2,6 +2,7 @@
+   "require": {
      "google/apiclient": "^2.0",
      "google/cloud": "^0.21",
 +    "monolog/monolog": "^1.17",
      "silex/silex": "^1.3",
-     "symfony/yaml": "^3.0",
      "twig/twig": "^1.22"
+   },
 diff --git a/composer.lock b/composer.lock
-index f1b81a1..abfa9d8 100644
+index 5a008e7..3a9fe24 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "content-hash": "98aada38718ecf493f780ae2f577c4ac",
-+    "content-hash": "abb8ae0244c2bf14e8f7ed1b5d72c0a5",
+-    "content-hash": "cb511a82e409c7afa12f2e0798b5130b",
++    "content-hash": "38d6f3040b55f11e93ba2de53081f43c",
      "packages": [
          {
              "name": "firebase/php-jwt",
 diff --git a/src/app.php b/src/app.php
-index 40f94fb..8e49c0c 100644
+index cddec81..31b7e9d 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -20,6 +20,7 @@
@@ -51,7 +51,7 @@ index 40f94fb..8e49c0c 100644
  use Google\Cloud\Samples\Bookshelf\DataModel\Sql;
  use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
  use Google\Cloud\Samples\Bookshelf\DataModel\MongoDb;
-@@ -62,17 +63,29 @@ $app['user'] = function ($app) {
+@@ -56,6 +57,16 @@ $app['user'] = function ($app) {
  };
  // [END session]
  
@@ -68,13 +68,8 @@ index 40f94fb..8e49c0c 100644
  // create the google authorization client
  // [START google_client]
  $app['google_client'] = function ($app) {
-     /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
-     $urlGen = $app['url_generator'];
-     $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
--    return new Google_Client([
-+    $client = new Google_Client([
-         'client_id'     => $app['config']['google_client_id'],
-         'client_secret' => $app['config']['google_client_secret'],
+@@ -67,6 +78,8 @@ $app['google_client'] = function ($app) {
+         'client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
          'redirect_uri'  => $redirectUri,
      ]);
 +    $client->setLogger($app['monolog']);
@@ -128,10 +123,10 @@ index f6656d8..fd2d873 100644
      "silex/silex": "^1.3",
      "symfony/yaml": "^3.0",
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 9e8ff1f..ab9a67b 100644
+index f6fec7e..4ac9f79 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -332,4 +332,16 @@ class ControllersTest extends WebTestCase
+@@ -333,4 +333,16 @@ class ControllersTest extends WebTestCase
  
          $this->assertNull($this->app['session']->get('user'));
      }

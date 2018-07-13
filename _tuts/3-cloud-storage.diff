@@ -95,7 +95,7 @@ index 0000000..4349e9f
 +    }
 +}
 diff --git a/src/app.php b/src/app.php
-index 11f75c0..594c4af 100644
+index 87242a9..5024a57 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -23,6 +23,7 @@
@@ -106,22 +106,20 @@ index 11f75c0..594c4af 100644
  use Silex\Application;
  use Silex\Provider\TwigServiceProvider;
  use Symfony\Component\Yaml\Yaml;
-@@ -43,6 +44,15 @@ $config = getenv('BOOKSHELF_CONFIG') ?:
- 
- $app['config'] = Yaml::parse(file_get_contents($config));
+@@ -37,6 +38,13 @@ $app->register(new TwigServiceProvider(), array(
+     ),
+ ));
  
 +// Cloud Storage
 +$app['bookshelf.storage'] = function ($app) {
-+    /** @var array $config */
-+    $config = $app['config'];
-+    $projectId = $config['google_project_id'];
++    $projectId = getenv('GOOGLE_CLOUD_PROJECT');
 +    $bucketName = $projectId . '.appspot.com';
 +    return new CloudStorage($projectId, $bucketName);
 +};
 +
  // determine the datamodel backend using the app configuration
  $app['bookshelf.model'] = function ($app) {
-     /** @var array $config */
+     // Data Model
 diff --git a/src/controllers.php b/src/controllers.php
 index fc15adc..2a04c16 100644
 --- a/src/controllers.php
@@ -253,18 +251,30 @@ index 459ce61..9693bca 100644
      <h4 class="book-title">
        {{book.title}}
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 4efd086..3b15077 100644
+index 53314e3..062994e 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -20,6 +20,7 @@ namespace Google\Cloud\Samples\Bookshelf;
- use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
+@@ -17,9 +17,11 @@
+ 
+ namespace Google\Cloud\Samples\Bookshelf;
+ 
++use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
+ use Google\Cloud\TestUtils\TestTrait;
  use Monolog\Handler\TestHandler;
  use Silex\WebTestCase;
 +use Symfony\Component\HttpFoundation\File\UploadedFile;
  
  /**
   * Test for application controllers
-@@ -74,11 +75,22 @@ class ControllersTest extends WebTestCase
+@@ -44,6 +46,7 @@ class ControllersTest extends WebTestCase
+ 
+         // Set a tiny page size so it's easy to test paging.
+         $app['bookshelf.page_size'] = 1;
++        $app['bookshelf.storage'] = new FakeFileStorage();
+         $app['monolog.handler'] = new TestHandler();
+ 
+         return $app;
+@@ -73,11 +76,22 @@ class ControllersTest extends WebTestCase
          $submitButton = $crawler->selectButton('submit');
          $form = $submitButton->form();
  
@@ -287,7 +297,7 @@ index 4efd086..3b15077 100644
  
          // Capture the delete button.
          $deleteCatHat = $crawler->selectButton('submit');
-@@ -133,10 +145,17 @@ class ControllersTest extends WebTestCase
+@@ -132,10 +146,17 @@ class ControllersTest extends WebTestCase
          $submitButton = $crawler->selectButton('submit');
          $form = $submitButton->form();
  
@@ -305,7 +315,7 @@ index 4efd086..3b15077 100644
          ));
  
          // Make sure the page contents match what we just submitted.
-@@ -157,6 +176,7 @@ class ControllersTest extends WebTestCase
+@@ -156,6 +177,7 @@ class ControllersTest extends WebTestCase
              'title' => 'Where the Red Fern Grows',
              'author' => 'Wilson Rawls',
              'published_date' => '1961',
@@ -313,6 +323,55 @@ index 4efd086..3b15077 100644
          ));
  
          // Make sure the page contents match what we just submitted.
+diff --git a/test/lib/FileSystem/FakeFileStorage.php b/test/lib/FileSystem/FakeFileStorage.php
+new file mode 100644
+index 0000000..7882a18
+--- /dev/null
++++ b/test/lib/FileSystem/FakeFileStorage.php
+@@ -0,0 +1,43 @@
++<?php
++/*
++ * Copyright 2015 Google Inc. All Rights Reserved.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++namespace Google\Cloud\Samples\Bookshelf\FileSystem;
++
++/**
++ * Class FakeFileStorage
++ * @package Google\Cloud\Samples\Bookshelf
++ *
++ * A simple mock that is easy to verify in tests.
++ */
++class FakeFileStorage
++{
++    public function __construct()
++    {
++        $this->count = 0;
++        $this->deletedFiles = array();
++    }
++
++    public function storeFile($localFilePath, $contentType)
++    {
++        $this->count += 1;
++        return 'img' . $this->count;
++    }
++
++    public function deleteFile($url)
++    {
++        array_push($this->deletedFiles, $url);
++    }
++}
 diff --git a/test/unit/FileSystem/CloudStorageTest.php b/test/unit/FileSystem/CloudStorageTest.php
 new file mode 100644
 index 0000000..0318779

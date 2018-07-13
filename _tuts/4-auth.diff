@@ -14,28 +14,42 @@ index 4df4bde..ea0038e 100644
 -[step-3]: https://cloud.google.com/php/getting-started/using-cloud-storage
 +[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
  
+diff --git a/app.yaml b/app.yaml
+index cc1e5e1..52e77ef 100644
+--- a/app.yaml
++++ b/app.yaml
+@@ -1,6 +1,10 @@
+ runtime: php72
+ 
+ env_variables:
++    # In order to enable 3-legged OAuth, you must specify Client Credentials
++    GOOGLE_CLIENT_ID:
++    GOOGLE_CLIENT_SECRET:
++
+     # this can be "mysql", "postgres", "mongodb", or "datastore"
+     BOOKSHELF_BACKEND: datastore
+ 
 diff --git a/composer.json b/composer.json
-index d446a6c..a539281 100644
+index 743431c..3c39922 100644
 --- a/composer.json
 +++ b/composer.json
-@@ -6,6 +6,7 @@
-   },
+@@ -1,5 +1,6 @@
+ {
    "require": {
-     "php": "5.6.*|7.0.*|7.1.*|7.2.*",
 +    "google/apiclient": "^2.0",
      "google/cloud": "^0.21",
      "silex/silex": "^1.3",
-     "symfony/yaml": "^3.0",
+     "twig/twig": "^1.22"
 diff --git a/composer.lock b/composer.lock
-index 3132444..f1b81a1 100644
+index 0ad48c5..5a008e7 100644
 --- a/composer.lock
 +++ b/composer.lock
 @@ -4,7 +4,7 @@
          "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
          "This file is @generated automatically"
      ],
--    "content-hash": "ddeb8732b91dd8034b5debf67192545e",
-+    "content-hash": "98aada38718ecf493f780ae2f577c4ac",
+-    "content-hash": "6892c9475d97fd0cb9580d194be4ea95",
++    "content-hash": "cb511a82e409c7afa12f2e0798b5130b",
      "packages": [
          {
              "name": "firebase/php-jwt",
@@ -148,16 +162,16 @@ index 3132444..f1b81a1 100644
          },
 +        {
 +            "name": "phpseclib/phpseclib",
-+            "version": "2.0.10",
++            "version": "2.0.11",
 +            "source": {
 +                "type": "git",
 +                "url": "https://github.com/phpseclib/phpseclib.git",
-+                "reference": "d305b780829ea4252ed9400b3f5937c2c99b51d4"
++                "reference": "7053f06f91b3de78e143d430e55a8f7889efc08b"
 +            },
 +            "dist": {
 +                "type": "zip",
-+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d305b780829ea4252ed9400b3f5937c2c99b51d4",
-+                "reference": "d305b780829ea4252ed9400b3f5937c2c99b51d4",
++                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/7053f06f91b3de78e143d430e55a8f7889efc08b",
++                "reference": "7053f06f91b3de78e143d430e55a8f7889efc08b",
 +                "shasum": ""
 +            },
 +            "require": {
@@ -236,13 +250,13 @@ index 3132444..f1b81a1 100644
 +                "x.509",
 +                "x509"
 +            ],
-+            "time": "2018-02-19T04:29:13+00:00"
++            "time": "2018-04-15T16:55:05+00:00"
 +        },
          {
              "name": "pimple/pimple",
              "version": "v1.1.1",
 diff --git a/src/app.php b/src/app.php
-index 594c4af..40f94fb 100644
+index 5024a57..cddec81 100644
 --- a/src/app.php
 +++ b/src/app.php
 @@ -25,7 +25,9 @@ use Google\Cloud\Samples\Bookshelf\DataModel\Datastore;
@@ -255,19 +269,13 @@ index 594c4af..40f94fb 100644
  use Symfony\Component\Yaml\Yaml;
  
  $app = new Application();
-@@ -38,12 +40,42 @@ $app->register(new TwigServiceProvider(), array(
+@@ -38,6 +40,36 @@ $app->register(new TwigServiceProvider(), array(
      ),
  ));
  
 +// register the url generator
 +$app->register(new UrlGeneratorServiceProvider);
 +
- // parse configuration
- $config = getenv('BOOKSHELF_CONFIG') ?:
-     __DIR__ . '/../config/' . 'settings.yml';
- 
- $app['config'] = Yaml::parse(file_get_contents($config));
- 
 +// register the session handler
 +// [START session]
 +$app->register(new SessionServiceProvider);
@@ -288,8 +296,8 @@ index 594c4af..40f94fb 100644
 +    $urlGen = $app['url_generator'];
 +    $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
 +    return new Google_Client([
-+        'client_id'     => $app['config']['google_client_id'],
-+        'client_secret' => $app['config']['google_client_secret'],
++        'client_id'     => getenv('GOOGLE_CLIENT_ID'),
++        'client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
 +        'redirect_uri'  => $redirectUri,
 +    ]);
 +};
@@ -297,7 +305,7 @@ index 594c4af..40f94fb 100644
 +
  // Cloud Storage
  $app['bookshelf.storage'] = function ($app) {
-     /** @var array $config */
+     $projectId = getenv('GOOGLE_CLOUD_PROJECT');
 diff --git a/src/controllers.php b/src/controllers.php
 index 2a04c16..a379eb2 100644
 --- a/src/controllers.php
@@ -399,10 +407,10 @@ index db1be8f..e73f8bb 100644
      </div>
      <div class="container">
 diff --git a/test/functional/ControllersTest.php b/test/functional/ControllersTest.php
-index 3b15077..9e8ff1f 100644
+index 062994e..f6fec7e 100644
 --- a/test/functional/ControllersTest.php
 +++ b/test/functional/ControllersTest.php
-@@ -47,6 +47,7 @@ class ControllersTest extends WebTestCase
+@@ -48,6 +48,7 @@ class ControllersTest extends WebTestCase
          $app['bookshelf.page_size'] = 1;
          $app['bookshelf.storage'] = new FakeFileStorage();
          $app['monolog.handler'] = new TestHandler();
@@ -410,7 +418,7 @@ index 3b15077..9e8ff1f 100644
  
          return $app;
      }
-@@ -204,4 +205,131 @@ class ControllersTest extends WebTestCase
+@@ -205,4 +206,131 @@ class ControllersTest extends WebTestCase
          $client->submit($submitButton->form());
          $this->assertEquals(404, $client->getResponse()->getStatusCode());
      }

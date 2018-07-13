@@ -48,30 +48,35 @@ index 1bd64f0..760f1b3 100644
  
 diff --git a/app.yaml b/app.yaml
 deleted file mode 100644
-index 722f4bf..0000000
+index 3c9b78d..0000000
 --- a/app.yaml
 +++ /dev/null
-@@ -1,20 +0,0 @@
--runtime: php
--env: flex
+@@ -1,25 +0,0 @@
+-runtime: php72
 -
--runtime_config:
--  document_root: web
+-env_variables:
+-    # In order to enable 3-legged OAuth, you must specify Client Credentials
+-    GOOGLE_CLIENT_ID: ""
+-    GOOGLE_CLIENT_SECRET: ""
 -
--## Uncomment for Cloud SQL
--# beta_settings:
--#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
+-    # Pubsub (this should be the same as in worker.yaml)
+-    PUBSUB_TOPIC_NAME: book_modified
+-    PUBSUB_SUBSCRIPTION_NAME: worker
 -
--# This sample incurs costs to run on the App Engine flexible environment.
--# The settings below are to reduce costs during testing and are not appropriate
--# for production use. For more information, see:
--# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
--manual_scaling:
--  instances: 1
--resources:
--  cpu: 1
--  memory_gb: 0.5
--  disk_size_gb: 10
+-    # this can be "mysql", "postgres", "mongodb", or "datastore"
+-    BOOKSHELF_BACKEND: datastore
+-
+-    # populate these to use the "mysql" or "postres" backends
+-    CLOUDSQL_DATABASE_NAME: ""
+-    CLOUDSQL_PORT: ""
+-    CLOUDSQL_CONNECTION_NAME: ""
+-    CLOUDSQL_USER: ""
+-    CLOUDSQL_PASSWORD: ""
+-
+-    # populate these to use the "mongodb" backend
+-    MONGO_URL: ""
+-    MONGO_DATABASE: ""
+-    MONGO_COLLECTION: ""
 diff --git a/bookshelf-frontend.yaml b/bookshelf-frontend.yaml
 new file mode 100644
 index 0000000..041b17c
@@ -193,31 +198,8 @@ index 0000000..a5c0af3
 +        ports:
 +        - name: ratchet-server
 +          containerPort: 8080
-diff --git a/config/worker-supervisord.conf b/config/worker-supervisord.conf
-deleted file mode 100644
-index afc6a38..0000000
---- a/config/worker-supervisord.conf
-+++ /dev/null
-@@ -1,17 +0,0 @@
--[supervisord]
--nodaemon = true
--logfile = /dev/null
--logfile_maxbytes = 0
--pidfile = /var/run/supervisord.pid
--
--[program:pubsub-worker]
--command = php /app/bin/pubsub/entrypoint.php
--stdout_logfile = /dev/stdout
--stdout_logfile_maxbytes=0
--stderr_logfile = /dev/stderr
--stderr_logfile_maxbytes=0
--user = www-data
--autostart = true
--autorestart = true
--priority = 5
--stopwaitsecs = 20
 diff --git a/test/app-e2e.yaml b/test/app-e2e.yaml
-index 8dffa4d..4725e7b 100644
+index d3334e0..603665f 100644
 --- a/test/app-e2e.yaml
 +++ b/test/app-e2e.yaml
 @@ -1,4 +1,4 @@
@@ -225,7 +207,7 @@ index 8dffa4d..4725e7b 100644
 +runtime: custom
  env: flex
  
- runtime_config:
+ env_variables:
 diff --git a/test/e2e/MongoDbTest.php b/test/e2e/MongoDbTest.php
 index dd90be0..c3a6f3f 100644
 --- a/test/e2e/MongoDbTest.php
@@ -253,14 +235,15 @@ index dd90be0..c3a6f3f 100644
      }
  }
 diff --git a/test/lib/E2eTest.php b/test/lib/E2eTest.php
-index 1f0e8c9..b4b5925 100644
+index 0989a8d..b4b5925 100644
 --- a/test/lib/E2eTest.php
 +++ b/test/lib/E2eTest.php
-@@ -17,52 +17,27 @@
+@@ -17,53 +17,27 @@
  
  namespace Google\Cloud\Samples\Bookshelf;
  
 -use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+-use Google\Cloud\TestUtils\TestTrait;
 -use Symfony\Component\Yaml\Dumper;
 -
  /**
@@ -268,7 +251,7 @@ index 1f0e8c9..b4b5925 100644
   */
  abstract class E2eTest extends \PHPUnit_Framework_TestCase
  {
--    use SkipTestsIfMissingCredentialsTrait,
+-    use TestTrait,
 -        AppEngineDeploymentTrait,
 -        GetConfigTrait;
 -
@@ -317,31 +300,15 @@ index 1f0e8c9..b4b5925 100644
  }
 diff --git a/worker.yaml b/worker.yaml
 deleted file mode 100644
-index 0c4406a..0000000
+index 2139ab0..0000000
 --- a/worker.yaml
 +++ /dev/null
-@@ -1,24 +0,0 @@
--runtime: php
--env: flex
+@@ -1,8 +0,0 @@
+-runtime: php72
 -service: worker
+-entrypoint: php worker.php
 -
--# [START runtime_config]
--runtime_config:
--  document_root: .
--  supervisord_conf_override: config/worker-supervisord.conf
--# [END runtime_config]
+-env_variables:
+-    PUBSUB_TOPIC_NAME: book_modified
+-    PUBSUB_SUBSCRIPTION_NAME: worker
 -
--## Uncomment for Cloud SQL
--# beta_settings:
--#   cloud_sql_instances: "INSTANCE_CONNECTION_NAME"
--
--# This sample incurs costs to run on the App Engine flexible environment.
--# The settings below are to reduce costs during testing and are not appropriate
--# for production use. For more information, see:
--# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
--manual_scaling:
--  instances: 1
--resources:
--  cpu: 1
--  memory_gb: 0.5
--  disk_size_gb: 10
