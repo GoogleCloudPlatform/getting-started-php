@@ -75,4 +75,7 @@ cp /opt/app/gce/fluentd/bookshelf.conf /etc/google-fluentd/config.d/bookshelf.co
 # Start Fluentd
 service google-fluentd restart &
 # [END logging]
+
+# Decrypt the settings.yml file
+gcloud kms decrypt --location=global --keyring=[YOUR_KEY_RING] --key=[YOUR_KEY_NAME] --plaintext-file=/opt/app/config/settings.yml --ciphertext-file=/opt/app/config/settings.yml.enc
 # [END all]
