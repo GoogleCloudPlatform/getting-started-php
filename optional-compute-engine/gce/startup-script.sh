@@ -46,6 +46,13 @@ ln -s /opt/src/optional-compute-engine /opt/app
 composer install -d /opt/app --no-ansi --no-progress
 # [END php]
 
+# Decrypt the settings.yml file, if applicable
+pushd /opt/app/config
+if [-f settings.yml ]; then
+  gcloud kms decrypt --location=global --keyring=[YOUR_KEY_RING] --key=[YOUR_KEY_NAME] --plaintext-file=settings.yml --ciphertext-file=settings.yml.enc
+fi
+popd
+
 # [START project_config]
 # Fetch the application config file from the Metadata server and add it to the project
 curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/project-config" \
@@ -75,7 +82,4 @@ cp /opt/app/gce/fluentd/bookshelf.conf /etc/google-fluentd/config.d/bookshelf.co
 # Start Fluentd
 service google-fluentd restart &
 # [END logging]
-
-# Decrypt the settings.yml file
-gcloud kms decrypt --location=global --keyring=[YOUR_KEY_RING] --key=[YOUR_KEY_NAME] --plaintext-file=/opt/app/config/settings.yml --ciphertext-file=/opt/app/config/settings.yml.enc
 # [END all]
