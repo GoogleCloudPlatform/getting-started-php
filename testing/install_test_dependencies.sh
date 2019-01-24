@@ -20,7 +20,6 @@ source ${MYDIR}/variables.sh
 
 PREREQ="true"
 
-# Check for necessary envvars.
 for v in "${VARS[@]}"; do
     if [ -z "${!v}" ]; then
         echo "Please set ${v} envvar."
@@ -86,7 +85,7 @@ gcloud config set project ${GOOGLE_PROJECT_ID}
 gcloud config set app/promote_by_default false
 
 # Dump the credentials
-php testing/dump_credentials.php
+php ${MYDIR}/dump_credentials.php
 
 # Activate the service account
 if [ -z "{$GOOGLE_APPLICATION_CREDENTIALS" ]; then

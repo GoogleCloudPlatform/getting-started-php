@@ -24,7 +24,6 @@ php-cs-fixer fix --diff
 
 # Run tests for each directories.
 for STEP in "${STEPS[@]}"; do
-    cp ${MYDIR}/app-e2e.yaml ${STEP}/app-e2e.yaml
     pushd ${STEP}
     mkdir -p build/logs
     php vendor/bin/phpunit --coverage-clover build/logs/clover.xml

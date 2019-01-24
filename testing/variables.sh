@@ -33,12 +33,12 @@ VARS=(
 )
 
 STEPS=(
-    1-hello-world
-    2-structured-data
-    3-cloud-storage
-    4-auth
-    5-logging
-    6-pubsub
-    optional-kubernetes-engine
-    optional-compute-engine
+    app-engine-flex/1-hello-world
+    app-engine-flex/2-structured-data
+    app-engine-flex/3-cloud-storage
+    app-engine-flex/4-auth
+    app-engine-flex/5-logging
+    app-engine-flex/6-pubsub
+    compute-engine
+    kubernetes-engine
 )
