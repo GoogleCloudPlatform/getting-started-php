@@ -1,0 +1,21 @@
+runtime: php72
+
+env_variables:
+    # In order to enable 3-legged OAuth, you must specify Client Credentials
+    GOOGLE_CLIENT_ID:
+    GOOGLE_CLIENT_SECRET:
+
+    # this can be "mysql", "postgres", "mongodb", or "datastore"
+    BOOKSHELF_BACKEND: datastore
+
+    # populate these to use the "mysql" or "postres" backends
+    CLOUDSQL_DATABASE_NAME:
+    CLOUDSQL_PORT:
+    CLOUDSQL_CONNECTION_NAME:
+    CLOUDSQL_USER:
+    CLOUDSQL_PASSWORD:
+
+    # populate these to use the "mongodb" backend
+    MONGO_URL:
+    MONGO_DATABASE:
+    MONGO_COLLECTION:
