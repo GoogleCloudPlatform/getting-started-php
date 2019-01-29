@@ -194,6 +194,5 @@ class CloudSql
         return sprintf('mysql:unix_socket=/cloudsql/%s;dbname=%s',
             $connectionName,
             $dbName);
-
     }
 }
