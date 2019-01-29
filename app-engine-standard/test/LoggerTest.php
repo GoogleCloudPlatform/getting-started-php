@@ -32,8 +32,8 @@ class LoggerTest extends WebTestCase
      */
     public function createApplication()
     {
-        $app = require __DIR__ . '/../../src/app.php';
-        require __DIR__ . '/../../src/controllers.php';
+        $app = require __DIR__ . '/../src/app.php';
+        require __DIR__ . '/../src/controllers.php';
 
         return $app;
     }
@@ -46,16 +46,16 @@ class LoggerTest extends WebTestCase
 
     public function testDeleteLogsId()
     {
-        $model = $this->getMock('Google\Cloud\Samples\Bookshelf\DataModel\DataModelInterface');
-        $model
+        $db = $this->createMock('Google\Cloud\Bookshelf\CloudSql');
+        $db
             ->expects($this->once())
             ->method('read')
             ->will($this->returnValue(array('id' => '123', 'image_url' => null)));
-        $model
+        $db
             ->expects($this->once())
             ->method('delete');
 
-        $this->app['bookshelf.model'] = $model;
+        $this->app['bookshelf.db'] = $db;
         $this->app['monolog.handler'] = new TestHandler;
 
         $client = $this->createClient();

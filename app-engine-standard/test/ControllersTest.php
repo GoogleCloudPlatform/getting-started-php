@@ -17,7 +17,6 @@
 
 namespace Google\Cloud\Bookshelf;
 
-use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
 use Google\Cloud\TestUtils\TestTrait;
 use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
@@ -29,7 +28,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ControllersTest extends WebTestCase
 {
     use TestTrait;
-    use GetConfigTrait;
 
     /**
      * Creates the application.
@@ -38,11 +36,8 @@ class ControllersTest extends WebTestCase
      */
     public function createApplication()
     {
-        $app = require __DIR__ . '/../../src/app.php';
-        require __DIR__ . '/../../src/controllers.php';
-
-        // set the app config to our test config
-        $app['config'] = $this->getConfig();
+        $app = require __DIR__ . '/../src/app.php';
+        require __DIR__ . '/../src/controllers.php';
 
         // Set a tiny page size so it's easy to test paging.
         $app['bookshelf.page_size'] = 1;
@@ -78,10 +73,10 @@ class ControllersTest extends WebTestCase
         $form = $submitButton->form();
 
         $photo = new UploadedFile(
-            __DIR__ . '/../lib/CatHat.jpg',
+            __DIR__ . '/data/CatHat.jpg',
             'CatHat.jpg',
             'image/jpg',
-            filesize(__DIR__ . '/../lib/CatHat.jpg')
+            filesize(__DIR__ . '/data/CatHat.jpg')
         );
         $crawler = $client->submit($form, array(
             'title' => 'The Cat in the Hat',
@@ -148,10 +143,10 @@ class ControllersTest extends WebTestCase
         $form = $submitButton->form();
 
         $photo = new UploadedFile(
-            __DIR__ . '/../lib/CatHat.jpg',
+            __DIR__ . '/data/CatHat.jpg',
             'CatHat.jpg',
             'image/jpg',
-            filesize(__DIR__ . '/../lib/CatHat.jpg')
+            filesize(__DIR__ . '/data/CatHat.jpg')
         );
         $crawler = $client->submit($form, array(
             'title' => 'Where the Red Fern Grows',
@@ -241,15 +236,15 @@ class ControllersTest extends WebTestCase
         // get the created book ID and read it
         $url = $client->getResponse()->headers->get('location');
         $id = str_replace('/books/', '', $url);
-        $book = $this->app['bookshelf.model']->read($id);
+        $book = $this->app['bookshelf.db']->read($id);
         $this->assertNotEquals(false, $book);
         $this->assertArrayHasKey('created_by', $book);
         $this->assertEquals($userInfo['name'], $book['created_by']);
         $this->assertArrayHasKey('created_by_id', $book);
         $this->assertEquals($userInfo['id'], $book['created_by_id']);
         // clean up
-        $this->app['bookshelf.model']->delete($id);
-        $book = $this->app['bookshelf.model']->read($id);
+        $this->app['bookshelf.db']->delete($id);
+        $book = $this->app['bookshelf.db']->read($id);
         $this->assertEquals(false, $book);
     }
 
@@ -297,7 +292,7 @@ class ControllersTest extends WebTestCase
             'name' => 'Fake Name',
             'picture' => null
         ];
-        $googleClient = $this->getMock('Google_Client');
+        $googleClient = $this->createMock('Google_Client');
         $googleClient->expects($this->once())
             ->method('fetchAccessTokenWithAuthCode')
             ->will($this->returnValue(true));
@@ -344,5 +339,25 @@ class ControllersTest extends WebTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('OK', $response->getContent());
+    }
+}
+
+class FakeFileStorage
+{
+    public function __construct()
+    {
+        $this->count = 0;
+        $this->deletedFiles = array();
+    }
+
+    public function storeFile($localFilePath, $contentType)
+    {
+        $this->count += 1;
+        return 'img' . $this->count;
+    }
+
+    public function deleteFile($url)
+    {
+        array_push($this->deletedFiles, $url);
     }
 }

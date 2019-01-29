@@ -16,15 +16,13 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Bookshelf;
 
 /*
  * Adds all the controllers to $app.  Follows Silex Skeleton pattern.
  */
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Google\Cloud\Bookshelf\DataModel\Sql;
-use Google\Cloud\Bookshelf\FileSystem\CloudStorage;
 
 $app->get('/', function (Request $request) use ($app) {
     return $app->redirect('/books/');
@@ -32,7 +30,7 @@ $app->get('/', function (Request $request) use ($app) {
 
 // [START index]
 $app->get('/books/', function (Request $request) use ($app) {
-    /** @var Sql $db */
+    /** @var \Google\Cloud\Bookshelf\DataModel\CloudSql $db */
     $db = $app['bookshelf.db'];
     /** @var Twig_Environment $twig */
     $twig = $app['twig'];
@@ -58,9 +56,9 @@ $app->get('/books/add', function () use ($app) {
 });
 
 $app->post('/books/add', function (Request $request) use ($app) {
-    /** @var Sql $db */
+    /** @var \Google\Cloud\Bookshelf\DataModel\CloudSql $db */
     $db = $app['bookshelf.db'];
-    /** @var CloudStorage $storage */
+    /** @var \Google\Cloud\Bookshelf\CloudStorage $storage */
     $storage = $app['bookshelf.storage'];
     $files = $request->files;
     $book = $request->request->all();
@@ -83,7 +81,7 @@ $app->post('/books/add', function (Request $request) use ($app) {
 
 // [START show]
 $app->get('/books/{id}', function ($id) use ($app) {
-    /** @var Sql $db */
+    /** @var \Google\Cloud\Bookshelf\DataModel\CloudSql $db */
     $db = $app['bookshelf.db'];
     $book = $db->read($id);
     if (!$book) {
@@ -98,7 +96,7 @@ $app->get('/books/{id}', function ($id) use ($app) {
 
 // [START edit]
 $app->get('/books/{id}/edit', function ($id) use ($app) {
-    /** @var Sql $db */
+    /** @var \Google\Cloud\Bookshelf\DataModel\CloudSql $db */
     $db = $app['bookshelf.db'];
     $book = $db->read($id);
     if (!$book) {
@@ -116,9 +114,9 @@ $app->get('/books/{id}/edit', function ($id) use ($app) {
 $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
     $book = $request->request->all();
     $book['id'] = $id;
-    /** @var CloudStorage $storage */
+    /** @var \Google\Cloud\Bookshelf\CloudStorage $storage */
     $storage = $app['bookshelf.storage'];
-    /** @var Sql $db */
+    /** @var \Google\Cloud\Bookshelf\DataModel\CloudSql $db */
     $db = $app['bookshelf.db'];
     if (!$db->read($id)) {
         return new Response('', Response::HTTP_NOT_FOUND);
@@ -143,14 +141,14 @@ $app->post('/books/{id}/edit', function (Request $request, $id) use ($app) {
 
 // [START delete]
 $app->post('/books/{id}/delete', function ($id) use ($app) {
-    /** @var Sql $db */
+    /** @var \Google\Cloud\Bookshelf\DataModel\CloudSql $db */
     $db = $app['bookshelf.db'];
     $book = $db->read($id);
     if ($book) {
         $db->delete($id);
         // [START delete_image]
         if (!empty($book['image_url'])) {
-            /** @var CloudStorage $storage */
+            /** @var \Google\Cloud\Bookshelf\CloudStorage $storage */
             $storage = $app['bookshelf.storage'];
             $storage->deleteFile($book['image_url']);
         }

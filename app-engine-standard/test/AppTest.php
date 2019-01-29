@@ -14,30 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Bookshelf\FileSystem;
+
+namespace Google\Cloud\Bookshelf;
+
+use Silex\WebTestCase;
 
 /**
- * Class FakeFileStorage
- * @package Google\Cloud\Samples\Bookshelf
- *
- * A simple mock that is easy to verify in tests.
+ * Test for application controllers
  */
-class FakeFileStorage
+class AppTest extends WebTestCase
 {
-    public function __construct()
+    /**
+     * Creates the application.
+     *
+     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+     */
+    public function createApplication()
     {
-        $this->count = 0;
-        $this->deletedFiles = array();
+        $app = require __DIR__ . '/../src/app.php';
+
+        return $app;
     }
 
-    public function storeFile($localFilePath, $contentType)
+    public function testBookshelfModelMysql()
     {
-        $this->count += 1;
-        return 'img' . $this->count;
-    }
-
-    public function deleteFile($url)
-    {
-        array_push($this->deletedFiles, $url);
+        $this->assertInstanceOf(
+            'Google\Cloud\Bookshelf\CloudSql',
+            $this->app['bookshelf.db']
+        );
     }
 }

@@ -14,24 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Bookshelf\FileSystem;
+namespace Google\Cloud\Bookshelf;
 
-use Google\Cloud\Bookshelf\GetConfigTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 class CloudStorageTest extends TestCase
 {
     use TestTrait;
-    use GetConfigTrait;
 
     public function testOne()
     {
-        $config = $this->getConfig();
-        $projectId = $config['google_project_id'];
-        $bucketName = $projectId . '.appspot.com';
-        $storage = new CloudStorage($projectId, $bucketName);
-        $url = $storage->storeFile(__DIR__ . '/../../lib/CatHat.jpg', 'image/jpg');
+        $bucketName = self::$projectId . '.appspot.com';
+        $storage = new CloudStorage(self::$projectId, $bucketName);
+        $url = $storage->storeFile(__DIR__ . '/data/CatHat.jpg', 'image/jpg');
         try {
             $this->assertStringStartsWith(
                 "https://www.googleapis.com/download/storage/v1/b/$bucketName/o/",

@@ -15,15 +15,18 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf\DataModel;
+namespace Google\Cloud\Bookshelf;
 
 use PDO;
 
 /**
- * Class Sql can implement a mysql or postgres database.
+ * CloudSql can implement a mysql or postgres database.
+ * This example uses MySQL, but Postgres can be used by
+ * changing the DSN.
+ * @see getMysqlDsn
  *
  */
-class Sql
+class CloudSql
 {
     private $dsn;
     private $user;
