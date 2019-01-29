@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf;
+namespace Google\Cloud\Bookshelf;
 
-use Google\Cloud\Samples\Bookshelf\FileSystem\FakeFileStorage;
+use Google\Cloud\Bookshelf\FakeFileStorage;
 use Monolog\Handler\TestHandler;
 use Silex\WebTestCase;
 

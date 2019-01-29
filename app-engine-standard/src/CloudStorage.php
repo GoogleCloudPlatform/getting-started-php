@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Google\Cloud\Samples\Bookshelf\FileSystem;
+namespace Google\Cloud\Bookshelf;
 
 use Google\Cloud\Storage\StorageClient;
 

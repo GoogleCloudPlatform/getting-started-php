@@ -20,8 +20,8 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
-use Google\Cloud\Bookshelf\DataModel\Sql;
-use Google\Cloud\Bookshelf\FileSystem\CloudStorage;
+use Google\Cloud\Bookshelf\CloudSql;
+use Google\Cloud\Bookshelf\CloudStorage;
 use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -55,7 +55,9 @@ $app['user'] = function ($app) {
 // [END session]
 
 // [START logging]
-$app->register(new Silex\Provider\MonologServiceProvider());
+$app->register(new Silex\Provider\MonologServiceProvider(), [
+    'monolog.handler' => new Monolog\Handler\ErrorLogHandler(),
+]);
 // [END logging]
 
 // create the google authorization client
@@ -85,29 +87,21 @@ $app['bookshelf.storage'] = function ($app) {
 $app['bookshelf.db'] = function ($app) {
     $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
     $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
+    $port = getenv('CLOUDSQL_PORT');
     if (getenv('GAE_INSTANCE')) {
-        $dsn = Sql::getMysqlDsn($dbName, $connectionName);
+        $dsn = CloudSql::getMysqlDsn($dbName, $connectionName);
     } else {
-        $dsn = Sql::getMysqlDsnForProxy($dbName);
+        $dsn = CloudSql::getMysqlDsnForProxy($dbName, $port);
     }
-    return new Sql(
+    return new CloudSql(
         $dsn,
         getenv('CLOUDSQL_USER'),
         getenv('CLOUDSQL_PASSWORD')
     );
 };
 
-// Turn on debug locally
-if (in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', 'fe80::1', '::1'])
-    || php_sapi_name() === 'cli-server'
-) {
-    $app['debug'] = true;
-} else {
-    $app['debug'] = filter_var(
-        getenv('BOOKSHELF_DEBUG'),
-        FILTER_VALIDATE_BOOLEAN
-    );
-}
+// Turn on debugging
+$app['debug'] = true;
 
 // add service parameters
 $app['bookshelf.page_size'] = 10;

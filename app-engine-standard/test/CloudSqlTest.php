@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace Google\Cloud\Bookshelf\DataModel;
+namespace Google\Cloud\Bookshelf;
 
-use Google\Cloud\Bookshelf\GetConfigTrait;
 use Google\Cloud\TestUtils\TestTrait;
+use PHPUnit\Framework\TestCase;
 
-class MySqlTest extends \PHPUnit_Framework_TestCase
+class CloudSqlTest extends TestCase
 {
-    use GetConfigTrait;
     use TestTrait;
 
     /**
@@ -31,16 +30,16 @@ class MySqlTest extends \PHPUnit_Framework_TestCase
      */
     public function testDataModel()
     {
-        $config = $this->getConfig();
+        $mysql_dsn_local = sprintf(
+            'mysql:host=127.0.0.1;port=%s;dbname=%s',
+            $this->requireEnv('CLOUDSQL_PORT'),
+            $this->requireEnv('CLOUDSQL_DATABASE_NAME')
+        );
 
-        $mysql_dsn_local = sprintf('mysql:host=127.0.0.1;port=%s;dbname=%s',
-            $config['mysql_port'],
-            $config['mysql_database_name']);
-
-        $db = new Sql(
+        $db = new CloudSql(
             $mysql_dsn_local,
-            $config['mysql_user'],
-            $config['mysql_password']
+            $this->requireEnv('CLOUDSQL_USER'),
+            $this->requireEnv('CLOUDSQL_PASSWORD')
         );
 
         // Iterate over the existing books and count the rows.

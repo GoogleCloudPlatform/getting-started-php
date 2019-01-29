@@ -1,5 +1,0 @@
-runtime: php
-env: flex
-
-env_variables:
-  BOOKSHELF_CONFIG: /app/config/settings-e2e.yml
