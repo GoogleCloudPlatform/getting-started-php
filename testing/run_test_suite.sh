@@ -25,7 +25,6 @@ php-cs-fixer fix --diff
 # Run tests for each directories.
 for STEP in "${STEPS[@]}"; do
     pushd ${STEP}
-    mkdir -p build/logs
-    php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    php vendor/bin/phpunit
     popd
 done

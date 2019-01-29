@@ -53,15 +53,7 @@ done
 
 cd "${TEST_BUILD_DIR}"
 
-# Install php-coveralls
-
-# php-coveralls depends some legacy libs which may conflicts with the
-# dependencies of modern applications. To avoid such conflicts, it is
-# best to use the phar file (which includes all the deps).
 mkdir -p ${HOME}/bin
-
-wget https://github.com/satooshi/php-coveralls/releases/download/v0.7.1/coveralls.phar -O ${HOME}/bin/coveralls
-chmod +x ${HOME}/bin/coveralls
 
 # Install php-cs-fixer
 wget http://get.sensiolabs.org/php-cs-fixer.phar -O ${HOME}/bin/php-cs-fixer

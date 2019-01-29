@@ -19,6 +19,10 @@ VARS=(
     CLOUDSDK_ACTIVE_CONFIG_NAME
     GOOGLE_PROJECT_ID
     GOOGLE_STORAGE_BUCKET
+    CLOUDSQL_CONNECTION_NAME
+    CLOUDSQL_DATABASE_NAME
+    CLOUDSQL_USER
+    CLOUDSQL_PASSWORD
     MYSQL_CONNECTION_NAME
     MYSQL_DATABASE_NAME
     MYSQL_USER
@@ -39,6 +43,7 @@ STEPS=(
     app-engine-flex/4-auth
     app-engine-flex/5-logging
     app-engine-flex/6-pubsub
+    app-engine-standard
     compute-engine
     kubernetes-engine
 )
