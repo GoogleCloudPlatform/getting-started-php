@@ -2,7 +2,6 @@
 
 [![Build Status][travis-badge]][travis-link]
 ![Jenkins Build Status][jenkins-badge]
-[![Coverage Status][coveralls-badge]][coveralls-link]
 
 This repository contains the complete sample code for the
 [PHP Getting Started on Google Cloud Platform][getting-started] tutorials.
@@ -30,8 +29,6 @@ Tutorial | Folder
 
 * See [LICENSE](LICENSE)
 
-[coveralls-badge]: https://coveralls.io/repos/GoogleCloudPlatform/getting-started-php/badge.svg?branch=master&service=github
-[coveralls-link]: https://coveralls.io/github/GoogleCloudPlatform/getting-started-php?branch=master
 [travis-badge]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php.svg?branch=master
 [travis-link]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php
 [jenkins-badge]: https://storage.googleapis.com/getting-started-php-jenkins/jenkins-e2e-status.svg
