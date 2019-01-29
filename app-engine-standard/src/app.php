@@ -26,7 +26,6 @@ use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
-use Symfony\Component\Yaml\Yaml;
 
 $app = new Application();
 
