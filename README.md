@@ -1,25 +1,31 @@
 # Getting started with PHP on Google Cloud Platform
 
 [![Build Status][travis-badge]][travis-link]
-![Jenkins Build Status][jenkins-badge]
 
 This repository contains the complete sample code for the
 [PHP Getting Started on Google Cloud Platform][getting-started] tutorials.
 Please refer to the tutorials for instructions on configuring, running, and
 deploying these samples.
 
-The code for each tutorial is in an individual folder in this repository.
+ - Configuring a Database with `Cloud SQL`\*\*
+ - Uploading assets to `Cloud Storage`
+ - Authenticating users with `Google Auth`
+ - Logging app events with `Stackdriver Logging`
+ - Using `Cloud Pub/Sub`
+
+> \*\*App Engine Flex, GKE, and GCE tutorials also cover `Cloud Datastore` and `MongoDB`.
+
+The code for each tutorial is in an individual folder in this repository:
 
 Tutorial | Folder
 ---------|-------
-[Hello world][step-1] | [1-hello-world][step-1-code]
-[Structured data][step-2] | [2-structured-data][step-2-code]
-[Cloud Storage][step-3] | [3-cloud-storage][step-3-code]
-[Authenticating users][step-4] | [4-auth][step-4-code]
-[Logging app events][step-5] | [5-logging][step-5-code]
-[Using Pub/Sub][step-6] | [6-pubsub][step-6-code]
-[Deploying to Google Kubernetes Engine (GKE)][optional-gke] | [optional-kubernetes-engine][optional-gke-code]
-[Deploying to Google Compute Engine (GCE)][optional-gce] | [optional-compute-engine][optional-gce-code]
+[Deploying to App Engine Standard environment][app-engine-standard] | [app-engine-standard](app-engine-standard/)
+[Deploying to Google Kubernetes Engine (GKE)][gke] | [kubernetes-engine](kubernetes-engine/)
+[Deploying to Google Compute Engine (GCE)][gce] | [compute-engine](compute-engine/)
+[Deploying to App Engine Flexible environment][gae-flex] | [app-engine-flex](app-engine-flex/)
+
+**If you are unsure which App Engine environemnt to use, choose `App Engine
+Standard`, as this runtime provides the best getting started experience.**
 
 ## Contributing changes
 
@@ -31,22 +37,9 @@ Tutorial | Folder
 
 [travis-badge]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php.svg?branch=master
 [travis-link]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php
-[jenkins-badge]: https://storage.googleapis.com/getting-started-php-jenkins/jenkins-e2e-status.svg
-[getting-started]: http://cloud.google.com/php/getting-started/tutorial-app
-[step-1]: https://cloud.google.com/php/getting-started/hello-world
-[step-1-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/1-hello-world
-[step-2]: https://cloud.google.com/php/getting-started/using-structured-data
-[step-2-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/2-structured-data
-[step-3]: https://cloud.google.com/php/getting-started/using-cloud-storage
-[step-3-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/3-cloud-storage
-[step-4]: https://cloud.google.com/php/getting-started/authenticate-users
-[step-4-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/4-auth
-[step-5]: https://cloud.google.com/php/getting-started/logging-application-events
-[step-5-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/5-logging
-[step-6]: https://cloud.google.com/php/getting-started/using-pub-sub
-[step-6-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/6-pubsub
-[optional-gke]: https://cloud.google.com/php/tutorials/bookshelf-on-container-engine
-[optional-gke-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/optional-kubernetes-engine
-[optional-gce]: https://cloud.google.com/php/tutorials/bookshelf-on-compute-engine
-[optional-gce-code]: https://github.com/GoogleCloudPlatform/getting-started-php/tree/master/optional-compute-engine
+[getting-started]: http://cloud.google.com/php/getting-started
+[gae-standard]: http://cloud.google.com/php/getting-started/tutorial-app
+[gke]: https://cloud.google.com/php/tutorials/bookshelf-on-container-engine
+[gce]: https://cloud.google.com/php/tutorials/bookshelf-on-compute-engine
+[gae-flex]: http://cloud.google.com/php/getting-started/tutorial-app
 
