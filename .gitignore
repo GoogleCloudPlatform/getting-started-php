@@ -1,9 +1,3 @@
-**/vendor/
-**/build/
-.idea
-*~
-*.iml
-composer.phar
-**/config/settings.yml
-**/config/settings-e2e.yml
-.php_cs.cache
+**/vendor
+build/*
+composer.lock
