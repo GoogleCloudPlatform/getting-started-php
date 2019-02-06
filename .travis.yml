@@ -41,18 +41,13 @@ env:
     - CLOUDSDK_ACTIVE_CONFIG_NAME=getting-started-php
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
     - TEST_BUILD_DIR=${TRAVIS_BUILD_DIR}
-    - FIREWALL_NAME=travis-job-${TRAVIS_JOB_ID}
 
 install:
-- pecl install mongodb || echo "extension=mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- travis_retry testing/install_test_dependencies.sh
+- travis_retry test/bin/install_test_dependencies.sh
 
 before_script:
-- ./cloud_sql_proxy -instances=$MYSQL_CONNECTION_NAME=tcp:3307 &
-- ./cloud_sql_proxy -instances=$POSTGRES_CONNECTION_NAME=tcp:5433 &
+- ./cloud_sql_proxy -instances=$CLOUDSQL_CONNECTION_NAME=tcp:3306 &
 
 script:
-- testing/run_test_suite.sh
-
-after_script:
-- testing/test_cleanup.sh
+- php-cs-fixer fix --diff
+- php vendor/bin/phpunit

@@ -16,10 +16,20 @@
 set -ev
 
 MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source ${MYDIR}/variables.sh
+
+VARS=(
+    CLOUDSDK_ACTIVE_CONFIG_NAME
+    GOOGLE_PROJECT_ID
+    GOOGLE_STORAGE_BUCKET
+    CLOUDSQL_CONNECTION_NAME
+    CLOUDSQL_DATABASE_NAME
+    CLOUDSQL_USER
+    CLOUDSQL_PASSWORD
+    GOOGLE_CREDENTIALS_BASE64
+    TEST_BUILD_DIR
+)
 
 PREREQ="true"
-
 for v in "${VARS[@]}"; do
     if [ -z "${!v}" ]; then
         echo "Please set ${v} envvar."
@@ -37,19 +47,7 @@ if [ -n "$GH_TOKEN" ]; then
     composer config --global github-oauth.github.com ${GH_TOKEN};
 fi;
 
-# Run composer
-# Run tests for each directories.
-for STEP in "${STEPS[@]}"; do
-    pushd $STEP
-    composer install
-    if [ -f config/settings.yml.dist ]; then
-        cp config/settings.yml.dist config/settings.yml
-
-        # require mongo library, as this isn't included by default
-        composer require "mongodb/mongodb:1.0.4" --ignore-platform-reqs
-    fi;
-    popd
-done
+composer install
 
 cd "${TEST_BUILD_DIR}"
 
@@ -87,20 +85,7 @@ else
         "${GOOGLE_APPLICATION_CREDENTIALS}"
 fi
 
-# Create a firewall rule for mongodb
-IP=`curl https://ip-dot-cloud-dpes.appspot.com/`
-gcloud compute firewall-rules create ${FIREWALL_NAME} \
-    --allow tcp:27017 \
-    --source-ranges ${IP}/32 \
-    --target-tags mongodb \
-    --description "Allow mongodb access for ${FIREWALL_NAME}"
-
-gcloud compute firewall-rules create mongodb-e2e \
-    --allow tcp:27017 \
-    --source-tags bookshelf-e2e \
-    --target-tags mongodb \
-    --description "Allow mongodb access for e2e tests" || /bin/true
-
+# Download the Cloud SQL proxy
 wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
 mv cloud_sql_proxy.linux.amd64 cloud_sql_proxy
 chmod +x cloud_sql_proxy
