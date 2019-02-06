@@ -22,9 +22,9 @@ use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class DeployTest
+ * Class DeployGkeTest
  */
-class DeployTest extends TestCase
+class DeployGkeTest extends TestCase
 {
     use TestTrait;
     use AppEngineDeploymentTrait;

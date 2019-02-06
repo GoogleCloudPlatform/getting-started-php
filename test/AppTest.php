@@ -36,7 +36,7 @@ class AppTest extends WebTestCase
         return $app;
     }
 
-    public function testBookshelfModelMysql()
+    public function testCloudSql()
     {
         $this->assertInstanceOf(
             'Google\Cloud\Bookshelf\CloudSql',
