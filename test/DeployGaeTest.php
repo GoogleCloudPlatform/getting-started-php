@@ -41,20 +41,20 @@ class DeployGaeTest extends TestCase
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
 
         // update "app.yaml" for app engine config
-        $appYamlPath = __DIR__ . '/../' . 'gae_deployment/app.yaml';
+        $appYamlPath = __DIR__ . '/../gae_deployment/app.yaml';
         $appYaml = file_get_contents($appYamlPath);
         file_put_contents($tmpDir . '/app.yaml', str_replace(
             [
-                'CLOUDSQL_CONNECTION_NAME:',
-                'CLOUDSQL_DATABASE_NAME:',
-                'CLOUDSQL_USER:',
-                'CLOUDSQL_PASSWORD:',
+                'YOUR_CLOUDSQL_CONNECTION_NAME',
+                'YOUR_CLOUDSQL_DATABASE_NAME',
+                'YOUR_CLOUDSQL_USER',
+                'YOUR_CLOUDSQL_PASSWORD',
             ],
             [
-                'CLOUDSQL_CONNECTION_NAME: ' . $dbConn,
-                'CLOUDSQL_DATABASE_NAME: ' . $dbData,
-                'CLOUDSQL_USER: ' . $dbUser,
-                'CLOUDSQL_PASSWORD: ' . $dbPass,
+                $dbConn,
+                $dbData,
+                $dbUser,
+                $dbPass,
             ],
             $appYaml
         ));

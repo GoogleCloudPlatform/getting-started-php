@@ -14,6 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Populate these values to use the CloudSQL backend
+CLOUDSQL_CONNECTION_NAME="YOUR_CLOUDSQL_CONNECTION_NAME"
+CLOUDSQL_USER="YOUR_CLOUDSQL_USER"
+CLOUDSQL_PASSWORD="YOUR_CLOUDSQL_PASSWORD"
+CLOUDSQL_DATABASE_NAME="" # optional: defaults to "getting_started"
+CLOUDSQL_PORT=""          # optional: defaults to "3306"
+
 # [START all]
 set -e
 export HOME=/root
@@ -21,12 +28,7 @@ export HOME=/root
 # [START php]
 # Install PHP and dependencies from apt
 apt-get update
-apt-get install -y git nginx mongodb-clients php5 php5-fpm php5-mysql php5-dev php-pear pkg-config
-pecl install mongodb
-
-# Enable the MongoDB PHP extension
-echo "extension=mongodb.so" >> /etc/php5/mods-available/mongodb.ini
-php5enmod mongodb
+apt-get install -y git nginx php7.0 php7.0-fpm php7.0-mysql php7.0-dev php-pear pkg-config
 
 # Install Composer
 curl -sS https://getcomposer.org/installer | \
@@ -34,39 +36,37 @@ curl -sS https://getcomposer.org/installer | \
     --install-dir=/usr/local/bin \
     --filename=composer
 
-# Fetch the project ID from the Metadata server
-PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
-
 # Get the application source code
-git config --global credential.helper gcloud.sh
-git clone https://source.developers.google.com/p/$PROJECTID /opt/src -b master
-ln -s /opt/src/optional-compute-engine /opt/app
+gcloud source repos clone getting-started /opt/app
 
 # Run Composer
-composer install -d /opt/app --no-ansi --no-progress
+composer install -d /opt/app --no-dev --no-ansi --no-progress
 # [END php]
 
-# Decrypt the settings.yml file, if applicable
-pushd /opt/app/config
-if [-f settings.yml ]; then
-  gcloud kms decrypt --location=global --keyring=[YOUR_KEY_RING] --key=[YOUR_KEY_NAME] --plaintext-file=settings.yml --ciphertext-file=settings.yml.enc
-fi
-popd
+# [START cloud_sql]
+# Install the Cloud SQL proxy so our application can connect to Cloud SQL
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O /usr/local/bin/cloud_sql_proxy
+chmod +x /usr/local/bin/cloud_sql_proxy
 
-# [START project_config]
-# Fetch the application config file from the Metadata server and add it to the project
-curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/project-config" \
-  -H "Metadata-Flavor: Google" >> /opt/app/config/settings.yml
-# [END project_config]
+cloud_sql_proxy -instances=$CLOUDSQL_CONNECTION_NAME=tcp:3306 &
+# [END cloud_sql]
 
 # [START nginx]
 # Disable the default NGINX configuration
 rm /etc/nginx/sites-enabled/default
 
 # Enable our NGINX configuration
-cp /opt/app/gce/nginx/bookshelf.conf /etc/nginx/sites-available/bookshelf.conf
+cp /opt/app/gce_deployment/nginx/bookshelf.conf /etc/nginx/sites-available/bookshelf.conf
 ln -s /etc/nginx/sites-available/bookshelf.conf /etc/nginx/sites-enabled/bookshelf.conf
-cp /opt/app/gce/nginx/fastcgi_params /etc/nginx/fastcgi_params
+cp /opt/app/gce_deployment/nginx/fastcgi_params /etc/nginx/fastcgi_params
+
+# Replaces the variables inside fastcgi_env with configured variables above
+cp /opt/app/gce_deployment/nginx/fastcgi_env /etc/nginx/fastcgi_env
+sed -i -e "s/YOUR_CLOUDSQL_CONNECTION_NAME/$CLOUDSQL_CONNECTION_NAME/" /etc/nginx/fastcgi_env
+sed -i -e "s/YOUR_CLOUDSQL_USER/$CLOUDSQL_USER/" /etc/nginx/fastcgi_env
+sed -i -e "s/YOUR_CLOUDSQL_PASSWORD/$CLOUDSQL_PASSWORD/" /etc/nginx/fastcgi_env
+sed -i -e "s/YOUR_CLOUDSQL_DATABASE_NAME/$CLOUDSQL_DATABASE_NAME/" /etc/nginx/fastcgi_env
+sed -i -e "s/YOUR_CLOUDSQL_PORT/$CLOUDSQL_PORT/" /etc/nginx/fastcgi_env
 
 # Start NGINX
 systemctl restart nginx.service
@@ -77,9 +77,11 @@ systemctl restart nginx.service
 curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
 
 # Enable our Fluentd configuration
-cp /opt/app/gce/fluentd/bookshelf.conf /etc/google-fluentd/config.d/bookshelf.conf
+cp /opt/app/gce_deployment/fluentd/bookshelf.conf /etc/google-fluentd/config.d/bookshelf.conf
 
 # Start Fluentd
 service google-fluentd restart &
 # [END logging]
 # [END all]
+
+echo "Finished running startup-script.sh"

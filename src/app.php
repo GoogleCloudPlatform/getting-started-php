@@ -84,9 +84,9 @@ $app['bookshelf.storage'] = function ($app) {
 
 // determine the datamodel backend using the app configuration
 $app['bookshelf.db'] = function ($app) {
-    $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'bookshelf';
+    $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'getting_started';
     $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
-    $port = getenv('CLOUDSQL_PORT');
+    $port = getenv('CLOUDSQL_PORT') ?: '3306';
     if (getenv('GAE_INSTANCE')) {
         $dsn = CloudSql::getMysqlDsn($dbName, $connectionName);
     } else {
