@@ -27,8 +27,6 @@ use GuzzleHttp\Client;
  */
 trait DeploymentTrait
 {
-    use ExecuteCommandTrait;
-
     /** @var \GuzzleHttp\Client */
     private $client;
 
@@ -110,33 +108,5 @@ trait DeploymentTrait
     private static function getBaseUri()
     {
         throw new \Exception('This method must be implemented in your test');
-    }
-
-    private static function startGcloud($command, $args = [], $timeout = false)
-    {
-        $command = 'gcloud ' . $command;
-        foreach ($args as $key => $value) {
-            $command .= " $key $value";
-        }
-        return self::startProcess($command, $timeout);
-    }
-
-    private static function runGcloud($command, $args = [], $timeout = false)
-    {
-        $command = 'gcloud ' . $command;
-        foreach ($args as $key => $value) {
-            $command .= " $key $value";
-        }
-        return self::execute($command, $timeout);
-    }
-
-    private static function startProcess($cmd, $timeout = false)
-    {
-        $process = self::createProcess($cmd, $timeout);
-        $process->start();
-
-        foreach ($process as $type => $data) {
-            echo $data;
-        }
     }
 }

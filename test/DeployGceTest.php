@@ -18,6 +18,7 @@
 namespace Google\Cloud\Bookshelf;
 
 use Google\Cloud\TestUtils\DeploymentTrait;
+use Google\Cloud\TestUtils\ExecuteCommandTrait;
 use Google\Cloud\TestUtils\FileUtil;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
@@ -29,8 +30,9 @@ require_once __DIR__ . '/DeploymentTrait.php';
  */
 class DeployGceTest extends TestCase
 {
-    use TestTrait;
     use DeploymentTrait;
+    use ExecuteCommandTrait;
+    use TestTrait;
 
     private static $instanceName;
 
@@ -46,6 +48,7 @@ class DeployGceTest extends TestCase
         // Allow setting of the instance name for testing
         self::$instanceName = getenv('GOOGLE_INSTANCE_NAME')
             ?: 'getting-started-' . FileUtil::randomName(4);
+        self::$logger = new \Monolog\Logger('test');
     }
 
     private static function beforeDeploy()
@@ -83,35 +86,36 @@ class DeployGceTest extends TestCase
     private static function doDeploy()
     {
         // Create port 80 firewall rule if it doesn't exist
-        $output = self::runGcloud('compute firewall-rules list', [
-            '--filter' => '"name~\'default-allow-http-80\'"'
-        ]);
+        $output = self::execute('gcloud compute firewall-rules list --filter "name~\'default-allow-http-80\'"');
         if (!trim($output)) {
-            self::startGcloud('compute firewall-rules create default-allow-http-80', [
-                '--allow' => 'tcp:80',
-                '--source-ranges' => '0.0.0.0/0',
-                '--target-tags' => 'http-server',
-                '--description' => '"Allow port 80 access to http-server"',
-            ]);
+            self::execute('gcloud compute firewall-rules create default-allow-http-80'
+                . ' --allow tcp:80'
+                . ' --source-ranges 0.0.0.0/0'
+                . ' --target-tags http-server'
+                . ' --description "Allow port 80 access to http-server"'
+            );
         }
 
         // Create the instance
-        self::startGcloud(sprintf('compute instances create %s', self::$instanceName), [
-            '--image-family' => 'debian-9',
-            '--image-project' => 'debian-cloud',
-            '--machine-type' => 'g1-small',
-            '--scopes' => 'userinfo-email,cloud-platform',
-            '--metadata-from-file' => 'startup-script=startup-script.sh',
-            '--zone' => 'us-central1-f',
-            '--tags' => 'http-server',
-        ]);
+        self::execute(sprintf('gcloud compute instances create %s', self::$instanceName)
+            . ' --image-family debian-9'
+            . ' --image-project debian-cloud'
+            . ' --machine-type g1-small'
+            . ' --scopes userinfo-email,cloud-platform'
+            . ' --metadata-from-file startup-script=startup-script.sh'
+            . ' --zone us-central1-f'
+            . ' --tags http-server'
+        );
 
         // Ensure the instance is deployed and the startup script completed before continuing
         $startTime = time();
         $timeoutSeconds = 600;
-        $statusCmd = sprintf('compute instances get-serial-port-output %s', self::$instanceName);
+        $status = self::createProcess(sprintf(
+            'gcloud compute instances get-serial-port-output %s --zone us-central1-f',
+            self::$instanceName
+        ));
         do {
-            $output = trim(self::runGcloud($statusCmd, ['--zone' => 'us-central1-f']));
+            $output = trim($status->run());
             if (time() - $startTime > $timeoutSeconds) {
                 echo $output;
                 throw new \Exception("Startup script exceeded timeout of $timeoutSeconds seconds");
@@ -125,11 +129,7 @@ class DeployGceTest extends TestCase
     {
         // Delete the instance
         $timeout = 300;
-        self::startGcloud(
-            sprintf('compute instances delete -q %s', self::$instanceName),
-            [],
-            $timeout
-        );
+        self::execute(sprintf('gcloud compute instances delete -q %s', self::$instanceName), $timeout);
     }
 
     private static function getBaseUri()

@@ -1,0 +1,28 @@
+runtime: php
+env: flex
+
+## Populate the variable below to connect to Cloud SQL
+beta_settings:
+    cloud_sql_instances: "YOUR_CLOUDSQL_CONNECTION_NAME"
+
+env_variables:
+    # Populate these to use the CloudSQL backend
+    CLOUDSQL_CONNECTION_NAME: "YOUR_CLOUDSQL_CONNECTION_NAME"
+    CLOUDSQL_USER:            "YOUR_CLOUDSQL_USER"
+    CLOUDSQL_PASSWORD:        "YOUR_CLOUDSQL_PASSWORD"
+    CLOUDSQL_DATABASE_NAME:   "" # optional: defaults to "getting_started"
+    CLOUDSQL_PORT:            "" # optional: defaults to "3306"
+
+runtime_config:
+    document_root: .
+
+# This sample incurs costs to run on the App Engine flexible environment.
+# The settings below are to reduce costs during testing and are not appropriate
+# for production use. For more information, see:
+# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
+manual_scaling:
+    instances: 1
+resources:
+    cpu: 1
+    memory_gb: 0.5
+    disk_size_gb: 10

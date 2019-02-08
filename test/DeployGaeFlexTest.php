@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2019 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,15 @@ namespace Google\Cloud\GettingStarted;
 
 use Google\Cloud\TestUtils\FileUtil;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+
+;
 use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class DeployGaeTest
+ * Class DeployGaeFlexTest
  */
-class DeployGaeTest extends TestCase
+class DeployGaeFlexTest extends TestCase
 {
     use TestTrait;
     use AppEngineDeploymentTrait;
@@ -40,8 +42,7 @@ class DeployGaeTest extends TestCase
         $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
 
         // update "app.yaml" for app engine config
-        $appYamlPath = __DIR__ . '/../gae_deployment/app.yaml';
-        $appYaml = file_get_contents($appYamlPath);
+        $appYamlPath = __DIR__ . '/../gae_flex_deployment/app.yaml';
         file_put_contents($tmpDir . '/app.yaml', str_replace(
             [
                 'YOUR_CLOUDSQL_CONNECTION_NAME',
@@ -53,7 +54,7 @@ class DeployGaeTest extends TestCase
                 $dbUser,
                 $dbPass,
             ],
-            $appYaml
+            file_get_contents($appYamlPath)
         ));
 
         // set the directory in gcloud
