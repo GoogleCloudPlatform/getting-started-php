@@ -18,8 +18,10 @@
 namespace Google\Cloud\Bookshelf;
 
 use Google\Cloud\TestUtils\TestTrait;
-use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
+use Google\Cloud\TestUtils\DeploymentTrait;
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/DeploymentTrait.php';
 
 /**
  * Class DeployGkeTest
@@ -27,41 +29,26 @@ use PHPUnit\Framework\TestCase;
 class DeployGkeTest extends TestCase
 {
     use TestTrait;
-    use AppEngineDeploymentTrait;
+    use DeploymentTrait;
 
-    private static function beforeDeploy()
+    public function testIndex()
     {
-        // set "app-e2e.yaml" for app engine config
-        // set cloudsql connection name
-        $appYamlPath = __DIR__ . '/../app-e2e.yaml';
-        $appYaml = file_get_contents(__DIR__ . '/../app.yaml');
-        file_put_contents($appYamlPath, str_replace(
-            [
-                'CLOUDSQL_CONNECTION_NAME:',
-                'CLOUDSQL_DATABASE_NAME:',
-                'CLOUDSQL_USER:',
-                'CLOUDSQL_PASSWORD:',
-            ],
-            [
-                'CLOUDSQL_CONNECTION_NAME: ' . self::requireEnv('CLOUDSQL_CONNECTION_NAME'),
-                'CLOUDSQL_DATABASE_NAME: ' . self::requireEnv('CLOUDSQL_DATABASE_NAME'),
-                'CLOUDSQL_USER: ' . self::requireEnv('CLOUDSQL_USER'),
-                'CLOUDSQL_PASSWORD: ' . self::requireEnv('CLOUDSQL_PASSWORD'),
-            ],
-            $appYaml
-        ));
+        self::markTestSkipped('Not implemented yet');
+
+        $resp = $this->client->get('/books/');
+        $this->assertEquals('200', $resp->getStatusCode());
+        $this->assertContains('<h3>Books</h3>', (string) $resp->getBody());
     }
 
     private static function doDeploy()
     {
-        // deploy using "app-e2e.yaml"
-        return self::$gcloudWrapper->deploy('app-e2e.yaml');
     }
 
-    public function testIndex()
+    private static function doDelete()
     {
-        $resp = $this->client->get('/books/');
-        $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertContains('<h3>Books</h3>', (string) $resp->getBody());
+    }
+
+    private static function getBaseUri()
+    {
     }
 }

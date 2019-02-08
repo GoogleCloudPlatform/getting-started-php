@@ -85,17 +85,6 @@ class DeployGceTest extends TestCase
 
     private static function doDeploy()
     {
-        // Create port 80 firewall rule if it doesn't exist
-        $output = self::execute('gcloud compute firewall-rules list --filter "name~\'default-allow-http-80\'"');
-        if (!trim($output)) {
-            self::execute('gcloud compute firewall-rules create default-allow-http-80'
-                . ' --allow tcp:80'
-                . ' --source-ranges 0.0.0.0/0'
-                . ' --target-tags http-server'
-                . ' --description "Allow port 80 access to http-server"'
-            );
-        }
-
         // Create the instance
         self::execute(sprintf('gcloud compute instances create %s', self::$instanceName)
             . ' --image-family debian-9'
@@ -107,6 +96,17 @@ class DeployGceTest extends TestCase
             . ' --tags http-server'
         );
 
+        // Create port 80 firewall rule if it doesn't exist
+        $output = self::execute('gcloud compute firewall-rules list --filter "name~\'default-allow-http-80\'"');
+        if (!trim($output)) {
+            self::execute('gcloud compute firewall-rules create default-allow-http-80'
+                . ' --allow tcp:80'
+                . ' --source-ranges 0.0.0.0/0'
+                . ' --target-tags http-server'
+                . ' --description "Allow port 80 access to http-server"'
+            );
+        }
+
         // Ensure the instance is deployed and the startup script completed before continuing
         $startTime = time();
         $timeoutSeconds = 600;
@@ -115,7 +115,8 @@ class DeployGceTest extends TestCase
             self::$instanceName
         ));
         do {
-            $output = trim($status->run());
+            $status->run();
+            $output = trim($status->getOutput());
             if (time() - $startTime > $timeoutSeconds) {
                 echo $output;
                 throw new \Exception("Startup script exceeded timeout of $timeoutSeconds seconds");
