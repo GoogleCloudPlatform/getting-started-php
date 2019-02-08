@@ -1,7 +1,7 @@
 runtime: php72
 
 env_variables:
-    # populate these to use the CloudSQL backend
+    # Populate these to use the CloudSQL backend
     CLOUDSQL_CONNECTION_NAME: "YOUR_CLOUDSQL_CONNECTION_NAME"
     CLOUDSQL_USER:            "YOUR_CLOUDSQL_USER"
     CLOUDSQL_PASSWORD:        "YOUR_CLOUDSQL_PASSWORD"
