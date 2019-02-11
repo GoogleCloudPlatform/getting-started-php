@@ -39,7 +39,10 @@ class DeployGaeFlexTest extends TestCase
         $dbUser = self::requireEnv('CLOUDSQL_USER');
         $dbPass = self::requireEnv('CLOUDSQL_PASSWORD');
 
-        $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
+        $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
+        mkdir($tmpDir);
+        echo "Copying project dir to $tmpDir\n";
+        passthru(sprintf('cp -R %s %s', __DIR__ . '/..', $tmpDir));
 
         // update "app.yaml" for app engine config
         $appYamlPath = __DIR__ . '/../gae_flex_deployment/app.yaml';
