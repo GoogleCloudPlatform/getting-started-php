@@ -68,7 +68,7 @@ class DeployGkeTest extends TestCase
         // Copy the project dir
         $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
         mkdir($tmpDir);
-        echo "Copying project dir to $tmpDir\n";
+        echo "Copying project to $tmpDir\n";
         passthru(sprintf('cp -R %s %s', __DIR__ . '/..', $tmpDir));
         copy(self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS'), $tmpDir . '/credentials.json');
 
