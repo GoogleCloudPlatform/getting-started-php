@@ -221,3 +221,7 @@ $app->get('/logout', function () use ($app) {
 $app->get('/_ah/health', function (Request $request) use ($app) {
     return 'OK';
 });
+
+$app->get('/exception', function (Request $request) use ($app) {
+    throw new \Exception('Test');
+});

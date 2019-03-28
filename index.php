@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+if (!getenv('GOOGLE_CLOUD_PROJECT')) {
+    throw new Exception('Missing GOOGLE_CLOUD_PROJECT environment variable');
+}
+
 // [START index_php]
 require_once __DIR__ . '/vendor/autoload.php';
 
