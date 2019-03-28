@@ -20,7 +20,7 @@
  * Create a new Silex Application with Twig.  Configure it for debugging.
  * Follows Silex Skeleton pattern.
  */
-use Google\Cloud\Bookshelf\CloudSql;
+use Google\Cloud\Bookshelf\CloudFirestore;
 use Google\Cloud\Bookshelf\CloudStorage;
 use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
@@ -84,19 +84,9 @@ $app['bookshelf.storage'] = function ($app) {
 
 // determine the datamodel backend using the app configuration
 $app['bookshelf.db'] = function ($app) {
-    $dbName = getenv('CLOUDSQL_DATABASE_NAME') ?: 'getting_started';
-    $connectionName = getenv('CLOUDSQL_CONNECTION_NAME');
-    $port = getenv('CLOUDSQL_PORT') ?: '3306';
-    if (getenv('GAE_INSTANCE')) {
-        $dsn = CloudSql::getMysqlDsn($dbName, $connectionName);
-    } else {
-        $dsn = CloudSql::getMysqlDsnForProxy($dbName, $port);
-    }
-    return new CloudSql(
-        $dsn,
-        getenv('CLOUDSQL_USER'),
-        getenv('CLOUDSQL_PASSWORD')
-    );
+    $projectId = getenv('GOOGLE_CLOUD_PROJECT');
+    $collectionName = getenv('CLOUDSQL_COLLECTION_NAME') ?: 'books';
+    return new CloudFirestore($projectId, $collectionName);
 };
 
 // Turn on debugging
@@ -104,5 +94,11 @@ $app['debug'] = true;
 
 // add service parameters
 $app['bookshelf.page_size'] = 10;
+
+// Register stackdriver error handling
+Google\Cloud\ErrorReporting\Bootstrap::init();
+$app->error(function(\Exception $e, $code ) use ( $app ) {
+    Google\Cloud\ErrorReporting\Bootstrap::exceptionHandler($e);
+});
 
 return $app;
