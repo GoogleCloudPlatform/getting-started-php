@@ -40,40 +40,11 @@ $app->register(new TwigServiceProvider(), array(
 // register the url generator
 $app->register(new UrlGeneratorServiceProvider);
 
-// register the session handler
-// [START session]
-$app->register(new SessionServiceProvider);
-// fall back on PHP's "session.save_handler" for session storage
-$app['session.storage.handler'] = null;
-$app['user'] = function ($app) {
-    /** @var Symfony\Component\HttpFoundation\Session\Session $session */
-    $session = $app['session'];
-
-    return $session->has('user') ? $session->get('user') : null;
-};
-// [END session]
-
 // [START logging]
 $app->register(new Silex\Provider\MonologServiceProvider(), [
     'monolog.handler' => new Monolog\Handler\ErrorLogHandler(),
 ]);
 // [END logging]
-
-// create the google authorization client
-// [START google_client]
-$app['google_client'] = function ($app) {
-    /** @var Symfony\Component\Routing\Generator\UrlGenerator $urlGen */
-    $urlGen = $app['url_generator'];
-    $redirectUri = $urlGen->generate('login_callback', [], $urlGen::ABSOLUTE_URL);
-    return new Google_Client([
-        'client_id'     => getenv('GOOGLE_CLIENT_ID'),
-        'client_secret' => getenv('GOOGLE_CLIENT_SECRET'),
-        'redirect_uri'  => $redirectUri,
-    ]);
-    $client->setLogger($app['monolog']);
-    return $client;
-};
-// [END google_client]
 
 // Cloud Storage
 $app['bookshelf.storage'] = function ($app) {
