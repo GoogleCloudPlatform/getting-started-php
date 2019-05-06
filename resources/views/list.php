@@ -1,4 +1,5 @@
-{#
+<?php
+#
 # Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#}
-
-{% extends "base.html.twig" %}
-
-{% block content %}
+ob_start()
+?>
 
 <h3>Books</h3>
 <a href="/books/add" class="btn btn-success btn-sm">
@@ -24,36 +22,33 @@
   Add book
 </a>
 
-{# [START book_list] #}
-{% for book in books %}
+<?php // [START book_list] ?>
+<?php foreach ($books as $i => $book): ?>
 <div class="media">
-  <a href="/books/{{book.id}}">
-    {# [START book_image] #}
-    <div class="media-left">
-      {% if book.image_url %}
-        <img src="{{book.image_url}}">
-      {% else %}
-        <img src="http://placekitten.com/g/128/192">
-      {% endif %}
-    </div>
-    {# [END book_image] #}
+  <a href="/books/<?= $book->id() ?>">
+    <?php // [START book_image] ?>
+    <?php if ($imgUrl = $book->get('image_url')): ?>
+      <div class="media-left">
+        <img src="<?= $imgUrl ?>">
+      </div>
+    <?php endif ?>
+    <?php // [END book_image] ?>
     <div class="media-body">
-      <h4>{{book.title}}</h4>
-      <p>{{book.author}}</p>
+      <h4><?= $book->get('title') ?></h4>
+      <p><?= $book->get('author') ?></p>
     </div>
   </a>
 </div>
-{% else %}
+<?php endforeach ?>
+<?php if (!isset($i)): ?>
 <p>No books found</p>
-{% endfor %}
-{# [END book_list] #}
-
-{% if next_page_token %}
+<?php elseif ($i + 1 == $pageSize): ?>
 <nav>
   <ul class="pager">
-    <li><a href="?page_token={{next_page_token}}">More</a></li>
+    <li><a href="?page_token=<?= $book->id() ?>">More</a></li>
   </ul>
 </nav>
-{% endif %}
+<?php endif ?>
+<?php // [END book_list] ?>
 
-{% endblock %}
+<?= view('base', ['content' => ob_get_clean() ]) ?>

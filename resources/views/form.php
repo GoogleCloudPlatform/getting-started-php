@@ -1,4 +1,5 @@
-{#
+<?php
+#
 # Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,37 +13,34 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#}
+ob_start() ?>
 
-{# [START book_form] #}
-{% extends "base.html.twig" %}
-
-{% block content %}
-<h3>{{action}} book</h3>
+<?php // [START book_form] ?>
+<h3><?= $action ?> book</h3>
 
 <form method="POST" enctype="multipart/form-data">
 
   <div class="form-group">
     <label for="title">Title</label>
-    <input type="text" name="title" id="title" value="{{book.title}}" class="form-control"/>
+    <input type="text" name="title" id="title" value="<?= $book['title'] ?? '' ?>" class="form-control"/>
   </div>
 
   <div class="form-group">
     <label for="author">Author</label>
-    <input type="text" name="author" id="author" value="{{book.author}}" class="form-control"/>
+    <input type="text" name="author" id="author" value="<?= $book['author'] ?? '' ?>" class="form-control"/>
   </div>
 
   <div class="form-group">
     <label for="published_date">Date Published</label>
-    <input type="text" name="published_date" id="published_date" value="{{book.published_date}}" class="form-control"/>
+    <input type="text" name="published_date" id="published_date" value="<?= $book['published_date'] ?? '' ?>" class="form-control"/>
   </div>
 
   <div class="form-group">
     <label for="description">Description</label>
-    <textarea name="description" id="description" class="form-control">{{book.description}}</textarea>
+    <textarea name="description" id="description" class="form-control"><?= $book['description'] ?? '' ?></textarea>
   </div>
 
-  {# [START book_form_image] #}
+  <?php // [START book_form_image] ?>
   <div class="form-group">
     <label for="image">Cover Image</label>
     <input type="file" name="image" id="image" class="form-control"/>
@@ -50,12 +48,12 @@
 
   <div class="form-group hidden">
     <label for="image_url">Cover Image URL</label>
-    <input type="text" name="image_url" id="image_url" value="{{book.image_url}}" class="form-control"/>
+    <input type="text" name="image_url" id="image_url" value="<?= $book['image_url'] ?? '' ?>" class="form-control"/>
   </div>
-  {# [END book_form_image] #}
+  <?php // [END book_form_image] ?>
 
   <button id="submit" type="submit" class="btn btn-success">Save</button>
 </form>
+<?php // [END book_form] ?>
 
-{% endblock %}
-{# [END book_form] #}
+<?= view('base', ['content' => ob_get_clean() ]) ?>

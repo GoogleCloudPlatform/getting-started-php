@@ -1,4 +1,4 @@
-{#
+<?php
 # Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,16 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#}
-
-{% extends "base.html.twig" %}
-
-{% block content %}
+ob_start() ?>
 
 <h3>Book</h3>
-<form method="post" action="/books/{{book.id}}/delete" id="deleteForm">
+<form method="post" action="/books/<?= $book->id() ?>/delete" id="deleteForm">
   <div class="btn-group">
-    <a href="/books/{{book.id}}/edit" class="btn btn-primary btn-sm">
+    <a href="/books/<?= $book->id() ?>/edit" class="btn btn-primary btn-sm">
       <i class="glyphicon glyphicon-edit"></i>
       Edit book
     </a>
@@ -32,23 +28,24 @@
   </div>
 </form>
 
-{# [START book_details] #}
+<?php // [START book_details] ?>
 <div class="media">
-  {# [START book_image] #}
+  <?php // [START book_image] ?>
+  <?php if ($imgUrl = $book->get('image_url')): ?>
   <div class="media-left">
-    <img class="book-image"
-         src="{{ book.image_url ?: 'http://placekitten.com/g/128/192' }}">
+    <img class="book-image" src="<?= $imgUrl ?>" />
   </div>
-  {# [END book_image] #}
+  <?php endif ?>
+  <?php // [END book_image] ?>
   <div class="media-body">
     <h4 class="book-title">
-      {{book.title}}
-      <small>{{book.published_date}}</small>
+      <?= $book->get('title') ?>
+      <small><?= $book->get('published_date') ?></small>
     </h4>
-    <h5 class="book-author">By {{book.author|default('Unknown', True)}}</h5>
-    <p class="book-description">{{book.description}}</p>
+    <h5 class="book-author">By <?= $book->get('author') ?: 'Unknown' ?></h5>
+    <p class="book-description"><?= $book->get('description') ?></p>
   </div>
 </div>
-{# [END book_details] #}
+<?php // [END book_details] ?>
 
-{% endblock %}
+<?= view('base', ['content' => ob_get_clean() ]) ?>

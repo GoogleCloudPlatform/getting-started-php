@@ -1,4 +1,5 @@
-{#
+<?php
+#
 # Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#}
+# ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -28,29 +30,12 @@
           <div class="navbar-brand">Bookshelf</div>
         </div>
         <ul class="nav navbar-nav">
-          <li><a href="/books">Books</a></li>
+          <li><a href="/">Books</a></li>
         </ul>
-        <p class="navbar-text navbar-right">
-          {# [START login] #}
-          {% if app.user %}
-            {% if app.user.picture %}
-              <img src="{{ app.user.picture }}" class="img-circle" width="24" alt="Photo" />
-            {% endif %}
-            <span>
-              {{ app.user.name }} &nbsp;
-              <a href="/logout">(logout)</a>
-            </span>
-          {% else %}
-            <a href="/login">Login</a>
-          {% endif %}
-          {# [END login] #}
-        </p>
-
       </div>
     </div>
     <div class="container">
-      {% block content %}{% endblock %}
+      <?= $content ?>
     </div>
-    {{user}}
   </body>
 </html>
