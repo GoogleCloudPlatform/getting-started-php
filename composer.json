@@ -1,7 +1,6 @@
 {
   "require": {
     "laravel/lumen-framework": "5.8.*",
-    "vlucas/phpdotenv": "^3.3",
     "monolog/monolog": "^1.24",
     "google/cloud-storage": "^1.11",
     "google/cloud-firestore": "^1.2",
