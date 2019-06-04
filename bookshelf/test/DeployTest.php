@@ -23,41 +23,24 @@ use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class DeployGaeTest
+ * Class DeployTest
  */
-class DeployGaeTest extends TestCase
+class DeployTest extends TestCase
 {
     use TestTrait;
     use AppEngineDeploymentTrait;
 
     private static function beforeDeploy()
     {
-        // ensure we have the environment variables we need before doing anything
-        $dbConn = self::requireEnv('CLOUDSQL_CONNECTION_NAME');
-        $dbUser = self::requireEnv('CLOUDSQL_USER');
-        $dbPass = self::requireEnv('CLOUDSQL_PASSWORD');
-
         $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
         mkdir($tmpDir);
         echo "Copying project dir to $tmpDir\n";
         passthru(sprintf('cp -R %s %s', __DIR__ . '/..', $tmpDir));
 
         // update "app.yaml" for app engine config
-        $appYamlPath = __DIR__ . '/../gae_deployment/app.yaml';
+        $appYamlPath = __DIR__ . '/../app.yaml';
         $appYaml = file_get_contents($appYamlPath);
-        file_put_contents($tmpDir . '/app.yaml', str_replace(
-            [
-                'YOUR_CLOUDSQL_CONNECTION_NAME',
-                'YOUR_CLOUDSQL_USER',
-                'YOUR_CLOUDSQL_PASSWORD',
-            ],
-            [
-                $dbConn,
-                $dbUser,
-                $dbPass,
-            ],
-            $appYaml
-        ));
+        file_put_contents($tmpDir . '/app.yaml', $appYaml);
 
         // set the directory in gcloud
         self::$gcloudWrapper->setDir($tmpDir);

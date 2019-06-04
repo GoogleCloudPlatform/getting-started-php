@@ -7,16 +7,17 @@ use Google\Cloud\Storage\StorageClient;
 
 $projectId = getenv('GCLOUD_PROJECT');
 
-// Create Firestore client
+// Instantiate Firestore client
 $firestore = new FirestoreClient([
     'projectId' => $projectId,
 ]);
 
-// Create Storage client
+// Instantiate Storage client
 $storage = new StorageClient([
     'projectId' => $projectId,
 ]);
-$gcsBucket = $storage->bucket($projectId . '.appspot.com');
+$bucketId = getenv('CLOUD_STORAGE_BUCKET') ?: ($projectId . '.appspot.com');
+$gcsBucket = $storage->bucket($bucketId);
 
 /*
 |--------------------------------------------------------------------------

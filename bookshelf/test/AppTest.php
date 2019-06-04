@@ -14,27 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace Google\Cloud\Bookshelf;
 
-use Google\Cloud\TestUtils\TestTrait;
-use PHPUnit\Framework\TestCase;
+use Silex\WebTestCase;
 
-class CloudStorageTest extends TestCase
+/**
+ * Test for application controllers
+ */
+class AppTest extends WebTestCase
 {
-    use TestTrait;
-
-    public function testOne()
+    /**
+     * Creates the application.
+     *
+     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+     */
+    public function createApplication()
     {
-        $bucketName = self::$projectId . '.appspot.com';
-        $storage = new CloudStorage(self::$projectId, $bucketName);
-        $url = $storage->storeFile(__DIR__ . '/data/CatHat.jpg', 'image/jpg');
-        try {
-            $this->assertStringStartsWith(
-                "https://www.googleapis.com/download/storage/v1/b/$bucketName/o/",
-                $url
-            );
-        } finally {  // clean up
-            $storage->deleteFile($url);
-        }
+        $app = require __DIR__ . '/../src/app.php';
+
+        return $app;
     }
 }

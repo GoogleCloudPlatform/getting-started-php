@@ -1,9 +1,1 @@
-**/vendor
-/vendor
-/.idea
-Homestead.json
-Homestead.yaml
-.env
-composer.lock
-.gcloudignore
 .php_cs.cache

@@ -1,5 +1,5 @@
 runtime: php72
 
 env_variables:
-    # Populate these to use the CloudSQL backend
+    # Optionally set the Cloud Storage bucket name
     CLOUD_STORAGE_BUCKET: ""

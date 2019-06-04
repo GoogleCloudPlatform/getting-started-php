@@ -21,10 +21,6 @@ VARS=(
     CLOUDSDK_ACTIVE_CONFIG_NAME
     GOOGLE_PROJECT_ID
     GOOGLE_STORAGE_BUCKET
-    CLOUDSQL_CONNECTION_NAME
-    CLOUDSQL_DATABASE_NAME
-    CLOUDSQL_USER
-    CLOUDSQL_PASSWORD
     GOOGLE_CREDENTIALS_BASE64
     TEST_BUILD_DIR
 )
@@ -46,8 +42,6 @@ fi
 if [ -n "$GH_TOKEN" ]; then
     composer config --global github-oauth.github.com ${GH_TOKEN};
 fi;
-
-composer install
 
 cd "${TEST_BUILD_DIR}"
 
@@ -84,8 +78,3 @@ else
     gcloud auth activate-service-account --key-file \
         "${GOOGLE_APPLICATION_CREDENTIALS}"
 fi
-
-# Download the Cloud SQL proxy
-wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
-mv cloud_sql_proxy.linux.amd64 cloud_sql_proxy
-chmod +x cloud_sql_proxy
