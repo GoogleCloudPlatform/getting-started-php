@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Google\Cloud\Firestore\FirestoreClient;
+# [START cloud_storage_use]
 use Google\Cloud\Storage\StorageClient;
+# [END cloud_storage_use]
 
 $projectId = getenv('GCLOUD_PROJECT');
 
@@ -12,12 +14,14 @@ $firestore = new FirestoreClient([
     'projectId' => $projectId,
 ]);
 
-// Instantiate Storage client
+# [START cloud_storage_bucket]
+// Use the client library to call Cloud Storage
 $storage = new StorageClient([
     'projectId' => $projectId,
 ]);
-$bucketId = getenv('CLOUD_STORAGE_BUCKET') ?: ($projectId . '.appspot.com');
+$bucketId = $projectId . '.appspot.com';
 $gcsBucket = $storage->bucket($bucketId);
+# [END cloud_storage_bucket]
 
 /*
 |--------------------------------------------------------------------------

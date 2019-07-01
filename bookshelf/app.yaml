@@ -1,5 +1,1 @@
 runtime: php72
-
-env_variables:
-    # Optionally set the Cloud Storage bucket name
-    CLOUD_STORAGE_BUCKET: ""
