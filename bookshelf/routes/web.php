@@ -2,10 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+# [START firestore_client]
 use Google\Cloud\Firestore\FirestoreClient;
-# [START cloud_storage_use]
+# [END firestore_client]
+# [START cloud_storage_client]
 use Google\Cloud\Storage\StorageClient;
-# [END cloud_storage_use]
+# [END cloud_storage_client]
 
 $projectId = getenv('GCLOUD_PROJECT');
 
@@ -14,14 +16,14 @@ $firestore = new FirestoreClient([
     'projectId' => $projectId,
 ]);
 
-# [START cloud_storage_bucket]
+# [START cloud_storage_client]
 // Use the client library to call Cloud Storage
 $storage = new StorageClient([
     'projectId' => $projectId,
 ]);
 $bucketId = $projectId . '.appspot.com';
 $gcsBucket = $storage->bucket($bucketId);
-# [END cloud_storage_bucket]
+# [END cloud_storage_client]
 
 /*
 |--------------------------------------------------------------------------
@@ -80,8 +82,14 @@ $router->post('/books/add', function (Request $request) use ($firestore, $gcsBuc
 
 // [START show]
 $router->get('/books/{id}', function ($id) use ($firestore) {
+    # [START firestore_client]
+    // Use the client library to call Firestore
+    $firestore = new FirestoreClient([
+        'projectId' => $projectId,
+    ]);
     $bookRef = $firestore->collection('books')->document($id);
     $snapshot = $bookRef->snapshot();
+    # [END firestore_client]
 
     if (!$snapshot->exists()) {
         return new Response('', Response::HTTP_NOT_FOUND);
