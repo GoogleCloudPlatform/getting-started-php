@@ -2,22 +2,20 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-# [START firestore_client]
-use Google\Cloud\Firestore\FirestoreClient;
-# [END firestore_client]
-# [START cloud_storage_client]
-use Google\Cloud\Storage\StorageClient;
-# [END cloud_storage_client]
 
 $projectId = getenv('GCLOUD_PROJECT');
 
-// Instantiate Firestore client
+# [START firestore_client]
+// Use the client library to call Firestore
+use Google\Cloud\Firestore\FirestoreClient;
 $firestore = new FirestoreClient([
     'projectId' => $projectId,
 ]);
+# [END firestore_client]
 
 # [START cloud_storage_client]
 // Use the client library to call Cloud Storage
+use Google\Cloud\Storage\StorageClient;
 $storage = new StorageClient([
     'projectId' => $projectId,
 ]);
@@ -81,15 +79,11 @@ $router->post('/books/add', function (Request $request) use ($firestore, $gcsBuc
 // [END add]
 
 // [START show]
-$router->get('/books/{id}', function ($id) use ($firestore) {
-    # [START firestore_client]
-    // Use the client library to call Firestore
-    $firestore = new FirestoreClient([
-        'projectId' => $projectId,
-    ]);
-    $bookRef = $firestore->collection('books')->document($id);
+$router->get('/books/{bookId}', function ($bookId) use ($firestore) {
+    # [START firestore_client_get_book]
+    $bookRef = $firestore->collection('books')->document($bookId);
     $snapshot = $bookRef->snapshot();
-    # [END firestore_client]
+    # [END firestore_client_get_book]
 
     if (!$snapshot->exists()) {
         return new Response('', Response::HTTP_NOT_FOUND);
@@ -100,8 +94,8 @@ $router->get('/books/{id}', function ($id) use ($firestore) {
 // [END show]
 
 // [START edit]
-$router->get('/books/{id}/edit', function ($id) use ($firestore) {
-    $bookRef = $firestore->collection('books')->document($id);
+$router->get('/books/{bookId}/edit', function ($bookId) use ($firestore) {
+    $bookRef = $firestore->collection('books')->document($bookId);
     $snapshot = $bookRef->snapshot();
 
     if (!$snapshot->exists()) {
@@ -114,8 +108,8 @@ $router->get('/books/{id}/edit', function ($id) use ($firestore) {
     ]);
 });
 
-$router->post('/books/{id}/edit', function (Request $request, $id) use ($firestore, $gcsBucket) {
-    $bookRef = $firestore->collection('books')->document($id);
+$router->post('/books/{bookId}/edit', function (Request $request, $bookId) use ($firestore, $gcsBucket) {
+    $bookRef = $firestore->collection('books')->document($bookId);
     $snapshot = $bookRef->snapshot();
 
     if (!$snapshot->exists()) {
@@ -124,7 +118,7 @@ $router->post('/books/{id}/edit', function (Request $request, $id) use ($firesto
 
     // Get book data from the request object
     $bookData = $request->request->all();
-    $bookData['id'] = $id;
+    $bookData['id'] = $bookId;
 
     // [START add_image]
     $files = $request->files;
@@ -146,7 +140,7 @@ $router->post('/books/{id}/edit', function (Request $request, $id) use ($firesto
     }
 
     if ($bookRef->update($updateData)) {
-        return redirect("/books/$id");
+        return redirect("/books/$bookId");
     }
 
     return new Response('Could not update book');
@@ -154,8 +148,8 @@ $router->post('/books/{id}/edit', function (Request $request, $id) use ($firesto
 // [END edit]
 
 // [START delete]
-$router->post('/books/{id}/delete', function ($id) use ($firestore, $gcsBucket) {
-    $bookRef = $firestore->collection('books')->document($id);
+$router->post('/books/{bookId}/delete', function ($bookId) use ($firestore, $gcsBucket) {
+    $bookRef = $firestore->collection('books')->document($bookId);
     $snapshot = $bookRef->snapshot();
 
     if (!$snapshot->exists()) {
