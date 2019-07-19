@@ -27,9 +27,9 @@ ob_start()
 <div class="media">
   <a href="/books/<?= $book->id() ?>">
     <?php // [START book_image] ?>
-    <?php if ($imgUrl = $book->get('image_url')): ?>
+    <?php if (!empty($book['image_url'])): ?>
       <div class="media-left">
-        <img src="<?= $imgUrl ?>">
+        <img src="<?= $book['image_url'] ?>">
       </div>
     <?php endif ?>
     <?php // [END book_image] ?>

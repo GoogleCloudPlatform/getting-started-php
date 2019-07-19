@@ -87,4 +87,9 @@ $app->router->group([
 |
 */
 
+// for testing
+if (getenv('PHPUNIT_TESTS') === '1') {
+    return $app;
+}
+
 $app->run();

@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-$projectId = getenv('GCLOUD_PROJECT');
+$projectId = getenv('GOOGLE_CLOUD_PROJECT');
+$collectionName = getenv('FIRESTORE_COLLECTION') ?: 'books';
 
 # [START firestore_client]
 // Use the client library to call Firestore
@@ -11,6 +12,7 @@ use Google\Cloud\Firestore\FirestoreClient;
 $firestore = new FirestoreClient([
     'projectId' => $projectId,
 ]);
+$collection =  $firestore->collection($collectionName);
 # [END firestore_client]
 
 # [START cloud_storage_client]
@@ -34,12 +36,12 @@ $gcsBucket = $storage->bucket($bucketId);
 |
 */
 
-$router->get('/', function (Request $request) use ($firestore) {
-    $pageSize = 10;
-    $collection = $firestore->collection('books');
-    $query = $collection->limit($pageSize);
+$router->get('/', function (Request $request) use ($collection) {
+    $pageSize = getenv('BOOKSHELF_PAGE_SIZE') ?: 10;
+    $query = $collection->limit($pageSize)->orderBy('title');
     if ($token = $request->query->get('page_token')) {
-        $query = $query->startAfter($cursorDoc);
+        $lastBook = $collection->document($token)->snapshot();
+        $query = $query->startAfter($lastBook);
     }
 
     return view('list', [
@@ -57,7 +59,7 @@ $router->get('/books/add', function () {
     ]);
 });
 
-$router->post('/books/add', function (Request $request) use ($firestore, $gcsBucket) {
+$router->post('/books/add', function (Request $request) use ($collection, $gcsBucket) {
     $files = $request->files;
     $bookData = $request->request->all();
     $image = $files->get('image');
@@ -71,7 +73,7 @@ $router->post('/books/add', function (Request $request) use ($firestore, $gcsBuc
     }
 
     // Create the book
-    $bookRef = $firestore->collection('books')->newDocument();
+    $bookRef = $collection->newDocument();
     $bookRef->set($bookData);
 
     return redirect("/books/" . $bookRef->id());
@@ -79,9 +81,9 @@ $router->post('/books/add', function (Request $request) use ($firestore, $gcsBuc
 // [END add]
 
 // [START show]
-$router->get('/books/{bookId}', function ($bookId) use ($firestore) {
+$router->get('/books/{bookId}', function ($bookId) use ($collection) {
     # [START firestore_client_get_book]
-    $bookRef = $firestore->collection('books')->document($bookId);
+    $bookRef = $collection->document($bookId);
     $snapshot = $bookRef->snapshot();
     # [END firestore_client_get_book]
 
@@ -94,8 +96,8 @@ $router->get('/books/{bookId}', function ($bookId) use ($firestore) {
 // [END show]
 
 // [START edit]
-$router->get('/books/{bookId}/edit', function ($bookId) use ($firestore) {
-    $bookRef = $firestore->collection('books')->document($bookId);
+$router->get('/books/{bookId}/edit', function ($bookId) use ($collection) {
+    $bookRef = $collection->document($bookId);
     $snapshot = $bookRef->snapshot();
 
     if (!$snapshot->exists()) {
@@ -108,8 +110,8 @@ $router->get('/books/{bookId}/edit', function ($bookId) use ($firestore) {
     ]);
 });
 
-$router->post('/books/{bookId}/edit', function (Request $request, $bookId) use ($firestore, $gcsBucket) {
-    $bookRef = $firestore->collection('books')->document($bookId);
+$router->post('/books/{bookId}/edit', function (Request $request, $bookId) use ($collection, $gcsBucket) {
+    $bookRef = $collection->document($bookId);
     $snapshot = $bookRef->snapshot();
 
     if (!$snapshot->exists()) {
@@ -148,8 +150,8 @@ $router->post('/books/{bookId}/edit', function (Request $request, $bookId) use (
 // [END edit]
 
 // [START delete]
-$router->post('/books/{bookId}/delete', function ($bookId) use ($firestore, $gcsBucket) {
-    $bookRef = $firestore->collection('books')->document($bookId);
+$router->post('/books/{bookId}/delete', function ($bookId) use ($collection, $gcsBucket) {
+    $bookRef = $collection->document($bookId);
     $snapshot = $bookRef->snapshot();
 
     if (!$snapshot->exists()) {
@@ -166,10 +168,6 @@ $router->post('/books/{bookId}/delete', function ($bookId) use ($firestore, $gcs
         $object->delete();
     }
     // [END delete_image]
-
-    // [START logging]
-    // $app['monolog']->notice('Deleted Book: ' . $book['id']);
-    // [END logging]
 
     return redirect('/', Response::HTTP_SEE_OTHER);
 });
