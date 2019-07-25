@@ -166,4 +166,9 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
         );
         $this->assertContains('**New Description**', $response->getContent());
     }
+
+    public function testLogging()
+    {
+        // TODO
+    }
 }

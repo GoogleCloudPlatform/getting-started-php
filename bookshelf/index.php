@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2019 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
-| Register Google's error handler
-|--------------------------------------------------------------------------
-*/
-
-Google\Cloud\ErrorReporting\Bootstrap::init();
-
-/*
-|--------------------------------------------------------------------------
 | Create The Application
 |--------------------------------------------------------------------------
 |
@@ -44,6 +36,15 @@ $app = new Laravel\Lumen\Application(__DIR__);
 
 /*
 |--------------------------------------------------------------------------
+| Register Google's error handler to send exceptions to Stackdriver Error
+| Reporting
+|--------------------------------------------------------------------------
+*/
+
+// Google\Cloud\ErrorReporting\Bootstrap::init();
+
+/*
+|--------------------------------------------------------------------------
 | Register Container Bindings
 |--------------------------------------------------------------------------
 |
@@ -53,10 +54,10 @@ $app = new Laravel\Lumen\Application(__DIR__);
 |
 */
 
-// $app->singleton(
-//     Illuminate\Contracts\Debug\ExceptionHandler::class,
-//     App\Exceptions\Handler::class
-// );
+$app->singleton(
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
+);
 
 /*
 |--------------------------------------------------------------------------
