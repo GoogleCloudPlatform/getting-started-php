@@ -35,7 +35,7 @@ env:
     - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
 
 install:
-- composer global require google/cloud-tools
+- composer global require google/cloud-tools:dev-master
 - $COMPOSER_BIN_DIR/dump_credentials.php
 - $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud --cs-fixer
 
