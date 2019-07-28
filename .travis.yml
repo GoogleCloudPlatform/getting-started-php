@@ -46,7 +46,7 @@ install:
 
 script:
 # Run linter
-- php-cs-fixer fix --diff
+- ./php-cs-fixer fix --diff
 # Run all tests in all sample directories
 - |
   set -e
@@ -54,7 +54,7 @@ script:
     if [ -f $DIR/phpunit.xml.dist ]; then
       pushd $DIR
       composer install --ignore-platform-reqs
-      php vendor/bin/phpunit
+      phpunit
       popd
     fi
   done
