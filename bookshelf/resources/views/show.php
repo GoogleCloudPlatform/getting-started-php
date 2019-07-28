@@ -28,15 +28,15 @@ ob_start() ?>
   </div>
 </form>
 
-<?php // [START book_details] ?>
+<?php // [START book_details]?>
 <div class="media">
-  <?php // [START book_image] ?>
+  <?php // [START book_image]?>
   <?php if ($imgUrl = $book->get('image_url')): ?>
   <div class="media-left">
     <img class="book-image" src="<?= $imgUrl ?>" />
   </div>
   <?php endif ?>
-  <?php // [END book_image] ?>
+  <?php // [END book_image]?>
   <div class="media-body">
     <h4 class="book-title">
       <?= $book->get('title') ?>
@@ -46,6 +46,6 @@ ob_start() ?>
     <p class="book-description"><?= $book->get('description') ?></p>
   </div>
 </div>
-<?php // [END book_details] ?>
+<?php // [END book_details]?>
 
 <?= view('base', ['content' => ob_get_clean() ]) ?>

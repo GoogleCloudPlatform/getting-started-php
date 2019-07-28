@@ -15,7 +15,7 @@
 # limitations under the License.
 ob_start() ?>
 
-<?php // [START book_form] ?>
+<?php // [START book_form]?>
 <h3><?= $action ?> book</h3>
 
 <form method="POST" enctype="multipart/form-data">
@@ -40,7 +40,7 @@ ob_start() ?>
     <textarea name="description" id="description" class="form-control"><?= $book['description'] ?? '' ?></textarea>
   </div>
 
-  <?php // [START book_form_image] ?>
+  <?php // [START book_form_image]?>
   <div class="form-group">
     <label for="image">Cover Image</label>
     <input type="file" name="image" id="image" class="form-control"/>
@@ -50,10 +50,10 @@ ob_start() ?>
     <label for="image_url">Cover Image URL</label>
     <input type="text" name="image_url" id="image_url" value="<?= $book['image_url'] ?? '' ?>" class="form-control"/>
   </div>
-  <?php // [END book_form_image] ?>
+  <?php // [END book_form_image]?>
 
   <button id="submit" type="submit" class="btn btn-success">Save</button>
 </form>
-<?php // [END book_form] ?>
+<?php // [END book_form]?>
 
 <?= view('base', ['content' => ob_get_clean() ]) ?>

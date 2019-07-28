@@ -39,7 +39,8 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
         return require __DIR__.'/../index.php';
     }
 
-    public static function setUpBeforeClass()
+    /** @beforeClass */
+    public static function instantiateFirestoreCollection()
     {
         self::checkProjectEnvVars();
 

@@ -22,17 +22,17 @@ ob_start()
   Add book
 </a>
 
-<?php // [START book_list] ?>
+<?php // [START book_list]?>
 <?php foreach ($books as $i => $book): ?>
 <div class="media">
   <a href="/books/<?= $book->id() ?>">
-    <?php // [START book_image] ?>
+    <?php // [START book_image]?>
     <?php if (!empty($book['image_url'])): ?>
       <div class="media-left">
         <img src="<?= $book['image_url'] ?>">
       </div>
     <?php endif ?>
-    <?php // [END book_image] ?>
+    <?php // [END book_image]?>
     <div class="media-body">
       <h4><?= $book->get('title') ?></h4>
       <p><?= $book->get('author') ?></p>
@@ -49,6 +49,6 @@ ob_start()
   </ul>
 </nav>
 <?php endif ?>
-<?php // [END book_list] ?>
+<?php // [END book_list]?>
 
 <?= view('base', ['content' => ob_get_clean() ]) ?>

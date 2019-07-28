@@ -24,6 +24,7 @@ $collectionName = getenv('FIRESTORE_COLLECTION') ?: 'books';
 # [START firestore_client]
 // Use the client library to call Firestore
 use Google\Cloud\Firestore\FirestoreClient;
+
 $firestore = new FirestoreClient([
     'projectId' => $projectId,
 ]);
@@ -33,6 +34,7 @@ $collection =  $firestore->collection($collectionName);
 # [START cloud_storage_client]
 // Use the client library to call Cloud Storage
 use Google\Cloud\Storage\StorageClient;
+
 $storage = new StorageClient([
     'projectId' => $projectId,
 ]);
