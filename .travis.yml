@@ -31,9 +31,13 @@ branches:
 
 env:
   global:
-    - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/credentials.json
-    - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
-    - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
+  - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/credentials.json
+  - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
+  - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
+  include:
+  - php: 7.3
+    env: RUN_DEPLOYMENT_TESTS=true
+
 
 install:
 - composer global require google/cloud-tools:dev-master
