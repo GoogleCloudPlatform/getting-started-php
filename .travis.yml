@@ -49,7 +49,7 @@ script:
   for DIR in ./*/; do
     if [ -f $DIR/phpunit.xml.dist ]; then
       pushd $DIR
-      composer install
+      composer install --ignore-platform-reqs
       php vendor/bin/phpunit
       popd
     fi

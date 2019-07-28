@@ -32,23 +32,14 @@ class DeployTest extends TestCase
 
     private static function beforeDeploy()
     {
-        $tmpDir = sys_get_temp_dir() . '/test-' . FileUtil::randomName(8);
-        mkdir($tmpDir);
-        echo "Copying project dir to $tmpDir\n";
-        passthru(sprintf('cp -R %s %s', __DIR__ . '/..', $tmpDir));
-
-        // update "app.yaml" for app engine config
-        $appYamlPath = __DIR__ . '/../app.yaml';
-        $appYaml = file_get_contents($appYamlPath);
-        file_put_contents($tmpDir . '/app.yaml', $appYaml);
-
-        // set the directory in gcloud
+        $tmpDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
         self::$gcloudWrapper->setDir($tmpDir);
+        chdir($tmpDir);
     }
 
     public function testIndex()
     {
-        $resp = $this->client->get('/books/');
+        $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode());
         $this->assertContains('<h3>Books</h3>', (string) $resp->getBody());
     }

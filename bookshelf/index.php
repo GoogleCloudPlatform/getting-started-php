@@ -23,6 +23,13 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
+| Initialize Google's Stackdriver logger and error handler.
+|--------------------------------------------------------------------------
+*/
+Google\Cloud\ErrorReporting\Bootstrap::init();
+
+/*
+|--------------------------------------------------------------------------
 | Create The Application
 |--------------------------------------------------------------------------
 |
@@ -33,15 +40,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 */
 
 $app = new Laravel\Lumen\Application(__DIR__);
-
-/*
-|--------------------------------------------------------------------------
-| Register Google's error handler to send exceptions to Stackdriver Error
-| Reporting
-|--------------------------------------------------------------------------
-*/
-
-// Google\Cloud\ErrorReporting\Bootstrap::init();
 
 /*
 |--------------------------------------------------------------------------

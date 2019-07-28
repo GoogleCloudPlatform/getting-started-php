@@ -40,7 +40,7 @@ ob_start()
   </a>
 </div>
 <?php endforeach ?>
-<?php if (count($books) == 0): ?>
+<?php if (!isset($book)): ?>
 <p>No books found</p>
 <?php elseif ($i + 1 == $pageSize): ?>
 <nav>
