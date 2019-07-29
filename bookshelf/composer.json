@@ -9,8 +9,7 @@
   },
   "require-dev": {
     "symfony/dom-crawler": "^4.3",
-    "symfony/css-selector": "^4.3",
-    "google/cloud-tools": "dev-master"
+    "symfony/css-selector": "^4.3"
   },
   "autoload": {
     "psr-4": {
