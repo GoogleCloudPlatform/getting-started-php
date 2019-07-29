@@ -55,7 +55,7 @@ script:
   for DIR in ./*/; do
     if [ -f $DIR/phpunit.xml.dist ]; then
       pushd $DIR
-      composer install --ignore-platform-reqs
+      composer install
       phpunit
       popd
     fi
