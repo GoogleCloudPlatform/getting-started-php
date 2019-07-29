@@ -51,11 +51,11 @@ script:
 - if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --diff; fi
 # Run all tests in all sample directories
 - |
-set -e
-find . -name 'phpunit.xml.dist' -exec dirname {} \; | while read DIR
-do
-  pushd $DIR
-  composer install
-  phpunit
-  popd
-done
+  set -e
+  find . -name 'phpunit.xml.dist' -exec dirname {} \; | while read DIR
+  do
+    pushd $DIR
+    composer install
+    phpunit
+    popd
+  done
