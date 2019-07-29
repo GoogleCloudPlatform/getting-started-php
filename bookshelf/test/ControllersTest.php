@@ -36,7 +36,7 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
      */
     public function createApplication()
     {
-        return require __DIR__.'/../index.php';
+        return require __DIR__ . '/../index.php';
     }
 
     /** @beforeClass */
@@ -57,7 +57,8 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
         self::$collection = $firestore->collection($collectionName);
     }
 
-    public static function tearDownAfterClass()
+    /** @afterClass */
+    public static function deleteFirestoreCollection()
     {
         // Delete the collection
         foreach (self::$collection->documents() as $document) {

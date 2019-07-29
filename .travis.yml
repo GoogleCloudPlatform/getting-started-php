@@ -36,17 +36,18 @@ env:
   - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
   include:
   - php: 7.3
-    env: RUN_DEPLOYMENT_TESTS=true
+    env: RUN_DEPLOYMENT_TESTS=true RUN_CS_FIXER=true
 
 
 install:
 - composer global require google/cloud-tools:dev-master
 - $COMPOSER_BIN_DIR/dump_credentials.php
-- $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud --cs-fixer
+- $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud
+- if [ "$RUN_CS_FIXER" = "true" ]; then  $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
 
 script:
 # Run linter
-- ./php-cs-fixer fix --diff
+- if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --diff; fi
 # Run all tests in all sample directories
 - |
   set -e
