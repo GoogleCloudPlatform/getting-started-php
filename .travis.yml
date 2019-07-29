@@ -32,6 +32,7 @@ branches:
 env:
   global:
   - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/credentials.json
+  - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
   - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
   - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
   include:
@@ -50,4 +51,4 @@ script:
 # Run linter
 - if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --diff; fi
 # Run the tests in each of the sample directories
-- pushd bookshelf && composer install && vendor/bin/phpunit && popd
+- pushd bookshelf && composer install && phpunit && popd
