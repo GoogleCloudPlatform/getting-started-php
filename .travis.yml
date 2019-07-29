@@ -41,7 +41,7 @@ env:
 
 install:
 - composer global require google/cloud-tools:dev-master phwoolcon/ci-pecl-cacher
-- $COMPOSER_BIN_DIR/ci-pecl-install swoole
+- $COMPOSER_BIN_DIR/ci-pecl-install grpc
 - $COMPOSER_BIN_DIR/dump_credentials.php
 - $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud
 - if [ "$RUN_CS_FIXER" = "true" ]; then  $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
@@ -51,12 +51,11 @@ script:
 - if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --diff; fi
 # Run all tests in all sample directories
 - |
-  set -e
-  for DIR in ./*/; do
-    if [ -f $DIR/phpunit.xml.dist ]; then
-      pushd $DIR
-      composer install
-      phpunit
-      popd
-    fi
-  done
+set -e
+find . -name 'phpunit.xml.dist' -exec dirname {} \; | while read DIR
+do
+  pushd $DIR
+  composer install
+  phpunit
+  popd
+done
