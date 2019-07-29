@@ -40,6 +40,7 @@ env:
 
 
 install:
+- pecl install grpc
 - composer global require google/cloud-tools:dev-master
 - $COMPOSER_BIN_DIR/dump_credentials.php
 - $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud
