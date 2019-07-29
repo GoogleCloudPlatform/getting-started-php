@@ -40,8 +40,8 @@ env:
 
 
 install:
-- pecl install grpc
-- composer global require google/cloud-tools:dev-master
+- composer global require google/cloud-tools:dev-master phwoolcon/ci-pecl-cacher
+- $COMPOSER_BIN_DIR/ci-pecl-install swoole
 - $COMPOSER_BIN_DIR/dump_credentials.php
 - $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud
 - if [ "$RUN_CS_FIXER" = "true" ]; then  $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
