@@ -49,13 +49,5 @@ install:
 script:
 # Run linter
 - if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --diff; fi
-# Run all tests in all sample directories
-- |
-  set -e
-  find . -name 'phpunit.xml.dist' -exec dirname {} \; | while read DIR
-  do
-    pushd $DIR
-    composer install
-    phpunit
-    popd
-  done
+# Run the tests in each of the sample directories
+- pushd bookshelf && composer install && vendor/bin/phpunit && popd
