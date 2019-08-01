@@ -16,11 +16,6 @@ sudo: required
 
 language: php
 
-php:
-  - 7.1
-  - 7.2
-  - 7.3
-
 cache:
   directories:
     - $HOME/.composer/cache
@@ -29,16 +24,19 @@ branches:
   only:
     - master
 
+matrix:
+  include:
+    - php: 7.1
+    - php: 7.2
+    - php: 7.3
+      env: RUN_DEPLOYMENT_TESTS=true RUN_CS_FIXER=true
+
 env:
   global:
   - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/credentials.json
   - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
   - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
   - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
-  matrix:
-    include:
-    - php: 7.3
-      env: RUN_DEPLOYMENT_TESTS=true RUN_CS_FIXER=true
 
 install:
 - composer global require phpunit/phpunit:^7 google/cloud-tools:dev-master phwoolcon/ci-pecl-cacher
