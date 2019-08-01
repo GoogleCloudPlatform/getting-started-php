@@ -19,7 +19,7 @@ language: php
 php:
   - 7.1
   - 7.2
-  - 7.3
+  # - 7.3
 
 cache:
   directories:
@@ -35,9 +35,10 @@ env:
   - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
   - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
   - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
-  include:
-  - php: 7.3
-    env: RUN_DEPLOYMENT_TESTS=true RUN_CS_FIXER=true
+  matrix:
+    include:
+    - php: 7.3
+      env: RUN_DEPLOYMENT_TESTS=true RUN_CS_FIXER=true
 
 install:
 - composer global require phpunit/phpunit:^7 google/cloud-tools:dev-master phwoolcon/ci-pecl-cacher
