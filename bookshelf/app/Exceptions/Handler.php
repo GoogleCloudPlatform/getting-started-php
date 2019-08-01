@@ -22,16 +22,4 @@ class Handler extends ExceptionHandler
         Bootstrap::exceptionHandler($exception);
         parent::report($exception);
     }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
-     */
-    public function render($request, Exception $exception)
-    {
-        return parent::render($request, $exception);
-    }
 }

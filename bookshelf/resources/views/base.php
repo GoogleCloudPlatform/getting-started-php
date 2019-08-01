@@ -1,6 +1,6 @@
 <?php
 #
-# Copyright 2015 Google Inc.
+# Copyright 2019 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#?>
+?>
+
+<?php
+/**
+ * Base template for the other views.
+ *
+ * @param $content The content to display, typically set using output buffering
+ *                 in the [template].php files.
+ */
+?>
 
 <!DOCTYPE html>
 <html lang="en">

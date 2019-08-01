@@ -1,5 +1,6 @@
 <?php
-# Copyright 2015 Google Inc.
+#
+# Copyright 2019 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +13,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+// NOTE: These view files use output buffering to mock inheritance without the
+// use of a templating language. This is done for simplicity. For production, a
+// templating language such as Twig or Blade is recommended.
 ob_start() ?>
+
+<?php
+/**
+ * A detailed page for an individual book.
+ *
+ * @param $book The book to display
+ */
+?>
 
 <h3>Book</h3>
 <form method="post" action="/books/<?= $book->id() ?>/delete" id="deleteForm">
@@ -28,15 +41,12 @@ ob_start() ?>
   </div>
 </form>
 
-<?php // [START book_details]?>
 <div class="media">
-  <?php // [START book_image]?>
   <?php if ($imgUrl = $book->get('image_url')): ?>
   <div class="media-left">
     <img class="book-image" src="<?= $imgUrl ?>" />
   </div>
   <?php endif ?>
-  <?php // [END book_image]?>
   <div class="media-body">
     <h4 class="book-title">
       <?= $book->get('title') ?>
@@ -46,6 +56,7 @@ ob_start() ?>
     <p class="book-description"><?= $book->get('description') ?></p>
   </div>
 </div>
-<?php // [END book_details]?>
 
+<?php // The base.php template is rendered using the contents of this template
+      // which is sent in the $content variable ?>
 <?= view('base', ['content' => ob_get_clean() ]) ?>

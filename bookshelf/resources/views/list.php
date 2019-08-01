@@ -1,6 +1,6 @@
 <?php
 #
-# Copyright 2015 Google Inc.
+# Copyright 2019 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-ob_start()
+
+// NOTE: These view files use output buffering to mock inheritance without the
+// use of a templating language. This is done for simplicity. For production, a
+// templating language such as Twig or Blade is recommended.
+ob_start() ?>
+
+<?php
+/**
+ * A list view of a set of books.
+ *
+ * If the number of books provided equals the number of books on a page, display
+ * pagination controls.
+ *
+ * @param $books    The list of books to display.
+ * @param $pageSize The maximum number of books on a page.
+ */
 ?>
 
 <h3>Books</h3>
@@ -22,17 +37,14 @@ ob_start()
   Add book
 </a>
 
-<?php // [START book_list]?>
 <?php foreach ($books as $i => $book): ?>
 <div class="media">
   <a href="/books/<?= $book->id() ?>">
-    <?php // [START book_image]?>
-    <?php if (!empty($book['image_url'])): ?>
+    <?php if ($imgUrl = $book->get('image_url')): ?>
       <div class="media-left">
-        <img src="<?= $book['image_url'] ?>">
+        <img src="<?= $imgUrl ?>">
       </div>
     <?php endif ?>
-    <?php // [END book_image]?>
     <div class="media-body">
       <h4><?= $book->get('title') ?></h4>
       <p><?= $book->get('author') ?></p>
@@ -49,6 +61,7 @@ ob_start()
   </ul>
 </nav>
 <?php endif ?>
-<?php // [END book_list]?>
 
+<?php // The base.php template is rendered using the contents of this template
+      // which is sent in the $content variable ?>
 <?= view('base', ['content' => ob_get_clean() ]) ?>

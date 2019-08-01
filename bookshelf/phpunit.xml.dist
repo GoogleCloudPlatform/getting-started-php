@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2015 Google Inc.
+  Copyright 2019 Google LLC.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,5 +27,7 @@
     </filter>
     <php>
         <env name="PHPUNIT_TESTS" value="1"/>
+        <env name="APP_ENV" value="test"/>
+        <env name="APP_DEBUG" value="true"/>
     </php>
 </phpunit>

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015 Google Inc. All Rights Reserved.
+ * Copyright 2019 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Firestore\FirestoreClient;
+use Google\Cloud\TestUtils\TestTrait;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -36,7 +36,9 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
      */
     public function createApplication()
     {
-        return require __DIR__ . '/../index.php';
+        $app = require __DIR__ . '/../index.php';
+        $app['debug'] = true;
+        return $app;
     }
 
     /** @beforeClass */
@@ -106,6 +108,16 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
         );
     }
 
+    public function testCreateBookWithInvalidFields()
+    {
+        $response = $this->call('POST', '/books/add', [
+            'title' => 'The Cat in the Hat',
+            'invalid_field' => 'abc',
+        ]);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertContains('unsupported field: invalid_field', $response->getContent());
+    }
+
     /**
      * @depends testCreateBook
      */
@@ -117,6 +129,7 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
             'author' => 'Robert Louis Stevenson',
             'published_date' => '1883-01-01',
             'description' => '',
+            'image_url' => '',
         ]);
         $this->assertEquals(302, $response->getStatusCode());
 
@@ -162,15 +175,18 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
         $redirectUri = $crawler->filter('a')->attr('href');
         $response = $this->call('GET', $redirectUri);
 
-        $this->assertContains(
-            'The Cat in the Hat (edited)',
-            $response->getContent()
-        );
+        $this->assertContains('The Cat in the Hat (edited)', $response->getContent());
         $this->assertContains('**New Description**', $response->getContent());
     }
 
     public function testLogging()
     {
-        // TODO
+        $response = $this->call('GET', '/logs');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertContains('Hey, you triggered a custom log entry. Good job', $output);
+
+        $response = $this->call('GET', '/errors');
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertContains('This is an intentional exception.', $response->getContent());
     }
 }

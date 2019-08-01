@@ -86,7 +86,7 @@ $app->router->group([
 |
 */
 
-// for testing
+// Unit testing uses the application object for request injection.
 if (getenv('PHPUNIT_TESTS') === '1') {
     return $app;
 }
