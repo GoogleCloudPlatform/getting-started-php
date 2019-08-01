@@ -183,7 +183,6 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
     {
         $response = $this->call('GET', '/logs');
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertContains('Hey, you triggered a custom log entry. Good job', $output);
 
         $response = $this->call('GET', '/errors');
         $this->assertEquals(500, $response->getStatusCode());
