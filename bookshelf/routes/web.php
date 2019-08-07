@@ -39,7 +39,7 @@ use Google\Cloud\Storage\StorageClient;
 $storage = new StorageClient([
     'projectId' => $projectId,
 ]);
-$bucketId = $projectId . '.appspot.com';
+$bucketId = $projectId . '_bucket';
 $gcsBucket = $storage->bucket($bucketId);
 # [END bookshelf_cloud_storage_client]
 
