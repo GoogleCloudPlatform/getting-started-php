@@ -4,6 +4,3 @@ Homestead.json
 Homestead.yaml
 storage/logs/*
 .env
-composer.lock
-.gcloudignore
-.php_cs.cache

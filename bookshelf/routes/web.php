@@ -17,6 +17,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Google\Cloud\Core\Exception\FailedPreconditionException;
 
 $projectId = getenv('GOOGLE_CLOUD_PROJECT');
 $collectionName = getenv('FIRESTORE_COLLECTION') ?: 'books';
@@ -67,8 +68,15 @@ $router->get('/', function (Request $request) use ($collection) {
         $query = $query->startAfter($lastBook);
     }
 
+    try {
+        $books = $query->documents();
+    } catch (FailedPreconditionException $e) {
+        // Firestore hasn't been enabled, catch the error gracefully.
+        $books = [];
+    }
+
     return view('list', [
-        'books' => $query->documents(),
+        'books' => $books,
         'pageSize' => $pageSize,
     ]);
 });

@@ -63,5 +63,5 @@ ob_start() ?>
 <?php endif ?>
 
 <?php // The base.php template is rendered using the contents of this template
-      // which is sent in the $content variable ?>
+      // which is sent in the $content variable?>
 <?= view('base', ['content' => ob_get_clean() ]) ?>
