@@ -16,12 +16,6 @@ sudo: required
 
 language: php
 
-php:
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-
 cache:
   directories:
     - $HOME/.composer/cache
@@ -30,33 +24,28 @@ branches:
   only:
     - master
 
-services:
-  - mongodb
+matrix:
+  include:
+    - php: 7.2
+    - php: 7.3
+      env: RUN_DEPLOYMENT_TESTS=true RUN_CS_FIXER=true
 
 env:
   global:
-    - GCLOUD_DIR=${HOME}/gcloud
-    - PATH=${HOME}/bin:${GCLOUD_DIR}/google-cloud-sdk/bin:${PATH}
-    - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/credentials.json
-    - CLOUDSDK_ACTIVE_CONFIG_NAME=getting-started-php
-    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
-    - TEST_BUILD_DIR=${TRAVIS_BUILD_DIR}
-    - FIREWALL_NAME=travis-job-${TRAVIS_JOB_ID}
+  - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/credentials.json
+  - GOOGLE_VERSION_ID=$TRAVIS_JOB_ID
+  - PATH=${HOME}/google-cloud-sdk/bin:${PATH}
+  - COMPOSER_BIN_DIR=$(composer global config bin-dir --absolute)
 
 install:
-- pecl install mongodb || phpenv config-add testing/mongodb.ini;
-- travis_retry testing/install_test_dependencies.sh
-
-before_script:
-- mkdir -p build/logs
-- ./cloud_sql_proxy -instances=$MYSQL_CONNECTION_NAME=tcp:3307 &
-- ./cloud_sql_proxy -instances=$POSTGRES_CONNECTION_NAME=tcp:5433 &
+- composer global require phpunit/phpunit:^7 google/cloud-tools:dev-master phwoolcon/ci-pecl-cacher
+- $COMPOSER_BIN_DIR/ci-pecl-install grpc
+- $COMPOSER_BIN_DIR/dump_credentials.php
+- $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud
+- if [ "$RUN_CS_FIXER" = "true" ]; then  $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
 
 script:
-- testing/run_test_suite.sh
-
-after_success:
-- testing/run_coveralls.sh
-
-after_script:
-- testing/test_cleanup.sh
+# Run linter
+- if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --diff; fi
+# Run the tests in each of the sample directories
+- pushd bookshelf && composer install && $COMPOSER_BIN_DIR/phpunit -v && popd

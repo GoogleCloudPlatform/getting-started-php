@@ -13,19 +13,13 @@ of this repo:
 1.  Under `Key type`, choose `JSON`, and then click `Create`.  A json credential
     file will be downloaded to your computer.
 1.  Under `APIs & auth`, enable Cloud Datastore API.
-1.  Create a Cloud SQL instance, assign an IPv4 IP address, then
-    create a database and a user.
-1.  Create a Cloud Storage bucket.
+1.  Go to `Firestore` in the Console and select "Firestore in Native Mode"
 1.  Visit [Travis](https://travis-ci.org/profile ) and turn on Travis for your
     new forked repo.
 1.  Go back to the [Travis](https://travis-ci.org/) home page, click on your
     repo, then click on `Settings`.
 1.  Under Environment Variables, set the following envvars:
-    - `GOOGLE_PROJECT_ID`
-    - `GOOGLE_STORAGE_BUCKET`
-    - `MYSQL_DSN`
-    - `MYSQL_USER`
-    - `MYSQL_PASSWORD`
+    - `GOOGLE_CLOUD_PROJECT`
 
     **Be sure te leave `Display value in build log` switched OFF for
       secret values.**
