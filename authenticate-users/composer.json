@@ -1,0 +1,6 @@
+{
+    "require": {
+        "guzzle/http": "^3.9",
+        "kelvinmo/simplejwt": "^0.2.5"
+    }
+}
