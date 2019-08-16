@@ -90,9 +90,9 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
             'description' => '',
         ], [], [
             'image' => new UploadedFile(
-                __DIR__ . '/../images/moby-dick.png',
-                'moby-dick.png',
-                'image/png',
+                __DIR__ . '/../images/moby-dick.jpg',
+                'moby-dick.jpg',
+                'image/jpg',
                 null,
                 true
             ),
@@ -103,7 +103,7 @@ class ControllersTest extends Laravel\Lumen\Testing\TestCase
         $response = $this->call('GET', $redirectUri);
 
         $this->assertContains(
-            'moby-dick.png',
+            'moby-dick.jpg',
             $response->getContent()
         );
     }
