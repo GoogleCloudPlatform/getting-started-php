@@ -1,21 +1,19 @@
 <?php
-
-# Copyright 2019 Google LLC All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-// "getallheaders" works for NGINX headers in PHP 7.3, but not in PHP 7.2 or below.
-require_once __DIR__ . '/getallheaders.php';
+/*
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 # [START getting_started_auth_all]
 require_once __DIR__ . '/vendor/autoload.php';
@@ -28,10 +26,10 @@ require_once __DIR__ . '/vendor/autoload.php';
  */
 function certs() : string
 {
-    $client = new Guzzle\Http\Client();
+    $client = new GuzzleHttp\Client();
     $response = $client->get(
         'https://www.gstatic.com/iap/verify/public_key-jwk'
-    )->send();
+    );
     return $response->getBody();
 }
 # [END getting_started_auth_certs]
@@ -44,15 +42,14 @@ function certs() : string
  */
 function get_metadata($itemName) : string
 {
-    $client = new Guzzle\Http\Client();
+    $client = new GuzzleHttp\Client();
 
     $endpoint = 'http://metadata.google.internal';
     $path = '/computeMetadata/v1/project/' . $itemName;
     $response = $client->get(
         $endpoint . $path,
-        null,
         ['headers' => ['Metadata-Flavor' => 'Google']]
-    )->send();
+    );
 
     return $response->getBody();
 }

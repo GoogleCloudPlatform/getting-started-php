@@ -1,6 +1,8 @@
 {
     "require": {
-        "guzzle/http": "^3.9",
-        "kelvinmo/simplejwt": "^0.2.5"
+        "php": ">=7",
+        "guzzlehttp/guzzle": "^6.3",
+        "kelvinmo/simplejwt": "^0.2.5",
+        "ralouphie/getallheaders": "^3.0"
     }
 }
