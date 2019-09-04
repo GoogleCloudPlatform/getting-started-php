@@ -24,7 +24,7 @@ class ControllersTest extends TestCase
 {
     private static $collection;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         $_SERVER['REQUEST_URI'] = '/';
         ob_start();
