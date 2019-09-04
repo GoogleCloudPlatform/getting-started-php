@@ -21,8 +21,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 # [START getting_started_auth_certs]
 /**
  * Returns a dictionary of current Google public key certificates for
- * validating Google-signed JWTs. Since these change rarely, the result
- * is cached on first request for faster subsequent responses.
+ * validating Google-signed JWTs.
  */
 function certs() : string
 {

@@ -35,7 +35,7 @@ class ControllersTest extends TestCase
 
     public function testInvalidJwt()
     {
-        validate_assertion('fake_jwt', 'fake_expected_audience');
+        validate_assertion('fake_jwt');
         $this->expectOutputRegex('/Failed to validate assertion: Cannot decode compact serialisation/');
     }
 
