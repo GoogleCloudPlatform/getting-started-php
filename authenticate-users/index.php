@@ -105,7 +105,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/':
         $assertion = getallheaders()['X-Goog-Iap-Jwt-Assertion'] ?? '';
         list($email, $id) = validate_assertion($assertion);
-        printf("<h1>Hello %s</h1>", $email ?: 'None');
+        if ($email) {
+            printf("<h1>Hello %s</h1>", $email);
+        }
         break;
     default:
         http_response_code(404);

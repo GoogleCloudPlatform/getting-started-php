@@ -22,8 +22,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ControllersTest extends TestCase
 {
-    private static $collection;
-
     public static function setUpBeforeClass() : void
     {
         $_SERVER['REQUEST_URI'] = '/';
