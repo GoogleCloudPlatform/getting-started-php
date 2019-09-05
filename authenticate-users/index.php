@@ -35,9 +35,9 @@ function certs() : string
 
 # [START getting_started_auth_metadata]
 /**
- * Returns a string with the project metadata value for the item_name.
+ * Returns a string with the project metadata value for the $itemName.
  * See https://cloud.google.com/compute/docs/storing-retrieving-metadata for
- * possible item_name values.
+ * possible $itemName values.
  */
 function get_metadata(string $itemName) : string
 {
