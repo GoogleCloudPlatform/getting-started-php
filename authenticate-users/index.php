@@ -75,7 +75,7 @@ function audience() : string
  * correct audience) and if so, returns strings for the requesting user's
  * email and a persistent user ID. If not valid, returns null for each field.
  */
-function validate_assertion($assertion) : array
+function validate_assertion(string $assertion) : array
 {
     $jwkset = new SimpleJWT\Keys\KeySet();
     $jwkset->load(certs());
