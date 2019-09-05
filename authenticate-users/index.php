@@ -39,7 +39,7 @@ function certs() : string
  * See https://cloud.google.com/compute/docs/storing-retrieving-metadata for
  * possible item_name values.
  */
-function get_metadata($itemName) : string
+function get_metadata(string $itemName) : string
 {
     $client = new GuzzleHttp\Client();
 
