@@ -73,7 +73,7 @@ function audience() : string
 /**
  * Checks that the JWT assertion is valid (properly signed, for the
  * correct audience) and if so, returns strings for the requesting user's
- * email and a persistent user ID. If not valid, returns None for each field.
+ * email and a persistent user ID. If not valid, returns null for each field.
  */
 function validate_assertion($assertion) : array
 {
