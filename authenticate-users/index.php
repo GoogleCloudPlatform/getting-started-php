@@ -99,7 +99,7 @@ function validate_assertion(string $assertion) : array
 # [START getting_started_auth_front_controller]
 /**
  * This is an example of a front controller for a flat file PHP site. Using a
- * Static list provides security against URL injection by default.
+ * static list provides security against URL injection by default.
  */
 switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/':
