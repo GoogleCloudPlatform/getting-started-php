@@ -22,19 +22,69 @@ use PHPUnit\Framework\TestCase;
  */
 class ControllersTest extends TestCase
 {
+    /**
+     * Test private/public keys generated from http://jwt.io
+     *
+     * Private Key:
+     *  -----BEGIN PUBLIC KEY-----
+     *  MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEEVs/o5+uQbTjL3chynL4wXgUg2R9
+     *  q9UU8I5mEovUf86QZ7kOBIjJwqnzD1omageEHWwHdBO6B+dFabmdT9POxg==
+     *  -----END PUBLIC KEY-----
+     *
+     * Public Key:
+     *  -----BEGIN PRIVATE KEY-----
+     *  MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgevZzL1gdAFr88hb2
+     *  OF/2NxApJCzGCEDdfSp6VQO30hyhRANCAAQRWz+jn65BtOMvdyHKcvjBeBSDZH2r
+     *  1RTwjmYSi9R/zpBnuQ4EiMnCqfMPWiZqB4QdbAd0E7oH50VpuZ1P087G
+     *  -----END PRIVATE KEY-----
+     */
+    private static $testCert = [
+        'kty' => 'EC',
+        'crv' => 'P-256',
+        'x' => 'EVs_o5-uQbTjL3chynL4wXgUg2R9q9UU8I5mEovUf84',
+        'y' => 'kGe5DgSIycKp8w9aJmoHhB1sB3QTugfnRWm5nU_TzsY',
+        'kid' => '19J8y7Z',
+    ];
+
     public static function setUpBeforeClass() : void
     {
-        $_SERVER['REQUEST_URI'] = '/';
-        ob_start();
-        // Use output buffers to prevent print statements from showing up in test output.
         require_once __DIR__ . '/../index.php';
-        ob_clean();
     }
 
     public function testInvalidJwt()
     {
-        validate_assertion('fake_jwt');
+        validate_assertion('fake_jwt', '{"keys":[]}', '');
         $this->expectOutputRegex('/Failed to validate assertion: Cannot decode compact serialisation/');
+    }
+
+    public function testInvalidAudience()
+    {
+        $testAssertion = 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImF1ZCI6ImZvbyJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiYXVkIjoiZm9vIiwiZW1haWwiOiJmb29AZ29vZ2xlLmNvbSJ9.rKr6N3u3inkeTIlVaJ24iIb_8C-x-WKcDw65cwaoxb27ZclFSFQktFCGLW1ochruuL0OD8-GViv1vOSyKpXb_g';
+        $testAudience = 'invalidaudience';
+
+        list($email, $id) = validate_assertion(
+            $testAssertion,
+            json_encode(['keys' => [self::$testCert]]),
+            $testAudience
+        );
+
+        $this->expectOutputRegex('/Failed to validate assertion: Audience did not match/');
+    }
+
+    public function testValidAssertion()
+    {
+        $testAssertion = 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImF1ZCI6ImZvbyJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiYXVkIjoiZm9vIiwiZW1haWwiOiJmb29AZ29vZ2xlLmNvbSJ9.rKr6N3u3inkeTIlVaJ24iIb_8C-x-WKcDw65cwaoxb27ZclFSFQktFCGLW1ochruuL0OD8-GViv1vOSyKpXb_g';
+        $testAudience = 'foo';
+
+        list($email, $id) = validate_assertion(
+            $testAssertion,
+            json_encode(['keys' => [self::$testCert]]),
+            $testAudience
+        );
+
+        $this->assertEquals('foo@google.com', $email);
+        $this->assertEquals('1234567890', $id);
+        $this->expectOutputRegex('//');
     }
 
     public function testCerts()

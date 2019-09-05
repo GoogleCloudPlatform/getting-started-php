@@ -74,18 +74,23 @@ function audience() : string
  * Checks that the JWT assertion is valid (properly signed, for the
  * correct audience) and if so, returns strings for the requesting user's
  * email and a persistent user ID. If not valid, returns null for each field.
+ *
+ * @param $assertion The JWT string to assert
+ * @param $certs the certificates to use for the assertion validation
+ * @param $audience the required audience of the JWT
+ * @return array containing [$email, $id], or [null, null] on failed validatiion.
  */
-function validate_assertion(string $assertion) : array
+function validate_assertion(string $assertion, string $certs, string $audience) : array
 {
     $jwkset = new SimpleJWT\Keys\KeySet();
-    $jwkset->load(certs());
+    $jwkset->load($certs);
     try {
         $info = SimpleJWT\JWT::decode(
             $assertion,
             $jwkset,
             'ES256'
         );
-        if ($info->getClaim('aud') != audience()) {
+        if ($info->getClaim('aud') != $audience) {
             throw new Exception('Audience did not match');
         }
         return [$info->getClaim('email'), $info->getClaim('sub')];
@@ -104,11 +109,12 @@ function validate_assertion(string $assertion) : array
 switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/':
         $assertion = getallheaders()['X-Goog-Iap-Jwt-Assertion'] ?? '';
-        list($email, $id) = validate_assertion($assertion);
+        list($email, $id) = validate_assertion($assertion, certs(), audience());
         if ($email) {
             printf("<h1>Hello %s</h1>", $email);
         }
         break;
+    case ""; break; // Nothing to do, we're running our tests
     default:
         http_response_code(404);
         exit('Not Found');
