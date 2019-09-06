@@ -55,9 +55,9 @@ function audience() : string
  * correct audience) and if so, returns strings for the requesting user's
  * email and a persistent user ID. If not valid, returns null for each field.
  *
- * @param $assertion The JWT string to assert
- * @param $certs the certificates to use for the assertion validation
- * @param $audience the required audience of the JWT
+ * @param string $assertion The JWT string to assert.
+ * @param string $certs The certificates to use for the assertion validation.
+ * @param string $audience The required audience of the JWT.
  * @return array containing [$email, $id], or [null, null] on failed validation.
  */
 function validate_assertion(string $assertion, string $certs, string $audience) : array
