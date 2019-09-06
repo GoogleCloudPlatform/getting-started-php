@@ -5,10 +5,12 @@
 This repository contains the code for getting started with PHP on Google Cloud
 Platform. Please follow the tutorials for instructions on using these samples.
 
+<<<<<<< HEAD
   * [Getting started with PHP][getting-started]
   * [Authenticating users on PHP][authenticate-users]
   * [Compute Engine for PHP][getting-started-gce]
   * [Session handling with PHP][sessions]
+  * [Background Processing for PHP][background-processing]
 
 ## Contributing changes
 
@@ -24,3 +26,4 @@ Platform. Please follow the tutorials for instructions on using these samples.
 [authenticate-users]: http://cloud.google.com/php/getting-started/authenticate-users
 [getting-started-gce]: https://cloud.google.com/php/tutorials/getting-started-on-compute-engine
 [sessions]: http://cloud.google.com/php/getting-started/sessions
+[background-processing]: https://cloud.google.com/php/getting-started/background-processing
