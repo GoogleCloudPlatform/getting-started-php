@@ -1,7 +1,8 @@
-# Hello World for PHP on Google Compute Engine
+# Google Compute Engine for PHP
 
-This folder contains the sample code for the [Deploying to Google Compute Engine][tutorial-gce]
-tutorial. Please refer to the tutorial for instructions on configuring, running,
-and deploying this sample.
+This directory contains the complete sample code for deploying a "Hello, World!"
+app to Compute Engine with PHP. Follow the tutorial to run the sample.
 
-[tutorial-gce]: https://cloud.google.com/php/tutorials/getting-started-on-compute-engine
+  * [Compute Engine for PHP][getting-started-gce]
+
+[getting-started-gce]: https://cloud.google.com/php/tutorials/getting-started-on-compute-engine
