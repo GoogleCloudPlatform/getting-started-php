@@ -33,27 +33,6 @@ function certs() : string
 }
 # [END getting_started_auth_certs]
 
-# [START getting_started_auth_metadata]
-/**
- * Returns a string with the project metadata value for the $itemName.
- * See https://cloud.google.com/compute/docs/storing-retrieving-metadata for
- * possible $itemName values.
- */
-function get_metadata(string $itemName) : string
-{
-    $client = new GuzzleHttp\Client();
-
-    $endpoint = 'http://metadata.google.internal';
-    $path = '/computeMetadata/v1/project/' . $itemName;
-    $response = $client->get(
-        $endpoint . $path,
-        ['headers' => ['Metadata-Flavor' => 'Google']]
-    );
-
-    return $response->getBody();
-}
-# [END getting_started_auth_metadata]
-
 # [START getting_started_auth_audience]
 /**
  * Returns the audience value (the JWT 'aud' property) for the current
@@ -62,8 +41,9 @@ function get_metadata(string $itemName) : string
  */
 function audience() : string
 {
-    $projectNumber = get_metadata('numeric-project-id');
-    $projectId = get_metadata('project-id');
+    $metadata = new Google\Cloud\Core\Compute\Metadata();
+    $projectNumber = $metadata->getNumericProjectId();
+    $projectId = $metadata->getProjectId();
     $audience = sprintf('/projects/%s/apps/%s', $projectNumber, $projectId);
     return $audience;
 }
