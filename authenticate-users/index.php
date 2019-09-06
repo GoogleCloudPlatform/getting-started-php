@@ -58,7 +58,7 @@ function audience() : string
  * @param $assertion The JWT string to assert
  * @param $certs the certificates to use for the assertion validation
  * @param $audience the required audience of the JWT
- * @return array containing [$email, $id], or [null, null] on failed validatiion.
+ * @return array containing [$email, $id], or [null, null] on failed validation.
  */
 function validate_assertion(string $assertion, string $certs, string $audience) : array
 {
@@ -94,7 +94,7 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
             printf("<h1>Hello %s</h1>", $email);
         }
         break;
-    case ""; break; // Nothing to do, we're running our tests
+    case ''; break; // Nothing to do, we're running our tests
     default:
         http_response_code(404);
         exit('Not Found');
