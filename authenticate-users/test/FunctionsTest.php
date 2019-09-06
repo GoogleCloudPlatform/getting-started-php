@@ -18,7 +18,7 @@
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test for application controllers
+ * Test for the application controller.
  */
 class ControllersTest extends TestCase
 {
