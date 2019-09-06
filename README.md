@@ -7,6 +7,7 @@ Google Cloud Platform tutorials. Please refer to the tutorials for instructions
 on configuring, running, and deploying these samples.
 
   * [Getting started on PHP][getting-started]
+  * [Session handling with PHP][sessions]
 
 ## Contributing changes
 
@@ -19,3 +20,4 @@ on configuring, running, and deploying these samples.
 [travis-badge]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php.svg?branch=master
 [travis-link]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php
 [getting-started]: http://cloud.google.com/php/getting-started
+[sessions]: http://cloud.google.com/php/getting-started/sessions
