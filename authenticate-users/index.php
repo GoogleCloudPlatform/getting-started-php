@@ -94,7 +94,7 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
             printf("<h1>Hello %s</h1>", $email);
         }
         break;
-    case ""; break; // Nothing to do, we're running our tests
+    case ''; break; // Nothing to do, we're running our tests
     default:
         http_response_code(404);
         exit('Not Found');
