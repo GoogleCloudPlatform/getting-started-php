@@ -14,19 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
+# [START getting_started_script]
 set -e
 export HOME=/root
 
-# [START php]
 # Install PHP and dependencies from apt
 apt-get update
-apt-get install -y git nginx mongodb-clients php5 php5-fpm php5-mysql php5-dev php-pear pkg-config
-pecl install mongodb
-
-# Enable the MongoDB PHP extension
-echo "extension=mongodb.so" >> /etc/php5/mods-available/mongodb.ini
-php5enmod mongodb
+apt-get install -y git nginx php7 php7-fpm php7-mysql php7-dev php-pear pkg-config
 
 # Install Composer
 curl -sS https://getcomposer.org/installer | \
@@ -35,51 +29,33 @@ curl -sS https://getcomposer.org/installer | \
     --filename=composer
 
 # Fetch the project ID from the Metadata server
-PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
+PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
 
 # Get the application source code
 git config --global credential.helper gcloud.sh
-git clone https://source.developers.google.com/p/$PROJECTID /opt/src -b master
-ln -s /opt/src/optional-compute-engine /opt/app
+git clone https://source.developers.google.com/p/$PROJECT /opt/src -b master
+ln -s /opt/src/gce /opt/app
 
 # Run Composer
 composer install -d /opt/app --no-ansi --no-progress
-# [END php]
 
-# Decrypt the settings.yml file, if applicable
-pushd /opt/app/config
-if [-f settings.yml ]; then
-  gcloud kms decrypt --location=global --keyring=[YOUR_KEY_RING] --key=[YOUR_KEY_NAME] --plaintext-file=settings.yml --ciphertext-file=settings.yml.enc
-fi
-popd
-
-# [START project_config]
-# Fetch the application config file from the Metadata server and add it to the project
-curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/project-config" \
-  -H "Metadata-Flavor: Google" >> /opt/app/config/settings.yml
-# [END project_config]
-
-# [START nginx]
 # Disable the default NGINX configuration
 rm /etc/nginx/sites-enabled/default
 
 # Enable our NGINX configuration
-cp /opt/app/gce/nginx/bookshelf.conf /etc/nginx/sites-available/bookshelf.conf
-ln -s /etc/nginx/sites-available/bookshelf.conf /etc/nginx/sites-enabled/bookshelf.conf
+cp /opt/app/gce/nginx/helloworld.conf /etc/nginx/sites-available/helloworld.conf
+ln -s /etc/nginx/sites-available/helloworld.conf /etc/nginx/sites-enabled/helloworld.conf
 cp /opt/app/gce/nginx/fastcgi_params /etc/nginx/fastcgi_params
 
 # Start NGINX
 systemctl restart nginx.service
-# [END nginx]
 
-# [START logging]
 # Install Fluentd
 curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
 
 # Enable our Fluentd configuration
-cp /opt/app/gce/fluentd/bookshelf.conf /etc/google-fluentd/config.d/bookshelf.conf
+cp /opt/app/gce/fluentd/helloworld.conf /etc/google-fluentd/config.d/helloworld.conf
 
 # Start Fluentd
 service google-fluentd restart &
-# [END logging]
-# [END all]
+# [END getting_started_script]
