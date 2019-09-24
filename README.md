@@ -2,11 +2,11 @@
 
 [![Build Status][travis-badge]][travis-link]
 
-This repository contains the complete sample code for the PHP Getting Started on
-Google Cloud Platform tutorials. Please refer to the tutorials for instructions
-on configuring, running, and deploying these samples.
+This repository contains the code for getting started with PHP on Google Cloud
+Platform. Please follow the tutorials for instructions on using these samples.
 
-  * [Getting started on PHP][getting-started]
+  * [Getting started with PHP][getting-started]
+  * [Authenticating users on PHP][authenticate-users]
   * [Compute Engine for PHP][getting-started-gce]
 
 ## Contributing changes
@@ -20,4 +20,5 @@ on configuring, running, and deploying these samples.
 [travis-badge]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php.svg?branch=master
 [travis-link]: https://travis-ci.org/GoogleCloudPlatform/getting-started-php
 [getting-started]: http://cloud.google.com/php/getting-started
+[authenticate-users]: http://cloud.google.com/php/getting-started/authenticate-users
 [getting-started-gce]: https://cloud.google.com/php/tutorials/getting-started-on-compute-engine

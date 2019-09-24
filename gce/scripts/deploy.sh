@@ -15,6 +15,7 @@
 
 set -ex
 
+# [START getting_started_useful]
 ZONE=us-central1-f
 
 GROUP=frontend-group
@@ -33,6 +34,7 @@ TAGS=http-server
 MIN_INSTANCES=1
 MAX_INSTANCES=10
 TARGET_UTILIZATION=0.6
+# [END getting_started_useful]
 
 SERVICE=frontend-web-service
 
@@ -44,7 +46,7 @@ SERVICE=frontend-web-service
 # This template will be used by the instance group
 # to create new instances.
 
-# [START create_template]
+# [START getting_started_create_template]
 gcloud compute instance-templates create $TEMPLATE \
   --machine-type $MACHINE_TYPE \
   --scopes $SCOPES \
@@ -52,25 +54,25 @@ gcloud compute instance-templates create $TEMPLATE \
   --image-family $IMAGE_FAMILY \
   --image-project $IMAGE_PROJECT \
   --tags $TAGS
-# [END create_template]
+# [END getting_started_create_template]
 
 # Create the managed instance group.
 
-# [START create_group]
+# [START getting_started_create_group]
 gcloud compute instance-groups managed \
   create $GROUP \
   --base-instance-name $GROUP \
   --size $MIN_INSTANCES \
   --template $TEMPLATE \
   --zone $ZONE
-# [END create_group]
+# [END getting_started_create_group]
 
-# [START create_named_port]
+# [START getting_started_create_named_port]
 gcloud compute instance-groups managed set-named-ports \
     $GROUP \
     --named-ports http:8080 \
     --zone $ZONE
-# [END create_named_port]
+# [END getting_started_create_named_port]
 
 #
 # Load Balancer Setup
@@ -92,65 +94,65 @@ gcloud compute instance-groups managed set-named-ports \
 # The load balancer will use this check to keep track of which instances to send traffic to.
 # Note that health checks will not cause the load balancer to shutdown any instances.
 
-# [START create_health_check]
+# [START getting_started_create_health_check]
 gcloud compute http-health-checks create ah-health-check \
   --request-path /_ah/health
-# [END create_health_check]
+# [END getting_started_create_health_check]
 
 # Create a backend service, associate it with the health check and instance group.
 # The backend service serves as a target for load balancing.
 
-# [START create_backend_service]
+# [START getting_started_create_backend_service]
 gcloud compute backend-services create $SERVICE \
   --http-health-checks ah-health-check \
   --port-name http \
   --global
-# [END create_backend-service]
+# [END getting_started_create_backend_service]
 
-# [START add_backend_service]
+# [START getting_started_add_backend_service]
 gcloud compute backend-services add-backend $SERVICE \
   --instance-group $GROUP \
   --instance-group-zone $ZONE \
   --global
-# [END add_backend_service]
+# [END getting_started_add_backend_service]
 
 # Create a URL map and web Proxy. The URL map will send all requests to the
 # backend service defined above.
 
-# [START create_url_map]
+# [START getting_started_create_url_map]
 gcloud compute url-maps create $SERVICE-map \
   --default-service $SERVICE
-# [END create_url_map]
+# [END getting_started_create_url_map]
 
-# [START create_http_proxy]
+# [START getting_started_create_http_proxy]
 gcloud compute target-http-proxies create $SERVICE-proxy \
   --url-map $SERVICE-map
-# [END create_http_proxy]
+# [END getting_started_create_http_proxy]
 
 # Create a global forwarding rule to send all traffic to our proxy
 
-# [START create_forwarding_rule]
+# [START getting_started_create_forwarding_rule]
 gcloud compute forwarding-rules create $SERVICE-http-rule \
   --global \
   --target-http-proxy $SERVICE-proxy \
   --ports 80
-# [END create_forwarding_rule]
+# [END getting_started_create_forwarding_rule]
 
 #
 # Autoscaler configuration
 #
-# [START set_autoscaling]
+# [START getting_started_set_autoscaling]
 gcloud compute instance-groups managed set-autoscaling \
   $GROUP \
   --max-num-replicas $MAX_INSTANCES \
   --target-load-balancing-utilization $TARGET_UTILIZATION \
   --zone $ZONE
-# [END set_autoscaling]
+# [END getting_started_set_autoscaling]
 
-# [START create_firewall]
+# [START getting_started_create_firewall]
 gcloud compute firewall-rules create default-allow-http-8080 \
     --allow tcp:8080 \
     --source-ranges 0.0.0.0/0 \
     --target-tags http-server \
     --description "Allow port 8080 access to http-server"
-# [END create_firewall]
+# [END getting_started_create_firewall]
