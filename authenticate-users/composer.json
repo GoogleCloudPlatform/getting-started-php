@@ -1,0 +1,8 @@
+{
+    "require": {
+        "php": ">=7.1",
+        "google/cloud-core": "^1.32",
+        "kelvinmo/simplejwt": "^0.2.5",
+        "ralouphie/getallheaders": "^3.0"
+    }
+}
