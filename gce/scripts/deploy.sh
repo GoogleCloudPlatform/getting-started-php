@@ -27,7 +27,6 @@ IMAGE_PROJECT=ubuntu-os-cloud
 SCOPES="userinfo-email,\
 logging-write,\
 storage-full,\
-datastore,\
 https://www.googleapis.com/auth/projecthosting"
 TAGS=http-server
 
