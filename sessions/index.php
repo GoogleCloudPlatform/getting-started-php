@@ -28,7 +28,7 @@ $firestore = new FirestoreClient([
 ]);
 
 # [START getting_started_sessions_create_handler]
-$handler = $firestore->sessionHandler(['gcLimit' => 1000]);
+$handler = $firestore->sessionHandler(['gcLimit' => 500]);
 # [END getting_started_sessions_create_handler]
 
 // Configure PHP to use the the Firebase session handler.
