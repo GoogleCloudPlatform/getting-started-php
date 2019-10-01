@@ -20,7 +20,7 @@ export HOME=/root
 
 # Install PHP and dependencies from apt
 apt-get update
-apt-get install -y git nginx php7 php7-fpm php7-mysql php7-dev php-pear pkg-config
+apt-get install -y git nginx php7.2 php7.2-fpm php7.2-mysql php7.2-dev php-pear pkg-config
 
 # Install Composer
 curl -sS https://getcomposer.org/installer | \

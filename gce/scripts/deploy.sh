@@ -21,12 +21,11 @@ ZONE=us-central1-f
 GROUP=frontend-group
 TEMPLATE=$GROUP-tmpl
 MACHINE_TYPE=f1-micro
-STARTUP_SCRIPT=startup-script.sh
+STARTUP_SCRIPT=scripts/startup-script.sh
 IMAGE_FAMILY=ubuntu-1804-lts
 IMAGE_PROJECT=ubuntu-os-cloud
 SCOPES="userinfo-email,\
 logging-write,\
-storage-full,\
 https://www.googleapis.com/auth/projecthosting"
 TAGS=http-server
 
