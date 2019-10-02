@@ -18,7 +18,6 @@
 namespace Google\Cloud\GettingStarted\Sessions;
 
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
-use Google\Cloud\TestUtils\TestTrait;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 
@@ -27,7 +26,6 @@ use GuzzleHttp\Client;
  */
 class DeployTest extends TestCase
 {
-    use TestTrait;
     use AppEngineDeploymentTrait;
 
     public function testIndex()
