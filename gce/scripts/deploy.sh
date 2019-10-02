@@ -26,6 +26,7 @@ IMAGE_FAMILY=ubuntu-1804-lts
 IMAGE_PROJECT=ubuntu-os-cloud
 SCOPES="userinfo-email,\
 logging-write,\
+sourcerepo,\
 https://www.googleapis.com/auth/projecthosting"
 TAGS=http-server
 

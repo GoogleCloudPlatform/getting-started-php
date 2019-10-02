@@ -32,8 +32,7 @@ curl -sS https://getcomposer.org/installer | \
 PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
 
 # Get the application source code
-git config --global credential.helper gcloud.sh
-git clone https://source.developers.google.com/p/$PROJECT /opt/src -b master
+gcloud source repos clone gce-helloworld /opt/src
 ln -s /opt/src/gce /opt/app
 
 # Run Composer
@@ -43,9 +42,9 @@ composer install -d /opt/app --no-ansi --no-progress
 rm /etc/nginx/sites-enabled/default
 
 # Enable our NGINX configuration
-cp /opt/app/gce/nginx/helloworld.conf /etc/nginx/sites-available/helloworld.conf
+cp /opt/app/config/nginx/helloworld.conf /etc/nginx/sites-available/helloworld.conf
 ln -s /etc/nginx/sites-available/helloworld.conf /etc/nginx/sites-enabled/helloworld.conf
-cp /opt/app/gce/nginx/fastcgi_params /etc/nginx/fastcgi_params
+cp /opt/app/config/nginx/fastcgi_params /etc/nginx/fastcgi_params
 
 # Start NGINX
 systemctl restart nginx.service
@@ -54,7 +53,7 @@ systemctl restart nginx.service
 curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
 
 # Enable our Fluentd configuration
-cp /opt/app/gce/fluentd/helloworld.conf /etc/google-fluentd/config.d/helloworld.conf
+cp /opt/app/config/fluentd/helloworld.conf /etc/google-fluentd/config.d/helloworld.conf
 
 # Start Fluentd
 service google-fluentd restart &
