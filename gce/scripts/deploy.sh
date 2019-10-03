@@ -16,23 +16,21 @@
 set -ex
 
 # [START getting_started_gce_create_firewall]
-MY_INSTANCE_NAME='[your instance name goes here]'
+MY_INSTANCE_NAME='my-app-instance'
 ZONE=us-central1-f
 
 gcloud compute instances create $MY_INSTANCE_NAME \
-    --image-family=debian-9 \
-    --image-project=debian-cloud \
+    --image-family=ubuntu-1804-lts \
+    --image-project=ubuntu-os-cloud \
     --machine-type=g1-small \
     --scopes userinfo-email,cloud-platform \
-    --metadata-from-file startup-script=gce/scripts/startup-script.sh \
+    --metadata-from-file startup-script=scripts/startup-script.sh \
     --zone $ZONE \
     --tags http-server
 # [START getting_started_gce_create_instance]
 
-# [START getting_started_gce_create_firewall]
-gcloud compute firewall-rules create default-allow-http-8080 \
-    --allow tcp:8080 \
+gcloud compute firewall-rules create default-allow-http-80 \
+    --allow tcp:80 \
     --source-ranges 0.0.0.0/0 \
     --target-tags http-server \
-    --description "Allow port 8080 access to http-server"
-# [END getting_started_gce_create_firewall]
+    --description "Allow port 80 access to http-server"

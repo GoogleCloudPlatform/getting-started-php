@@ -20,7 +20,8 @@ export HOME=/root
 
 # Install PHP and dependencies from apt
 apt-get update
-apt-get install -y git nginx php7.2 php7.2-fpm php7.2-mysql php7.2-dev php-pear pkg-config
+apt-get install -y git nginx php7.2 php7.2-fpm php7.2-mysql php7.2-dev \
+    php7.2-mbstring php7.2-zip php-pear pkg-config
 
 # Install Composer
 curl -sS https://getcomposer.org/installer | \
@@ -28,15 +29,12 @@ curl -sS https://getcomposer.org/installer | \
     --install-dir=/usr/local/bin \
     --filename=composer
 
-# Fetch the project ID from the Metadata server
-PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
-
 # Get the application source code
-git clone https://github.com/googlecloudplatform/getting-started-php -b gce
+git clone https://github.com/googlecloudplatform/getting-started-php /opt/src -b gce
 ln -s /opt/src/gce /opt/app
 
 # Run Composer
-composer install -d /opt/app --no-ansi --no-progress
+composer install -d /opt/app --no-ansi --no-progress --no-dev
 
 # Disable the default NGINX configuration
 rm /etc/nginx/sites-enabled/default

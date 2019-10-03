@@ -16,11 +16,11 @@
 set -x
 
 # [START getting_started_gce_teardown]
-MY_INSTANCE_NAME='[your instance name goes here]'
+MY_INSTANCE_NAME='my-app-instance'
 ZONE=us-central1-f
 
 gcloud compute instances delete $MY_INSTANCE_NAME \
     --zone=$ZONE --delete-disks=all
 
-gcloud compute firewall-rules delete default-allow-http-8080
+gcloud compute firewall-rules delete default-allow-http-80
 # [START getting_started_gce_teardown]
