@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START getting_started_script]
+# [START getting_started_gce_startup_script]
 set -e
 export HOME=/root
 
@@ -32,7 +32,7 @@ curl -sS https://getcomposer.org/installer | \
 PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
 
 # Get the application source code
-gcloud source repos clone gce-helloworld /opt/src
+git clone https://github.com/googlecloudplatform/getting-started-php -b gce
 ln -s /opt/src/gce /opt/app
 
 # Run Composer
@@ -57,4 +57,4 @@ cp /opt/app/config/fluentd/helloworld.conf /etc/google-fluentd/config.d/hellowor
 
 # Start Fluentd
 service google-fluentd restart &
-# [END getting_started_script]
+# [END getting_started_gce_startup_script]
