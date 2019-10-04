@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2019 Google LLC.
+  Copyright 2019 Google LLC
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="vendor/autoload.php" convertWarningsToExceptions="false">
+<phpunit bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="PHP Getting Started Test Suite">
+        <testsuite name="PHP Getting Started Sessions Test Suite">
             <directory>test</directory>
         </testsuite>
     </testsuites>
-    <php>
-        <env name="PHPUNIT_TESTS" value="1"/>
-        <env name="APP_ENV" value="test"/>
-        <env name="APP_DEBUG" value="true"/>
-    </php>
+    <filter>
+        <whitelist>
+             <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>

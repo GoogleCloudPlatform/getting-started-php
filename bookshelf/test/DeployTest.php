@@ -20,7 +20,6 @@ namespace Google\Cloud\GettingStarted;
 use Google\Cloud\TestUtils\FileUtil;
 use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
-use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
 use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
@@ -32,7 +31,6 @@ use PHPUnit\Framework\TestCase;
  */
 class DeployTest extends TestCase
 {
-    use TestTrait;
     use AppEngineDeploymentTrait;
     use EventuallyConsistentTestTrait;
 
