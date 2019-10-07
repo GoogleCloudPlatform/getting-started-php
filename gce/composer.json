@@ -1,6 +1,5 @@
 {
   "require": {
-    "google/cloud-logging": "^1.17",
     "laravel/lumen-framework": " 5.8.*"
   }
 }
