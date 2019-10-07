@@ -22,10 +22,6 @@ use Google\Cloud\TestUtils\DeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\TestTrait;
 use Google\Cloud\Utils\ExponentialBackoff;
-use Google\Cloud\Logging\LoggingClient;
-use Google\Cloud\ErrorReporting\V1beta1\ErrorStatsServiceClient;
-use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange;
-use Google\Cloud\ErrorReporting\V1beta1\QueryTimeRange\Period;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -16,7 +16,6 @@
  */
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 /**
  * An example route using the Lumen framework.
