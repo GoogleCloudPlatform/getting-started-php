@@ -66,7 +66,7 @@ class DeployTest extends TestCase
             $output = implode("\n", $output);
             if (false === strpos($output, 'Finished running startup scripts')) {
                 echo "Waiting for startup script to complete...\n";
-                throw new \Exception('Startup script has not completed');
+                throw new \Exception('Startup script is still running');
             }
         });
     }
