@@ -41,9 +41,7 @@ $app = new Laravel\Lumen\Application(__DIR__);
 |
 */
 
-$app->router->group([
-    'namespace' => 'App\Http\Controllers',
-], function ($router) {
+$app->router->group([], function ($router) {
     require __DIR__ . '/routes/web.php';
 });
 
