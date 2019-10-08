@@ -20,7 +20,9 @@
             <directory>test</directory>
         </testsuite>
     </testsuites>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
+    <php>
+        <env name="PHPUNIT_TESTS" value="1"/>
+        <env name="APP_ENV" value="test"/>
+        <env name="APP_DEBUG" value="true"/>
+    </php>
 </phpunit>
