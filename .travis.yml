@@ -42,10 +42,10 @@ install:
 - $COMPOSER_BIN_DIR/ci-pecl-install grpc
 - $COMPOSER_BIN_DIR/dump_credentials.php
 - $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud
-- if [ "$RUN_CS_FIXER" = "true" ]; then  $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
+- if [ "$RUN_CS_FIXER" = "true" ]; then $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
 
 script:
 # Run linter
-- if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --diff; fi
+- if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --dry-run --diff; fi
 # Run the tests in each of the sample directories
 - pushd bookshelf && composer install && $COMPOSER_BIN_DIR/phpunit -v && popd
