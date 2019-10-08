@@ -16,16 +16,14 @@
 -->
 <phpunit bootstrap="vendor/autoload.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="PHP Getting Started Test Suite">
+        <testsuite name="PHP Getting Started background processing app tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
-    <filter>
-        <whitelist>
-             <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
+    <php>
+        <env name="PHPUNIT_TESTS" value="1"/>
+    </php>
 </phpunit>
