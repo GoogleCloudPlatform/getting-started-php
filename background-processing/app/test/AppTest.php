@@ -46,31 +46,35 @@ class AppTest extends Laravel\Lumen\Testing\TestCase
             $response->getContent()
         );
         $crawler = new Crawler($response->getContent());
-        $this->assertEquals(1, $crawler->selectLink('Submit')->count());
+        $this->assertEquals(1, $crawler->selectButton('Submit')->count());
+    }
+
+    public function testRequestTranslationWithInvalidLanguage()
+    {
+        // Try with no language parameter
+        $response = $this->call('POST', '/request-translation');
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertContains(
+            'Unsupported Language:',
+            $response->getContent()
+        );
+
+        $response = $this->call('POST', '/request-translation', [
+            'lang'=> 'klingonese'
+        ]);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertContains(
+            'Unsupported Language: klingonese',
+            $response->getContent()
+        );
     }
 
     public function testSubmitTranslation()
     {
-        $response = $this->call('GET', '/');
-        $this->assertEquals(200, $response->getStatusCode());
-        $crawler = new Crawler($response->getContent());
-
-        // Find the first book and get the edit URL
-        $firstBook = $crawler->filter('a:contains("The Cat in the Hat")');
-        $this->assertEquals(1, $firstBook->count());
-
-        // Edit the book
-        $response = $this->call('POST', $firstBook->attr('href') . '/edit', [
-            'title' => 'The Cat in the Hat (edited)',
-            'description' => '**New Description**'
+        $response = $this->call('POST', '/request-translation', [
+            'lang' => 'en',
+            'v' => 'This is a test translation',
         ]);
-
-        $this->assertEquals(302, $response->getStatusCode());
-        $crawler = new Crawler($response->getContent());
-        $redirectUri = $crawler->filter('a')->attr('href');
-        $response = $this->call('GET', $redirectUri);
-
-        $this->assertContains('The Cat in the Hat (edited)', $response->getContent());
-        $this->assertContains('**New Description**', $response->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

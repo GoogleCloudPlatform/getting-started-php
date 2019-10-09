@@ -14,13 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="vendor/autoload.php">
+<phpunit convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="PHP Getting Started background processing worker tests">
+        <testsuite name="PHP Getting Started background processing tests">
             <directory>test</directory>
         </testsuite>
     </testsuites>
-    <php>
-        <env name="PHPUNIT_TESTS" value="1"/>
-    </php>
 </phpunit>
