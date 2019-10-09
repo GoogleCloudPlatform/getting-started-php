@@ -36,9 +36,6 @@ class DeployTest extends TestCase
     use EventuallyConsistentTestTrait;
     use DeploymentTrait;
 
-    private static $appDir;
-    private static $workerDir;
-
     /** @var \Google\Cloud\TestUtils\GcloudWrapper */
     private static $appGcloudWrapper;
 
@@ -47,6 +44,7 @@ class DeployTest extends TestCase
 
     /** @var \Google\Cloud\PubSub\Subscription */
     private static $subscription;
+
     /**
      * Deploy the application.
      *
@@ -65,11 +63,11 @@ class DeployTest extends TestCase
 
     private static function beforeDeploy()
     {
-        self::$appDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
-        self::$appGcloudWrapper->setDir(self::$appDir);
+        $appDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
+        self::$appGcloudWrapper->setDir($appDir);
 
-        self::$workerDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../worker');
-        self::$workerGcloudWrapper->setDir(self::$workerDir);
+        $workerDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../worker');
+        self::$workerGcloudWrapper->setDir($workerDir);
     }
 
     private static function doDeploy()
@@ -119,7 +117,10 @@ class DeployTest extends TestCase
     {
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode());
-        $this->assertContains('Translate with Background Processing', (string) $resp->getBody());
+        $this->assertContains(
+            'Translate with Background Processing',
+            (string) $resp->getBody()
+        );
     }
 
     public function testWorker()
@@ -170,7 +171,10 @@ class DeployTest extends TestCase
         $this->assertEquals('200', $resp->getStatusCode());
         $this->runEventuallyConsistentTest(function () use ($timestamp) {
             $resp = $this->client->get('/');
-            $this->assertContains('Viviendo la vida loca ' . $timestamp, (string) $resp->getBody());
+            $this->assertContains(
+                'Viviendo la vida loca ' . $timestamp,
+                (string) $resp->getBody()
+            );
         });
     }
 }
