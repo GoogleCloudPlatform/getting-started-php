@@ -20,7 +20,7 @@ function translateString(array $data)
     ]);
 
     if (empty($data['language']) || empty($data['text'])) {
-        throw new Exception('Error parsing data');
+        throw new Exception('Error parsing translation data');
     }
 
     $docId = sprintf('%s:%s', $data['language'], base64_encode($data['text']));

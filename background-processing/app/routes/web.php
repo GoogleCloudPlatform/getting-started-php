@@ -18,7 +18,6 @@
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\PubSub\PubSubClient;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 if (!$projectId = getenv('GOOGLE_CLOUD_PROJECT')) {
     throw new Exception('Env var GOOGLE_CLOUD_PROJECT must be set');
@@ -43,15 +42,17 @@ $router->post('/request-translation', function (Request $request) use ($projectI
     if (!in_array($lang = $request->get('lang'), $acceptableLanguages)) {
         throw new Exception('Unsupported Language: ' . $lang);
     }
+    if (!$text = $request->get('v')) {
+        throw new Exception('No text to translate');
+    }
     $pubsub = new PubSubClient([
         'projectId' => $projectId,
     ]);
     $topic = $pubsub->topic('translate');
     $topic->publish(['data' => json_encode([
         'language' => $lang,
-        'text' => $request->get('v'),
+        'text' => $text,
     ])]);
-    $bookData = $request->request->all();
 
     return '';
 });

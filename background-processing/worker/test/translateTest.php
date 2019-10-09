@@ -17,7 +17,6 @@
 
 use Google\Cloud\Firestore\FirestoreClient;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__ . '/../index.php';
 
@@ -27,10 +26,11 @@ class translateTest extends TestCase
     public function testTranslateString()
     {
         $text = 'Living the crazy life ' . time();
-        $request = new Request();
-        $request->request->set('text', $text);
-        $request->request->set('language', 'es');
-        $result = translateString($request);
+        $data = [
+            'text' => $text,
+            'language' => 'es',
+        ];
+        $result = translateString($data);
 
         $firestore = new FirestoreClient();
         $docRef = $firestore->collection('translations')->document('es:' . base64_encode($text));
