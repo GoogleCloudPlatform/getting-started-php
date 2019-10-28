@@ -40,7 +40,7 @@ class DeployTest extends TestCase
     private static $appGcloudWrapper;
 
     /** @var \Google\Cloud\TestUtils\GcloudWrapper */
-    private static $workerGcloudWrapper;
+    private static $backendGcloudWrapper;
 
     /** @var \Google\Cloud\PubSub\Subscription */
     private static $subscription;
@@ -55,7 +55,7 @@ class DeployTest extends TestCase
         $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         $versionId = self::requireEnv('GOOGLE_VERSION_ID');
         self::$appGcloudWrapper = new GcloudWrapper($projectId, $versionId . '-app');
-        self::$workerGcloudWrapper = new GcloudWrapper($projectId, $versionId . '-worker');
+        self::$backendGcloudWrapper = new GcloudWrapper($projectId, $versionId . '-backend');
         self::$subscription = (new PubSubClient(['projectId' => $projectId]))
             ->topic('translate')
             ->subscription($versionId . '-test');
@@ -63,22 +63,22 @@ class DeployTest extends TestCase
 
     private static function beforeDeploy()
     {
-        $appDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
+        $appDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../appengine-frontend');
         self::$appGcloudWrapper->setDir($appDir);
 
-        $workerDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../worker');
-        self::$workerGcloudWrapper->setDir($workerDir);
+        $backendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../cloud-run-backend');
+        self::$backendGcloudWrapper->setDir($backendDir);
     }
 
     private static function doDeploy()
     {
-        // Deploy both the app and worker to App Engine.
+        // Deploy both the app and backend to App Engine.
         if (self::$appGcloudWrapper->deploy() === false) {
             throw new \Exception('Failed to deploy app');
         }
 
-        if (self::$workerGcloudWrapper->deploy() === false) {
-            throw new \Exception('Failed to deploy worker');
+        if (self::$backendGcloudWrapper->deploy() === false) {
+            throw new \Exception('Failed to deploy backend');
         }
 
         if (self::$subscription->exists()) {
@@ -88,7 +88,7 @@ class DeployTest extends TestCase
         // Create the pubsub subscription
         self::$subscription->create([
             'pushConfig' => [
-                'pushEndpoint' => self::$workerGcloudWrapper->getBaseUrl()
+                'pushEndpoint' => self::$backendGcloudWrapper->getBaseUrl()
             ],
         ]);
 
@@ -101,7 +101,7 @@ class DeployTest extends TestCase
     private static function doDelete()
     {
         self::$appGcloudWrapper->delete();
-        self::$workerGcloudWrapper->delete();
+        self::$backendGcloudWrapper->delete();
         self::$subscription->delete();
     }
 
@@ -123,10 +123,10 @@ class DeployTest extends TestCase
         );
     }
 
-    public function testWorker()
+    public function testBackend()
     {
         $client = new Client([
-            'base_uri' => self::$workerGcloudWrapper->getBaseUrl()
+            'base_uri' => self::$backendGcloudWrapper->getBaseUrl()
         ]);
 
         $text = 'living the crazy life';
@@ -159,7 +159,7 @@ class DeployTest extends TestCase
 
     /**
      * @depends testApp
-     * @depends testWorker
+     * @depends testBackend
      */
     public function testRequestTranslation()
     {

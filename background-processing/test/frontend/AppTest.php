@@ -32,7 +32,7 @@ class AppTest extends Laravel\Lumen\Testing\TestCase
      */
     public function createApplication()
     {
-        $app = require __DIR__ . '/../index.php';
+        $app = require __DIR__ . '/../../appengine-frontend/index.php';
         $app['debug'] = true;
         return $app;
     }

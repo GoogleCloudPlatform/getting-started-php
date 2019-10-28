@@ -1,6 +1,6 @@
-/vendor
+vendor/
 /.idea
 Homestead.json
 Homestead.yaml
-storage/logs/*
+/app/storage/logs/*
 .env

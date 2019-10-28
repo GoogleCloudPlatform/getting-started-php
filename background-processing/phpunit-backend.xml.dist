@@ -14,15 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="vendor/autoload.php" convertWarningsToExceptions="false">
+<phpunit bootstrap="cloud-run-backend/vendor/autoload.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="PHP Getting Started background processing app tests">
-            <directory>test</directory>
+        <testsuite name="PHP Getting Started background processing backend tests">
+            <directory>test/backend</directory>
         </testsuite>
     </testsuites>
-    <php>
-        <env name="PHPUNIT_TESTS" value="1"/>
-        <env name="APP_ENV" value="test"/>
-        <env name="APP_DEBUG" value="true"/>
-    </php>
 </phpunit>
