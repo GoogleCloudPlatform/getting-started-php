@@ -17,12 +17,16 @@
 
 namespace Google\Cloud\GettingStarted;
 
+use Google\Auth\ApplicationDefaultCredentials;
+use Google\Auth\CredentialsLoader;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\PubSub\PubSubClient;
+use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\DeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\FileUtil;
-use Google\Cloud\TestUtils\GcloudWrapper;
+use Google\Cloud\TestUtils\GcloudWrapper\AppEngine;
+use Google\Cloud\TestUtils\GcloudWrapper\CloudRun;
 use Google\Cloud\TestUtils\TestTrait;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
@@ -32,18 +36,21 @@ use PHPUnit\Framework\TestCase;
  */
 class DeployTest extends TestCase
 {
-    use TestTrait;
     use EventuallyConsistentTestTrait;
     use DeploymentTrait;
+    use TestTrait;
 
-    /** @var \Google\Cloud\TestUtils\GcloudWrapper */
-    private static $appGcloudWrapper;
+    /** @var \Google\Cloud\TestUtils\GcloudWrapper\AppEngine */
+    private static $frontend;
 
-    /** @var \Google\Cloud\TestUtils\GcloudWrapper */
-    private static $backendGcloudWrapper;
+    /** @var \Google\Cloud\TestUtils\GcloudWrapper\CloudRun */
+    private static $backend;
 
     /** @var \Google\Cloud\PubSub\Subscription */
     private static $subscription;
+
+    /** @var string */
+    private static $image;
 
     /**
      * Deploy the application.
@@ -54,41 +61,53 @@ class DeployTest extends TestCase
     {
         $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         $versionId = self::requireEnv('GOOGLE_VERSION_ID');
-        self::$appGcloudWrapper = new GcloudWrapper($projectId, $versionId . '-app');
-        self::$backendGcloudWrapper = new GcloudWrapper($projectId, $versionId . '-backend');
+        self::$frontend = new AppEngine($projectId, $versionId . '-frontend');
+        self::$backend = new CloudRun($projectId);
         self::$subscription = (new PubSubClient(['projectId' => $projectId]))
             ->topic('translate')
             ->subscription($versionId . '-test');
+        self::$image = sprintf('gcr.io/%s/%s-image', $projectId, $versionId);
     }
 
     private static function beforeDeploy()
     {
-        $appDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../appengine-frontend');
-        self::$appGcloudWrapper->setDir($appDir);
+        $frontendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../appengine-frontend');
+        self::$frontend->setDir($frontendDir);
 
         $backendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../cloud-run-backend');
-        self::$backendGcloudWrapper->setDir($backendDir);
+        self::$backend->setDir($backendDir);
     }
 
     private static function doDeploy()
     {
-        // Deploy both the app and backend to App Engine.
-        if (self::$appGcloudWrapper->deploy() === false) {
-            throw new \Exception('Failed to deploy app');
+        // Deploy both the frontend and backend to App Engine.
+        if (false === self::$frontend->deploy()) {
+            return false;
         }
 
-        if (self::$backendGcloudWrapper->deploy() === false) {
-            throw new \Exception('Failed to deploy backend');
+        if (false === self::$backend->build(self::$image)) {
+            return false;
+        }
+
+        if (false === self::$backend->deploy(self::$image)) {
+            return false;
         }
 
         if (self::$subscription->exists()) {
             self::$subscription->delete();
         }
 
+        $serviceAccountJson = json_decode(file_get_contents(
+            self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS')
+        ), true);
+
         // Create the pubsub subscription
         self::$subscription->create([
             'pushConfig' => [
-                'pushEndpoint' => self::$backendGcloudWrapper->getBaseUrl()
+                'pushEndpoint' => self::$backend->getBaseUrl(),
+                'oidcToken' => [
+                    'serviceAccountEmail' => $serviceAccountJson['client_email']
+                ]
             ],
         ]);
 
@@ -100,20 +119,13 @@ class DeployTest extends TestCase
      */
     private static function doDelete()
     {
-        self::$appGcloudWrapper->delete();
-        self::$backendGcloudWrapper->delete();
+        self::$frontend->delete();
+        self::$backend->delete();
+        self::$backend->deleteImage(self::$image);
         self::$subscription->delete();
     }
 
-    /**
-     * Return the URI of the deployed App Engine app.
-     */
-    private function getBaseUri()
-    {
-        return self::$appGcloudWrapper->getBaseUrl();
-    }
-
-    public function testApp()
+    public function testFrontend()
     {
         $resp = $this->client->get('/');
         $this->assertEquals('200', $resp->getStatusCode());
@@ -125,11 +137,17 @@ class DeployTest extends TestCase
 
     public function testBackend()
     {
-        $client = new Client([
-            'base_uri' => self::$backendGcloudWrapper->getBaseUrl()
+        $timestamp = time();
+        // create an authenticated HTTP client
+        $targetAudience = self::$backend->getBaseUrl();
+        $credentials = ApplicationDefaultCredentials::getCredentials(
+            null, null, null, null, $targetAudience
+        );
+        $client = CredentialsLoader::makeHttpClient($credentials, [
+            'base_uri' => $targetAudience,
         ]);
 
-        $text = 'living the crazy life';
+        $text = 'Test sent directly to the backend ' . $timestamp;
         $resp = $client->post('/', [
             'json' => [
                 'message' => [
@@ -148,17 +166,16 @@ class DeployTest extends TestCase
             ->document('es:' . base64_encode($text));
 
         $this->assertTrue($docRef->snapshot()->exists());
-
         $this->assertEquals($text, $docRef->snapshot()['original']);
         $this->assertEquals('en', $docRef->snapshot()['originalLang']);
         $this->assertEquals('es', $docRef->snapshot()['lang']);
-        $this->assertContains('la vida loca', $docRef->snapshot()['translated']);
+        $this->assertContains((string) $timestamp, $docRef->snapshot()['translated']);
 
         $docRef->delete();
     }
 
     /**
-     * @depends testApp
+     * @depends testFrontend
      * @depends testBackend
      */
     public function testRequestTranslation()
@@ -176,5 +193,10 @@ class DeployTest extends TestCase
                 (string) $resp->getBody()
             );
         });
+    }
+
+    public function getBaseUri()
+    {
+        return self::$frontend->getBaseUrl();
     }
 }

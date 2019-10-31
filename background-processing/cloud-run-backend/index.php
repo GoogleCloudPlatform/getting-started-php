@@ -9,15 +9,8 @@ function translateString(array $data)
     if (empty($data['language']) || empty($data['text'])) {
         throw new Exception('Error parsing translation data');
     }
-    if (!$projectId = getenv('GOOGLE_CLOUD_PROJECT')) {
-        throw new Exception('Env var GOOGLE_CLOUD_PROJECT must be set');
-    }
-    $translate = new TranslateClient([
-        'projectId' => $projectId,
-    ]);
-    $firestore = new FirestoreClient([
-        'projectId' => $projectId,
-    ]);
+    $translate = new TranslateClient();
+    $firestore = new FirestoreClient();
 
     $docId = sprintf('%s:%s', $data['language'], base64_encode($data['text']));
     $docRef = $firestore->collection('translations')->document($docId);
@@ -42,4 +35,6 @@ function translateString(array $data)
             ]);
         }
     );
+
+    echo "Done.";
 }
