@@ -35,10 +35,12 @@ class DeployTest extends TestCase
 
     private static $projectDir;
     private static $instanceName;
+    private static $instanceZone = 'us-central1-f';
 
     private static function beforeDeploy()
     {
-        self::$instanceName = 'test-instance-' . FileUtil::randomName(4);
+        self::$instanceName = getenv('COMPUTE_INSTANCE_NAME')
+            ?: 'test-instance-' . FileUtil::randomName(4);
         self::$projectDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/..');
         chdir(self::$projectDir);
         file_put_contents('scripts/deploy.sh', str_replace(
@@ -56,11 +58,12 @@ class DeployTest extends TestCase
     private static function doDeploy()
     {
         passthru('bash scripts/deploy.sh');
-        $backoff = new ExponentialBackoff(10);
+        $backoff = new ExponentialBackoff(12);
         $backoff->execute(function () {
             $cmd = sprintf(
-                'gcloud compute instances get-serial-port-output %s 2>&1',
-                self::$instanceName
+                'gcloud compute instances get-serial-port-output %s --zone=%s',
+                self::$instanceName,
+                self::$instanceZone
             );
             exec($cmd, $output);
             $output = implode("\n", $output);
@@ -89,8 +92,9 @@ class DeployTest extends TestCase
     private function getBaseUri()
     {
         $cmd = sprintf(
-            'gcloud compute instances describe %s | grep natIP | awk \'{print $2}\'',
-            self::$instanceName
+            'gcloud compute instances describe %s --zone=%s | grep natIP | awk \'{print $2}\'',
+            self::$instanceName,
+            self::$instanceZone
         );
         exec($cmd, $output);
         if (empty($output[0])) {

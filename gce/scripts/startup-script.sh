@@ -30,7 +30,7 @@ curl -sS https://getcomposer.org/installer | \
     --filename=composer
 
 # Get the application source code
-git clone https://github.com/googlecloudplatform/getting-started-php /opt/src -b gce
+git clone https://github.com/googlecloudplatform/getting-started-php /opt/src
 ln -s /opt/src/gce /opt/app
 
 # Run Composer
