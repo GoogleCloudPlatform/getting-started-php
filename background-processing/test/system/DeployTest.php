@@ -17,8 +17,8 @@
 
 namespace Google\Cloud\GettingStarted;
 
-use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\CredentialsLoader;
+use Google\Auth\OAuth2;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\PubSub\PubSubClient;
 use Google\Cloud\TestUtils\DeploymentTrait;
@@ -141,18 +141,24 @@ class DeployTest extends TestCase
 
     public function testBackend()
     {
-        $timestamp = time();
-        // create an authenticated HTTP client
+        // Get the ID Token from the Google OAuth2 endpoint
         $targetAudience = self::$backend->getBaseUrl();
-        $credentials = ApplicationDefaultCredentials::getCredentials(
-            null, null, null, null, $targetAudience
-        );
-        $client = CredentialsLoader::makeHttpClient($credentials, [
-            'base_uri' => $targetAudience,
+        $jsonKey = CredentialsLoader::fromEnv();
+        $auth = new OAuth2([
+            'audience' => CredentialsLoader::TOKEN_CREDENTIAL_URI,
+            'issuer' => $jsonKey['client_email'],
+            'signingAlgorithm' => 'RS256',
+            'signingKey' => $jsonKey['private_key'],
+            'tokenCredentialUri' => CredentialsLoader::TOKEN_CREDENTIAL_URI,
+            'additionalClaims' => ['target_audience' => $targetAudience],
         ]);
+        $token = $auth->fetchAuthToken();
 
+        // Send an authenticated HTTP request to the backend
+        $timestamp = time();
         $text = 'Test sent directly to the backend ' . $timestamp;
-        $resp = $client->post('/', [
+        $backendClient = new Client();
+        $resp = $backendClient->post($targetAudience, [
             'json' => [
                 'message' => [
                     'data' => base64_encode(json_encode([
@@ -160,11 +166,13 @@ class DeployTest extends TestCase
                         'text' => $text,
                     ])),
                 ]
-            ]
+            ],
+            'headers' => ['Authorization' => 'Bearer ' . $token['id_token']],
         ]);
         $this->assertEquals('200', $resp->getStatusCode());
         $this->assertContains('Done.', (string) $resp->getBody());
 
+        // Verify the translation exists in Firestore
         $firestore = new FirestoreClient();
         $docRef = $firestore->collection('translations')
             ->document('es:' . base64_encode($text));
