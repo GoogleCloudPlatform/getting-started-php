@@ -1,4 +1,2 @@
 Dockerfile
-test/
 vendor/
-phpunit.xml.dist
