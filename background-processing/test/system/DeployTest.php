@@ -64,7 +64,7 @@ class DeployTest extends TestCase
         self::$backend = new CloudRun($projectId);
         self::$subscription = (new PubSubClient(['projectId' => $projectId]))
             ->topic('translate')
-            ->subscription($versionId . '-test');
+            ->subscription('test-' . $versionId);
         self::$image = sprintf('gcr.io/%s/%s-image', $projectId, $versionId);
     }
 
