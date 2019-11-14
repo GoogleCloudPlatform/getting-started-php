@@ -28,7 +28,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 |
 */
 
+# [START getting_started_background_app_main]
 $app = new Laravel\Lumen\Application(__DIR__);
+# [END getting_started_background_app_main]
 
 /*
 |--------------------------------------------------------------------------
@@ -41,10 +43,12 @@ $app = new Laravel\Lumen\Application(__DIR__);
 |
 */
 
+# [START getting_started_background_app_main]
 $app->router->group([
 ], function ($router) {
     require __DIR__ . '/routes/web.php';
 });
+# [END getting_started_background_app_main]
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +67,6 @@ if (getenv('PHPUNIT_TESTS') === '1') {
     return $app;
 }
 
+# [START getting_started_background_app_main]
 $app->run();
+# [END getting_started_background_app_main]

@@ -23,8 +23,9 @@ if (!$projectId = getenv('GOOGLE_CLOUD_PROJECT')) {
     throw new Exception('Env var GOOGLE_CLOUD_PROJECT must be set');
 }
 
+# [START getting_started_background_app_list]
 /**
- * An example route using the Lumen framework.
+ * Homepage listing all requested translations and their results.
  */
 $router->get('/', function (Request $request) use ($projectId) {
     $firestore = new FirestoreClient([
@@ -33,9 +34,11 @@ $router->get('/', function (Request $request) use ($projectId) {
     $translations = $firestore->collection('translations')->documents();
     return view('home', ['translations' => $translations]);
 });
+# [END getting_started_background_app_list]
 
+# [START getting_started_background_app_request]
 /**
- * An example route using the Lumen framework.
+ * Endpoint which publishes a PubSub request for a new translation
  */
 $router->post('/request-translation', function (Request $request) use ($projectId) {
     $acceptableLanguages = ['de', 'en', 'es', 'fr', 'ja', 'sw'];
@@ -56,3 +59,4 @@ $router->post('/request-translation', function (Request $request) use ($projectI
 
     return '';
 });
+# [END getting_started_background_app_request]
