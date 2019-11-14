@@ -45,7 +45,23 @@ install:
 - if [ "$RUN_CS_FIXER" = "true" ]; then $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
 
 script:
+# Fail immediately
+- set -e
 # Run linter
 - if [ "$RUN_CS_FIXER" = "true" ]; then ./php-cs-fixer fix --dry-run --diff; fi
+# Install composer in all directories containing composer.json
+- |
+  find . -name composer.json -not -path '*vendor/*' -exec dirname {} \; | while read COMPOSER_DIR
+  do
+    pushd $COMPOSER_DIR;
+    composer install --quiet;
+    popd;
+  done
 # Run the tests in each of the sample directories
-- pushd bookshelf && composer install && $COMPOSER_BIN_DIR/phpunit -v && popd
+- |
+  find . -name 'phpunit*.xml*' -not -path '*vendor/*' | while read PHPUNIT_FILE
+  do
+    pushd $(dirname $PHPUNIT_FILE);
+    $COMPOSER_BIN_DIR/phpunit -v -c $(basename $PHPUNIT_FILE);
+    popd;
+  done
