@@ -1,40 +1,25 @@
 <?php
 
-use Google\Cloud\Firestore\FirestoreClient;
-use Google\Cloud\Firestore\Transaction;
-use Google\Cloud\Translate\TranslateClient;
+require __DIR__ . '/vendor/autoload.php';
 
-function translateString(array $data)
-{
-    if (empty($data['language']) || empty($data['text'])) {
-        throw new Exception('Error parsing translation data');
+use Symfony\Component\HttpFoundation\Request;
+
+require_once getenv('FUNCTION_SOURCE', true) ?: __DIR__ . '/index.php';
+
+(function () {
+    $target = getenv('FUNCTION_TARGET', true);
+    if ($target === false) {
+        throw new \Exception('FUNCTION_TARGET is not set');
     }
-    $translate = new TranslateClient();
-    $firestore = new FirestoreClient();
 
-    $docId = sprintf('%s:%s', $data['language'], base64_encode($data['text']));
-    $docRef = $firestore->collection('translations')->document($docId);
-
-    $translation = [
-        'original' => $data['text'],
-        'lang' => $data['language'],
-    ];
-
-    $firestore->runTransaction(
-        function (Transaction $transaction) use ($translate, $translation, $docRef) {
-            $snapshot = $transaction->snapshot($docRef);
-            if ($snapshot->exists()) {
-                return; // Do nothing if the document already exists
-            }
-            $result = $translate->translate($translation['original'], [
-                'target' => $translation['lang'],
-            ]);
-            $transaction->set($docRef, $translation + [
-                'translated' => $result['text'],
-                'originalLang' => $result['source'],
-            ]);
-        }
-    );
-
-    echo "Done.";
-}
+    $request = Request::createFromGlobals();
+    $message = json_decode($request->getContent(), true);
+    if (empty($message['message']['data'])) {
+        throw new \Exception('No message received');
+    }
+    $data = json_decode(base64_decode($message['message']['data']), true);
+    if (!$data) {
+        throw new \Exception('Error decoding data from message');
+    }
+    call_user_func_array($target, [$data]);
+})();

@@ -21,7 +21,6 @@ use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\CredentialsLoader;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\PubSub\PubSubClient;
-use Google\Cloud\TestUtils\AppEngineDeploymentTrait;
 use Google\Cloud\TestUtils\DeploymentTrait;
 use Google\Cloud\TestUtils\EventuallyConsistentTestTrait;
 use Google\Cloud\TestUtils\FileUtil;
@@ -57,7 +56,7 @@ class DeployTest extends TestCase
      *
      * @beforeClass
      */
-    public static function setUpGcloudWrappers()
+    public static function setUpDeploymentVars()
     {
         $projectId = self::requireEnv('GOOGLE_PROJECT_ID');
         $versionId = self::requireEnv('GOOGLE_VERSION_ID');
@@ -71,6 +70,11 @@ class DeployTest extends TestCase
 
     private static function beforeDeploy()
     {
+        // Ensure setUpDeploymentVars has been called
+        if (is_null(self::$frontend)) {
+            self::setUpDeploymentVars();
+        }
+
         $frontendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../appengine-frontend');
         self::$frontend->setDir($frontendDir);
 

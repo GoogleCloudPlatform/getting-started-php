@@ -18,7 +18,7 @@
 use Google\Cloud\Firestore\FirestoreClient;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../cloud-run-backend/index.php';
+require_once __DIR__ . '/../../cloud-run-backend/functions.php';
 
 class translateTest extends TestCase
 {
