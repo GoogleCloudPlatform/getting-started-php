@@ -60,7 +60,7 @@ class DeployTest extends TestCase
         $backoff = new ExponentialBackoff(12);
         $backoff->execute(function () {
             $cmd = sprintf(
-                'gcloud compute instances get-serial-port-output %s',
+                'gcloud compute instances get-serial-port-output %s --zone=us-central1-f',
                 self::$instanceName
             );
             exec($cmd, $output);
