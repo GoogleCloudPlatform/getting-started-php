@@ -35,6 +35,7 @@ class DeployTest extends TestCase
 
     private static $projectDir;
     private static $instanceName;
+    private static $instanceZone = 'us-central1-f';
 
     private static function beforeDeploy()
     {
@@ -60,8 +61,9 @@ class DeployTest extends TestCase
         $backoff = new ExponentialBackoff(12);
         $backoff->execute(function () {
             $cmd = sprintf(
-                'gcloud compute instances get-serial-port-output %s --zone=us-central1-f',
-                self::$instanceName
+                'gcloud compute instances get-serial-port-output %s --zone=%s',
+                self::$instanceName,
+                self::$instanceZone
             );
             exec($cmd, $output);
             $output = implode("\n", $output);
@@ -90,8 +92,9 @@ class DeployTest extends TestCase
     private function getBaseUri()
     {
         $cmd = sprintf(
-            'gcloud compute instances describe %s | grep natIP | awk \'{print $2}\'',
-            self::$instanceName
+            'gcloud compute instances describe %s --zone=%s | grep natIP | awk \'{print $2}\'',
+            self::$instanceName,
+            self::$instanceZone
         );
         exec($cmd, $output);
         if (empty($output[0])) {
