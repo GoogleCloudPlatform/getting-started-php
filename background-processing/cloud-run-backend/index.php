@@ -4,8 +4,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 
-require_once getenv('FUNCTION_SOURCE', true) ?: __DIR__ . '/index.php';
-
 (function () {
     $target = getenv('FUNCTION_TARGET', true);
     if ($target === false) {
