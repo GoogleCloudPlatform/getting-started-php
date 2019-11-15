@@ -58,6 +58,6 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     default:
         http_response_code(404);
         exit('Not Found');
-    }
+}
 # [END getting_started_sessions_front_controller]
 # [END getting_started_sessions_all]
