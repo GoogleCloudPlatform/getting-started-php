@@ -5,8 +5,19 @@
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Firestore\Transaction;
 use Google\Cloud\Translate\TranslateClient;
+
 # [END getting_started_background_translate_setup]
 
+/**
+ * @param array $data {
+ *     The PubSub message data containing text and target language.
+ *
+ *     @type string $text
+ *           The full text to translate.
+ *     @type string $language
+ *           The target language for the translation.
+ * }
+ */
 function translateString(array $data)
 {
     if (empty($data['language']) || empty($data['text'])) {
