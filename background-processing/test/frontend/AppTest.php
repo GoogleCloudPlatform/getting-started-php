@@ -16,12 +16,13 @@
  */
 
 use Google\Cloud\TestUtils\TestTrait;
+use Laravel\Lumen\Testing\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Test for application controllers
  */
-class AppTest extends Laravel\Lumen\Testing\TestCase
+class AppTest extends TestCase
 {
     use TestTrait;
 

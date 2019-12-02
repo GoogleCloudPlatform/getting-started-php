@@ -115,16 +115,16 @@
               <?php foreach ($translations as $translation): ?>
                 <tr>
                   <td class="mdl-data-table__cell--non-numeric">
-                      <span class="mdl-chip mdl-color--primary">
-                          <span class="mdl-chip__text mdl-color-text--white"><?= $translation['originalLang'] ?></span>
-                      </span>
+                    <span class="mdl-chip mdl-color--primary">
+                      <span class="mdl-chip__text mdl-color-text--white"><?= $translation['originalLang'] ?></span>
+                    </span>
                   <?= $translation['original'] ?>
                   </td>
                   <td class="mdl-data-table__cell--non-numeric">
-                      <span class="mdl-chip mdl-color--accent">
-                          <span class="mdl-chip__text mdl-color-text--white"><?= $translation['lang'] ?></span>
-                      </span>
-                      <?= $translation['translated'] ?>
+                    <span class="mdl-chip mdl-color--accent">
+                      <span class="mdl-chip__text mdl-color-text--white"><?= $translation['lang'] ?></span>
+                    </span>
+                    <?= $translation['translated'] ?>
                   </td>
                 </tr>
               <?php endforeach ?>
@@ -136,8 +136,8 @@
         </div>
       </div>
       <div aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-snackbar mdl-js-snackbar" id="snackbar">
-          <div class="mdl-snackbar__text mdl-color-text--black"></div>
-          <button type="button" class="mdl-snackbar__action"></button>
+        <div class="mdl-snackbar__text mdl-color-text--black"></div>
+        <button type="button" class="mdl-snackbar__action"></button>
       </div>
     </main>
   </div>

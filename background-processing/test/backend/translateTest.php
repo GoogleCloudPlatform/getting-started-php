@@ -22,7 +22,6 @@ require_once __DIR__ . '/../../cloud-run-backend/functions.php';
 
 class translateTest extends TestCase
 {
-    // Test event function with incomplete GCF Event context and check for 500 Error
     public function testTranslateString()
     {
         $text = 'Living the crazy life ' . time();

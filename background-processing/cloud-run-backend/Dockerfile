@@ -2,11 +2,8 @@ FROM gcr.io/gae-runtimes/php73:php73_20190827_7_3_7_RC03
 
 WORKDIR /srv/
 
-# Enable PHP gRPC extension
-RUN echo "extension=grpc.so" > grpc.ini
-
 # Copy over all application files
-COPY . /srv/
+COPY . .
 
 # Run "composer install"
 COPY --from=composer:1 /usr/bin/composer /usr/local/bin
