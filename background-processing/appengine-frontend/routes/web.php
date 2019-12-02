@@ -38,7 +38,7 @@ $router->get('/', function (Request $request) use ($projectId) {
 
 # [START getting_started_background_app_request]
 /**
- * Endpoint which publishes a PubSub request for a new translation
+ * Endpoint which publishes a PubSub request for a new translation.
  */
 $router->post('/request-translation', function (Request $request) use ($projectId) {
     $acceptableLanguages = ['de', 'en', 'es', 'fr', 'ja', 'sw'];
