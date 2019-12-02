@@ -6,7 +6,7 @@
   },
   "autoload": {
     "files": [
-        "functions.php"
+      "functions.php"
     ]
   }
 }
