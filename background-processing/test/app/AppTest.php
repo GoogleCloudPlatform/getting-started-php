@@ -33,7 +33,7 @@ class AppTest extends TestCase
      */
     public function createApplication()
     {
-        $app = require __DIR__ . '/../../appengine-frontend/index.php';
+        $app = require __DIR__ . '/../../app/index.php';
         $app['debug'] = true;
         return $app;
     }

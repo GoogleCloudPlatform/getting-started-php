@@ -14,10 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<phpunit bootstrap="../appengine-frontend/vendor/autoload.php" convertWarningsToExceptions="false">
+<phpunit bootstrap="../app/vendor/autoload.php" convertWarningsToExceptions="false">
     <testsuites>
-        <testsuite name="PHP Getting Started background processing frontend tests">
-            <directory>frontend</directory>
+        <testsuite name="PHP Getting Started background processing app tests">
+            <directory>app</directory>
         </testsuite>
     </testsuites>
     <php>

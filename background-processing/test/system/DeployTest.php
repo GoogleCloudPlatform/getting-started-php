@@ -75,10 +75,10 @@ class DeployTest extends TestCase
             self::setUpDeploymentVars();
         }
 
-        $frontendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../appengine-frontend');
+        $frontendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../app');
         self::$frontend->setDir($frontendDir);
 
-        $backendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../cloud-run-backend');
+        $backendDir = FileUtil::cloneDirectoryIntoTmp(__DIR__ . '/../../backend');
         self::$backend->setDir($backendDir);
     }
 
