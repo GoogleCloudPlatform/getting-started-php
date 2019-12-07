@@ -9,6 +9,7 @@ Platform. Please follow the tutorials for instructions on using these samples.
   * [Authenticating users on PHP][authenticate-users]
   * [Compute Engine for PHP][getting-started-gce]
   * [Session handling with PHP][sessions]
+  * [Background Processing for PHP][background-processing]
 
 ## Contributing changes
 
@@ -24,3 +25,4 @@ Platform. Please follow the tutorials for instructions on using these samples.
 [authenticate-users]: http://cloud.google.com/php/getting-started/authenticate-users
 [getting-started-gce]: https://cloud.google.com/php/tutorials/getting-started-on-compute-engine
 [sessions]: http://cloud.google.com/php/getting-started/sessions
+[background-processing]: https://cloud.google.com/php/getting-started/background-processing
