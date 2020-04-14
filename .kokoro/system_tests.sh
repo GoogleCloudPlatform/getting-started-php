@@ -29,6 +29,7 @@ cd github/getting-started-php
 export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
 export GOOGLE_PROJECT_ID=$(cat "${GOOGLE_APPLICATION_CREDENTIALS}" | jq -r .project_id)
 export GOOGLE_CLOUD_PROJECT=$GOOGLE_PROJECT_ID
+export GOOGLE_VERSION_ID=$KOKORO_BUILD_NUMBER
 
 # Activate the service account
 if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
