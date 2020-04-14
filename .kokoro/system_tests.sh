@@ -16,15 +16,15 @@
 
 set -e
 
+# Kokoro directory for running these samples
+cd github/getting-started-php
+
 # Run code standards check when appropriate
 if [ "${RUN_CS_CHECK}" = "true" ]; then
   wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -O php-cs-fixer
   chmod a+x php-cs-fixer
   ./php-cs-fixer fix --dry-run --diff
 fi
-
-# Kokoro directory for running these samples
-cd github/getting-started-php
 
 export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
 export GOOGLE_PROJECT_ID=$(cat "${GOOGLE_APPLICATION_CREDENTIALS}" | jq -r .project_id)
