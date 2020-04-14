@@ -17,7 +17,9 @@
 set -e
 
 # Kokoro directory for running these samples
-cd github/getting-started-php
+if [ -d github/getting-started-php ]; then
+  cd github/getting-started-php
+fi
 
 # Run code standards check when appropriate
 if [ "${RUN_CS_CHECK}" = "true" ]; then
@@ -26,16 +28,28 @@ if [ "${RUN_CS_CHECK}" = "true" ]; then
   ./php-cs-fixer fix --dry-run --diff
 fi
 
-export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
+if [ -f $KOKORO_GFILE_DIR/service-account.json ]; then
+  export GOOGLE_APPLICATION_CREDENTIALS=$KOKORO_GFILE_DIR/service-account.json
+elif [ "$GOOGLE_APPLICATION_CREDENTIALS" = "" ]; then
+  echo "GOOGLE_APPLICATION_CREDENTIALS not found"
+  exit 1
+fi
+
 export GOOGLE_PROJECT_ID=$(cat "${GOOGLE_APPLICATION_CREDENTIALS}" | jq -r .project_id)
 export GOOGLE_CLOUD_PROJECT=$GOOGLE_PROJECT_ID
 export GOOGLE_VERSION_ID=$KOKORO_BUILD_NUMBER
+export PULL_REQUEST_NUMBER=$KOKORO_GITHUB_PULL_REQUEST_NUMBER
 
 # Activate the service account
 if [ -f ${GOOGLE_APPLICATION_CREDENTIALS} ]; then
     gcloud auth activate-service-account \
         --key-file "${GOOGLE_APPLICATION_CREDENTIALS}" \
         --project $GOOGLE_CLOUD_PROJECT
+fi
+
+# Only run Deployment Tests on nightly builds
+if [ "$PULL_REQUEST_NUMBER" != "" ]; then
+  export RUN_DEPLOYMENT_TESTS=""
 fi
 
 # Install composer in all directories containing composer.json
