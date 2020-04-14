@@ -44,6 +44,10 @@ install:
 - $COMPOSER_BIN_DIR/install_test_deps.sh --gcloud
 - if [ "$RUN_CS_FIXER" = "true" ]; then $COMPOSER_BIN_DIR/install_test_deps.sh --cs-fixer; fi
 
+before_script:
+# Set credentials
+- echo $GOOGLE_CREDENTIALS_BASE64 | base64 -d > $GOOGLE_APPLICATION_CREDENTIALS
+
 script:
 # Fail immediately
 - set -e
