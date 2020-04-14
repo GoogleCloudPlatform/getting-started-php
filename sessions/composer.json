@@ -1,5 +1,8 @@
 {
     "require": {
         "google/cloud-firestore": "^1.9"
+    },
+    "require-dev": {
+        "google/cloud-tools": "dev-master"
     }
 }
