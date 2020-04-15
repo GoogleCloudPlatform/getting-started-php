@@ -8,8 +8,8 @@
     "google/cloud-error-reporting": "^0.12.5"
   },
   "require-dev": {
-    "symfony/dom-crawler": "^4.3",
-    "symfony/css-selector": "^4.3",
+    "symfony/dom-crawler": "4.4.7",
+    "symfony/css-selector": "4.4.7",
     "google/cloud-tools": "dev-master"
   },
   "autoload": {
