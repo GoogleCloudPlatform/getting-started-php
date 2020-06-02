@@ -62,7 +62,7 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/':
         $idToken = getallheaders()['X-Goog-Iap-Jwt-Assertion'] ?? '';
         try {
-            list($email, $id) = validate_assertion($idToken, audience());
+            list($email, $id) = validate_assertion($idToken);
             printf("<h1>Hello %s</h1>", $email);
         } catch (Exception $e) {
             printf('Failed to validate assertion: ', $e->getMessage());
