@@ -28,20 +28,8 @@ require_once __DIR__ . '/vendor/autoload.php';
  *
  * @return array containing [$email, $id], or [null, null] on failed validation.
  */
-function validate_assertion(string $idToken, $audience = null) : array
+function validate_assertion(string $idToken, string $audience) : array
 {
-    // Get audience from the metadata server if it isn't passed in
-    if ($audience === null) {
-        # [START getting_started_auth_audience]
-        $metadata = new Google\Cloud\Core\Compute\Metadata();
-        $audience = sprintf(
-            '/projects/%s/apps/%s',
-            $metadata->getNumericProjectId(),
-            $metadata->getProjectId()
-        );
-        # [END getting_started_auth_audience]
-    }
-
     # [START getting_started_auth_validate_assertion]
     $auth = new Google\Auth\AccessToken();
     $info = $auth->verify($idToken, [
@@ -49,8 +37,10 @@ function validate_assertion(string $idToken, $audience = null) : array
       'throwException' => true,
     ]);
 
-    if ($info['aud'] ?? '' != $audience) {
-        throw new Exception('Audience did not match');
+    if ($audience != $info['aud'] ?? '') {
+        throw new Exception(sprintf(
+            'Audience %s did not match expected %s', $info['aud'], $audience
+        ));
     }
 
     return [$info['email'], $info['sub']];
@@ -64,12 +54,23 @@ function validate_assertion(string $idToken, $audience = null) : array
  */
 switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/':
+        if (!Google\Auth\Credentials\GCECredentials::onGce()) {
+            throw new Exception('You must deploy to appengine to run this sample');
+        }
+        # [START getting_started_auth_audience]
+        $metadata = new Google\Cloud\Core\Compute\Metadata();
+        $audience = sprintf(
+            '/projects/%s/apps/%s',
+            $metadata->getNumericProjectId(),
+            $metadata->getProjectId()
+        );
+        # [END getting_started_auth_audience]
         $idToken = getallheaders()['X-Goog-Iap-Jwt-Assertion'] ?? '';
         try {
-            list($email, $id) = validate_assertion($idToken);
+            list($email, $id) = validate_assertion($idToken, $audience);
             printf("<h1>Hello %s</h1>", $email);
         } catch (Exception $e) {
-            printf('Failed to validate assertion: ', $e->getMessage());
+            printf('Failed to validate assertion: %s', $e->getMessage());
         }
         break;
     case '': break; // Nothing to do, we're running our tests
