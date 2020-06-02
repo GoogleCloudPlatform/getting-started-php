@@ -3,6 +3,7 @@
         "php": ">=7.1",
         "google/auth": "^1.9",
         "google/cloud-core": "^1.32",
-        "ralouphie/getallheaders": "^3.0"
+        "ralouphie/getallheaders": "^3.0",
+        "kelvinmo/simplejwt": "^0.2.5"
     }
 }
