@@ -24,19 +24,23 @@ require_once __DIR__ . '/vendor/autoload.php';
  * email and a persistent user ID. If not valid, returns null for each field.
  *
  * @param string $assertion The JWT string to assert.
+ * @param string $assertion The audience of the JWT.
  *
  * @return array containing [$email, $id], or [null, null] on failed validation.
  */
-function validate_assertion(string $idToken) : array
+function validate_assertion(string $idToken, $audience = null) : array
 {
-    # [START getting_started_auth_audience]
-    $metadata = new Google\Cloud\Core\Compute\Metadata();
-    $audience = sprintf(
-        '/projects/%s/apps/%s',
-        $metadata->getNumericProjectId(),
-        $metadata->getProjectId()
-    );
-    # [END getting_started_auth_audience]
+    // Get audience from the metadata server if it isn't passed in
+    if ($audience === null) {
+        # [START getting_started_auth_audience]
+        $metadata = new Google\Cloud\Core\Compute\Metadata();
+        $audience = sprintf(
+            '/projects/%s/apps/%s',
+            $metadata->getNumericProjectId(),
+            $metadata->getProjectId()
+        );
+        # [END getting_started_auth_audience]
+    }
 
     # [START getting_started_auth_validate_assertion]
     $auth = new Google\Auth\AccessToken();
