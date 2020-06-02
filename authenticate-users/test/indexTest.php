@@ -86,11 +86,4 @@ class indexTest extends TestCase
         $this->assertEquals('1234567890', $id);
         $this->expectOutputRegex('//');
     }
-
-    public function testCerts()
-    {
-        $certs = certs();
-        $this->assertTrue(false !== $json = json_decode($certs, true));
-        $this->assertArrayHasKey('keys', $json);
-    }
 }

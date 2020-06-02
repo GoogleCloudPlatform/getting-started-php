@@ -18,68 +18,40 @@
 # [START getting_started_auth_all]
 require_once __DIR__ . '/vendor/autoload.php';
 
-# [START getting_started_auth_certs]
-/**
- * Returns a dictionary of current Google public key certificates for
- * validating Google-signed JWTs.
- */
-function certs() : string
-{
-    $client = new GuzzleHttp\Client();
-    $response = $client->get(
-        'https://www.gstatic.com/iap/verify/public_key-jwk'
-    );
-    return $response->getBody();
-}
-# [END getting_started_auth_certs]
-
-# [START getting_started_auth_audience]
-/**
- * Returns the audience value (the JWT 'aud' property) for the current
- * running instance. Since this involves a metadata lookup, the result is
- * cached when first requested for faster future responses.
- */
-function audience() : string
-{
-    $metadata = new Google\Cloud\Core\Compute\Metadata();
-    $projectNumber = $metadata->getNumericProjectId();
-    $projectId = $metadata->getProjectId();
-    $audience = sprintf('/projects/%s/apps/%s', $projectNumber, $projectId);
-    return $audience;
-}
-# [END getting_started_auth_audience]
-
-# [START getting_started_auth_validate_assertion]
 /**
  * Checks that the JWT assertion is valid (properly signed, for the
  * correct audience) and if so, returns strings for the requesting user's
  * email and a persistent user ID. If not valid, returns null for each field.
  *
  * @param string $assertion The JWT string to assert.
- * @param string $certs The certificates to use for the assertion validation.
- * @param string $audience The required audience of the JWT.
+ *
  * @return array containing [$email, $id], or [null, null] on failed validation.
  */
-function validate_assertion(string $assertion, string $certs, string $audience) : array
+function validate_assertion(string $idToken) : array
 {
-    $jwkset = new SimpleJWT\Keys\KeySet();
-    $jwkset->load($certs);
-    try {
-        $info = SimpleJWT\JWT::decode(
-            $assertion,
-            $jwkset,
-            'ES256'
-        );
-        if ($info->getClaim('aud') != $audience) {
-            throw new Exception('Audience did not match');
-        }
-        return [$info->getClaim('email'), $info->getClaim('sub')];
-    } catch (Exception $e) {
-        printf('Failed to validate assertion: %s', $e->getMessage());
-        return [null, null];
+    # [START getting_started_auth_audience]
+    $metadata = new Google\Cloud\Core\Compute\Metadata();
+    $audience = sprintf(
+        '/projects/%s/apps/%s',
+        $metadata->getNumericProjectId(),
+        $metadata->getProjectId()
+    );
+    # [END getting_started_auth_audience]
+
+    # [START getting_started_auth_validate_assertion]
+    $auth = new Google\Auth\AccessToken();
+    $info = $auth->verify($idToken, [
+      'certsLocation' => Google\Auth\AccessToken::IAP_CERT_URL,
+      'throwException' => true,
+    ]);
+
+    if ($info['aud'] ?? '' != $audience) {
+        throw new Exception('Audience did not match');
     }
+
+    return [$info['email'], $info['sub']];
+    # [END getting_started_auth_validate_assertion]
 }
-# [END getting_started_auth_validate_assertion]
 
 # [START getting_started_auth_front_controller]
 /**
@@ -88,10 +60,12 @@ function validate_assertion(string $assertion, string $certs, string $audience) 
  */
 switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/':
-        $assertion = getallheaders()['X-Goog-Iap-Jwt-Assertion'] ?? '';
-        list($email, $id) = validate_assertion($assertion, certs(), audience());
-        if ($email) {
+        $idToken = getallheaders()['X-Goog-Iap-Jwt-Assertion'] ?? '';
+        try {
+            list($email, $id) = validate_assertion($idToken, audience());
             printf("<h1>Hello %s</h1>", $email);
+        } catch (Exception $e) {
+            printf('Failed to validate assertion: ', $e->getMessage());
         }
         break;
     case '': break; // Nothing to do, we're running our tests
