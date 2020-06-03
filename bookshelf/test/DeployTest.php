@@ -98,7 +98,10 @@ class DeployTest extends TestCase
         // Iterate through all elements
         $this->runEventuallyConsistentTest(function () use ($errorStats, $projectName, $timeRange, $message) {
             $messages = [];
-            $response = $errorStats->listGroupStats($projectName, $timeRange, ['pageSize' => 100]);
+            $response = $errorStats->listGroupStats($projectName, [
+                'timeRange' => $timeRange,
+                'pageSize' => 100,
+            ]);
             foreach ($response->iterateAllElements() as $groupStat) {
                 $response = $errorStats->listEvents($projectName, $groupStat->getGroup()->getGroupId(), [
                     'timeRange' => $timeRange,
