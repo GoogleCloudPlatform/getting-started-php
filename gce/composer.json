@@ -1,8 +1,5 @@
 {
   "require": {
     "laravel/lumen-framework": " 5.8.*"
-  },
-  "require-dev": {
-    "google/cloud-tools": "dev-master"
   }
 }

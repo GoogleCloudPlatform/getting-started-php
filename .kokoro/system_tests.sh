@@ -52,6 +52,9 @@ if [ "$PULL_REQUEST_NUMBER" != "" ]; then
   export RUN_DEPLOYMENT_TESTS=""
 fi
 
+# Install google/cloud-tools globally
+composer global require google/cloud-tools:dev-master
+
 # Install composer in all directories containing composer.json
 find . -name composer.json -not -path '*vendor/*' -exec dirname {} \; | while read COMPOSER_DIR
 do

@@ -53,6 +53,13 @@ globally:
 composer global require phpunit/phpunit:^7
 ```
 
+These tests also use `google/cloud-tools:dev-master`. You can install this with
+composer globally:
+
+```
+composer global require google/cloud-tools:dev-master
+```
+
 Now you can run the tests in the samples directory!
 
 ```
