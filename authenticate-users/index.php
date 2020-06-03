@@ -18,19 +18,20 @@
 # [START getting_started_auth_all]
 require_once __DIR__ . '/vendor/autoload.php';
 
+# [START getting_started_auth_validate_assertion]
 /**
  * Checks that the JWT assertion is valid (properly signed, for the
  * correct audience) and if so, returns strings for the requesting user's
  * email and a persistent user ID. If not valid, returns null for each field.
  *
  * @param string $assertion The JWT string to assert.
- * @param string $assertion The audience of the JWT.
+ * @param string $audience The audience of the JWT.
  *
- * @return array containing [$email, $id], or [null, null] on failed validation.
+ * @return string[] array containing [$email, $id]
+ * @throws Exception on failed validation
  */
 function validate_assertion(string $idToken, string $audience) : array
 {
-    # [START getting_started_auth_validate_assertion]
     $auth = new Google\Auth\AccessToken();
     $info = $auth->verify($idToken, [
       'certsLocation' => Google\Auth\AccessToken::IAP_CERT_URL,
@@ -44,8 +45,8 @@ function validate_assertion(string $idToken, string $audience) : array
     }
 
     return [$info['email'], $info['sub']];
-    # [END getting_started_auth_validate_assertion]
 }
+# [END getting_started_auth_validate_assertion]
 
 # [START getting_started_auth_front_controller]
 /**

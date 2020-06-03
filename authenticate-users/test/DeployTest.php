@@ -38,7 +38,6 @@ class DeployTest extends TestCase
      */
     private static function checkProjectEnvVars()
     {
-        self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
     }
 
     /**
@@ -47,6 +46,10 @@ class DeployTest extends TestCase
      */
     public static function deployApp()
     {
+        // This has to go here because the requirements are out of order
+        self::requireEnv('GOOGLE_APPLICATION_CREDENTIALS');
+
+        // Deploy using the IAP project ID
         self::$gcloudWrapper = new GcloudWrapper(
             self::$iapProjectId,
             self::requireEnv('GOOGLE_VERSION_ID')
