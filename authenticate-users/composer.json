@@ -5,8 +5,5 @@
         "google/cloud-core": "^1.32",
         "ralouphie/getallheaders": "^3.0",
         "kelvinmo/simplejwt": "^0.2.5"
-    },
-    "require-dev": {
-        "google/cloud-tools": "dev-master"
     }
 }
