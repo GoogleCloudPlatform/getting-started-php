@@ -1,23 +1,63 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+# [START getting_started_background_translate]
+# [START getting_started_background_translate_setup]
+use Google\Cloud\Firestore\FirestoreClient;
+use Google\Cloud\Firestore\Transaction;
+use Google\Cloud\Translate\TranslateClient;
 
-use Symfony\Component\HttpFoundation\Request;
+# [END getting_started_background_translate_setup]
 
-(function () {
-    $target = getenv('FUNCTION_TARGET', true);
-    if ($target === false) {
-        throw new \Exception('FUNCTION_TARGET is not set');
+/**
+ * @param array $data {
+ *     The PubSub message data containing text and target language.
+ *
+ *     @type string $text
+ *           The full text to translate.
+ *     @type string $language
+ *           The target language for the translation.
+ * }
+ */
+function translateString(array $data)
+{
+    if (empty($data['language']) || empty($data['text'])) {
+        throw new Exception('Error parsing translation data');
     }
 
-    $request = Request::createFromGlobals();
-    $message = json_decode($request->getContent(), true);
-    if (empty($message['message']['data'])) {
-        throw new \Exception('No message received');
-    }
-    $data = json_decode(base64_decode($message['message']['data']), true);
-    if (!$data) {
-        throw new \Exception('Error decoding data from message');
-    }
-    call_user_func_array($target, [$data]);
-})();
+    # [START getting_started_background_translate_init]
+    $firestore = new FirestoreClient();
+    $translate = new TranslateClient();
+
+    $translation = [
+        'original' => $data['text'],
+        'lang' => $data['language'],
+    ];
+    # [END getting_started_background_translate_init]
+
+    # [START getting_started_background_translate_transaction]
+    $docId = sprintf('%s:%s', $data['language'], base64_encode($data['text']));
+    $docRef = $firestore->collection('translations')->document($docId);
+
+    $firestore->runTransaction(
+        function (Transaction $transaction) use ($translate, $translation, $docRef) {
+            $snapshot = $transaction->snapshot($docRef);
+            if ($snapshot->exists()) {
+                return; // Do nothing if the document already exists
+            }
+
+            # [START getting_started_background_translate_string]
+            $result = $translate->translate($translation['original'], [
+                'target' => $translation['lang'],
+            ]);
+            # [END getting_started_background_translate_string]
+            $transaction->set($docRef, $translation + [
+                'translated' => $result['text'],
+                'originalLang' => $result['source'],
+            ]);
+        }
+    );
+    # [END getting_started_background_translate_transaction]
+
+    echo "Done.";
+}
+# [END getting_started_background_translate]
