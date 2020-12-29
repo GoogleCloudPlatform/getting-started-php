@@ -3,6 +3,6 @@
         "php": ">=7.1",
         "google/auth": "^1.9",
         "google/cloud-core": "^1.32",
-        "kelvinmo/simplejwt": "^0.4.0"
+        "kelvinmo/simplejwt": "^0.5.0"
     }
 }
