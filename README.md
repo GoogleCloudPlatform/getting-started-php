@@ -1,4 +1,4 @@
-# Getting started with PHP on Google Cloud Platform_4
+# Getting started with PHP on Google Cloud Platform_6
 
 [![Build Status][travis-badge]][travis-link]
 
