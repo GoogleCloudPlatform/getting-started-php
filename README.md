@@ -11,6 +11,10 @@ Platform. Please follow the tutorials for instructions on using these samples.
   * [Session handling with PHP][sessions]
   * [Background Processing for PHP][background-processing]
 
+## Google Cloud Samples
+
+To browse ready to use code samples check [Google Cloud Samples](https://cloud.google.com/docs/samples).
+
 ## Contributing changes
 
 * See [CONTRIBUTING.md](CONTRIBUTING.md)
