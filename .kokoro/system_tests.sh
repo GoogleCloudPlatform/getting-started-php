@@ -23,7 +23,7 @@ fi
 
 # Run code standards check when appropriate
 if [ "${RUN_CS_CHECK}" = "true" ]; then
-  wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -O php-cs-fixer
+  wget wget https://cs.symfony.com/download/php-cs-fixer-v3.phar -O php-cs-fixer
   chmod a+x php-cs-fixer
   ./php-cs-fixer fix --dry-run --diff
 fi
@@ -53,7 +53,7 @@ if [ "$PULL_REQUEST_NUMBER" != "" ]; then
 fi
 
 # Install google/cloud-tools globally
-composer global require google/cloud-tools:dev-master
+composer global require google/cloud-tools:dev-main
 
 # Install composer in all directories containing composer.json
 find . -name composer.json -not -path '*vendor/*' -exec dirname {} \; | while read COMPOSER_DIR
