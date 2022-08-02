@@ -2,6 +2,6 @@
   "require": {
     "google/cloud-translate": "^1.4",
     "google/cloud-firestore": "^1.7",
-    "google/cloud-functions-framework": "^0.7.0"
+    "google/cloud-functions-framework": "^0.8.0"
   }
 }
