@@ -1,8 +1,5 @@
 {
   "require": {
     "google/cloud-firestore": "^1.9"
-  },
-  "config": {
-    "platform-check": false
   }
 }
