@@ -25,7 +25,7 @@ fi
 if [ "${RUN_CS_CHECK}" = "true" ]; then
   wget https://cs.symfony.com/download/php-cs-fixer-v3.phar -O php-cs-fixer
   chmod a+x php-cs-fixer
-  ./php-cs-fixer fix --dry-run --diff
+  PHP_CS_FIXER_IGNORE_ENV=1 ./php-cs-fixer fix --dry-run --diff
 fi
 
 if [ -f $KOKORO_GFILE_DIR/service-account.json ]; then
