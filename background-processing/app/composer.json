@@ -3,5 +3,8 @@
     "google/cloud-pubsub": "^1.16",
     "google/cloud-firestore": "^1.7",
     "laravel/lumen-framework": " 5.8.*"
+  },
+  "config": {
+    "platform-check": false
   }
 }
