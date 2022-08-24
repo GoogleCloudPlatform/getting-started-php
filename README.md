@@ -1,7 +1,5 @@
 # Getting started with PHP on Google Cloud Platform
 
-[![Build Status][travis-badge]][travis-link]
-
 This repository contains the code for getting started with PHP on Google Cloud
 Platform. Please follow the tutorials for instructions on using these samples.
 
