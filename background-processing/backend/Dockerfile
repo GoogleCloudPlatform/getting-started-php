@@ -14,7 +14,7 @@ RUN mkdir .googleconfig && \
 
 # Copy over composer files and run "composer install"
 COPY composer.* php.ini ./
-COPY --from=composer:1 /usr/bin/composer /usr/local/bin
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin
 RUN composer install --no-dev
 
 # Copy over all application files
