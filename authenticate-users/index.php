@@ -24,7 +24,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  * correct audience) and if so, returns strings for the requesting user's
  * email and a persistent user ID. If not valid, returns null for each field.
  *
- * @param string $assertion The JWT string to assert.
+ * @param string $idToken The JWT string to assert.
  * @param string $audience The audience of the JWT.
  *
  * @return string[] array containing [$email, $id]
