@@ -4,7 +4,7 @@
     "laravel/lumen-framework": "5.8.*",
     "google/cloud-storage": "^1.11",
     "google/cloud-firestore": "^1.2",
-    "google/cloud-logging": "^1.14",
+    "google/cloud-logging": "^2.0",
     "google/cloud-error-reporting": "^0.18.0"
   },
   "require-dev": {
